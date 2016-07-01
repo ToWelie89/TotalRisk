@@ -1,0 +1,68 @@
+module.exports = function(grunt) {
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+        uglify: {
+            options: {
+                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                sourceMap: true
+            },
+            build: {
+                files: [{
+                    src: 'build/app.bundle.js',
+                    dest: 'build/app.bundle.min.js'
+                }]
+            }
+        },
+        less: {
+            options: {
+                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                cleancss: true
+            },
+            all: {
+                files: [{
+                    src: 'less/init.less',
+                    dest: 'build/default.css'
+                }]
+            },
+        },
+        clean: {
+            build: ['build/*']
+        },
+        watch: {
+            scripts: {
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json'],
+                tasks: ['default'],
+                options: {
+                    spawn: false,
+                },
+            }
+        },
+        shell: {
+            webpack: {
+                command: 'npm run webpack'
+            }
+        },
+        jsonlint: {
+            src: [
+                'package.json'
+            ]
+        }
+    });
+
+    // Load the plugin that provides the "uglify" task.
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-jsonlint');
+
+    // Default task for building
+    grunt.registerTask('default', [
+        'jsonlint',
+        'clean', // Clean previous build files
+        'shell:webpack',
+        'uglify', // Minify and uglify css and put it in build folder
+        'less', // Compile CSS files and put them in build folder
+    ]);
+};

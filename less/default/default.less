@@ -1,0 +1,89 @@
+body {
+    font-family: 'Sans Serif';
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    background: #E4E4E4;
+}
+
+a {
+    color: #03A9F4;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #016694;
+}
+
+header {
+    background-color: #03A9F4;
+    padding: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    position: relative;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.wrapper > h1 {
+    font-weight: 300;
+    font-size: 24px;
+    margin: 0;
+    color: #FFFFFF;
+}
+
+.content {
+    padding: 25px;
+    background: white;
+    min-height: 600px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+}
+
+footer {
+    margin-top: 15px;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #8A8A8A;
+}
+
+#sizeIndicator:before{
+    color: white;
+    content: "LARGE";
+    position: fixed;
+    font-size: 8px;
+    top: 0;
+    left: 0;
+    display: block;
+}
+
+#currentDeployment {
+    table {
+        tr {
+            &.black {
+                background: black;
+                color: white;
+            }
+            &.red {
+                background: red;
+                color: black;
+            }
+            td {
+                padding-left: 10px;
+                padding-right: 10px;
+                border: 1px solid gainsboro;
+            }
+        }
+        thead {
+            font-weight: 800;
+            tr {
+                td {
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+            }
+        }
+    }
+}
