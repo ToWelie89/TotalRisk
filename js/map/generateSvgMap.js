@@ -8,7 +8,7 @@ var countries;
 var seas;
 
 export function initSvgMap() {
-    svg = document.getElementById('map').contentDocument.getElementById('svgMap');
+    svg = document.getElementById('svgMap');
     doc = svg.ownerDocument;
     map = doc.getElementById('map');
     label = newElement('text', 'id=label font-size=30 stroke=none fill=black text-insert=middle x=100 y=700');
