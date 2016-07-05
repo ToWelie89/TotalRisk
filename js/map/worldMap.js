@@ -6,7 +6,7 @@ export default class WorldMap {
     constructor() {
         this.regions = new Map();
 
-        this.shuffleMap(worldMap);
+        //this.shuffleMap(worldMap);
 
         worldMap.regions.forEach(region => this.initializeRegion(region));
         console.log('World map regions: ');

@@ -4,14 +4,10 @@
 
 import WorldMap from './map/worldMap';
 import Player from './player/player';
-import {
-    playerColors
-}
-from './player/playerConstants';
-import {
-    turnPhases
-}
-from './gameConstants';
+import { playerColors } from './player/playerConstants';
+import { turnPhases } from './gameConstants';
+import MapController from './map/mapController';
+import { shuffle } from './helpers';
 
 export default class GameEngine {
 
@@ -20,12 +16,15 @@ export default class GameEngine {
         this.map = new WorldMap();
         // Initialize player list
         this.players = new Map();
-        this.players.set(0, new Player('Martin', playerColors.BLACK));
-        this.players.set(1, new Player('Pelle', playerColors.RED));
+        this.players.set('Martin', new Player('Martin', playerColors.BLACK));
+        this.players.set('Pelle', new Player('Pelle', playerColors.RED));
         console.log('Players: ');
         console.log(this.players);
+        // Setup map controller
+        this.mapController = new MapController(this.players);
         // Setup game table
         this.setupInitDeployment();
+        this.mapController.updateMap(this.map);
 
         this.printCurrentDeployment();
 
@@ -40,16 +39,17 @@ export default class GameEngine {
 
     setupInitDeployment() {
         let totalNumberOfPlayers = this.players.size;
+        let names = Array.from(this.players.keys());
 
         let currentPlayerIndex = 0;
+        let territories = this.map.getAllTerritoriesAsList();
+        shuffle(territories);
 
-        this.map.regions.forEach(region => {
-            region.territories.forEach(territory => {
-                currentPlayerIndex = ((totalNumberOfPlayers - 1) === currentPlayerIndex) ? 0 : (currentPlayerIndex + 1);
-                territory.owner = this.players.get(currentPlayerIndex).name;
-                territory.numberOfTroops = 1;
-                console.log(territory);
-            });
+        territories.forEach(territory => {
+            currentPlayerIndex = ((totalNumberOfPlayers - 1) === currentPlayerIndex) ? 0 : (currentPlayerIndex + 1);
+            territory.owner = names[currentPlayerIndex];
+            territory.numberOfTroops = 1;
+            console.log(territory);
         });
     }
 
@@ -68,7 +68,7 @@ export default class GameEngine {
         html += "<tbody>";
         let count = 1;
         this.map.getAllTerritoriesAsList().sort(this.sortByName).forEach((territory) => {
-            let color = this.getPlayerByName(territory.owner).color;
+            let color = this.players.get(territory.owner).color.name.toLowerCase();
             html += `
                         <tr class="${color}">
                             <td>${count}</td>
@@ -83,16 +83,6 @@ export default class GameEngine {
         html += "</tbody>";
         html += '</table>';
         document.getElementById("currentDeployment").innerHTML = html;
-    }
-
-    getPlayerByName(name) {
-        for (let player of this.players.values()) {
-            if (name === player.name) {
-                return player;
-            }
-        }
-
-        return null;
     }
 
     sortByName (a, b) {

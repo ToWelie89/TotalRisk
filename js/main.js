@@ -3,7 +3,6 @@
 *********************/
 
 import GameEngine from './gameEngine';
-import { initSvgMap } from './map/generateSvgMap';
 
 /*********************
 * DECLARATIONS
@@ -12,10 +11,6 @@ import { initSvgMap } from './map/generateSvgMap';
 /*********************
 * MAIN
 *********************/
-
-window.initMap = function() {
-    initSvgMap();
-}
 
 window.onload = function() {
     let gameEngine = new GameEngine();
