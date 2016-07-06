@@ -2,14 +2,94 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:map="http:rsvg.org/dtd/map"
       width="100%" height="100%"
-      viewBox="0 0 1024 792" id="svgMap" onload="top.initMap(evt)">
+      viewBox="0 0 1024 792"
+      onload="init(evt)">
   <defs>
+    <script type="text/ecmascript">
+    <![CDATA[
+      var svg;
+      var doc;
+      var map;
+      var label;
+      var text;
+      var hilite;
+      var countries;
+      var seas;
+
+      function init( evt )
+      {
+        svg = evt.target;
+        doc = svg.ownerDocument;
+        map = doc.getElementById( 'map' );
+        label = newElement( 'text', 'id=label font-size=30 stroke=none fill=black text-insert=middle x=100 y=700' );
+        text = doc.createTextNode( 'Move mouse over a country' );
+        label.appendChild( text );
+        svg.appendChild( label );
+        hilite = doc.getElementById( "hilite" );
+
+        countries = document.getElementsByClassName('country');
+        for (var i = 0; i < countries.length; i++)
+        {
+          var country = countries[i];
+          country.addEventListener('mouseover', function(evt){
+            mouseoverCountry(evt);
+          });
+        }
+
+        seas = document.getElementsByClassName('sea');
+        for (var i = 0; i < seas.length; i++)
+        {
+          var sea = seas[i];
+          sea.addEventListener('mouseover', function(evt){
+            mouseoverSea(evt);
+          });
+        }
+      }
+
+      // generic function to create an xml element
+      // format for attr is very strict
+      // attrs is a string of attribute=value pairs separated by single spaces,
+      // no quotes inside the string, no spaces in attributes
+      // eg. newElement( 'circle', 'cx=20 cy=20 r=15 visibility=hidden' );
+      //
+      function newElement( type, attrs )
+      {
+        var result = doc.createElementNS( "http://www.w3.org/2000/svg", type );
+        if( result )
+        {
+          attr = attrs.split( ' ' );
+          for( var i = 0; i < attr.length; i++ )
+          {
+            value = attr[i].split( '=' );
+            result.setAttribute( value[0], value[1] );
+          }
+        }
+        return result;
+      }
+
+      function mouseoverSea( evt )
+      {
+        var sea = evt.target;
+        text.textContent = sea.getAttribute( 'id' );
+        hilite.setAttribute( 'd', 'm0 0' );
+      }
+
+      function mouseoverCountry( evt )
+      {
+        var country = evt.target;
+        var outline = country.getAttribute( 'd' );
+        hilite.setAttribute( 'd', outline );
+        text.textContent = country.getAttribute( 'id' );
+      }
+    ]]>
+
+  </script>
 
   </defs>
-  <path id="Move mouse over a country" class='sea' fill="#98D6F7" d="M0 792c0,-264 0,-528 0,-792 341,0 682,0 1023,0 0,264 0,528 0,792 -341,0 -682,0 -1023,0z"/>
+  <path id="Move mouse over a country" class='sea' fill="#FFFFFF" d="M0 792c0,-264 0,-528 0,-792 341,0 682,0 1023,0 0,264 0,528 0,792 -341,0 -682,0 -1023,0z"/>
   <g id="map" visibility="visible" fill="none" stroke-width="1.5">
     <map:country name="East Africa" index="1" continent="africa" d="M532 514c-1,-6 -1,-12 -2,-17 5,-1 6,-8 7,-12 1,0 2,0 4,0 1,-8 11,-8 10,-19 -5,-1 -10,-2 -16,-2 0,-2 -1,-4 -2,-6 0,1 -1,2 -2,3 -7,-10 -12,-18 -16,-29 -1,-14 2,-24 4,-37 0,-1 0,-3 0,-4 1,0 2,0 4,0 -1,-3 -1,-3 1,-9 11,0 22,0 33,0 2,-3 2,-3 5,-4 7,11 9,26 14,38 1,1 2,1 3,1 2,5 3,9 5,14 -1,0 -2,0 -3,0 9,6 21,1 30,-1 0,0 0,1 1,2 -4,12 -9,23 -16,34 -15,12 -22,25 -33,39 0,7 0,14 1,21 -6,1 -11,2 -16,4 -2,6 -2,16 -2,18 -2,-1 -3,-1 -5,-1 0,-7 0,-15 0,-23 -2,-3 -5,-7 -7,-10 -1,0 -2,0 -2,0z"/>
-    <g id="Seas" fill="transparent">
+    <g id="Seas" fill="#FFFFFF">
       <path class='sea' id="Mediterranean" d="M484 328c-2,-1 -4,-2 -6,-3 0,-1 0,-2 0,-3 -3,0 -3,0 -3,-1 1,0 3,0 4,0 0,-4 1,-7 -1,-10 1,0 1,0 2,-1 0,-1 0,-2 0,-4 -18,1 -21,2 -28,2 -7,3 -16,9 -23,4 4,-5 8,-6 14,-7 2,-3 5,-5 6,-8 0,-13 1,-14 7,-25 4,-1 8,-1 12,-1 0,-1 0,-2 1,-3 0,0 1,-1 1,-2 2,0 5,0 7,0 0,3 1,5 2,8 1,0 2,0 3,1 0,1 0,1 0,2 5,3 11,11 14,17 -1,2 -2,4 -3,7 -5,0 -5,0 -6,1 1,1 2,2 4,4 0,0 1,0 2,-1 2,-2 4,-5 6,-8 1,0 2,0 3,0 -2,-3 -3,-5 0,-9 2,2 3,3 5,4 -2,-4 -5,-9 -8,-13 -5,-2 -17,-17 -12,-23 4,6 10,17 16,19 2,5 5,10 7,16 1,0 1,0 2,0 2,12 2,12 5,18 0,0 1,-1 1,-1 0,0 1,1 1,1 6,-5 3,-14 2,-21 2,0 2,0 2,3 0,-1 1,-1 2,-1 0,0 -1,-1 -1,-1 1,0 2,0 3,0 0,6 3,11 5,21 2,0 4,0 6,-1 0,1 1,2 1,3 3,-1 6,-2 9,-3 1,1 2,2 2,2 8,-1 8,-1 11,-3 1,0 1,1 2,1 -2,11 1,21 -6,29 -5,0 -9,0 -14,0 -11,-4 -23,-11 -35,-8 -1,3 -1,3 -1,7 -8,1 -15,-7 -23,-9z"/>
       <path class='sea' id="Dead Sea"  d="M607 293c1,-4 3,-8 4,-12 -2,0 -5,-1 -7,-2 0,-4 0,-7 0,-11 -7,-2 -3,-8 -1,-13 7,-4 11,-5 18,-5 0,3 0,6 0,9 -1,0 -2,0 -2,0 -1,-1 -1,-2 -1,-3 -3,5 -4,6 -5,12 3,1 5,2 7,3 0,8 0,8 2,9 1,-3 1,-3 0,-7 1,0 2,0 3,0 0,4 0,7 0,10 -1,0 -2,1 -3,1 0,3 0,5 0,8 1,0 2,1 3,1 1,2 1,4 1,7 0,1 0,3 0,4 -6,2 -10,1 -17,0 -1,-3 -1,-3 -2,-11z"/>
       <path class='sea' id="Black Sea"  d="M542 259c0,-1 0,-1 2,-1 0,-3 0,-6 0,-8 2,0 4,0 5,0 0,1 0,1 -3,3 0,0 1,1 2,1 1,0 3,-1 4,-1 0,2 0,2 -1,4 5,3 5,3 10,3 0,-1 1,-2 1,-3 1,0 2,0 3,-1 0,-1 0,-1 0,-2 -3,0 -3,0 -5,-1 3,-4 8,-4 13,-5 -3,3 -5,5 -6,10 1,0 2,0 3,0 0,2 1,4 1,6 7,2 13,6 12,15 -8,2 -12,1 -14,2 -5,-8 -11,-5 -20,-4 0,1 0,2 0,3 -2,0 -5,0 -8,0 -2,-2 -4,-5 -6,-7 2,-5 4,-10 7,-14z"/>
@@ -72,4 +152,3 @@
   </g>
   <path id="hilite" fill="white" stroke-width="8" stroke="black" opacity="0.3"/>
 </svg>
-

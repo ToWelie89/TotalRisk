@@ -24,7 +24,7 @@ export default class MapController {
             country.setAttribute('fill', color.mainColor);
             country.setAttribute('stroke', color.borderColor);
         } else {
-            console.error('Country not found!');
+            console.error('Country '+ territory.name +' not found!');
         }
     }
 

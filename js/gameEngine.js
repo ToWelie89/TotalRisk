@@ -26,7 +26,7 @@ export default class GameEngine {
         this.setupInitDeployment();
         this.mapController.updateMap(this.map);
 
-        this.printCurrentDeployment();
+        //this.printCurrentDeployment();
 
         //
         this.indexOfCurrentPlayersTurn = 0;
