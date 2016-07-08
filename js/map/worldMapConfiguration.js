@@ -2,6 +2,10 @@ export let worldMap = {
     "regions": [{
         "name": "Africa",
         "bonusTroops": 3,
+        "color": {
+            "mainColor": "#564848",
+            "borderColor": "#362d2d",
+        },
         "territories": [{
             "name": "North Africa",
             "adjacentTerritories": [
@@ -53,6 +57,10 @@ export let worldMap = {
     }, {
         "name": "South America",
         "bonusTroops": 2,
+        "color": {
+            "mainColor": "#dd4444",
+            "borderColor": "#b22525",
+        },
         "territories": [{
             "name": "Venezuela",
             "adjacentTerritories": [
@@ -85,6 +93,10 @@ export let worldMap = {
     }, {
         "name": "Europe",
         "bonusTroops": 5,
+        "color": {
+            "mainColor": "#4acd61",
+            "borderColor": "#35a749",
+        },
         "territories": [{
             "name": "Iceland",
             "adjacentTerritories": [
@@ -149,6 +161,10 @@ export let worldMap = {
     }, {
         "name": "North America",
         "bonusTroops": 5,
+        "color": {
+            "mainColor": "#4770ea",
+            "borderColor": "#234abe",
+        },
         "territories": [{
             "name": "Greenland",
             "adjacentTerritories": [
@@ -226,6 +242,10 @@ export let worldMap = {
     }, {
         "name": "Asia",
         "bonusTroops": 7,
+        "color": {
+            "mainColor": "#eaea67",
+            "borderColor": "#bbbb42",
+        },
         "territories": [{
             "name": "Afghanistan",
             "adjacentTerritories": [
@@ -330,6 +350,10 @@ export let worldMap = {
     }, {
         "name": "Australia",
         "bonusTroops": 2,
+        "color": {
+            "mainColor": "#a55eec",
+            "borderColor": "#8442c6",
+        },
         "territories": [{
             "name": "Eastern Australia",
             "adjacentTerritories": [

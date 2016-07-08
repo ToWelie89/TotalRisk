@@ -1,3 +1,58 @@
+.marginLeft {
+  margin-left: 10px;
+}
+.marginLeft--double {
+  margin-left: 20px;
+}
+.marginRight {
+  margin-right: 10px;
+}
+.marginRight--double {
+  margin-right: 20px;
+}
+.marginBottom {
+  margin-bottom: 10px;
+}
+.marginBottom--double {
+  margin-bottom: 20px;
+}
+.marginTop {
+  margin-top: 10px;
+}
+.marginTop--double {
+  margin-top: 20px;
+}
+.paddingLeft {
+  padding-left: 10px;
+}
+.paddingLeft--double {
+  padding-left: 20px;
+}
+.paddingRight {
+  padding-right: 10px;
+}
+.paddingRight--double {
+  padding-right: 20px;
+}
+.paddingBottom {
+  padding-bottom: 10px;
+}
+.paddingBottom--double {
+  padding-bottom: 20px;
+}
+.paddingTop {
+  padding-top: 10px;
+}
+.paddingTop--double {
+  padding-top: 20px;
+}
+.paddingAll {
+    .paddingTop;
+    .paddingBottom;
+    .paddingLeft;
+    .paddingRight;
+}
+
 body {
     font-family: 'Sans Serif';
     font-size: 16px;
@@ -15,6 +70,23 @@ a:hover {
     color: #016694;
 }
 
+button {
+    outline: none !important;
+    outline-color: transparent !important;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.47) !important;
+    border: 2px solid transparent;
+}
+
+.btn-default {
+    &.active, &:focus {
+        border-color: #CE131E !important;
+        border-width: 2px;
+    }
+    &:hover, &:focus {
+        background-color: #e0e0e0 !important;
+    }
+}
+
 header {
     background-color: #03A9F4;
     padding: 14px;
@@ -30,16 +102,25 @@ header {
 
 .wrapper > h1 {
     font-weight: 300;
-    font-size: 24px;
+    font-size: 42px;
     margin: 0;
     color: #FFFFFF;
+    font-family: 'Finger Paint', cursive;
 }
 
-.content {
+.container {
+    padding: 25px;
+}
+
+.mainContent {
     padding: 25px;
     background: #98D6F7;
-    min-height: 300px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 footer {

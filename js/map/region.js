@@ -5,6 +5,7 @@ export default class Region {
         this.name = region.name;
         this.bonusTroops = region.bonusTroops;
         this.territories = new Map();
+        this.color = region.color;
 
         region.territories.forEach(territory => this.initializeTerritory(territory));
     }

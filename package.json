@@ -1,5 +1,5 @@
 {
-  "name": "ecma6testing",
+  "name": "ECMA6Risk",
   "version": "1.0.0",
   "description": "",
   "main": "js/main.js",
@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "angular": "^1.5.7",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
+    "bootstrap": "^3.3.6",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "0.7.0",
     "grunt-contrib-less": "~0.8.3",
