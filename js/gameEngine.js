@@ -21,7 +21,6 @@ export default class GameEngine {
         this.iterator = playerIterator(Array.from(this.players), [ TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT ]);
         this.turn = this.iterator.getCurrent();
 
-        console.log('Players: ');
         // Setup game table
         this.setupInitDeployment();
 
