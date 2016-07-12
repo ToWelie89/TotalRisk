@@ -14,19 +14,28 @@ import MapController from './../map/mapController';
      * @description Main controller for the whole site
      */
     var mainController = ['$scope', function($scope) {
+        // PUBLIC FUNCTIONS
         $scope.filterByOwner = filterByOwner;
         $scope.filterByRegion = filterByRegion;
         $scope.nextTurn = nextTurn;
+        $scope.getCurrentPlayerColor = getCurrentPlayerColor;
+        $scope.init = init;
+
         $scope.turn = {};
 
-        var gameEngine = new GameEngine();
+        var gameEngine;
+        var mapController;
 
-        var mapController = new MapController(gameEngine.players, gameEngine.map);
-        mapController.updateMap(gameEngine.map);
+        function init() {
+            gameEngine = new GameEngine();
 
-        gameEngine.startGame();
-        $scope.turn = gameEngine.turn;
-        $scope.filter = 'byOwner';
+            mapController = new MapController(gameEngine.players, gameEngine.map);
+            mapController.updateMap(gameEngine.map);
+
+            gameEngine.startGame();
+            $scope.turn = gameEngine.turn;
+            $scope.filter = 'byOwner';
+        }
 
         function filterByOwner() {
             gameEngine.map.regions.forEach(region => {
@@ -49,6 +58,10 @@ import MapController from './../map/mapController';
         function nextTurn() {
             $scope.turn = gameEngine.nextTurn();
             console.log($scope.turn);
+        }
+
+        function getCurrentPlayerColor(){
+            return gameEngine.players.get($scope.turn.player.name).color.mainColor;
         }
     }];
 

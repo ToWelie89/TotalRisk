@@ -19,7 +19,7 @@
             <h1>ECMA6 Risk</h1>
         </div>
     </header>
-    <div class="wrapper" data-ng-controller="mainController">
+    <div class="wrapper" data-ng-controller="mainController" data-ng-init="init()">
         <div class="container mainContent">
             <div class="row">
                 <div id="filters" class="paddingBottom--double col-xs-6" style="padding-right:0px;">
@@ -32,15 +32,21 @@
                 </div>
                 <div id="turnInfo" class="col-xs-6" style="padding-left:0px;text-align: right;">
                     <div class="row">
-                        <div class="col-xs-4" style="line-height: 30px;">
+                        <div class="col-xs-6 text-shadow" style="line-height: 30px; color: {{ getCurrentPlayerColor() }}">
                             <strong><span data-ng-bind="turn.player.name"></span></strong>
                         </div>
-                        <div class="col-xs-4" style="line-height: 30px;">
-                            <span data-ng-show="turn.turnPhase == 0">Deployment</span>
-                            <span data-ng-show="turn.turnPhase == 1">Attack</span>
-                            <span data-ng-show="turn.turnPhase == 2">Movement</span>
+                        <div class="col-xs-2" style="line-height: 30px;">
+                            <span data-ng-show="turn.turnPhase == 0">
+                                Deployment
+                            </span>
+                            <span data-ng-show="turn.turnPhase == 1">
+                                Attack
+                            </span>
+                            <span data-ng-show="turn.turnPhase == 2">
+                                Movement
+                            </span>
                         </div>
-                        <div class="col-xs-4" style="line-height: 30px;">
+                        <div class="col-xs-3" style="line-height: 30px;">
                             <button type="button" class="btn btn-md btn-success" id="showByOwner" data-ng-click="nextTurn()">
                                 NEXT
                             </button>
