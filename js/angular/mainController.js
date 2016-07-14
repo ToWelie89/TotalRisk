@@ -4,6 +4,7 @@
 
 import GameEngine from './../gameEngine';
 import MapController from './../map/mapController';
+import { GAME_PHASES } from './../gameConstants';
 
 (function() {
     var app = angular.module('risk', []);
@@ -20,6 +21,10 @@ import MapController from './../map/mapController';
         $scope.nextTurn = nextTurn;
         $scope.getCurrentPlayerColor = getCurrentPlayerColor;
         $scope.init = init;
+        $scope.startGame = startGame;
+
+        $scope.gamePhases = GAME_PHASES;
+        $scope.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
 
         $scope.turn = {};
 
@@ -32,9 +37,16 @@ import MapController from './../map/mapController';
             mapController = new MapController(gameEngine.players, gameEngine.map);
             mapController.updateMap(gameEngine.map);
 
-            gameEngine.startGame();
             $scope.turn = gameEngine.turn;
             $scope.filter = 'byOwner';
+
+            // Temp
+            //startGame();
+        }
+
+        function startGame() {
+            gameEngine.startGame();
+            $scope.currentGamePhase = $scope.gamePhases.GAME;
         }
 
         function filterByOwner() {

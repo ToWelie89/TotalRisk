@@ -3,9 +3,9 @@
 \*------------------------------------*/
 
 // Major breakpoints
-@small  : 480px;    /* 480px / 16 */
-@medium : 760px;    /* 768px / 16 */
-@large  : 1280px;    /* 1024px / 16 */
+@small  : 750px;
+@medium : 970px;
+@large  : 1170px;
 
 // To use as max-width values
 @lt-small  : (@small  - 1px); /* Lower than Small */
@@ -18,10 +18,10 @@
 
 @import "default/default";
 
-@media only screen and (min-width: 0em) and (max-width: @lt-medium) { // SMALL
+@media only screen and (min-width: 0em) and (max-width: @lt-small) { // SMALL
     @import "default/default-small";
 }
-@media only screen and (min-width: @medium) and (max-width: @lt-large) { // MEDIUM
+@media only screen and (min-width: @small) and (max-width: @lt-large) { // MEDIUM
     @import "default/default-medium";
 }
 @media only screen and (min-width: @large) { // LARGE

@@ -3,3 +3,8 @@ export const TURN_PHASES = {
     ATTACK: 1,
     MOVEMENT: 2
 }
+
+export const GAME_PHASES = {
+    PLAYER_SETUP: 0,
+    GAME: 1
+}
