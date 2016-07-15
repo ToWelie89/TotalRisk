@@ -46,6 +46,14 @@ module.exports = function(grunt) {
             src: [
                 'package.json'
             ]
+        },
+        notify: {
+            watch: {
+                options: {
+                    title: 'Grunt watch', // optional
+                    message: 'Build complete', //required
+                }
+            }
         }
     });
 
@@ -56,6 +64,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-jsonlint');
+    grunt.loadNpmTasks('grunt-notify');
 
     // Default task for building
     grunt.registerTask('default', [
@@ -64,5 +73,6 @@ module.exports = function(grunt) {
         'shell:webpack',
         'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
+        'notify'
     ]);
 };
