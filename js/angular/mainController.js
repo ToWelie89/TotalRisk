@@ -39,20 +39,19 @@ import { GAME_PHASES } from './../gameConstants';
 
             $scope.turn = gameEngine.turn;
             $scope.filter = 'byOwner';
-
-            // Temp
-            //startGame();
         }
 
         function startGame() {
             gameEngine.startGame();
             $scope.currentGamePhase = $scope.gamePhases.GAME;
+            $scope.troopsToDeploy = gameEngine.troopsToDeploy;
         }
 
         function filterByOwner() {
             gameEngine.map.regions.forEach(region => {
                 region.territories.forEach(territory => {
-                    mapController.updateColorOfTerritory(territory.name, gameEngine.players.get(territory.owner).color);
+                    mapController.updateColorOfTerritory(territory, gameEngine.players.get(territory.owner).color);
+                    mapController.updateTroopIndicator(territory, gameEngine.players.get(territory.owner).color);
                 });
             });
             $scope.filter = 'byOwner';
@@ -61,7 +60,8 @@ import { GAME_PHASES } from './../gameConstants';
         function filterByRegion() {
             gameEngine.map.regions.forEach(region => {
                 region.territories.forEach(territory => {
-                    mapController.updateColorOfTerritory(territory.name, region.color);
+                    mapController.updateColorOfTerritory(territory, region.color);
+                    mapController.updateTroopIndicator(territory, region.color);
                 });
             });
             $scope.filter = 'byRegion';

@@ -37,6 +37,38 @@ export default class WorldMap {
         return arr;
     }
 
+    getNumberOfTerritoriesByOwner(owner) {
+        let count = 0;
+        this.regions.forEach(region => {
+            region.territories.forEach(territory => {
+                if (territory.owner === owner) {
+                    count++;
+                }
+            });
+        });
+        return count;
+    }
+
+    calculateRegionBonusesForPlayer(owner) {
+        let regionBonuses = [];
+        this.regions.forEach(region => {
+            if (this.allTerritoriesOwnedByPlayer(owner, region.territories)) {
+                regionBonuses.push(region);
+            }
+        });
+        return regionBonuses;
+    }
+
+    allTerritoriesOwnedByPlayer (owner, territories) {
+        let returnValue = true;
+        territories.forEach(territory => {
+            if (territory.owner !== owner) {
+                returnValue = false;
+            }
+        });
+        return returnValue;
+    }
+
     shuffleMap(map) {
         shuffle(map.regions); // First shuffle regions
         map.regions.forEach(region => shuffle(region.territories)); // Shuffle every territory in every region

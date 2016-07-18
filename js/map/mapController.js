@@ -17,18 +17,38 @@ export default class MapController {
         this.map = map;
         this.map.regions.forEach(region => {
             region.territories.forEach(territory => {
-                this.updateColorOfTerritory(territory.name, this.players.get(territory.owner).color);
+                this.updateColorOfTerritory(territory, this.players.get(territory.owner).color);
+                this.updateTroopIndicator(territory, this.players.get(territory.owner).color);
             });
         });
     }
 
     updateColorOfTerritory(territory, color) {
-        let country = this.svg.getElementById(territory);
+        let country = this.svg.getElementById(territory.name);
         if (country) {
             country.setAttribute('fill', color.mainColor);
             country.setAttribute('stroke', color.borderColor);
         } else {
             console.error('Country '+ territory.name +' not found!');
+        }
+    }
+
+    updateTroopIndicator(territory, color) {
+        let troopIndicatorEllipse = this.svg.querySelector('.troopCounter[for="' + territory.name + '"]');
+        if (troopIndicatorEllipse) {
+            troopIndicatorEllipse.setAttribute('fill', color.mainColor);
+            troopIndicatorEllipse.setAttribute('stroke', color.borderColor);
+        } else {
+            console.error('Troop indicator ellipse for '+ territory.name +' not found!');
+        }
+
+        let troopIndicatorText = this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]');
+        if (troopIndicatorText) {
+            troopIndicatorText.setAttribute('fill', 'black');
+            troopIndicatorText.setAttribute('stroke', 'black');
+            troopIndicatorText.innerHTML = territory.numberOfTroops;
+        } else {
+            console.error('Troop indicator text for '+ territory.name +' not found!');
         }
     }
 

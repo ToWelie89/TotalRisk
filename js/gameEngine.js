@@ -19,8 +19,8 @@ export default class GameEngine {
         // Initialize player list
         this.players = new Map();
         this.players.set('Martin', new Player('Martin', PLAYER_COLORS.GREEN));
-        this.players.set('Örjan', new Player('Örjan', PLAYER_COLORS.RED));
         this.players.set('Johan', new Player('Johan', PLAYER_COLORS.BLUE));
+        this.players.set('Napoleon', new Player('Napoleon', PLAYER_COLORS.RED));
 
         this.iterator = playerIterator(Array.from(this.players), [ TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT ]);
         this.turn = this.iterator.getCurrent();
@@ -39,6 +39,7 @@ export default class GameEngine {
         this.gameAnnouncer.stateTurn(this.turn);
 
         console.log(this.turn);
+        this.handleTurnPhase();
     }
 
     nextTurn() {
@@ -46,7 +47,14 @@ export default class GameEngine {
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
         this.gameAnnouncer.stateTurn(this.turn);
+        this.handleTurnPhase();
         return this.turn;
+    }
+
+    handleTurnPhase(turn) {
+        if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            this.troopsToDeploy = this.calculateReinforcements();
+        }
     }
 
     setupInitDeployment() {
@@ -64,9 +72,22 @@ export default class GameEngine {
         });
     }
 
-    sortByName (a, b) {
-        if(a.owner < b.owner) return -1;
-        if(a.owner > b.owner) return 1;
-        return 0;
+    calculateReinforcements() {
+        let numberOfReinforcements = 0;
+        let currentPlayer = this.players.get(this.turn.player.name);
+        let numberOfTerritories = this.map.getNumberOfTerritoriesByOwner(currentPlayer.name);
+        console.log(numberOfTerritories + ' territories owned by ' + currentPlayer.name);
+        numberOfReinforcements += Math.floor(numberOfTerritories / 3);
+
+        let regionBonuses = this.map.calculateRegionBonusesForPlayer(currentPlayer.name);
+        console.log('Region bonuses: ');
+        console.log(regionBonuses);
+
+        regionBonuses.forEach(region => {
+            numberOfReinforcements += region.bonusTroops;
+        });
+
+        console.log('Total number of reinforcements: ' + numberOfReinforcements);
+        return numberOfReinforcements;
     }
 }
