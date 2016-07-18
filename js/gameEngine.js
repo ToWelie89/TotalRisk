@@ -3,11 +3,13 @@
  *********************/
 
 import WorldMap from './map/worldMap';
+import { getTerritoryByName } from './map/mapHelpers';
 import Player from './player/player';
 import { PLAYER_COLORS, playerIterator } from './player/playerConstants';
 import { TURN_PHASES } from './gameConstants';
 import { shuffle } from './helpers';
 import GameAnnouncer from './voice/gameAnnouncer';
+import DeploymentHandler from './deploymentHandler';
 
 export default class GameEngine {
 
@@ -25,10 +27,10 @@ export default class GameEngine {
         this.iterator = playerIterator(Array.from(this.players), [ TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT ]);
         this.turn = this.iterator.getCurrent();
 
+        this.deploymentHandler = new DeploymentHandler();
+
         // Setup game table
         this.setupInitDeployment();
-
-        this.currentTurnPhase = TURN_PHASES.DEPLOYMENT;
     }
 
     startGame() {
@@ -53,7 +55,7 @@ export default class GameEngine {
 
     handleTurnPhase(turn) {
         if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.troopsToDeploy = this.calculateReinforcements();
+            this.troopsToDeploy = this.deploymentHandler.calculateReinforcements(this.players, this.map, this.turn);
         }
     }
 
@@ -72,22 +74,14 @@ export default class GameEngine {
         });
     }
 
-    calculateReinforcements() {
-        let numberOfReinforcements = 0;
-        let currentPlayer = this.players.get(this.turn.player.name);
-        let numberOfTerritories = this.map.getNumberOfTerritoriesByOwner(currentPlayer.name);
-        console.log(numberOfTerritories + ' territories owned by ' + currentPlayer.name);
-        numberOfReinforcements += Math.floor(numberOfTerritories / 3);
-
-        let regionBonuses = this.map.calculateRegionBonusesForPlayer(currentPlayer.name);
-        console.log('Region bonuses: ');
-        console.log(regionBonuses);
-
-        regionBonuses.forEach(region => {
-            numberOfReinforcements += region.bonusTroops;
-        });
-
-        console.log('Total number of reinforcements: ' + numberOfReinforcements);
-        return numberOfReinforcements;
+    handleCountryClick(country) {
+        if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            if (this.troopsToDeploy > 0) {
+                this.troopsToDeploy--;
+                let territory = getTerritoryByName(this.map, country);
+                territory.numberOfTroops++;
+                console.log(territory);
+            }
+        }
     }
 }

@@ -36,6 +36,7 @@ import { GAME_PHASES } from './../gameConstants';
 
             mapController = new MapController(gameEngine.players, gameEngine.map);
             mapController.updateMap(gameEngine.map);
+            document.getElementById('hilite').addEventListener('click', (e) => { clickCountry(e); });
 
             $scope.turn = gameEngine.turn;
             $scope.filter = 'byOwner';
@@ -74,6 +75,13 @@ import { GAME_PHASES } from './../gameConstants';
 
         function getCurrentPlayerColor(){
             return gameEngine.players.get($scope.turn.player.name).color.mainColor;
+        }
+
+        function clickCountry(evt) {
+            let country = evt.target.getAttribute('country');
+            gameEngine.handleCountryClick(country);
+            mapController.updateMap(gameEngine.map);
+            $scope.troopsToDeploy = gameEngine.troopsToDeploy;
         }
     }];
 

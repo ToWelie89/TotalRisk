@@ -87,5 +87,6 @@ export default class MapController {
         let territory = getTerritoryByName(this.map, country.getAttribute('id'));
         document.getElementById('currentTerritoryInfo').innerHTML = territory.name + ' | Owner: ' + territory.owner + ' | Troops: ' + territory.numberOfTroops;
         hilite.setAttribute('d', outline);
+        hilite.setAttribute('country', country.id);
     }
 }
