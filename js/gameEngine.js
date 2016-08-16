@@ -76,9 +76,9 @@ export default class GameEngine {
 
     handleCountryClick(country) {
         if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            if (this.troopsToDeploy > 0) {
+            let territory = getTerritoryByName(this.map, country);
+            if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
                 this.troopsToDeploy--;
-                let territory = getTerritoryByName(this.map, country);
                 territory.numberOfTroops++;
                 console.log(territory);
             }
