@@ -22,7 +22,7 @@
         </div>
     </header>
     <div class="wrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
-        <div class="container mainContent">
+        <div class="container mainContent" data-ng-controller="gameSetupController as setup">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP">
                 <div class="row marginTop marginBottom">
                     <div class="col-xs-6" style="text-align: right;">

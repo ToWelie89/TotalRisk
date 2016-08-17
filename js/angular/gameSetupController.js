@@ -1,23 +1,10 @@
-/*********************
-* IMPORTS
-*********************/
+export function GameSetupController($scope) {
+    var vm = this;
 
-(function() {
-    var app = angular.module('risk', []);
+    vm.lol = 'test';
 
-    /**
-     * @constructor MainController
-     * @memberof controllers
-     * @description Main controller for the whole site
-     */
-    var gameSetupController = ['$scope', function($scope) {
-        var vm = this;
-
-        // PUBLIC FUNCTIONS
-        function lol() {
-            $scope.hej = '';
-        }
-    }];
-
-    app.controller('gameSetupController', gameSetupController);
-}());
+    // PUBLIC FUNCTIONS
+    function lol() {
+        $scope.hej = '';
+    }
+}

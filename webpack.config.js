@@ -3,7 +3,7 @@
 
  module.exports = {
      entry: {
-         app: './js/angular/mainController.js'
+         app: './js/angular/angularSetup.js'
      },
      output: {
          path: path.resolve(__dirname, 'build'),
