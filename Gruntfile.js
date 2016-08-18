@@ -54,6 +54,20 @@ module.exports = function(grunt) {
                     message: 'Build complete', //required
                 }
             }
+        },
+        replace: {
+            inlineSvg: {
+                options: {
+                    patterns: [{
+                        match: 'mapSvg',
+                        replacement: '<%= grunt.file.read("assets/map.svg") %>'
+                    }]
+                },
+                files: [{
+                    src: ['src/index.html'],
+                    dest: 'index.html'
+                }]
+            }
         }
     });
 
@@ -65,6 +79,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-jsonlint');
     grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-replace');
 
     // Default task for building
     grunt.registerTask('default', [
@@ -73,6 +88,7 @@ module.exports = function(grunt) {
         'shell:webpack',
         'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
+        'replace',
         'notify'
     ]);
 };

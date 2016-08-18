@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ECMA6 Risk</title>
+    <script src='js/libs/responsivevoice.js'></script>
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="build/app.bundle.js"></script>
+
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link href="build/default.css" rel="stylesheet" type="text/css">
+
+    <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+</head>
+<body ng-app="risk">
+    <header>
+        <span id="sizeIndicator"></span>
+        <div class="wrapper">
+            <h1>ECMA6 Risk</h1>
+        </div>
+    </header>
+    <div class="wrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
+        <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP">
+
+
+                <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
+                    <div class="col-xs-4 text-shadow" style="text-align: right;">
+                        <div style="background-color: {{player.color.mainColor}}; height: 33px; width: 33px; float:right; border-radius: 3px; border: 1px solid black;"></div>
+                    </div>
+                    <div class="col-xs-4" style="text-align: left;">
+                        <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control" style="width: 100%;" />
+                    </div>
+                    <div class="col-xs-4" style="text-align: left;">
+                        <button type="button" class="btn btn-md btn-danger" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.count > setup.minimumNumberOfPlayers">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div class="row marginTop">
+                    <div class="col-xs-12 textCenter">
+                        <button type="button" class="btn btn-lg btn-primary" data-ng-click="setup.addPlayer()">
+                            Add new player
+                        </button>
+                        <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame()">
+                            Start
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME">
+                <div class="row">
+                    <div id="filters" class="paddingBottom--double col-xs-6" style="padding-right:0px;">
+                        <button type="button" class="btn btn-md btn-default" id="showByOwner" data-ng-click="main.filterByOwner()" data-ng-class="{'active': main.filter == 'byOwner'}">
+                            Color by owner
+                        </button>
+                        <button type="button" class="btn btn-md btn-default" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
+                            Color by region
+                        </button>
+                    </div>
+                    <div id="turnInfo" class="col-xs-6" style="padding-left:0px;text-align: right;">
+                        <div class="row">
+                            <div class="col-xs-4 text-shadow" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
+                                <strong><span data-ng-bind="main.turn.player.name"></span></strong>
+                            </div>
+                            <div class="col-xs-6" style="line-height: 30px;">
+                                <span data-ng-show="main.turn.turnPhase == 0">
+                                    Deployment (Troops left: <span data-ng-bind="main.troopsToDeploy"></span>)
+                                </span>
+                                <span data-ng-show="main.turn.turnPhase == 1">
+                                    Attack
+                                </span>
+                                <span data-ng-show="main.turn.turnPhase == 2">
+                                    Movement
+                                </span>
+                            </div>
+                            <div class="col-xs-2" style="line-height: 30px;">
+                                <button type="button" class="btn btn-md btn-success" id="showByOwner" data-ng-click="main.nextTurn()" data-ng-disabled="main.checkIfNextIsDisabled()">
+                                    NEXT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                   <div id="map">
+                       @@mapSvg
+                   </div>
+                </div>
+                <div class="row">
+                    <div id="currentTerritoryInfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container" style="padding: 0;">
+            <div class="wrapper">
+                ECMA6 Risk web application game made by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
