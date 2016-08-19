@@ -18,11 +18,16 @@ export default class GameEngine {
         this.gameAnnouncer = new GameAnnouncer();
         // Initialize world map
         this.map = new WorldMap();
+    }
+
+    startGame(players) {
+        console.log('game started!');
+
         // Initialize player list
         this.players = new Map();
-        this.players.set('Martin', new Player('Martin', PLAYER_COLORS.GREEN));
-        this.players.set('Johan', new Player('Johan', PLAYER_COLORS.BLUE));
-        this.players.set('Napoleon', new Player('Napoleon', PLAYER_COLORS.RED));
+        players.forEach(player => {
+            this.players.set(player.name, player);
+        });
 
         this.iterator = playerIterator(Array.from(this.players), [ TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT ]);
         this.turn = this.iterator.getCurrent();
@@ -31,13 +36,8 @@ export default class GameEngine {
 
         // Setup game table
         this.setupInitDeployment();
-    }
 
-    startGame() {
-        console.log('game started!');
         this.gameAnnouncer.speak("Game started");
-
-        this.turn = this.iterator.getCurrent();
         this.gameAnnouncer.stateTurn(this.turn);
 
         console.log(this.turn);

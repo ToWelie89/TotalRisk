@@ -10,6 +10,7 @@ export default class MapController {
 
         this.initEvents();
         this.clearWholeMap();
+        this.updateMap(this.map);
     }
 
     updateMap(map) {

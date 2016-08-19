@@ -1,3 +1,5 @@
+import { CONSTANTS } from './gameConstants';
+
 export default class DeploymentHandler {
     constructor() {
 
@@ -19,6 +21,6 @@ export default class DeploymentHandler {
         });
 
         console.log('Total number of reinforcements: ' + numberOfReinforcements);
-        return numberOfReinforcements;
+        return (numberOfReinforcements > CONSTANTS.MIN_REINFORCEMENTS) ? numberOfReinforcements : CONSTANTS.MIN_REINFORCEMENTS;
     }
 }

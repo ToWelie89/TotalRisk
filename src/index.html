@@ -24,8 +24,6 @@
     <div class="wrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP">
-
-
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
                     <div class="col-xs-4 text-shadow" style="text-align: right;">
                         <div style="background-color: {{player.color.mainColor}}; height: 33px; width: 33px; float:right; border-radius: 3px; border: 1px solid black;"></div>
@@ -34,26 +32,21 @@
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control" style="width: 100%;" />
                     </div>
                     <div class="col-xs-4" style="text-align: left;">
-                        <button type="button" class="btn btn-md btn-danger" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.count > setup.minimumNumberOfPlayers">
+                        <button type="button" class="btn btn-md btn-danger" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                     </div>
                 </div>
-
-
-
                 <div class="row marginTop">
                     <div class="col-xs-12 textCenter">
-                        <button type="button" class="btn btn-lg btn-primary" data-ng-click="setup.addPlayer()">
+                        <button type="button" class="btn btn-lg btn-primary" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
                             Add new player
                         </button>
-                        <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame()">
+                        <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
                             Start
                         </button>
                     </div>
                 </div>
-
-
             </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME">
                 <div class="row">

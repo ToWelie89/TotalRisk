@@ -24,21 +24,20 @@ export function MainController($scope) {
 
     function init() {
         gameEngine = new GameEngine();
+    }
+
+    function startGame(players) {
+        gameEngine.startGame(players);
+        vm.currentGamePhase = vm.gamePhases.GAME;
+        vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
         mapController = new MapController(gameEngine.players, gameEngine.map);
-        mapController.updateMap(gameEngine.map);
         document.getElementById('hilite').addEventListener('click', (e) => {
             clickCountry(e);
         });
 
         vm.turn = gameEngine.turn;
         vm.filter = 'byOwner';
-    }
-
-    function startGame() {
-        gameEngine.startGame();
-        vm.currentGamePhase = vm.gamePhases.GAME;
-        vm.troopsToDeploy = gameEngine.troopsToDeploy;
     }
 
     function filterByOwner() {
@@ -67,6 +66,9 @@ export function MainController($scope) {
     }
 
     function checkIfNextIsDisabled() {
+        if (!gameEngine.turn) {
+            return;
+        }
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && gameEngine.troopsToDeploy > 0) {
             return true;
         } else {
@@ -75,7 +77,7 @@ export function MainController($scope) {
     }
 
     function getCurrentPlayerColor() {
-        return gameEngine.players.get(vm.turn.player.name).color.mainColor;
+        return gameEngine.players ? gameEngine.players.get(vm.turn.player.name).color.mainColor : '';
     }
 
     function clickCountry(evt) {

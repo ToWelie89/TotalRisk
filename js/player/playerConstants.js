@@ -13,6 +13,21 @@ export const PLAYER_COLORS = {
         name: 'Blue',
         mainColor: '#3333ff',
         borderColor: '#1a1a9c'
+    },
+    PINK: {
+        name: 'Pink',
+        mainColor: '#ff99cc',
+        borderColor: '#ff6699'
+    },
+    BLACK: {
+        name: 'Black',
+        mainColor: '#3c3c3c',
+        borderColor: '#202020'
+    },
+    YELLOW: {
+        name: 'Yellow',
+        mainColor: '#ffff66',
+        borderColor: '#dbdb39'
     }
 }
 export function playerIterator(playerMap, turnPhases) {
