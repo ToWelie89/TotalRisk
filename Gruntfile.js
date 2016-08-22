@@ -83,7 +83,7 @@ module.exports = function(grunt) {
 
     // Default task for building
     grunt.registerTask('default', [
-        'jsonlint',
+        //'jsonlint',
         'clean', // Clean previous build files
         'shell:webpack',
         'uglify', // Minify and uglify css and put it in build folder
