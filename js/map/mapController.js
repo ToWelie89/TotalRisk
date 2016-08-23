@@ -13,14 +13,36 @@ export default class MapController {
         this.updateMap(this.map);
     }
 
-    updateMap(map) {
+    updateMap(map, filter = 'byOwner') {
         console.log('Update map');
         this.map = map;
-        this.map.regions.forEach(region => {
-            region.territories.forEach(territory => {
-                this.updateColorOfTerritory(territory, this.players.get(territory.owner).color);
-                this.updateTroopIndicator(territory, this.players.get(territory.owner).color);
+        if (filter === 'byOwner') {
+            this.map.regions.forEach(region => {
+                region.territories.forEach(territory => {
+                    this.updateColorOfTerritory(territory, this.players.get(territory.owner).color);
+                    this.updateTroopIndicator(territory, this.players.get(territory.owner).color);
+                });
             });
+        } else if (filter === 'byRegion') {
+            this.map.regions.forEach(region => {
+                region.territories.forEach(territory => {
+                    this.updateColorOfTerritory(territory, region.color);
+                    this.updateTroopIndicator(territory, region.color);
+                });
+            });
+        }
+    }
+
+    hightlightTerritory(target) {
+        let country = this.svg.getElementById(target);
+        let territory = getTerritoryByName(this.map, country.getAttribute('id'));
+        console.log(territory);
+
+        country.setAttribute('stroke', 'white');
+        country.setAttribute('stroke-width', 5);
+        territory.adjacentTerritories.forEach(territory => {
+            this.svg.getElementById(territory).setAttribute('stroke-width', 5);
+            this.svg.getElementById(territory).setAttribute('stroke', 'white');
         });
     }
 
@@ -29,6 +51,7 @@ export default class MapController {
         if (country) {
             country.setAttribute('fill', color.mainColor);
             country.setAttribute('stroke', color.borderColor);
+            country.setAttribute('stroke-width', 1);
         } else {
             console.error('Country '+ territory.name +' not found!');
         }

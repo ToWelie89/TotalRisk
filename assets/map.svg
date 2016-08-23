@@ -2,6 +2,15 @@
  <svg id="svgMap" width="100%" height="100%" viewBox="0 8 1024 643" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
    <defs>
      <style id="bx-google-fonts">@import url(https://fonts.googleapis.com/css?family=Bigelow+Rules:400|Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic);</style>
+     <pattern id="pattern-stripe"
+       width="10" height="10"
+       patternUnits="userSpaceOnUse"
+       patternTransform="rotate(45)">
+       <rect width="5" height="10" transform="translate(0,0)" fill="white"></rect>
+     </pattern>
+     <mask id="mask-stripe">
+       <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-stripe)" />
+     </mask>
    </defs>
    <path id="Move mouse over a country" class="sea" d="M 1.628 695.842 C 1.628 463.662 1.628 231.482 1.628 -0.698 C 342.628 -0.698 683.628 -0.698 1024.628 -0.698 C 1024.628 231.482 1024.628 463.662 1024.628 695.842 C 683.628 695.842 342.628 695.842 1.628 695.842 Z" style="fill: transparent;" bx:origin="0.5 0.5"/>
    <g id="map" style="visibility: visible; fill: none; stroke-width: 1.5;" transform="matrix(1, 0, 0, 1, 1.627975, -0.697704)">

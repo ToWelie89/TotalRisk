@@ -41,23 +41,13 @@ export function MainController($scope) {
     }
 
     function filterByOwner() {
-        gameEngine.map.regions.forEach(region => {
-            region.territories.forEach(territory => {
-                mapController.updateColorOfTerritory(territory, gameEngine.players.get(territory.owner).color);
-                mapController.updateTroopIndicator(territory, gameEngine.players.get(territory.owner).color);
-            });
-        });
         vm.filter = 'byOwner';
+        mapController.updateMap(gameEngine.map, vm.filter);
     }
 
     function filterByRegion() {
-        gameEngine.map.regions.forEach(region => {
-            region.territories.forEach(territory => {
-                mapController.updateColorOfTerritory(territory, region.color);
-                mapController.updateTroopIndicator(territory, region.color);
-            });
-        });
         vm.filter = 'byRegion';
+        mapController.updateMap(gameEngine.map, vm.filter);
     }
 
     function nextTurn() {
@@ -83,8 +73,13 @@ export function MainController($scope) {
     function clickCountry(evt) {
         let country = evt.target.getAttribute('country');
         gameEngine.handleCountryClick(country);
-        mapController.updateMap(gameEngine.map);
-        vm.troopsToDeploy = gameEngine.troopsToDeploy;
-        $scope.$apply();
+        if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            mapController.updateMap(gameEngine.map, vm.filter);
+            vm.troopsToDeploy = gameEngine.troopsToDeploy;
+            $scope.$apply();
+        } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
+            mapController.updateMap(gameEngine.map, vm.filter);
+            mapController.hightlightTerritory(country);
+        }
     }
 }

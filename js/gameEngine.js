@@ -82,6 +82,14 @@ export default class GameEngine {
                 territory.numberOfTroops++;
                 console.log(territory);
             }
+        } else if (this.turn.turnPhase === TURN_PHASES.ATTACK) {
+            let territory = getTerritoryByName(this.map, country);
+            if (this.selectedTerritory && territory.owner !== this.turn.player.name && territory.adjacentTerritories.includes(this.selectedTerritory.name)) {
+                // Attack other persons territory
+                console.log('ATTACK!!!');
+            } else {
+                this.selectedTerritory = territory;
+            }
         }
     }
 }
