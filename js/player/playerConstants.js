@@ -2,32 +2,38 @@ export const PLAYER_COLORS = {
     RED: {
         name: 'Red',
         mainColor: '#EF5C5C',
-        borderColor: '#CC3030'
+        borderColor: '#CC3030',
+        highlightColor: '#fe8c8c'
     },
     GREEN: {
         name: 'Green',
         mainColor: '#92F381',
-        borderColor: '#53E239'
+        borderColor: '#53E239',
+        highlightColor: '#caf6c2'
     },
     BLUE: {
         name: 'Blue',
         mainColor: '#3333ff',
-        borderColor: '#1a1a9c'
+        borderColor: '#1a1a9c',
+        highlightColor: '#7272fa'
     },
     PINK: {
         name: 'Pink',
         mainColor: '#ff99cc',
-        borderColor: '#ff6699'
+        borderColor: '#ff6699',
+        highlightColor: '#ffc9e4'
     },
     BLACK: {
         name: 'Black',
         mainColor: '#3c3c3c',
-        borderColor: '#202020'
+        borderColor: '#202020',
+        highlightColor: '#525252'
     },
     YELLOW: {
         name: 'Yellow',
         mainColor: '#ffff66',
-        borderColor: '#dbdb39'
+        borderColor: '#dbdb39',
+        highlightColor: '#ffffae'
     }
 }
 export function playerIterator(playerMap, turnPhases) {

@@ -1,10 +1,10 @@
 import { getTerritoryByName } from './mapHelpers';
+import { TURN_PHASES } from './../gameConstants';
 
 export default class MapController {
     constructor(players, map) {
         this.svg = document.getElementById('svgMap');
         this.doc = this.svg.ownerDocument;
-        this.hilite = this.doc.getElementById('hilite');
         this.players = players;
         this.map = map;
 
@@ -13,45 +13,47 @@ export default class MapController {
         this.updateMap(this.map);
     }
 
-    updateMap(map, filter = 'byOwner') {
+    updateMap(map, filter = 'byOwner', turn = undefined) {
         console.log('Update map');
         this.map = map;
-        if (filter === 'byOwner') {
-            this.map.regions.forEach(region => {
-                region.territories.forEach(territory => {
-                    this.updateColorOfTerritory(territory, this.players.get(territory.owner).color);
-                    this.updateTroopIndicator(territory, this.players.get(territory.owner).color);
-                });
+
+        this.map.regions.forEach(region => {
+            region.territories.forEach(territory => {
+                let color = (filter === 'byOwner') ? this.players.get(territory.owner).color : { name: region.name.toUpperCase() };
+                this.updateColorOfTerritory(territory, color);
+                this.updateTroopIndicator(territory, color);
+
+                this.svg.getElementById(territory.name).classList.remove('attackCursor');
+                this.svg.getElementById(territory.name).classList.remove('highlighted');
+                this.svg.getElementById(territory.name).classList.remove('addTroopCursor');
+
+                if (turn && turn.turnPhase === TURN_PHASES.DEPLOYMENT && turn.player.name === territory.owner) {
+                    this.svg.getElementById(territory.name).classList.add('addTroopCursor');
+                }
             });
-        } else if (filter === 'byRegion') {
-            this.map.regions.forEach(region => {
-                region.territories.forEach(territory => {
-                    this.updateColorOfTerritory(territory, region.color);
-                    this.updateTroopIndicator(territory, region.color);
-                });
-            });
-        }
+        });
     }
 
-    hightlightTerritory(target) {
+    hightlightTerritory(target, currentPlayerName) {
         let country = this.svg.getElementById(target);
         let territory = getTerritoryByName(this.map, country.getAttribute('id'));
+        country.classList.add('highlighted');
         console.log(territory);
 
-        country.setAttribute('stroke', 'white');
-        country.setAttribute('stroke-width', 5);
         territory.adjacentTerritories.forEach(territory => {
-            this.svg.getElementById(territory).setAttribute('stroke-width', 5);
-            this.svg.getElementById(territory).setAttribute('stroke', 'white');
+            if (currentPlayerName !== getTerritoryByName(this.map, territory).owner) {
+                this.svg.getElementById(territory).classList.add('attackCursor');
+                this.svg.getElementById(territory).classList.add('highlighted');
+            } else {
+                this.svg.getElementById(territory).classList.remove('attackCursor');
+            }
         });
     }
 
     updateColorOfTerritory(territory, color) {
         let country = this.svg.getElementById(territory.name);
         if (country) {
-            country.setAttribute('fill', color.mainColor);
-            country.setAttribute('stroke', color.borderColor);
-            country.setAttribute('stroke-width', 1);
+            country.setAttribute('country-color', color.name.toUpperCase());
         } else {
             console.error('Country '+ territory.name +' not found!');
         }
@@ -59,17 +61,10 @@ export default class MapController {
 
     updateTroopIndicator(territory, color) {
         let troopIndicatorEllipse = this.svg.querySelector('.troopCounter[for="' + territory.name + '"]');
-        if (troopIndicatorEllipse) {
-            troopIndicatorEllipse.setAttribute('fill', color.mainColor);
-            troopIndicatorEllipse.setAttribute('stroke', color.borderColor);
-        } else {
-            console.error('Troop indicator ellipse for '+ territory.name +' not found!');
-        }
+        troopIndicatorEllipse.setAttribute('country-color', color.name.toUpperCase());
 
         let troopIndicatorText = this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]');
         if (troopIndicatorText) {
-            troopIndicatorText.setAttribute('fill', 'black');
-            troopIndicatorText.setAttribute('stroke', 'black');
             troopIndicatorText.innerHTML = territory.numberOfTroops;
         } else {
             console.error('Troop indicator text for '+ territory.name +' not found!');
@@ -100,17 +95,12 @@ export default class MapController {
     }
 
     mouseoverSea(evt) {
-        var sea = evt.target;
-        hilite.setAttribute('d', 'm0 0');
         document.getElementById('currentTerritoryInfo').innerHTML = ' ';
     }
 
     mouseoverCountry(evt) {
         var country = evt.target;
-        var outline = country.getAttribute('d');
         let territory = getTerritoryByName(this.map, country.getAttribute('id'));
-        document.getElementById('currentTerritoryInfo').innerHTML = territory.name + ' | Owner: ' + territory.owner + ' | Troops: ' + territory.numberOfTroops;
-        hilite.setAttribute('d', outline);
-        hilite.setAttribute('country', country.id);
+        document.getElementById('currentTerritoryInfo').innerHTML = `${territory.name} | Owner: ${territory.owner} | Troops: ${territory.numberOfTroops}`;
     }
 }

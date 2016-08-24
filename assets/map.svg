@@ -2,6 +2,11 @@
  <svg id="svgMap" width="100%" height="100%" viewBox="0 8 1024 643" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
    <defs>
      <style id="bx-google-fonts">@import url(https://fonts.googleapis.com/css?family=Bigelow+Rules:400|Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic);</style>
+     <style>
+       .attackCursor {
+           cursor: url(../assets/cursors/attack.gif), auto;
+       }
+     </style>
      <pattern id="pattern-stripe"
        width="10" height="10"
        patternUnits="userSpaceOnUse"
@@ -159,7 +164,7 @@
        <text class="troopCounterText" for="Argentina" x="249.384" y="558.245" style="font-size: 11px; font-family: Roboto; word-spacing: 0px;">x</text>
      </g>
    </g>
-   <path id="hilite" style="fill: white; stroke-width: 8; stroke: black; opacity: 0.3;" bx:origin="Infinity -Infinity"/>
+   <path id="hilite" style="fill: white; stroke-width: 4; stroke: black; opacity: 0.3;" bx:origin="Infinity -Infinity"/>
    <path d="M 374.745 427.315 C 376.476 427.315 379.564 425.52 380.793 424.291 C 381.513 423.571 382.776 422.346 383.71 422.346" style="stroke: black; fill: none;" bx:origin="0.5 0.5"/>
    <path d="M 423.046 137.083 C 422.782 137.083 422.378 133.505 421.195 132.323 C 421.071 132.199 419.08 131.265 419.08 131.265" style="stroke: black; fill: none;" bx:origin="0.5 0.5"/>
    <path d="M 452.926 147.131 C 453.914 147.131 459.007 147.659 459.007 147.659 C 459.977 147.659 460.682 147.659 461.387 147.659" style="stroke: black; fill: none;" bx:origin="0.5 0.501"/>

@@ -32,26 +32,30 @@ export function MainController($scope) {
         vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
         mapController = new MapController(gameEngine.players, gameEngine.map);
-        document.getElementById('hilite').addEventListener('click', (e) => {
-            clickCountry(e);
+        document.querySelectorAll('.country').forEach(country => {
+            country.addEventListener('click', (e) => {
+                clickCountry(e);
+            });
         });
 
         vm.turn = gameEngine.turn;
         vm.filter = 'byOwner';
+        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
     }
 
     function filterByOwner() {
         vm.filter = 'byOwner';
-        mapController.updateMap(gameEngine.map, vm.filter);
+        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
     }
 
     function filterByRegion() {
         vm.filter = 'byRegion';
-        mapController.updateMap(gameEngine.map, vm.filter);
+        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
     }
 
     function nextTurn() {
         vm.turn = gameEngine.nextTurn();
+        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
         console.log(vm.turn);
     }
 
@@ -71,15 +75,15 @@ export function MainController($scope) {
     }
 
     function clickCountry(evt) {
-        let country = evt.target.getAttribute('country');
+        let country = evt.target.getAttribute('id');
         gameEngine.handleCountryClick(country);
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            mapController.updateMap(gameEngine.map, vm.filter);
+            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
             $scope.$apply();
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
-            mapController.updateMap(gameEngine.map, vm.filter);
-            mapController.hightlightTerritory(country);
+            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+            mapController.hightlightTerritory(country, vm.turn.player.name);
         }
     }
 }
