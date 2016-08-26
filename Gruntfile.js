@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html'],
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html', 'assets/map.svg'],
                 tasks: ['default'],
                 options: {
                     spawn: false,
