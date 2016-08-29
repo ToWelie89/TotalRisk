@@ -1,8 +1,9 @@
 import GameEngine from './../gameEngine';
 import MapController from './../map/mapController';
 import { GAME_PHASES, TURN_PHASES } from './../gameConstants';
+import { getTerritoryByName } from './../map/mapHelpers';
 
-export function MainController($scope) {
+export function MainController($scope, $rootScope, gameEngine) {
     var vm = this;
 
     // PUBLIC FUNCTIONS
@@ -19,11 +20,10 @@ export function MainController($scope) {
 
     vm.turn = {};
 
-    var gameEngine;
     var mapController;
 
     function init() {
-        gameEngine = new GameEngine();
+        console.log('Initialization of mainController');
     }
 
     function startGame(players) {
@@ -76,14 +76,27 @@ export function MainController($scope) {
 
     function clickCountry(evt) {
         let country = evt.target.getAttribute('id');
-        gameEngine.handleCountryClick(country);
+
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            gameEngine.addTroopToTerritory(country);
             mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
             $scope.$apply();
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
-            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-            mapController.hightlightTerritory(country, vm.turn.player.name);
+            let territory = getTerritoryByName(gameEngine.map, country);
+            if (gameEngine.selectedTerritory && territory.owner !== gameEngine.turn.player.name && territory.adjacentTerritories.includes(gameEngine.selectedTerritory.name)) {
+                let attack = {
+                    territoryAttacked: territory,
+                    attackFrom: gameEngine.selectedTerritory,
+                    attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
+                    defender: gameEngine.players.get(territory.owner)
+                };
+                $rootScope.$emit('engageAttackPhase', attack);
+            } else {
+                gameEngine.selectedTerritory = territory;
+                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+                mapController.hightlightTerritory(country, vm.turn.player.name);
+            }
         }
     }
 }

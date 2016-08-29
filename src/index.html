@@ -18,19 +18,32 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 </head>
 
-<!-- Attack mode modal -->
-<div id="attackModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
+<body ng-app="risk">
+    <!-- Attack mode modal -->
+    <div data-ng-controller="attackModalController as attack" data-ng-init="attack.init()">
+        <div id="attackModal" class="modal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Attacker
+                            </div>
+                            <div class="col-xs-6">
+                                Defender
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6" data-ng-bind="attack.attacker"></div>
+                            <div class="col-xs-6" data-ng-bind="attack.defender"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<body ng-app="risk">
     <header>
         <span id="sizeIndicator"></span>
         <div class="wrapper">
@@ -71,7 +84,7 @@
                         <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
                             Start
                         </button>
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#attackModal">Open Modal</button>
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#attackModal" data-backdrop="static">Open Modal</button>
                     </div>
                 </div>
             </div>

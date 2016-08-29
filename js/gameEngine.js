@@ -65,7 +65,7 @@ export default class GameEngine {
 
         let currentPlayerIndex = 0;
         let territories = this.map.getAllTerritoriesAsList();
-        shuffle(territories);
+        shuffle (territories);
 
         territories.forEach(territory => {
             currentPlayerIndex = ((totalNumberOfPlayers - 1) === currentPlayerIndex) ? 0 : (currentPlayerIndex + 1);
@@ -74,22 +74,12 @@ export default class GameEngine {
         });
     }
 
-    handleCountryClick(country) {
-        if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            let territory = getTerritoryByName(this.map, country);
-            if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
-                this.troopsToDeploy--;
-                territory.numberOfTroops++;
-                console.log(territory);
-            }
-        } else if (this.turn.turnPhase === TURN_PHASES.ATTACK) {
-            let territory = getTerritoryByName(this.map, country);
-            if (this.selectedTerritory && territory.owner !== this.turn.player.name && territory.adjacentTerritories.includes(this.selectedTerritory.name)) {
-                // Attack other persons territory
-                console.log('ATTACK!!!');
-            } else {
-                this.selectedTerritory = territory;
-            }
+    addTroopToTerritory(country) {
+        let territory = getTerritoryByName(this.map, country);
+        if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
+            this.troopsToDeploy--;
+            territory.numberOfTroops++;
+            console.log(territory);
         }
     }
 }
