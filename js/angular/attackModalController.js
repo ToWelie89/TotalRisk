@@ -19,6 +19,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             vm.attacker = data.attacker.name;
             vm.defender = data.defender.name;
             $scope.$apply();
+            $("#" + data.territoryAttacked.name).clone().appendTo("#mapModal");
             $("#attackModal").modal('toggle');
         });
     }
