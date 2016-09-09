@@ -19,7 +19,7 @@ export default class MapController {
 
         this.map.regions.forEach(region => {
             region.territories.forEach(territory => {
-                let color = (filter === 'byOwner') ? this.players.get(territory.owner).color : { name: region.name.toUpperCase() };
+                const color = (filter === 'byOwner') ? this.players.get(territory.owner).color : { name: region.name.toUpperCase() };
                 this.updateColorOfTerritory(territory, color);
                 this.updateTroopIndicator(territory, color);
 
@@ -55,34 +55,38 @@ export default class MapController {
         if (country) {
             country.setAttribute('country-color', color.name.toUpperCase());
         } else {
-            console.error('Country '+ territory.name +' not found!');
+            console.error(`Country ${territory.name} not found!`);
         }
     }
 
     updateTroopIndicator(territory, color) {
-        let troopIndicatorEllipse = this.svg.querySelector('.troopCounter[for="' + territory.name + '"]');
+        const troopIndicatorEllipse = this.svg.querySelector('.troopCounter[for="' + territory.name + '"]');
         troopIndicatorEllipse.setAttribute('country-color', color.name.toUpperCase());
 
         let troopIndicatorText = this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]');
         if (troopIndicatorText) {
             troopIndicatorText.innerHTML = territory.numberOfTroops;
         } else {
-            console.error('Troop indicator text for '+ territory.name +' not found!');
+            console.error(`Troop indicator text for ${territory.name} not found!`);
         }
     }
 
     initEvents() {
         let countries = this.svg.getElementsByClassName('country');
         for (let i = 0; i < countries.length; i++) {
-            countries[i].addEventListener('mouseover', (e) => { this.mouseoverCountry(e); });
+            countries[i].addEventListener('mouseover', (e) => {
+                this.mouseoverCountry(e);
+            });
         }
         let seas = this.svg.getElementsByClassName('sea');
         for (let i = 0; i < seas.length; i++) {
-            seas[i].addEventListener('mouseover', (e) => { this.mouseoverSea(e); });
+            seas[i].addEventListener('mouseover', (e) => {
+                this.mouseoverSea(e);
+            });
         }
     }
 
-    clearWholeMap () {
+    clearWholeMap() {
         let countries = this.svg.getElementsByClassName('country');
         for (let i = 0; i < countries.length; i++) {
             this.clearCountry(countries[i]);
@@ -90,8 +94,8 @@ export default class MapController {
     }
 
     clearCountry(country) {
-        country.setAttribute('fill', '#FFFFFF')
-        country.setAttribute('stroke', 'gainsboro')
+        country.setAttribute('fill', '#FFFFFF');
+        country.setAttribute('stroke', 'gainsboro');
     }
 
     mouseoverSea(evt) {

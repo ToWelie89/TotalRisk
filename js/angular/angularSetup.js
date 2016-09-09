@@ -1,13 +1,13 @@
-/*********************
+/*
 * IMPORTS
-*********************/
+*/
 
-import { MainController } from './mainController';
-import { GameSetupController } from './gameSetupController';
-import { AttackModalController } from './attackModalController';
+import {MainController} from './mainController';
+import {GameSetupController} from './gameSetupController';
+import {AttackModalController} from './attackModalController';
 import GameEngine from './../gameEngine';
 
-var app = angular.module('risk', []);
+const app = angular.module('risk', []);
 
 app.constant('gameEngine', new GameEngine());
 

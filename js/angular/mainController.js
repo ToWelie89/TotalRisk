@@ -1,7 +1,7 @@
 import GameEngine from './../gameEngine';
 import MapController from './../map/mapController';
-import { GAME_PHASES, TURN_PHASES } from './../gameConstants';
-import { getTerritoryByName } from './../map/mapHelpers';
+import {GAME_PHASES, TURN_PHASES} from './../gameConstants';
+import {getTerritoryByName} from './../map/mapHelpers';
 
 export function MainController($scope, $rootScope, gameEngine) {
     var vm = this;
@@ -65,9 +65,8 @@ export function MainController($scope, $rootScope, gameEngine) {
         }
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && gameEngine.troopsToDeploy > 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     function getCurrentPlayerColor() {

@@ -6,7 +6,7 @@ export default class WorldMap {
     constructor() {
         this.regions = new Map();
 
-        //this.shuffleMap(worldMap);
+        // this.shuffleMap(worldMap);
 
         worldMap.regions.forEach(region => this.initializeRegion(region));
         console.log('World map regions: ');
@@ -21,7 +21,7 @@ export default class WorldMap {
         let count = 0;
         this.regions.forEach(region => {
             region.territories.forEach(territory => {
-                count++
+                count++;
             });
         });
         return count;
@@ -59,7 +59,7 @@ export default class WorldMap {
         return regionBonuses;
     }
 
-    allTerritoriesOwnedByPlayer (owner, territories) {
+    allTerritoriesOwnedByPlayer(owner, territories) {
         let returnValue = true;
         territories.forEach(territory => {
             if (territory.owner !== owner) {

@@ -1,12 +1,11 @@
 import Player from './../player/player';
-import { PLAYER_COLORS } from './../player/playerConstants';
-import { CONSTANTS } from './../gameConstants';
+import {PLAYER_COLORS} from './../player/playerConstants';
+import {CONSTANTS} from './../gameConstants';
 
 export function GameSetupController($scope) {
-    var vm = this;
+    let vm = this;
 
     // PUBLIC FIELDS
-    vm.players;
     vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
     vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
 
@@ -20,7 +19,7 @@ export function GameSetupController($scope) {
 
     function init() {
         console.log('Initialize game setup controller');
-        vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x,i) => new Player(`Player ${i+1}`, Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
+        vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(`Player ${i + 1}`, Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
         console.log(vm.players);
     }
 
@@ -67,7 +66,7 @@ export function GameSetupController($scope) {
     }
 
     function hasDuplicates() {
-        let names = Array.from(vm.players, x => x.name.toLowerCase());
+        const names = Array.from(vm.players, x => x.name.toLowerCase());
         return (new Set(names)).size !== names.length;
     }
 

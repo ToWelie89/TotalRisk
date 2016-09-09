@@ -1,6 +1,6 @@
-/*********************
+/*
  * IMPORTS
- *********************/
+ */
 
 import WorldMap from './map/worldMap';
 import { getTerritoryByName } from './map/mapHelpers';
@@ -29,7 +29,7 @@ export default class GameEngine {
             this.players.set(player.name, player);
         });
 
-        this.iterator = playerIterator(Array.from(this.players), [ TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT ]);
+        this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
         this.turn = this.iterator.getCurrent();
 
         this.deploymentHandler = new DeploymentHandler();
@@ -65,7 +65,7 @@ export default class GameEngine {
 
         let currentPlayerIndex = 0;
         let territories = this.map.getAllTerritoriesAsList();
-        shuffle (territories);
+        shuffle(territories);
 
         territories.forEach(territory => {
             currentPlayerIndex = ((totalNumberOfPlayers - 1) === currentPlayerIndex) ? 0 : (currentPlayerIndex + 1);

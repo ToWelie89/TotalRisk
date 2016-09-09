@@ -1,14 +1,14 @@
 export let worldMap = {
-    "regions": [{
-        "name": "Africa",
-        "bonusTroops": 3,
-        "color": {
-            "mainColor": "#564848",
-            "borderColor": "#362d2d",
+    regions: [{
+        name: "Africa",
+        bonusTroops: 3,
+        color: {
+            mainColor: "#564848",
+            borderColor: "#362d2d"
         },
-        "territories": [{
-            "name": "North Africa",
-            "adjacentTerritories": [
+        territories: [{
+            name: "North Africa",
+            adjacentTerritories: [
                 "Western Europe",
                 "Southern Europe",
                 "Egypt",
@@ -17,16 +17,16 @@ export let worldMap = {
                 "Brazil"
             ]
         }, {
-            "name": "Egypt",
-            "adjacentTerritories": [
+            name: "Egypt",
+            adjacentTerritories: [
                 "Southern Europe",
                 "East Africa",
                 "North Africa",
                 "Middle East"
             ]
         }, {
-            "name": "East Africa",
-            "adjacentTerritories": [
+            name: "East Africa",
+            adjacentTerritories: [
                 "Madagascar",
                 "Congo",
                 "North Africa",
@@ -34,103 +34,103 @@ export let worldMap = {
                 "Middle East"
             ]
         }, {
-            "name": "Congo",
-            "adjacentTerritories": [
+            name: "Congo",
+            adjacentTerritories: [
                 "South Africa",
                 "East Africa",
                 "North Africa"
             ]
         }, {
-            "name": "South Africa",
-            "adjacentTerritories": [
+            name: "South Africa",
+            adjacentTerritories: [
                 "Madagascar",
                 "East Africa",
                 "Congo"
             ]
         }, {
-            "name": "Madagascar",
-            "adjacentTerritories": [
+            name: "Madagascar",
+            adjacentTerritories: [
                 "South Africa",
                 "East Africa"
             ]
         }]
     }, {
-        "name": "South America",
-        "bonusTroops": 2,
-        "color": {
-            "mainColor": "#dd4444",
-            "borderColor": "#b22525",
+        name: "South America",
+        bonusTroops: 2,
+        color: {
+            mainColor: "#dd4444",
+            borderColor: "#b22525"
         },
-        "territories": [{
-            "name": "Venezuela",
-            "adjacentTerritories": [
+        territories: [{
+            name: "Venezuela",
+            adjacentTerritories: [
                 "Central America",
                 "Brazil",
                 "Peru"
             ]
         }, {
-            "name": "Brazil",
-            "adjacentTerritories": [
+            name: "Brazil",
+            adjacentTerritories: [
                 "Venezuela",
                 "Peru",
                 "Argentina",
                 "North Africa"
             ]
         }, {
-            "name": "Peru",
-            "adjacentTerritories": [
+            name: "Peru",
+            adjacentTerritories: [
                 "Venezuela",
                 "Brazil",
                 "Argentina"
             ]
         }, {
-            "name": "Argentina",
-            "adjacentTerritories": [
+            name: "Argentina",
+            adjacentTerritories: [
                 "Peru",
                 "Brazil"
             ]
         }]
     }, {
-        "name": "Europe",
-        "bonusTroops": 5,
-        "color": {
-            "mainColor": "#4acd61",
-            "borderColor": "#35a749",
+        name: "Europe",
+        bonusTroops: 5,
+        color: {
+            mainColor: "#4acd61",
+            borderColor: "#35a749"
         },
-        "territories": [{
-            "name": "Iceland",
-            "adjacentTerritories": [
+        territories: [{
+            name: "Iceland",
+            adjacentTerritories: [
                 "Greenland",
                 "Great Britain",
                 "Scandinavia"
             ]
         }, {
-            "name": "Great Britain",
-            "adjacentTerritories": [
+            name: "Great Britain",
+            adjacentTerritories: [
                 "Western Europe",
                 "Northern Europe",
                 "Scandinavia",
                 "Iceland"
             ]
         }, {
-            "name": "Scandinavia",
-            "adjacentTerritories": [
+            name: "Scandinavia",
+            adjacentTerritories: [
                 "Iceland",
                 "Northern Europe",
                 "Great Britain",
                 "Ukraine"
             ]
         }, {
-            "name": "Western Europe",
-            "adjacentTerritories": [
+            name: "Western Europe",
+            adjacentTerritories: [
                 "North Africa",
                 "Southern Europe",
                 "Northern Europe",
                 "Great Britain"
             ]
         }, {
-            "name": "Northern Europe",
-            "adjacentTerritories": [
+            name: "Northern Europe",
+            adjacentTerritories: [
                 "Western Europe",
                 "Southern Europe",
                 "Great Britain",
@@ -138,8 +138,8 @@ export let worldMap = {
                 "Scandinavia"
             ]
         }, {
-            "name": "Southern Europe",
-            "adjacentTerritories": [
+            name: "Southern Europe",
+            adjacentTerritories: [
                 "Egypt",
                 "North Africa",
                 "Ukraine",
@@ -148,8 +148,8 @@ export let worldMap = {
                 "Middle East"
             ]
         }, {
-            "name": "Ukraine",
-            "adjacentTerritories": [
+            name: "Ukraine",
+            adjacentTerritories: [
                 "Scandinavia",
                 "Northern Europe",
                 "Southern Europe",
@@ -159,46 +159,46 @@ export let worldMap = {
             ]
         }]
     }, {
-        "name": "North America",
-        "bonusTroops": 5,
-        "color": {
-            "mainColor": "#4770ea",
-            "borderColor": "#234abe",
+        name: "North America",
+        bonusTroops: 5,
+        color: {
+            mainColor: "#4770ea",
+            borderColor: "#234abe"
         },
-        "territories": [{
-            "name": "Greenland",
-            "adjacentTerritories": [
+        territories: [{
+            name: "Greenland",
+            adjacentTerritories: [
                 "Iceland",
                 "Northwest Territory",
                 "Ontario",
                 "Quebec"
             ]
         }, {
-            "name": "Northwest Territory",
-            "adjacentTerritories": [
+            name: "Northwest Territory",
+            adjacentTerritories: [
                 "Greenland",
                 "Ontario",
                 "Alaska",
                 "Alberta"
             ]
         }, {
-            "name": "Alaska",
-            "adjacentTerritories": [
+            name: "Alaska",
+            adjacentTerritories: [
                 "Kamchatka",
                 "Northwest Territory",
                 "Alberta"
             ]
         }, {
-            "name": "Alberta",
-            "adjacentTerritories": [
+            name: "Alberta",
+            adjacentTerritories: [
                 "Alaska",
                 "Northwest Territory",
                 "Ontario",
                 "Western United States"
             ]
         }, {
-            "name": "Ontario",
-            "adjacentTerritories": [
+            name: "Ontario",
+            adjacentTerritories: [
                 "Greenland",
                 "Northwest Territory",
                 "Alberta",
@@ -207,24 +207,24 @@ export let worldMap = {
                 "Quebec"
             ]
         }, {
-            "name": "Quebec",
-            "adjacentTerritories": [
+            name: "Quebec",
+            adjacentTerritories: [
                 "Greenland",
                 "Northwest Territory",
                 "Ontario",
                 "Eastern United States"
             ]
         }, {
-            "name": "Western United States",
-            "adjacentTerritories": [
+            name: "Western United States",
+            adjacentTerritories: [
                 "Alberta",
                 "Ontario",
                 "Central America",
                 "Eastern United States"
             ]
         }, {
-            "name": "Eastern United States",
-            "adjacentTerritories": [
+            name: "Eastern United States",
+            adjacentTerritories: [
                 "Quebec",
                 "Ontario",
                 "Alberta",
@@ -232,23 +232,23 @@ export let worldMap = {
                 "Central America"
             ]
         }, {
-            "name": "Central America",
-            "adjacentTerritories": [
+            name: "Central America",
+            adjacentTerritories: [
                 "Western United States",
                 "Eastern United States",
                 "Venezuela"
             ]
         }]
     }, {
-        "name": "Asia",
-        "bonusTroops": 7,
-        "color": {
-            "mainColor": "#eaea67",
-            "borderColor": "#bbbb42",
+        name: "Asia",
+        bonusTroops: 7,
+        color: {
+            mainColor: "#eaea67",
+            borderColor: "#bbbb42"
         },
-        "territories": [{
-            "name": "Afghanistan",
-            "adjacentTerritories": [
+        territories: [{
+            name: "Afghanistan",
+            adjacentTerritories: [
                 "Ural",
                 "Ukraine",
                 "China",
@@ -256,8 +256,8 @@ export let worldMap = {
                 "Middle East"
             ]
         }, {
-            "name": "China",
-            "adjacentTerritories": [
+            name: "China",
+            adjacentTerritories: [
                 "Mongolia",
                 "Siberia",
                 "Ural",
@@ -266,30 +266,30 @@ export let worldMap = {
                 "Siam"
             ]
         }, {
-            "name": "India",
-            "adjacentTerritories": [
+            name: "India",
+            adjacentTerritories: [
                 "Middle East",
                 "Afghanistan",
                 "China",
                 "Siam"
             ]
         }, {
-            "name": "Irkutsk",
-            "adjacentTerritories": [
+            name: "Irkutsk",
+            adjacentTerritories: [
                 "Kamchatka",
                 "Mongolia",
                 "Siberia",
                 "Yakutsk"
             ]
         }, {
-            "name": "Japan",
-            "adjacentTerritories": [
+            name: "Japan",
+            adjacentTerritories: [
                 "Kamchatka",
                 "Mongolia"
             ]
         }, {
-            "name": "Kamchatka",
-            "adjacentTerritories": [
+            name: "Kamchatka",
+            adjacentTerritories: [
                 "Alaska",
                 "Yakutsk",
                 "Irkutsk",
@@ -297,8 +297,8 @@ export let worldMap = {
                 "Japan"
             ]
         }, {
-            "name": "Middle East",
-            "adjacentTerritories": [
+            name: "Middle East",
+            adjacentTerritories: [
                 "Egypt",
                 "East Africa",
                 "Southern Europe",
@@ -307,8 +307,8 @@ export let worldMap = {
                 "India"
             ]
         }, {
-            "name": "Mongolia",
-            "adjacentTerritories": [
+            name: "Mongolia",
+            adjacentTerritories: [
                 "Japan",
                 "China",
                 "Siberia",
@@ -316,15 +316,15 @@ export let worldMap = {
                 "Kamchatka"
             ]
         }, {
-            "name": "Siam",
-            "adjacentTerritories": [
+            name: "Siam",
+            adjacentTerritories: [
                 "China",
                 "India",
                 "Indonesia"
             ]
         }, {
-            "name": "Siberia",
-            "adjacentTerritories": [
+            name: "Siberia",
+            adjacentTerritories: [
                 "Ural",
                 "China",
                 "Mongolia",
@@ -332,55 +332,55 @@ export let worldMap = {
                 "Yakutsk"
             ]
         }, {
-            "name": "Ural",
-            "adjacentTerritories": [
+            name: "Ural",
+            adjacentTerritories: [
                 "Ukraine",
                 "Afghanistan",
                 "China",
                 "Siberia"
             ]
         }, {
-            "name": "Yakutsk",
-            "adjacentTerritories": [
+            name: "Yakutsk",
+            adjacentTerritories: [
                 "Siberia",
                 "Irkutsk",
                 "Kamchatka"
             ]
         }]
     }, {
-        "name": "Australia",
-        "bonusTroops": 2,
-        "color": {
-            "mainColor": "#a55eec",
-            "borderColor": "#8442c6",
+        name: "Australia",
+        bonusTroops: 2,
+        color: {
+            mainColor: "#a55eec",
+            borderColor: "#8442c6"
         },
-        "territories": [{
-            "name": "Eastern Australia",
-            "adjacentTerritories": [
+        territories: [{
+            name: "Eastern Australia",
+            adjacentTerritories: [
                 "Western Australia",
                 "New Guinea"
             ]
         }, {
-            "name": "Indonesia",
-            "adjacentTerritories": [
+            name: "Indonesia",
+            adjacentTerritories: [
                 "Siam",
                 "New Guinea",
                 "Western Australia"
             ]
         }, {
-            "name": "New Guinea",
-            "adjacentTerritories": [
+            name: "New Guinea",
+            adjacentTerritories: [
                 "Eastern Australia",
                 "Western Australia",
                 "Indonesia"
             ]
         }, {
-            "name": "Western Australia",
-            "adjacentTerritories": [
+            name: "Western Australia",
+            adjacentTerritories: [
                 "Eastern Australia",
                 "New Guinea",
                 "Indonesia"
             ]
         }]
     }]
-}
+};

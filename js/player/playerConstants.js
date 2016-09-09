@@ -35,7 +35,7 @@ export const PLAYER_COLORS = {
         borderColor: '#dbdb39',
         highlightColor: '#ffffae'
     }
-}
+};
 export function playerIterator(playerMap, turnPhases) {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;
@@ -53,24 +53,23 @@ export function playerIterator(playerMap, turnPhases) {
                     done: false,
                     newPlayer: newPlayer
                 };
-            } else {
-                currentTurnPhaseIndex = 0;
-                let turn = turnPhases[currentTurnPhaseIndex];
-                let player = playerMap[currentPlayerIndex];
-                newPlayer = true;
-
-                if ((currentPlayerIndex + 1) < (playerMap.length)) {
-                    currentPlayerIndex++;
-                } else {
-                    currentPlayerIndex = 0;
-                }
-                return {
-                    player: player[1],
-                    turnPhase: turn,
-                    done: false,
-                    newPlayer: newPlayer
-                };
             }
+            currentTurnPhaseIndex = 0;
+            let turn = turnPhases[currentTurnPhaseIndex];
+            let player = playerMap[currentPlayerIndex];
+            newPlayer = true;
+
+            if ((currentPlayerIndex + 1) < (playerMap.length)) {
+                currentPlayerIndex++;
+            } else {
+                currentPlayerIndex = 0;
+            }
+            return {
+                player: player[1],
+                turnPhase: turn,
+                done: false,
+                newPlayer: newPlayer
+            };
         },
         getCurrent: function() {
             return {
