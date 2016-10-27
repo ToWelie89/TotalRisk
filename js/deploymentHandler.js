@@ -11,6 +11,7 @@ export default class DeploymentHandler {
         let numberOfTerritories = map.getNumberOfTerritoriesByOwner(currentPlayer.name);
         console.log(`${numberOfTerritories} territories owned by ${currentPlayer.name}`);
         numberOfReinforcements += Math.floor(numberOfTerritories / 3);
+        numberOfReinforcements = numberOfReinforcements < 3 ? 3 : numberOfReinforcements;
 
         let regionBonuses = map.calculateRegionBonusesForPlayer(currentPlayer.name);
         console.log('Region bonuses: ');

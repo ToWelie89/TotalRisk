@@ -9,12 +9,15 @@ body {
     font-size: 16px;
     padding: 0;
     margin: 0;
-    background: #E4E4E4;
+    background: @gameBoardBackground;
 }
 
 a {
     color: #03A9F4;
     text-decoration: none;
+    &:focus {
+        underline: none !important;
+    }
 }
 
 a:hover {
@@ -38,20 +41,79 @@ button {
     border: 2px solid transparent;
 }
 
-.btn-default {
-    &.active, &:focus {
-        border-width: 2px;
+header {
+    background-color: #4e4e4e;
+    padding: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35),0 1px 30px rgba(0, 0, 0, 0.33);
+    position: relative;
+    .createdBy {
+        font-size: 12px;
+        color: black;
+        a {
+            color: white;
+        }
     }
-    &:hover, &:focus {
-        background-color: #e0e0e0 !important;
+
+    .wrapper {
+        position: relative;
+        z-index: 2;
+    }
+
+    .smoke {
+        width: 100%;
+        height: 100%;
+        background: url(/assets/img/smoke.png) no-repeat;
+        -webkit-animation: 60s FOG infinite;
+        background-size: 4000px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
     }
 }
 
-header {
-    background-color: #03A9F4;
-    padding: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    position: relative;
+#turnInfo {
+    svg {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+.pulsate {
+    -webkit-animation: pulsate 3s cubic-bezier(0.22, 0.61, 0.36, 1);
+    -webkit-animation-iteration-count: infinite;
+}
+@-webkit-keyframes pulsate {
+    0% {
+        text-shadow: none
+    }
+    50% {
+        text-shadow: 3px 3px 0 rgba(255, 0, 0, 0.5), -1px -1px 0 rgba(255, 0, 0, 0.5), 1px -1px 0 rgba(255, 0, 0, 0.5), -1px 1px 0 rgba(255, 0, 0, 0.5), 1px 1px 0 rgba(255, 0, 0, 0.5);
+    }
+    100% {
+        text-shadow: none;
+    }
+}
+
+@keyframes FOG {
+        0% {background-position:left;}
+        30% {opacity:.5;}
+        80% {opacity: .8;}
+        100%{background-position:right; opacity:1;}
+    }
+
+@-moz-keyframes FOG {
+   0% {background-position:left;}
+    30% {opacity:.5;}
+    80% {opacity: .8;}
+    100%{background-position:right; opacity:1;}
+}
+
+@-webkit-keyframes FOG {
+    0% {background-position:left;}
+    30% {opacity:.5;}
+    80% {opacity: .8;}
+    100%{background-position:right; opacity:1;}
 }
 
 .wrapper {
@@ -61,16 +123,17 @@ header {
 
 .wrapper > h1 {
     font-weight: 300;
-    font-size: 42px;
+    font-size: 52px;
     margin: 0;
     color: #FFFFFF;
-    font-family: 'Finger Paint', cursive;
+    font-family: 'ScorchedEarth';
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.72);
 }
 
 .mainWrapper {
     width: 100%;
     max-width: 100%;
-    background: #98D6F7;
+    background: @gameBoardBackground;
 }
 
 .container {
@@ -79,7 +142,7 @@ header {
 
 .mainContent {
     padding: 25px;
-    background: #98D6F7;
+    background: @gameBoardBackground;
     // box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
 }
 

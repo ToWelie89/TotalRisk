@@ -1,4 +1,4 @@
-BabelWebpackECMA6Template
+ECMA6Risk
 ==========
 
 ## Introduction

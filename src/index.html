@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="shortcut icon" href="assets/img/icon.ico">
     <title>ECMA6 Risk</title>
     <script src='js/libs/responsivevoice.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
@@ -27,8 +28,12 @@
     <header>
         <span id="sizeIndicator"></span>
         <div class="wrapper">
-            <h1>ECMA6 Risk</h1>
+            <h1 class="pulsate">ECMA6 Risk</h1>
+            <div class="createdBy">
+                ECMA6 Risk web application game made by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+            </div>
         </div>
+        <div class="smoke"></div>
     </header>
     <div class="wrapper mainWrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
@@ -69,23 +74,28 @@
             </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME">
                 <div class="row">
-                    <div id="filters" class="paddingBottom--double col-xs-6" style="padding-right:0px;">
-                        <button type="button" class="btn btn-md btn-default" id="showByOwner" data-ng-click="main.filterByOwner()" data-ng-class="{'active': main.filter == 'byOwner'}">
-                            Color by owner
-                        </button>
-                        <button type="button" class="btn btn-md btn-default" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
-                            Color by region
-                        </button>
+                    <div id="filters" class="paddingBottom--double col-xs-4" style="padding-right:0px;">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-md btn-info" id="showByOwner" data-ng-click="main.filterByOwner()" data-ng-class="{'active': main.filter == 'byOwner'}">
+                                Color by owner
+                            </button>
+                            <button type="button" class="btn btn-md btn-info" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
+                                Color by region
+                            </button>
+                        </div>
                     </div>
-                    <div id="turnInfo" class="col-xs-6" style="padding-left:0px;text-align: right;">
+                    <div class="col-xs-4 textCenter" style="padding-left:0px;">
+                        <div class="text-shadow" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
+                            <strong><span data-ng-bind="main.turn.player.name"></span></strong>
+                        </div>
+                    </div>
+                    <div class="col-xs-4" id="turnInfo">
                         <div class="row">
-                            <div class="col-xs-4 text-shadow" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
-                                <strong><span data-ng-bind="main.turn.player.name"></span></strong>
-                            </div>
-                            <div class="col-xs-6" style="line-height: 30px;">
-                                <span data-ng-show="main.turn.turnPhase == 0">
-                                    Deployment (Troops left: <span data-ng-bind="main.troopsToDeploy"></span>)
-                                </span>
+                            <div class="col-xs-8" style="line-height: 40px;">
+                                <div data-ng-show="main.turn.turnPhase == 0" class="troop_{{ main.turn.player.color.name }}">
+                                    <div class="floatLeft">Deploy <span data-ng-bind="main.troopsToDeploy"></span></div>
+                                    <div class="floatLeft">@@troopSvg</div>
+                                </div>
                                 <span data-ng-show="main.turn.turnPhase == 1">
                                     Attack
                                 </span>
@@ -93,7 +103,7 @@
                                     Movement
                                 </span>
                             </div>
-                            <div class="col-xs-2" style="line-height: 30px;">
+                            <div class="col-xs-4" style="line-height: 30px;">
                                 <button type="button" class="btn btn-md btn-success" id="showByOwner" data-ng-click="main.nextTurn()" data-ng-disabled="main.checkIfNextIsDisabled()">
                                     NEXT
                                 </button>
@@ -113,12 +123,5 @@
             </div>
         </div>
     </div>
-    <footer>
-        <div class="container" style="padding: 0;">
-            <div class="wrapper">
-                ECMA6 Risk web application game made by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>

@@ -61,6 +61,9 @@ module.exports = function(grunt) {
                     patterns: [{
                         match: 'mapSvg',
                         replacement: '<%= grunt.file.read("assets/map.svg") %>'
+                    }, {
+                        match: 'troopSvg',
+                        replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
                     }]
                 },
                 files: [{
