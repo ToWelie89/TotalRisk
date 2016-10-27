@@ -5,6 +5,7 @@
     <title>ECMA6 Risk</title>
     <script src='js/libs/responsivevoice.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
     <script src="build/app.bundle.js"></script>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -12,6 +13,7 @@
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="node_modules/angularjs-slider/dist/rzslider.css">
     <link href="build/default.css" rel="stylesheet" type="text/css">
 
     <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
@@ -20,35 +22,7 @@
 
 <body ng-app="risk">
     <!-- Attack mode modal -->
-    <div data-ng-controller="attackModalController as attack" data-ng-init="attack.init()">
-        <div id="attackModal" class="modal" role="dialog" data-backdrop="static">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row">
-                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 643 100" id="modalSvg">
-                                <g id="mapModal" style="visibility: visible; fill: none; stroke-width: 1.5;" transform="matrix(1, 0, 0, 1, 1.627975, -0.697704)">
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                Attacker
-                            </div>
-                            <div class="col-xs-6">
-                                Defender
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6" data-ng-bind="attack.attacker"></div>
-                            <div class="col-xs-6" data-ng-bind="attack.defender"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div data-ng-include="'attackModal.html'"></div>
 
     <header>
         <span id="sizeIndicator"></span>
@@ -56,7 +30,7 @@
             <h1>ECMA6 Risk</h1>
         </div>
     </header>
-    <div class="wrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
+    <div class="wrapper mainWrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP">
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
@@ -85,12 +59,11 @@
                 <div class="row marginTop">
                     <div class="col-xs-12 textCenter">
                         <button type="button" class="btn btn-lg btn-primary" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
-                            Add new player
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
                         <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
                             Start
                         </button>
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#attackModal" data-backdrop="static">Open Modal</button>
                     </div>
                 </div>
             </div>

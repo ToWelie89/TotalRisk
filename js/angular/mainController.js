@@ -3,7 +3,7 @@ import MapController from './../map/mapController';
 import {GAME_PHASES, TURN_PHASES} from './../gameConstants';
 import {getTerritoryByName} from './../map/mapHelpers';
 
-export function MainController($scope, $rootScope, gameEngine) {
+export function MainController($scope, $rootScope, $log, gameEngine) {
     var vm = this;
 
     // PUBLIC FUNCTIONS
@@ -23,7 +23,28 @@ export function MainController($scope, $rootScope, gameEngine) {
     var mapController;
 
     function init() {
+        setupEvents();
         console.log('Initialization of mainController');
+    }
+
+    function setupEvents() {
+        $rootScope.$on('battleIsOver', function(event, data) {
+            $log.debug('Battle is over ', data);
+            // update map in gameEngine by changing owner and numberOfTroops
+            let territoryAttacking = getTerritoryByName(gameEngine.map, data.attackFrom.name);
+
+            territoryAttacking.owner = data.attackFrom.owner;
+            territoryAttacking.numberOfTroops = data.attackFrom.numberOfTroops === 0 ? 1 : data.attackFrom.numberOfTroops;
+
+            let territoryAttacked = getTerritoryByName(gameEngine.map, data.attackTo.name);
+
+            territoryAttacked.owner = data.attackTo.owner;
+            territoryAttacked.numberOfTroops = data.attackTo.numberOfTroops;
+
+            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+
+            checkIfPlayerWonTheGame();
+        });
     }
 
     function startGame(players) {
@@ -43,6 +64,10 @@ export function MainController($scope, $rootScope, gameEngine) {
         mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
     }
 
+    function checkIfPlayerWonTheGame() {
+        // to do
+    }
+
     function filterByOwner() {
         vm.filter = 'byOwner';
         mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
@@ -56,6 +81,9 @@ export function MainController($scope, $rootScope, gameEngine) {
     function nextTurn() {
         vm.turn = gameEngine.nextTurn();
         mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+        if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            vm.troopsToDeploy = gameEngine.troopsToDeploy;
+        }
         console.log(vm.turn);
     }
 
@@ -83,7 +111,7 @@ export function MainController($scope, $rootScope, gameEngine) {
             $scope.$apply();
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
             let territory = getTerritoryByName(gameEngine.map, country);
-            if (gameEngine.selectedTerritory && territory.owner !== gameEngine.turn.player.name && territory.adjacentTerritories.includes(gameEngine.selectedTerritory.name)) {
+            if (gameEngine.selectedTerritory && territory.owner !== gameEngine.turn.player.name && territory.adjacentTerritories.includes(gameEngine.selectedTerritory.name) && gameEngine.selectedTerritory.numberOfTroops > 1) {
                 let attack = {
                     territoryAttacked: territory,
                     attackFrom: gameEngine.selectedTerritory,

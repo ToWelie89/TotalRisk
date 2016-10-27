@@ -41,7 +41,7 @@ export function GameSetupController($scope) {
             }
         });
         if (colorToUse) {
-            vm.players.push(new Player('', PLAYER_COLORS[colorToUse]));
+            vm.players.push(new Player(`Player ${vm.players.length + 1}`, PLAYER_COLORS[colorToUse]));
         }
     }
 

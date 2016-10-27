@@ -67,6 +67,24 @@ module.exports = function(grunt) {
                     src: ['src/index.html'],
                     dest: 'index.html'
                 }]
+            },
+            inlineModalSvgs: {
+                options: {
+                    patterns: [{
+                        match: 'cannonSvg',
+                        replacement: '<%= grunt.file.read("assets/troopIcons/cannon.svg") %>'
+                    }, {
+                        match: 'horseSvg',
+                        replacement: '<%= grunt.file.read("assets/troopIcons/horse.svg") %>'
+                    }, {
+                        match: 'troopSvg',
+                        replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
+                    }]
+                },
+                files: [{
+                    src: ['src/attackModal.html'],
+                    dest: 'attackModal.html'
+                }]
             }
         }
     });
@@ -88,7 +106,8 @@ module.exports = function(grunt) {
         'shell:webpack',
         'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
-        'replace',
+        'replace:inlineModalSvgs',
+        'replace:inlineSvg',
         'notify'
     ]);
 };

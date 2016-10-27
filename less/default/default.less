@@ -25,6 +25,12 @@ a:hover {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.68);
 }
 
+.rz-pointer.rz-pointer-min {
+    &:focus {
+        outline: none;
+    }
+}
+
 button {
     outline: none !important;
     outline-color: transparent !important;
@@ -61,6 +67,12 @@ header {
     font-family: 'Finger Paint', cursive;
 }
 
+.mainWrapper {
+    width: 100%;
+    max-width: 100%;
+    background: #98D6F7;
+}
+
 .container {
     padding: 25px;
 }
@@ -68,7 +80,7 @@ header {
 .mainContent {
     padding: 25px;
     background: #98D6F7;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+    // box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
 }
 
 .row {
@@ -82,6 +94,10 @@ footer {
     font-size: 12px;
     color: #8A8A8A;
     margin-bottom: 20px;
+}
+
+span.rz-bubble.rz-limit.rz-floor {
+    display: none;
 }
 
 #sizeIndicator:before{

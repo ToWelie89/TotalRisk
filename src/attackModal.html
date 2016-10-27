@@ -1,0 +1,189 @@
+<div data-ng-controller="attackModalController as attack" data-ng-init="attack.init()">
+    <div id="attackModal" class="modal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div class="row">
+                          <div class="col-xs-12 paddingBottom--double">
+                              <h1>~ Battle of {{ attack.defender.name }} ~</h1>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
+                                    <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
+                                        @@cannonSvg
+                                    </span>
+                                    <span data-ng-show="troop == 'horse'" class="troopIcon horse">
+                                        @@horseSvg
+                                    </span>
+                                    <span data-ng-show="troop == 'troop'" class="troopIcon troop">
+                                        @@troopSvg
+                                    </span>
+                                </span>
+                                <span data-ng-show="attack.attacker.numberOfTroops == 0">
+                                    <strong>DEAD!</strong>
+                                </span>
+                            </div>
+                            <div class="col-xs-6">
+                                <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}">
+                                    <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
+                                        @@cannonSvg
+                                    </span>
+                                    <span data-ng-show="troop == 'horse'" class="troopIcon horse">
+                                        @@horseSvg
+                                    </span>
+                                    <span data-ng-show="troop == 'troop'" class="troopIcon troop">
+                                        @@troopSvg
+                                    </span>
+                                </span>
+                                <span data-ng-show="attack.defender.numberOfTroops == 0">
+                                    <strong>DEAD!</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>Attacker</strong>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>Defender</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6" data-ng-bind="attack.attacker.owner"></div>
+                            <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
+                        </div>
+                        <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver">
+                            <button type="button" data-ng-click="attack.fight()" class="btn btn-info btn-lg">
+                                Fight!
+                            </button>
+                            <button type="button" data-ng-click="attack.retreat()" class="btn btn-info btn-lg">
+                                Retreat!
+                            </button>
+                        </div>
+                        <div class="row" data-ng-show="attack.attackerDice.length > 0 || attack.defenderDice.length > 0">
+                          <h2>Dice:</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6" data-ng-if="attack.attackerDice">
+                                <div data-ng-repeat="dice in attack.attackerDice track by $index" class="dice">
+                                    <div class="first-face" data-ng-show="dice == 1">
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="second-face" data-ng-show="dice == 2">
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="third-face" data-ng-show="dice == 3">
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="fourth-face" data-ng-show="dice == 4">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                    <div class="fifth-face" data-ng-show="dice == 5">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                    <div class="sixth-face" data-ng-show="dice == 6">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6" data-ng-if="attack.defenderDice">
+                                <div data-ng-repeat="dice in attack.defenderDice track by $index" class="dice">
+                                    <div class="first-face" data-ng-show="dice == 1">
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="second-face" data-ng-show="dice == 2">
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="third-face" data-ng-show="dice == 3">
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                        <span class="pip"></span>
+                                    </div>
+                                    <div class="fourth-face" data-ng-show="dice == 4">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                    <div class="fifth-face" data-ng-show="dice == 5">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                    <div class="sixth-face" data-ng-show="dice == 6 ">
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                        <div class="column">
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                            <span class="pip"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" data-ng-show="attack.showMoveTroops">
+                            <div class="col-xs-12">
+                                <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
+                            </div>
+                            <div class="col-xs-12 paddingTop">
+                                <button type="button" data-ng-click="attack.moveTroops()" class="btn btn-info btn-lg">
+                                    Move troops
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
