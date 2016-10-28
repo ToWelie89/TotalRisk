@@ -63,7 +63,7 @@ header {
         width: 100%;
         height: 100%;
         background: url(/assets/img/smoke.png) no-repeat;
-        -webkit-animation: 60s FOG infinite;
+        -webkit-animation: 60s fog infinite;
         background-size: 4000px;
         position: absolute;
         top: 0;
@@ -83,6 +83,7 @@ header {
     -webkit-animation: pulsate 3s cubic-bezier(0.22, 0.61, 0.36, 1);
     -webkit-animation-iteration-count: infinite;
 }
+
 @-webkit-keyframes pulsate {
     0% {
         text-shadow: none
@@ -95,21 +96,21 @@ header {
     }
 }
 
-@keyframes FOG {
+@keyframes fog {
         0% {background-position:left;}
         30% {opacity:.5;}
         80% {opacity: .8;}
         100%{background-position:right; opacity:1;}
     }
 
-@-moz-keyframes FOG {
+@-moz-keyframes fog {
    0% {background-position:left;}
     30% {opacity:.5;}
     80% {opacity: .8;}
     100%{background-position:right; opacity:1;}
 }
 
-@-webkit-keyframes FOG {
+@-webkit-keyframes fog {
     0% {background-position:left;}
     30% {opacity:.5;}
     80% {opacity: .8;}
@@ -143,7 +144,6 @@ header {
 .mainContent {
     padding: 25px;
     background: @gameBoardBackground;
-    // box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
 }
 
 .row {
@@ -171,35 +171,6 @@ span.rz-bubble.rz-limit.rz-floor {
     top: 0;
     left: 0;
     display: none;
-}
-
-#currentDeployment {
-    table {
-        tr {
-            &.black {
-                background: black;
-                color: white;
-            }
-            &.red {
-                background: red;
-                color: black;
-            }
-            td {
-                padding-left: 10px;
-                padding-right: 10px;
-                border: 1px solid gainsboro;
-            }
-        }
-        thead {
-            font-weight: 800;
-            tr {
-                td {
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                }
-            }
-        }
-    }
 }
 
 #currentTerritoryInfo {

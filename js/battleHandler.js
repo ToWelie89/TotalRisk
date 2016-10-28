@@ -25,13 +25,13 @@ export default class BattleHandler {
             defendDice,
             attacker,
             defender
-        }
+        };
     }
 
     sortDescending(array) {
         array.sort((a, b) => {
             return b - a;
-        })
+        });
     }
 
     getRandomDiceValue() {

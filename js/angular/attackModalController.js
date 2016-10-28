@@ -35,7 +35,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             vm.movementSliderOptions = {
                 floor: 1,
                 ceil: vm.attacker.numberOfTroops
-            }
+            };
             vm.showMoveTroops = true;
         }
         if (vm.attacker.numberOfTroops === 0) {
