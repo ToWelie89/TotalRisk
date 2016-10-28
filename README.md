@@ -37,3 +37,7 @@ Open http://127.0.0.1:8080 in your browser.
 + **less**: Compile less into a css-file
 + **replace**: This will inline the markup from the svg-file used for the map into the html markup
 + **notify**: Notify the user that the build is complete
+
+## Architecture
+
+![](https://raw.githubusercontent.com/ToWelie89/ECMA6Risk/master/docs/chart.png)
