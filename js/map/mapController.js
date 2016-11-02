@@ -24,6 +24,13 @@ export default class MapController {
                 this.updateTroopIndicator(territory, color);
 
                 this.svg.getElementById(territory.name).classList.remove('attackCursor');
+                this.svg.querySelector('.troopCounter[for="' + territory.name + '"]').classList.remove('attackCursor');
+                this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]').classList.remove('attackCursor');
+
+                this.svg.getElementById(territory.name).classList.remove('movementCursor');
+                this.svg.querySelector('.troopCounter[for="' + territory.name + '"]').classList.remove('movementCursor');
+                this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]').classList.remove('movementCursor');
+
                 this.svg.getElementById(territory.name).classList.remove('highlighted');
                 this.svg.getElementById(territory.name).classList.remove('addTroopCursor');
 
@@ -34,20 +41,41 @@ export default class MapController {
         });
     }
 
-    hightlightTerritory(target, currentPlayerName) {
+    hightlightTerritory(target, turn) {
         let country = this.svg.getElementById(target);
         let territory = getTerritoryByName(this.map, country.getAttribute('id'));
-        country.classList.add('highlighted');
         console.log(territory);
 
-        territory.adjacentTerritories.forEach(territory => {
-            if (currentPlayerName !== getTerritoryByName(this.map, territory).owner) {
-                this.svg.getElementById(territory).classList.add('attackCursor');
-                this.svg.getElementById(territory).classList.add('highlighted');
-            } else {
-                this.svg.getElementById(territory).classList.remove('attackCursor');
-            }
-        });
+        if (turn.turnPhase === TURN_PHASES.ATTACK) {
+            country.classList.add('highlighted');
+            territory.adjacentTerritories.forEach(territory => {
+                if (turn.player.name !== getTerritoryByName(this.map, territory).owner) {
+                    this.svg.getElementById(territory).classList.add('attackCursor');
+                    this.svg.querySelector('.troopCounter[for="' + territory + '"]').classList.add('attackCursor');
+                    this.svg.querySelector('.troopCounterText[for="' + territory + '"]').classList.add('attackCursor');
+                    this.svg.getElementById(territory).classList.add('highlighted');
+                } else {
+                    this.svg.getElementById(territory).classList.remove('attackCursor');
+                    this.svg.querySelector('.troopCounterText[for="' + territory + '"]').classList.remove('attackCursor');
+                    this.svg.querySelector('.troopCounter[for="' + territory + '"]').classList.remove('attackCursor');
+                }
+            });
+        } else if (turn.turnPhase === TURN_PHASES.MOVEMENT) {
+            this.map.regions.forEach(region => {
+                region.territories.forEach(currentTerritory => {
+                    if (currentTerritory.owner === turn.player.name && currentTerritory.name !== territory.name) {
+                        this.svg.getElementById(currentTerritory.name).classList.add('movementCursor');
+                        this.svg.querySelector('.troopCounter[for="' + currentTerritory.name + '"]').classList.add('movementCursor');
+                        this.svg.querySelector('.troopCounterText[for="' + currentTerritory.name + '"]').classList.add('movementCursor');
+                        this.svg.getElementById(currentTerritory.name).classList.add('highlighted');
+                    } else {
+                        this.svg.getElementById(currentTerritory.name).classList.remove('movementCursor');
+                        this.svg.querySelector('.troopCounter[for="' + currentTerritory.name + '"]').classList.remove('movementCursor');
+                        this.svg.querySelector('.troopCounterText[for="' + currentTerritory.name + '"]').classList.remove('movementCursor');
+                    }
+                });
+            });
+        }
     }
 
     updateColorOfTerritory(territory, color) {

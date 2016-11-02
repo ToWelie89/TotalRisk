@@ -103,6 +103,7 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
 
     function clickCountry(evt) {
         let country = evt.target.getAttribute('id');
+        let clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             gameEngine.addTroopToTerritory(country);
@@ -110,19 +111,36 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
             $scope.$apply();
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
-            let territory = getTerritoryByName(gameEngine.map, country);
-            if (gameEngine.selectedTerritory && territory.owner !== gameEngine.turn.player.name && territory.adjacentTerritories.includes(gameEngine.selectedTerritory.name) && gameEngine.selectedTerritory.numberOfTroops > 1) {
+            if (gameEngine.selectedTerritory &&
+                clickedTerritory.owner !== gameEngine.turn.player.name &&
+                clickedTerritory.adjacentTerritories.includes(gameEngine.selectedTerritory.name) &&
+                gameEngine.selectedTerritory.numberOfTroops > 1) {
                 let attack = {
-                    territoryAttacked: territory,
+                    territoryAttacked: clickedTerritory,
                     attackFrom: gameEngine.selectedTerritory,
                     attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
-                    defender: gameEngine.players.get(territory.owner)
+                    defender: gameEngine.players.get(clickedTerritory.owner)
                 };
                 $rootScope.$emit('engageAttackPhase', attack);
             } else {
-                gameEngine.selectedTerritory = territory;
+                gameEngine.selectedTerritory = clickedTerritory;
                 mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-                mapController.hightlightTerritory(country, vm.turn.player.name);
+                mapController.hightlightTerritory(country, vm.turn);
+            }
+        } else if (gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
+            if (gameEngine.selectedTerritory &&
+                gameEngine.selectedTerritory.name === clickedTerritory.name) {
+                gameEngine.selectedTerritory = undefined;
+                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+            } else if (gameEngine.selectedTerritory &&
+                       clickedTerritory.owner === gameEngine.turn.player.name &&
+                       gameEngine.selectedTerritory.numberOfTroops > 1 &&
+                       clickedTerritory.name !== gameEngine.selectedTerritory.name) {
+                // move troops
+            } else {
+                gameEngine.selectedTerritory = clickedTerritory;
+                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+                mapController.hightlightTerritory(country, vm.turn);
             }
         }
     }
