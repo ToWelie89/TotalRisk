@@ -36,6 +36,16 @@ export const PLAYER_COLORS = {
         highlightColor: '#ffffae'
     }
 };
+
+export const PLAYER_PREDEFINED_NAMES = [
+    'Julius Caesar',
+    'Napoloen Bonaparte',
+    'Hannibal Barca',
+    'Alexander the Great',
+    'Genghis Khan',
+    'Attila the Hun'
+];
+
 export function playerIterator(playerMap, turnPhases) {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;

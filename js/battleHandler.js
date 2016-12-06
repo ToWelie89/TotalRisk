@@ -1,6 +1,6 @@
 export default class BattleHandler {
     constructor() {
-
+        this.screamSound = new Audio('./audio/wilhelm.wav');
     }
 
     handleAttack(attacker, defender) {
@@ -10,15 +10,24 @@ export default class BattleHandler {
         this.sortDescending(attackDice);
         this.sortDescending(defendDice);
 
+        let defenderCasualties = 0;
+        let attackerCasualties = 0;
+
         [0, 1].forEach(x => {
             if (attackDice[x] && defendDice[x]) {
                 if (attackDice[x] > defendDice[x]) {
                     defender.numberOfTroops--;
+                    defenderCasualties++;
                 } else {
                     attacker.numberOfTroops--;
+                    attackerCasualties++;
                 }
             }
         });
+
+        if (defenderCasualties === 2 || attackerCasualties === 2) {
+            this.screamSound.play();
+        }
 
         return {
             attackDice,

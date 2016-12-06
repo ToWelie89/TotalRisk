@@ -18,6 +18,25 @@ export default class GameEngine {
         this.gameAnnouncer = new GameAnnouncer();
         // Initialize world map
         this.map = new WorldMap();
+        this.setMusic();
+        this.addTroopSound = new Audio('./audio/troop.wav');
+    }
+
+    setMusicVolume(volume) {
+        if (this.bgMusic) {
+            this.bgMusic.volume = volume;
+        }
+    }
+
+    setMusic(music = './audio/bgmusic.mp3') {
+        if (this.bgMusic) {
+            this.bgMusic.pause();
+            this.bgMusic.currentTime = 0;
+        }
+
+        this.bgMusic = new Audio(music);
+        this.bgMusic.loop = true;
+        this.bgMusic.play();
     }
 
     startGame(players) {
@@ -37,8 +56,15 @@ export default class GameEngine {
         // Setup game table
         this.setupInitDeployment();
 
-        this.gameAnnouncer.speak("Game started");
-        this.gameAnnouncer.stateTurn(this.turn);
+        this.gameAnnouncer.speak('Game started', () => {
+            this.setMusicVolume(0.3);
+        }, () => {
+            this.gameAnnouncer.stateTurn(this.turn, () => {
+                this.setMusicVolume(0.3);
+            }, () => {
+                this.setMusicVolume(1.0);
+            });
+        });
 
         console.log(this.turn);
         this.handleTurnPhase();
@@ -48,7 +74,11 @@ export default class GameEngine {
         console.log('New turn!');
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
-        this.gameAnnouncer.stateTurn(this.turn);
+        this.gameAnnouncer.stateTurn(this.turn, () => {
+            this.setMusicVolume(0.3);
+        }, () => {
+            this.setMusicVolume(1.0);
+        });
         this.handleTurnPhase();
         return this.turn;
     }
@@ -75,6 +105,7 @@ export default class GameEngine {
     }
 
     addTroopToTerritory(country) {
+        this.addTroopSound.play();
         let territory = getTerritoryByName(this.map, country);
         if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
             this.troopsToDeploy--;

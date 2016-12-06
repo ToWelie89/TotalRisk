@@ -19,6 +19,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
 </head>
 
 <body ng-app="risk">
@@ -46,7 +47,8 @@
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control" style="width: 100%;" />
                     </div>
                     <div class="col-xs-4" style="text-align: left;">
-                        <button type="button" class="btn btn-md btn-danger" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
+                        <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
+                            <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                     </div>
@@ -63,11 +65,13 @@
                 </div>
                 <div class="row marginTop">
                     <div class="col-xs-12 textCenter">
-                        <button type="button" class="btn btn-lg btn-primary" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
+                        <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
+                            <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-lg btn-success" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
-                            Start
+                        <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
+                            <i class="fa fa-times"></i>
+                            <strong>Start</strong>
                         </button>
                     </div>
                 </div>
@@ -76,13 +80,20 @@
                 <div class="row">
                     <div id="filters" class="paddingBottom--double col-xs-4" style="padding-right:0px;">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-md btn-info" id="showByOwner" data-ng-click="main.filterByOwner()" data-ng-class="{'active': main.filter == 'byOwner'}">
-                                Color by owner
+                            <button type="button" class="button button-blue" id="showByOwner" data-ng-click="main.filterByOwner()">
+                                <i class="fa fa-times"></i>
+                                <strong>Color by owner</strong>
                             </button>
-                            <button type="button" class="btn btn-md btn-info" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
-                                Color by region
+                            <button type="button" class="button button-blue" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
+                                <i class="fa fa-times"></i>
+                                <strong>Color by region</strong>
                             </button>
                         </div>
+                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-blue': !main.playMusic, 'button-red': main.playMusic}">
+                            <i class="fa fa-times"></i>
+                            <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="main.playMusic"></span>
+                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="!main.playMusic"></span>
+                        </button>
                     </div>
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="text-shadow" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
@@ -104,8 +115,9 @@
                                 </span>
                             </div>
                             <div class="col-xs-4" style="line-height: 30px;">
-                                <button type="button" class="btn btn-md btn-success" id="showByOwner" data-ng-click="main.nextTurn()" data-ng-disabled="main.checkIfNextIsDisabled()">
-                                    NEXT
+                                <button type="button" class="button button-green" data-ng-click="main.nextTurn()" data-ng-disabled="main.checkIfNextIsDisabled()">
+                                    <i class="fa fa-times"></i>
+                                    <strong>NEXT</strong>
                                 </button>
                             </div>
                         </div>

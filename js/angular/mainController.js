@@ -14,6 +14,8 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
     vm.getCurrentPlayerColor = getCurrentPlayerColor;
     vm.init = init;
     vm.startGame = startGame;
+    vm.toggleMusicVolume = toggleMusicVolume;
+    vm.playMusic = true;
 
     vm.gamePhases = GAME_PHASES;
     vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
@@ -27,8 +29,18 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
         console.log('Initialization of mainController');
     }
 
+    function toggleMusicVolume() {
+        if (vm.playMusic) {
+            gameEngine.setMusicVolume(0);
+        } else {
+            gameEngine.setMusicVolume(1.0);
+        }
+        vm.playMusic = !vm.playMusic;
+    }
+
     function setupEvents() {
         $rootScope.$on('battleIsOver', function(event, data) {
+            gameEngine.setMusic();
             $log.debug('Battle is over ', data);
             // update map in gameEngine by changing owner and numberOfTroops
             let territoryAttacking = getTerritoryByName(gameEngine.map, data.attackFrom.name);
@@ -121,6 +133,7 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
                     attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
                     defender: gameEngine.players.get(clickedTerritory.owner)
                 };
+                gameEngine.setMusic('./audio/bgmusic_attack.mp3');
                 $rootScope.$emit('engageAttackPhase', attack);
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;

@@ -1,0 +1,41 @@
+.banner {
+    position: inherit;
+    display: block;
+    margin: 0 auto;
+    width: 400px;
+    height: 60px;
+    border: 1px solid #a37c25;
+    font-family: 'Berkshire Swash', cursive;
+    text-align: center;
+    color: black;
+    background: #a37612;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .15) inset, 0 6px 10px rgba(0, 0, 0, .15);
+    top: -70px;
+    padding-top: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.64);
+
+    &::before, &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        left: -32px;
+        top: 24px;
+        display: block;
+        width: 40px;
+        height: 0px;
+        border: 30px solid #a37612;
+        border-right: 20px solid #5e4307;
+        border-bottom-color: #a27511;
+        border-left-color: transparent;
+        transform: rotate(-5deg);
+    }
+
+    &::after {
+        left: auto;
+        right: -32px;
+        border-left: 20px solid #5a4006;
+        border-right: 30px solid transparent;
+        transform: rotate(5deg);
+    }
+}

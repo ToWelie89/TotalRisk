@@ -6,8 +6,8 @@
                 <div class="modal-body">
                     <div class="modal-body textCenter">
                         <div class="row">
-                          <div class="col-xs-12 paddingBottom--double">
-                              <h1>~ Battle of {{ attack.defender.name }} ~</h1>
+                          <div class="col-xs-12" style="z-index: 10; margin-bottom: -30px;">
+                              <h2 class="banner">Battle of {{ attack.defender.name }}</h2>
                           </div>
                         </div>
                         <div class="row">
@@ -57,11 +57,13 @@
                             <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
                         </div>
                         <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver">
-                            <button type="button" data-ng-click="attack.fight()" class="btn btn-info btn-lg">
-                                Fight!
+                            <button type="button" class="button button-blue" data-ng-click="attack.fight()">
+                                <i class="fa fa-times"></i>
+                                <strong>Fight!</strong>
                             </button>
-                            <button type="button" data-ng-click="attack.retreat()" class="btn btn-info btn-lg">
-                                Retreat!
+                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()">
+                                <i class="fa fa-times"></i>
+                                <strong>Retreat!</strong>
                             </button>
                         </div>
                         <div class="row" data-ng-show="attack.attackerDice.length > 0 || attack.defenderDice.length > 0">
@@ -176,8 +178,9 @@
                                 <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
                             </div>
                             <div class="col-xs-12 paddingTop">
-                                <button type="button" data-ng-click="attack.moveTroops()" class="btn btn-info btn-lg">
-                                    Move troops
+                                <button type="button" class="button button-blue" data-ng-click="attack.moveTroops()">
+                                    <i class="fa fa-times"></i>
+                                    <strong>Move troops</strong>
                                 </button>
                             </div>
                         </div>

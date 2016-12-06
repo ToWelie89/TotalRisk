@@ -1,5 +1,5 @@
 import Player from './../player/player';
-import {PLAYER_COLORS} from './../player/playerConstants';
+import {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
 export function GameSetupController($scope) {
@@ -17,13 +17,18 @@ export function GameSetupController($scope) {
     vm.hasDuplicates = hasDuplicates;
     vm.emptyNamesExists = emptyNamesExists;
 
+    let bleep;
+
     function init() {
         console.log('Initialize game setup controller');
-        vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(`Player ${i + 1}`, Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
+        bleep = new Audio('./audio/bleep.wav');
+        vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(PLAYER_PREDEFINED_NAMES[i], Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
         console.log(vm.players);
     }
 
     function addPlayer() {
+        bleep.play();
+
         if (vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
@@ -41,7 +46,7 @@ export function GameSetupController($scope) {
             }
         });
         if (colorToUse) {
-            vm.players.push(new Player(`Player ${vm.players.length + 1}`, PLAYER_COLORS[colorToUse]));
+            vm.players.push(new Player(PLAYER_PREDEFINED_NAMES[vm.players.length], PLAYER_COLORS[colorToUse]));
         }
     }
 
