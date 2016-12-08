@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                     src: 'less/init.less',
                     dest: 'build/default.css'
                 }]
-            },
+            }
         },
         clean: {
             build: ['build/*']
@@ -33,8 +33,8 @@ module.exports = function(grunt) {
                 files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html', 'assets/map.svg'],
                 tasks: ['default'],
                 options: {
-                    spawn: false,
-                },
+                    spawn: false
+                }
             }
         },
         shell: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
             watch: {
                 options: {
                     title: 'Grunt watch', // optional
-                    message: 'Build complete', //required
+                    message: 'Build complete' // required
                 }
             }
         },
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
 
     // Default task for building
     grunt.registerTask('default', [
-        //'jsonlint',
+        // 'jsonlint',
         'clean', // Clean previous build files
         'shell:webpack',
         'uglify', // Minify and uglify css and put it in build folder
