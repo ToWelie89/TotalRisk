@@ -1,6 +1,8 @@
+import SoundEngine from './sound/soundEngine';
+
 export default class BattleHandler {
     constructor() {
-        this.screamSound = new Audio('./audio/wilhelm.wav');
+        this.soundEngine = new SoundEngine();
     }
 
     handleAttack(attacker, defender) {
@@ -26,7 +28,7 @@ export default class BattleHandler {
         });
 
         if (defenderCasualties === 2 || attackerCasualties === 2) {
-            this.screamSound.play();
+            this.soundEngine.screamSound.play();
         }
 
         return {

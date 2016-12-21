@@ -1,6 +1,6 @@
 import BattleHandler from './../battleHandler';
 
-export function AttackModalController($scope, $rootScope, gameEngine, $log) {
+export function AttackModalController($scope, $rootScope, $log, soundEngine) {
     var vm = this;
 
     // PUBLIC FIELDS
@@ -21,8 +21,6 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
     vm.moveTroops = moveTroops;
     vm.convertTroopAmountToTroopTypes = convertTroopAmountToTroopTypes;
 
-    let cheer;
-
     function fight() {
         let response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
         vm.attackerDice = response.attackDice;
@@ -32,7 +30,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
 
         if (vm.defender.numberOfTroops === 0) {
             // the invasion succeded
-            cheer.play();
+            soundEngine.cheer.play();
 
             vm.fightIsOver = true;
 
@@ -80,9 +78,9 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             return [];
         }
         let cannons = Math.floor(troops / 10);
-        troops = troops - (cannons * 10);
+        troops -= (cannons * 10);
         let horses = Math.floor(troops / 5);
-        troops = troops - (horses * 5);
+        troops -= (horses * 5);
 
         const array = Array.from(new Array(cannons + horses + troops));
         array.fill('cannon', 0, cannons);
@@ -94,8 +92,6 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
 
     function init() {
         $log.debug('Initialization of AttackModalController');
-
-        cheer = new Audio('./audio/victory_cheer.wav');
 
         vm.battleHandler = new BattleHandler();
         setupEvents();

@@ -10,6 +10,7 @@ import { TURN_PHASES } from './gameConstants';
 import { shuffle } from './helpers';
 import GameAnnouncer from './voice/gameAnnouncer';
 import DeploymentHandler from './deploymentHandler';
+import SoundEngine from './sound/soundEngine';
 
 export default class GameEngine {
 
@@ -19,7 +20,7 @@ export default class GameEngine {
         // Initialize world map
         this.map = new WorldMap();
         this.setMusic();
-        this.addTroopSound = new Audio('./audio/troop.wav');
+        this.soundEngine = new SoundEngine();
     }
 
     setMusicVolume(volume) {
@@ -105,7 +106,7 @@ export default class GameEngine {
     }
 
     addTroopToTerritory(country) {
-        this.addTroopSound.play();
+        this.soundEngine.addTroopSound.play();
         let territory = getTerritoryByName(this.map, country);
         if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
             this.troopsToDeploy--;
