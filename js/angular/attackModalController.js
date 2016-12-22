@@ -14,6 +14,8 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
     vm.moveNumberOfTroops = 1;
     vm.movementSliderOptions = {};
 
+    vm.countrySvg = '';
+
     // PUBLIC FUNCTIONS
     vm.init = init;
     vm.fight = fight;
@@ -90,6 +92,23 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
         return array;
     }
 
+    function getCountrySvg() {
+        let territoryWidth = Math.round(document.getElementById(vm.defender.name).getBoundingClientRect().width);
+        let territoryHeight = Math.round(document.getElementById(vm.defender.name).getBoundingClientRect().height);
+
+        let territorySvg = $(`svg .country[id='${vm.defender.name}']`).clone();
+        // let d = territorySvg.attr('d');
+        // let dParts = d.split(',');
+        // dParts[0] = `M${territoryWidth} 0c6`;
+
+        // d = dParts.join(',');
+        // territorySvg.attr('d', d);
+        territorySvg.attr('x', 0);
+        territorySvg.attr('y', 0);
+        // $('#territorySvg g')[0].setAttribute('viewBox', `0 -${territoryWidth} ${(2 * territoryHeight)} ${territoryWidth}`);
+        $('#territorySvg').html(territorySvg);
+    }
+
     function init() {
         $log.debug('Initialization of AttackModalController');
 
@@ -103,6 +122,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
         vm.moveNumberOfTroops = 1;
         vm.attackerDice = [];
         vm.defenderDice = [];
+        vm.countrySvg = '';
     }
 
     function setupEvents() {
@@ -115,6 +135,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
             vm.attacker.numberOfTroops--;
             vm.defender = data.territoryAttacked;
             vm.defender.color = data.defender.color;
+            getCountrySvg();
             $scope.$apply();
             $("#attackModal").modal('toggle');
         });

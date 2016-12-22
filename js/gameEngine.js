@@ -106,9 +106,9 @@ export default class GameEngine {
     }
 
     addTroopToTerritory(country) {
-        this.soundEngine.addTroopSound.play();
         let territory = getTerritoryByName(this.map, country);
         if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
+            this.soundEngine.addTroopSound.play();
             this.troopsToDeploy--;
             territory.numberOfTroops++;
             console.log(territory);

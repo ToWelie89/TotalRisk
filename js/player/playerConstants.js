@@ -61,7 +61,7 @@ export function playerIterator(playerMap, turnPhases) {
                     player: player[1],
                     turnPhase: turn,
                     done: false,
-                    newPlayer: newPlayer
+                    newPlayer
                 };
             }
             currentTurnPhaseIndex = 0;
@@ -78,7 +78,7 @@ export function playerIterator(playerMap, turnPhases) {
                 player: player[1],
                 turnPhase: turn,
                 done: false,
-                newPlayer: newPlayer
+                newPlayer
             };
         },
         getCurrent: function() {
@@ -86,7 +86,7 @@ export function playerIterator(playerMap, turnPhases) {
                 player: playerMap[currentPlayerIndex][1],
                 turnPhase: turnPhases[currentTurnPhaseIndex],
                 done: false,
-                newPlayer: newPlayer
+                newPlayer
             };
         }
     };
