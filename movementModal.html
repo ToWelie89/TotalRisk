@@ -1,0 +1,24 @@
+<div data-ng-controller="movementModalController as movement" data-ng-init="movement.init()">
+    <div id="movementModal" class="modal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <rzslider rz-slider-model="movement.moveNumberOfTroops" rz-slider-options="movement.movementSliderOptions"></rzslider>
+                            </div>
+                            <div class="col-xs-12 paddingTop">
+                                <button type="button" class="button button-blue" data-ng-click="movement.moveTroops()">
+                                    <i class="fa fa-times"></i>
+                                    <strong>Move troops</strong>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -141,3 +141,62 @@ svg {
         stroke: black;
     }
 }
+
+#territorySvg {
+    max-height: 250px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    .country {
+        &:hover {
+            stroke-width: 1;
+        }
+        &[country-color='RED'] {
+            fill: #EF5C5C;
+            stroke: #CC3030;
+        }
+        &[country-color='GREEN'] {
+            fill: #92F381;
+            stroke: #53E239;
+        }
+        &[country-color='BLUE'] {
+            fill: #3333ff;
+            stroke: #1a1a9c;
+        }
+        &[country-color='PINK'] {
+            fill: #ff99cc;
+            stroke: #ff6699;
+        }
+        &[country-color='BLACK'] {
+            fill: #3c3c3c;
+            stroke: #202020;
+        }
+        &[country-color='YELLOW'] {
+            fill: #ffff66;
+            stroke: #dbdb39;
+        }
+        &[country-color='AFRICA'] {
+            fill: #564848;
+            stroke: #362d2d;
+        }
+        &[country-color='SOUTH AMERICA'] {
+            fill: #dd4444;
+            stroke: #b22525;
+        }
+        &[country-color='EUROPE'] {
+            fill: #4acd61;
+            stroke: #35a749;
+        }
+        &[country-color='NORTH AMERICA'] {
+            fill: #4770ea;
+            stroke: #234abe;
+        }
+        &[country-color='ASIA'] {
+            fill: #eaea67;
+            stroke: #bbbb42;
+        }
+        &[country-color='AUSTRALIA'] {
+            fill: #a55eec;
+            stroke: #8442c6;
+        }
+    }
+}

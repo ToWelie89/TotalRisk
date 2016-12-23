@@ -52,6 +52,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
                 battleWasWon: false
             });
             $("#attackModal").modal('toggle');
+            $('#territorySvg').html('');
         }
     }
 
@@ -64,6 +65,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
             attackTo: vm.defender
         });
         $("#attackModal").modal('toggle');
+        $('#territorySvg').html('');
     }
 
     function retreat() {
@@ -73,6 +75,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
             attackTo: vm.defender
         });
         $("#attackModal").modal('toggle');
+        $('#territorySvg').html('');
     }
 
     function convertTroopAmountToTroopTypes(troops) {
@@ -93,20 +96,12 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
     }
 
     function getCountrySvg() {
-        let territoryWidth = Math.round(document.getElementById(vm.defender.name).getBoundingClientRect().width);
-        let territoryHeight = Math.round(document.getElementById(vm.defender.name).getBoundingClientRect().height);
-
-        let territorySvg = $(`svg .country[id='${vm.defender.name}']`).clone();
-        // let d = territorySvg.attr('d');
-        // let dParts = d.split(',');
-        // dParts[0] = `M${territoryWidth} 0c6`;
-
-        // d = dParts.join(',');
-        // territorySvg.attr('d', d);
-        territorySvg.attr('x', 0);
-        territorySvg.attr('y', 0);
-        // $('#territorySvg g')[0].setAttribute('viewBox', `0 -${territoryWidth} ${(2 * territoryHeight)} ${territoryWidth}`);
+        let territorySvg = $(`#svgMap .country[id='${vm.defender.name}']`).clone();
+        territorySvg.removeClass('attackCursor highlighted');
         $('#territorySvg').html(territorySvg);
+
+        let bB = document.getElementById('territorySvg').getBBox();
+        document.getElementById('territorySvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
     }
 
     function init() {
@@ -135,9 +130,9 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
             vm.attacker.numberOfTroops--;
             vm.defender = data.territoryAttacked;
             vm.defender.color = data.defender.color;
-            getCountrySvg();
             $scope.$apply();
             $("#attackModal").modal('toggle');
+            getCountrySvg();
         });
     }
 }

@@ -57,6 +57,21 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
 
             checkIfPlayerWonTheGame();
         });
+
+        $rootScope.$on('movementIsOver', function(event, data) {
+            gameEngine.setMusic();
+            $log.debug('Movement complete ', data);
+            let movementFromTerritory = getTerritoryByName(gameEngine.map, data.from.name);
+
+            movementFromTerritory.numberOfTroops = data.from.numberOfTroops === 0 ? 1 : data.from.numberOfTroops;
+
+            let movementToTerritory = getTerritoryByName(gameEngine.map, data.to.name);
+
+            movementToTerritory.numberOfTroops = data.to.numberOfTroops;
+
+            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+            nextTurn();
+        });
     }
 
     function startGame(players) {
@@ -127,14 +142,13 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
                 clickedTerritory.owner !== gameEngine.turn.player.name &&
                 clickedTerritory.adjacentTerritories.includes(gameEngine.selectedTerritory.name) &&
                 gameEngine.selectedTerritory.numberOfTroops > 1) {
-                let attack = {
+                gameEngine.setMusic('./audio/bgmusic_attack.mp3');
+                $rootScope.$emit('engageAttackPhase', {
                     territoryAttacked: clickedTerritory,
                     attackFrom: gameEngine.selectedTerritory,
                     attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
                     defender: gameEngine.players.get(clickedTerritory.owner)
-                };
-                gameEngine.setMusic('./audio/bgmusic_attack.mp3');
-                $rootScope.$emit('engageAttackPhase', attack);
+                });
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
                 mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
@@ -150,6 +164,10 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
                        gameEngine.selectedTerritory.numberOfTroops > 1 &&
                        clickedTerritory.name !== gameEngine.selectedTerritory.name) {
                 // move troops
+                $rootScope.$emit('engageMovementPhase', {
+                    moveTo: clickedTerritory,
+                    moveFrom: gameEngine.selectedTerritory
+                });
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
                 mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
