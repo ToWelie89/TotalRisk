@@ -39,7 +39,7 @@ export const PLAYER_COLORS = {
 
 export const PLAYER_PREDEFINED_NAMES = [
     'Julius Caesar',
-    'Napoloen Bonaparte',
+    'Napoleon Bonaparte',
     'Hannibal Barca',
     'Alexander the Great',
     'Genghis Khan',
