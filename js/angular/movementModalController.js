@@ -1,4 +1,4 @@
-export function MovementModalController($scope, $rootScope, $log, soundEngine) {
+export function MovementModalController($scope, $rootScope, $log) {
     var vm = this;
 
     // PUBLIC FIELDS

@@ -1,9 +1,8 @@
-import GameEngine from './../gameEngine';
 import MapController from './../map/mapController';
 import {GAME_PHASES, TURN_PHASES} from './../gameConstants';
 import {getTerritoryByName} from './../map/mapHelpers';
 
-export function MainController($scope, $rootScope, $log, gameEngine) {
+export function MainController($scope, $rootScope, $log, gameEngine, soundService) {
     var vm = this;
 
     // PUBLIC FUNCTIONS
@@ -30,12 +29,8 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
     }
 
     function toggleMusicVolume() {
-        if (vm.playMusic) {
-            gameEngine.setMusicVolume(0);
-        } else {
-            gameEngine.setMusicVolume(1.0);
-        }
         vm.playMusic = !vm.playMusic;
+        gameEngine.toggleSound(vm.playMusic);
     }
 
     function setupEvents() {
@@ -133,6 +128,7 @@ export function MainController($scope, $rootScope, $log, gameEngine) {
         let clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            soundService.addTroopSound.play();
             gameEngine.addTroopToTerritory(country);
             mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
             vm.troopsToDeploy = gameEngine.troopsToDeploy;

@@ -1,6 +1,6 @@
 import BattleHandler from './../battleHandler';
 
-export function AttackModalController($scope, $rootScope, $log, soundEngine) {
+export function AttackModalController($scope, $rootScope, $log, soundService) {
     var vm = this;
 
     // PUBLIC FIELDS
@@ -24,7 +24,10 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
     vm.convertTroopAmountToTroopTypes = convertTroopAmountToTroopTypes;
 
     function fight() {
-        let response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
+        const response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
+        if (response.defenderCasualties === 2 || response.attackerCasualties === 2) {
+            soundService.screamSound.play();
+        }
         vm.attackerDice = response.attackDice;
         vm.defenderDice = response.defendDice;
         vm.attacker = response.attacker;
@@ -32,7 +35,7 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
 
         if (vm.defender.numberOfTroops === 0) {
             // the invasion succeded
-            soundEngine.cheer.play();
+            soundService.cheer.play();
 
             vm.fightIsOver = true;
 
@@ -82,9 +85,9 @@ export function AttackModalController($scope, $rootScope, $log, soundEngine) {
         if (!troops) {
             return [];
         }
-        let cannons = Math.floor(troops / 10);
+        const cannons = Math.floor(troops / 10);
         troops -= (cannons * 10);
-        let horses = Math.floor(troops / 5);
+        const horses = Math.floor(troops / 5);
         troops -= (horses * 5);
 
         const array = Array.from(new Array(cannons + horses + troops));

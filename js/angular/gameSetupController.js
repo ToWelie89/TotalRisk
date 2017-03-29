@@ -2,7 +2,7 @@ import Player from './../player/player';
 import {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
-export function GameSetupController($scope, soundEngine) {
+export function GameSetupController($scope, soundService) {
     let vm = this;
 
     // PUBLIC FIELDS
@@ -24,7 +24,7 @@ export function GameSetupController($scope, soundEngine) {
     }
 
     function addPlayer() {
-        soundEngine.bleep.play();
+        soundService.bleep.play();
 
         if (vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;

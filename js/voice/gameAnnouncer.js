@@ -14,6 +14,10 @@ export default class GameAnnouncer {
         });
     }
 
+    mute() {
+        responsiveVoice.cancel();
+    }
+
     stateTurn(turn, onstartCallback, onendCallback) {
         const parameters = {
             pitch: this.pitch,
