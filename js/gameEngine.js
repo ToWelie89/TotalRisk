@@ -4,8 +4,7 @@
 
 import WorldMap from './map/worldMap';
 import { getTerritoryByName } from './map/mapHelpers';
-import Player from './player/player';
-import { PLAYER_COLORS, playerIterator } from './player/playerConstants';
+import { playerIterator } from './player/playerConstants';
 import { TURN_PHASES } from './gameConstants';
 import { shuffle } from './helpers';
 import GameAnnouncer from './voice/gameAnnouncer';
@@ -18,25 +17,37 @@ export default class GameEngine {
         this.gameAnnouncer = new GameAnnouncer();
         // Initialize world map
         this.map = new WorldMap();
+        this.playSound = true;
         this.setMusic();
-        this.addTroopSound = new Audio('./audio/troop.wav');
     }
 
     setMusicVolume(volume) {
-        if (this.bgMusic) {
+        if (this.bgMusic && this.playSound) {
             this.bgMusic.volume = volume;
         }
     }
 
-    setMusic(music = './audio/bgmusic.mp3') {
-        if (this.bgMusic) {
+    toggleSound(playSound) {
+        this.playSound = playSound;
+        if (this.playSound) {
+            this.bgMusic.play();
+        } else {
+            this.gameAnnouncer.mute();
             this.bgMusic.pause();
-            this.bgMusic.currentTime = 0;
         }
+    }
 
-        this.bgMusic = new Audio(music);
-        this.bgMusic.loop = true;
-        this.bgMusic.play();
+    setMusic(music = './audio/bgmusic.mp3') {
+        if (this.playSound) {
+            if (this.bgMusic) {
+                this.bgMusic.pause();
+                this.bgMusic.currentTime = 0;
+            }
+
+            this.bgMusic = new Audio(music);
+            this.bgMusic.loop = true;
+            this.bgMusic.play();
+        }
     }
 
     startGame(players) {
@@ -56,15 +67,17 @@ export default class GameEngine {
         // Setup game table
         this.setupInitDeployment();
 
-        this.gameAnnouncer.speak('Game started', () => {
-            this.setMusicVolume(0.3);
-        }, () => {
-            this.gameAnnouncer.stateTurn(this.turn, () => {
+        if (this.playSound) {
+            this.gameAnnouncer.speak('Game started', () => {
                 this.setMusicVolume(0.3);
             }, () => {
-                this.setMusicVolume(1.0);
+                this.gameAnnouncer.stateTurn(this.turn, () => {
+                    this.setMusicVolume(0.3);
+                }, () => {
+                    this.setMusicVolume(1.0);
+                });
             });
-        });
+        }
 
         console.log(this.turn);
         this.handleTurnPhase();
@@ -74,11 +87,13 @@ export default class GameEngine {
         console.log('New turn!');
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
-        this.gameAnnouncer.stateTurn(this.turn, () => {
-            this.setMusicVolume(0.3);
-        }, () => {
-            this.setMusicVolume(1.0);
-        });
+        if (this.playSound) {
+            this.gameAnnouncer.stateTurn(this.turn, () => {
+                this.setMusicVolume(0.3);
+            }, () => {
+                this.setMusicVolume(1.0);
+            });
+        }
         this.handleTurnPhase();
         return this.turn;
     }
@@ -90,11 +105,11 @@ export default class GameEngine {
     }
 
     setupInitDeployment() {
-        let totalNumberOfPlayers = this.players.size;
-        let names = Array.from(this.players.keys());
+        const totalNumberOfPlayers = this.players.size;
+        const names = Array.from(this.players.keys());
 
         let currentPlayerIndex = 0;
-        let territories = this.map.getAllTerritoriesAsList();
+        const territories = this.map.getAllTerritoriesAsList();
         shuffle(territories);
 
         territories.forEach(territory => {
@@ -105,8 +120,7 @@ export default class GameEngine {
     }
 
     addTroopToTerritory(country) {
-        this.addTroopSound.play();
-        let territory = getTerritoryByName(this.map, country);
+        const territory = getTerritoryByName(this.map, country);
         if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
             this.troopsToDeploy--;
             territory.numberOfTroops++;

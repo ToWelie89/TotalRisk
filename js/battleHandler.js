@@ -1,11 +1,7 @@
 export default class BattleHandler {
-    constructor() {
-        this.screamSound = new Audio('./audio/wilhelm.wav');
-    }
-
     handleAttack(attacker, defender) {
-        let attackDice = Array.from(new Array(attacker.numberOfTroops > 3 ? 3 : attacker.numberOfTroops), (x, i) => this.getRandomDiceValue());
-        let defendDice = Array.from(new Array(defender.numberOfTroops > 2 ? 2 : defender.numberOfTroops), (x, i) => this.getRandomDiceValue());
+        const attackDice = Array.from(new Array(attacker.numberOfTroops > 3 ? 3 : attacker.numberOfTroops), (x, i) => this.getRandomDiceValue());
+        const defendDice = Array.from(new Array(defender.numberOfTroops > 2 ? 2 : defender.numberOfTroops), (x, i) => this.getRandomDiceValue());
 
         this.sortDescending(attackDice);
         this.sortDescending(defendDice);
@@ -25,22 +21,18 @@ export default class BattleHandler {
             }
         });
 
-        if (defenderCasualties === 2 || attackerCasualties === 2) {
-            this.screamSound.play();
-        }
-
         return {
             attackDice,
             defendDice,
             attacker,
-            defender
+            defender,
+            defenderCasualties,
+            attackerCasualties
         };
     }
 
     sortDescending(array) {
-        array.sort((a, b) => {
-            return b - a;
-        });
+        array.sort((a, b) => b - a);
     }
 
     getRandomDiceValue() {

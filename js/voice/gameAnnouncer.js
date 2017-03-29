@@ -1,9 +1,5 @@
 import { TURN_PHASES } from './../gameConstants';
 
-function balle() {
-    console.log('balle');
-}
-
 export default class GameAnnouncer {
     constructor(announcerType = 'UK English Male', pitch = 0.7) {
         this.announcerType = announcerType;
@@ -18,8 +14,8 @@ export default class GameAnnouncer {
         });
     }
 
-    kuk() {
-        console.log('kuk');
+    mute() {
+        responsiveVoice.cancel();
     }
 
     stateTurn(turn, onstartCallback, onendCallback) {
@@ -29,7 +25,7 @@ export default class GameAnnouncer {
             onend: onendCallback
         };
 
-        responsiveVoice.speak(turn.newPlayer ? (turn.player.name + 's turn') : '', this.announcerType, {
+        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.name}'s turn`) : '', this.announcerType, {
             pitch: this.pitch,
             onstart: onstartCallback,
             onend: () => {

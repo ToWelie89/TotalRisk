@@ -11,6 +11,12 @@
                           </div>
                         </div>
                         <div class="row">
+                            <div class="col-xs-12">
+                                <svg id="territorySvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-6">
                                 <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
                                     <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">

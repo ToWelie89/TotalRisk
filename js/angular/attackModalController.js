@@ -1,6 +1,6 @@
 import BattleHandler from './../battleHandler';
 
-export function AttackModalController($scope, $rootScope, gameEngine, $log) {
+export function AttackModalController($scope, $rootScope, $log, soundService) {
     var vm = this;
 
     // PUBLIC FIELDS
@@ -14,6 +14,8 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
     vm.moveNumberOfTroops = 1;
     vm.movementSliderOptions = {};
 
+    vm.countrySvg = '';
+
     // PUBLIC FUNCTIONS
     vm.init = init;
     vm.fight = fight;
@@ -21,10 +23,11 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
     vm.moveTroops = moveTroops;
     vm.convertTroopAmountToTroopTypes = convertTroopAmountToTroopTypes;
 
-    let cheer;
-
     function fight() {
-        let response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
+        const response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
+        if (response.defenderCasualties === 2 || response.attackerCasualties === 2) {
+            soundService.screamSound.play();
+        }
         vm.attackerDice = response.attackDice;
         vm.defenderDice = response.defendDice;
         vm.attacker = response.attacker;
@@ -32,7 +35,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
 
         if (vm.defender.numberOfTroops === 0) {
             // the invasion succeded
-            cheer.play();
+            soundService.cheer.play();
 
             vm.fightIsOver = true;
 
@@ -52,6 +55,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
                 battleWasWon: false
             });
             $("#attackModal").modal('toggle');
+            $('#territorySvg').html('');
         }
     }
 
@@ -64,6 +68,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             attackTo: vm.defender
         });
         $("#attackModal").modal('toggle');
+        $('#territorySvg').html('');
     }
 
     function retreat() {
@@ -73,16 +78,17 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             attackTo: vm.defender
         });
         $("#attackModal").modal('toggle');
+        $('#territorySvg').html('');
     }
 
     function convertTroopAmountToTroopTypes(troops) {
         if (!troops) {
             return [];
         }
-        let cannons = Math.floor(troops / 10);
-        troops = troops - (cannons * 10);
-        let horses = Math.floor(troops / 5);
-        troops = troops - (horses * 5);
+        const cannons = Math.floor(troops / 10);
+        troops -= (cannons * 10);
+        const horses = Math.floor(troops / 5);
+        troops -= (horses * 5);
 
         const array = Array.from(new Array(cannons + horses + troops));
         array.fill('cannon', 0, cannons);
@@ -92,10 +98,17 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
         return array;
     }
 
+    function getCountrySvg() {
+        let territorySvg = $(`#svgMap .country[id='${vm.defender.name}']`).clone();
+        territorySvg.removeClass('attackCursor highlighted');
+        $('#territorySvg').html(territorySvg);
+
+        let bB = document.getElementById('territorySvg').getBBox();
+        document.getElementById('territorySvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
+    }
+
     function init() {
         $log.debug('Initialization of AttackModalController');
-
-        cheer = new Audio('./audio/victory_cheer.wav');
 
         vm.battleHandler = new BattleHandler();
         setupEvents();
@@ -107,6 +120,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
         vm.moveNumberOfTroops = 1;
         vm.attackerDice = [];
         vm.defenderDice = [];
+        vm.countrySvg = '';
     }
 
     function setupEvents() {
@@ -121,6 +135,7 @@ export function AttackModalController($scope, $rootScope, gameEngine, $log) {
             vm.defender.color = data.defender.color;
             $scope.$apply();
             $("#attackModal").modal('toggle');
+            getCountrySvg();
         });
     }
 }
