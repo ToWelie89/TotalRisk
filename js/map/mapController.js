@@ -24,12 +24,12 @@ export default class MapController {
                 this.updateTroopIndicator(territory, color);
 
                 this.svg.getElementById(territory.name).classList.remove('attackCursor');
-                this.svg.querySelector('.troopCounter[for="' + territory.name + '"]').classList.remove('attackCursor');
-                this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]').classList.remove('attackCursor');
+                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('attackCursor');
+                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('attackCursor');
 
                 this.svg.getElementById(territory.name).classList.remove('movementCursor');
-                this.svg.querySelector('.troopCounter[for="' + territory.name + '"]').classList.remove('movementCursor');
-                this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]').classList.remove('movementCursor');
+                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('movementCursor');
+                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('movementCursor');
 
                 this.svg.getElementById(territory.name).classList.remove('highlighted');
                 this.svg.getElementById(territory.name).classList.remove('addTroopCursor');
@@ -42,8 +42,8 @@ export default class MapController {
     }
 
     hightlightTerritory(target, turn) {
-        let country = this.svg.getElementById(target);
-        let territory = getTerritoryByName(this.map, country.getAttribute('id'));
+        const country = this.svg.getElementById(target);
+        const territory = getTerritoryByName(this.map, country.getAttribute('id'));
         console.log(territory);
 
         if (turn.turnPhase === TURN_PHASES.ATTACK) {
@@ -51,13 +51,13 @@ export default class MapController {
             territory.adjacentTerritories.forEach(territory => {
                 if (turn.player.name !== getTerritoryByName(this.map, territory).owner) {
                     this.svg.getElementById(territory).classList.add('attackCursor');
-                    this.svg.querySelector('.troopCounter[for="' + territory + '"]').classList.add('attackCursor');
-                    this.svg.querySelector('.troopCounterText[for="' + territory + '"]').classList.add('attackCursor');
+                    this.svg.querySelector(`.troopCounter[for="${territory}"]`).classList.add('attackCursor');
+                    this.svg.querySelector(`.troopCounterText[for="${territory}"]`).classList.add('attackCursor');
                     this.svg.getElementById(territory).classList.add('highlighted');
                 } else {
                     this.svg.getElementById(territory).classList.remove('attackCursor');
-                    this.svg.querySelector('.troopCounterText[for="' + territory + '"]').classList.remove('attackCursor');
-                    this.svg.querySelector('.troopCounter[for="' + territory + '"]').classList.remove('attackCursor');
+                    this.svg.querySelector(`.troopCounterText[for="${territory}"]`).classList.remove('attackCursor');
+                    this.svg.querySelector(`.troopCounter[for="${territory}"]`).classList.remove('attackCursor');
                 }
             });
         } else if (turn.turnPhase === TURN_PHASES.MOVEMENT) {
@@ -65,13 +65,13 @@ export default class MapController {
                 region.territories.forEach(currentTerritory => {
                     if (currentTerritory.owner === turn.player.name && currentTerritory.name !== territory.name) {
                         this.svg.getElementById(currentTerritory.name).classList.add('movementCursor');
-                        this.svg.querySelector('.troopCounter[for="' + currentTerritory.name + '"]').classList.add('movementCursor');
-                        this.svg.querySelector('.troopCounterText[for="' + currentTerritory.name + '"]').classList.add('movementCursor');
+                        this.svg.querySelector(`.troopCounter[for="${currentTerritory.name}"]`).classList.add('movementCursor');
+                        this.svg.querySelector(`.troopCounterText[for="${currentTerritory.name}"]`).classList.add('movementCursor');
                         this.svg.getElementById(currentTerritory.name).classList.add('highlighted');
                     } else {
                         this.svg.getElementById(currentTerritory.name).classList.remove('movementCursor');
-                        this.svg.querySelector('.troopCounter[for="' + currentTerritory.name + '"]').classList.remove('movementCursor');
-                        this.svg.querySelector('.troopCounterText[for="' + currentTerritory.name + '"]').classList.remove('movementCursor');
+                        this.svg.querySelector(`.troopCounter[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
+                        this.svg.querySelector(`.troopCounterText[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
                     }
                 });
             });
@@ -79,7 +79,7 @@ export default class MapController {
     }
 
     updateColorOfTerritory(territory, color) {
-        let country = this.svg.getElementById(territory.name);
+        const country = this.svg.getElementById(territory.name);
         if (country) {
             country.setAttribute('country-color', color.name.toUpperCase());
         } else {
@@ -88,10 +88,10 @@ export default class MapController {
     }
 
     updateTroopIndicator(territory, color) {
-        const troopIndicatorEllipse = this.svg.querySelector('.troopCounter[for="' + territory.name + '"]');
+        const troopIndicatorEllipse = this.svg.querySelector(`.troopCounter[for="${territory.name}"]`);
         troopIndicatorEllipse.setAttribute('country-color', color.name.toUpperCase());
 
-        let troopIndicatorText = this.svg.querySelector('.troopCounterText[for="' + territory.name + '"]');
+        const troopIndicatorText = this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`);
         if (troopIndicatorText) {
             troopIndicatorText.innerHTML = territory.numberOfTroops;
         } else {
@@ -100,13 +100,13 @@ export default class MapController {
     }
 
     initEvents() {
-        let countries = this.svg.getElementsByClassName('country');
+        const countries = this.svg.getElementsByClassName('country');
         for (let i = 0; i < countries.length; i++) {
             countries[i].addEventListener('mouseover', (e) => {
                 this.mouseoverCountry(e);
             });
         }
-        let seas = this.svg.getElementsByClassName('sea');
+        const seas = this.svg.getElementsByClassName('sea');
         for (let i = 0; i < seas.length; i++) {
             seas[i].addEventListener('mouseover', (e) => {
                 this.mouseoverSea(e);
@@ -115,7 +115,7 @@ export default class MapController {
     }
 
     clearWholeMap() {
-        let countries = this.svg.getElementsByClassName('country');
+        const countries = this.svg.getElementsByClassName('country');
         for (let i = 0; i < countries.length; i++) {
             this.clearCountry(countries[i]);
         }
@@ -131,8 +131,8 @@ export default class MapController {
     }
 
     mouseoverCountry(evt) {
-        var country = evt.target;
-        let territory = getTerritoryByName(this.map, country.getAttribute('id'));
+        const country = evt.target;
+        const territory = getTerritoryByName(this.map, country.getAttribute('id'));
         document.getElementById('currentTerritoryInfo').innerHTML = `${territory.name} | Owner: ${territory.owner} | Troops: ${territory.numberOfTroops}`;
     }
 }

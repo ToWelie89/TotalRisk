@@ -1,4 +1,5 @@
 import BattleHandler from './../battleHandler';
+import {delay} from './../helpers';
 
 export function AttackModalController($scope, $rootScope, $log, soundService) {
     var vm = this;
@@ -24,14 +25,45 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
     vm.convertTroopAmountToTroopTypes = convertTroopAmountToTroopTypes;
 
     function fight() {
+        // If one player loses 2 troops a scream sound is heard
         const response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
         if (response.defenderCasualties === 2 || response.attackerCasualties === 2) {
             soundService.screamSound.play();
         }
+
         vm.attackerDice = response.attackDice;
         vm.defenderDice = response.defendDice;
         vm.attacker = response.attacker;
         vm.defender = response.defender;
+
+        delay(100).then(() => {
+            // Animate shake effect on side(s) affected by casualties
+            if (response.defenderCasualties > response.attackerCasualties) {
+                new Promise((resolve, reject) => {
+                    $('#defenderTroops .troopIcon').addClass('shake shake-constant');
+                    resolve();
+                }).then(() => delay(500))
+                .then(() => {
+                    $('#defenderTroops .troopIcon').removeClass('shake shake-constant');
+                });
+            } else if (response.attackerCasualties > response.defenderCasualties) {
+                new Promise((resolve, reject) => {
+                    $('#attackerTroops .troopIcon').addClass('shake shake-constant');
+                    resolve();
+                }).then(() => delay(500))
+                .then(() => {
+                    $('#attackerTroops .troopIcon').removeClass('shake shake-constant');
+                });
+            } else if (response.attackerCasualties === response.defenderCasualties) {
+                new Promise((resolve, reject) => {
+                    $('.troopIcon').addClass('shake shake-constant');
+                    resolve();
+                }).then(() => delay(500))
+                .then(() => {
+                    $('.troopIcon').removeClass('shake shake-constant');
+                });
+            }
+        });
 
         if (vm.defender.numberOfTroops === 0) {
             // the invasion succeded
@@ -46,16 +78,18 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
             vm.showMoveTroops = true;
         }
         if (vm.attacker.numberOfTroops === 0) {
-            // the invasion failed
-            vm.fightIsOver = true;
-            // update state
-            $rootScope.$broadcast('battleIsOver', {
-                attackFrom: vm.attacker,
-                attackTo: vm.defender,
-                battleWasWon: false
+            delay(2500).then(() => {
+                // the invasion failed
+                vm.fightIsOver = true;
+                // update state
+                $rootScope.$broadcast('battleIsOver', {
+                    attackFrom: vm.attacker,
+                    attackTo: vm.defender,
+                    battleWasWon: false
+                });
+                $("#attackModal").modal('toggle');
+                $('#territorySvg').html('');
             });
-            $("#attackModal").modal('toggle');
-            $('#territorySvg').html('');
         }
     }
 
