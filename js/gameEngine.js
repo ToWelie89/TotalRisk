@@ -30,7 +30,11 @@ export default class GameEngine {
     toggleSound(playSound) {
         this.playSound = playSound;
         if (this.playSound) {
-            this.bgMusic.play();
+            if (this.bgmusic) {
+                this.bgMusic.play();
+            } else {
+                this.setMusic();
+            }
         } else {
             this.gameAnnouncer.mute();
             this.bgMusic.pause();

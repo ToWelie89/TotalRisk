@@ -1,4 +1,4 @@
-export function shuffle(a) {
+const shuffle = a => {
     let j;
     let x;
     let i;
@@ -8,4 +8,10 @@ export function shuffle(a) {
         a[i - 1] = a[j];
         a[j] = x;
     }
-}
+};
+
+const delay = ms => new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+});
+
+export {delay, shuffle};

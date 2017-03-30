@@ -6,6 +6,8 @@
     <title>ECMA6 Risk</title>
     <script src='js/libs/responsivevoice.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
     <script src="build/app.bundle.js"></script>
 
@@ -15,6 +17,7 @@
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="node_modules/angularjs-slider/dist/rzslider.css">
+    <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
     <link href="build/default.css" rel="stylesheet" type="text/css">
 
     <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
@@ -40,10 +43,21 @@
     </header>
     <div class="wrapper mainWrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" id="gameSetupBox">
+                <div class="row">
+                    <div id="filters" class="paddingBottom--double col-xs-4" style="padding-right:0px;">
+                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-blue': main.playSound, 'button-red': !main.playSound}">
+                            <i class="fa fa-times"></i>
+                            <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
+                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
+                        </button>
+                    </div>
+                </div>
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
                     <div class="col-xs-4 text-shadow" style="text-align: right;">
-                        <div style="background-color: {{player.color.mainColor}}; height: 33px; width: 33px; float:right; border-radius: 3px; border: 1px solid black;"></div>
+                        <div class="colorSelectorBox" style="background-color: {{player.color.mainColor}};"
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="popover.templateUrl" data-ng-controller="colorPopoverController as popover" data-ng-init="popover.init(player)">
+                        </div>
                     </div>
                     <div class="col-xs-4" style="text-align: left;">
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control" style="width: 100%;" />
@@ -91,10 +105,10 @@
                                 <strong>Color by region</strong>
                             </button>
                         </div>
-                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-blue': !main.playMusic, 'button-red': main.playMusic}">
+                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-blue': main.playSound, 'button-red': !main.playSound}">
                             <i class="fa fa-times"></i>
-                            <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="main.playMusic"></span>
-                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="!main.playMusic"></span>
+                            <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
+                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
                         </button>
                     </div>
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
@@ -117,7 +131,14 @@
                                 </span>
                             </div>
                             <div class="col-xs-4" style="line-height: 30px;">
-                                <button type="button" class="button button-green" data-ng-click="main.nextTurn()" data-ng-disabled="main.checkIfNextIsDisabled()">
+                                <button
+                                type="button"
+                                class="button button-green"
+                                data-ng-click="main.nextTurn()"
+                                data-ng-disabled="main.checkIfNextIsDisabled()"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Go to next phase of the turn when you are done">
                                     <i class="fa fa-times"></i>
                                     <strong>NEXT</strong>
                                 </button>

@@ -14,7 +14,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     vm.init = init;
     vm.startGame = startGame;
     vm.toggleMusicVolume = toggleMusicVolume;
-    vm.playMusic = true;
+    vm.playSound = true;
 
     vm.gamePhases = GAME_PHASES;
     vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
@@ -29,8 +29,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     }
 
     function toggleMusicVolume() {
-        vm.playMusic = !vm.playMusic;
-        gameEngine.toggleSound(vm.playMusic);
+        vm.playSound = !vm.playSound;
+        gameEngine.toggleSound(vm.playSound);
     }
 
     function setupEvents() {
@@ -124,8 +124,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     }
 
     function clickCountry(evt) {
-        let country = evt.target.getAttribute('id');
-        let clickedTerritory = getTerritoryByName(gameEngine.map, country);
+        const country = evt.target.getAttribute('id');
+        const clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             soundService.addTroopSound.play();

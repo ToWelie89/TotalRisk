@@ -17,7 +17,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-6" id="attackerTroops">
                                 <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
                                     <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
                                         @@cannonSvg
@@ -33,7 +33,7 @@
                                     <strong>DEAD!</strong>
                                 </span>
                             </div>
-                            <div class="col-xs-6">
+                            <div class="col-xs-6" id="defenderTroops">
                                 <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}">
                                     <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
                                         @@cannonSvg

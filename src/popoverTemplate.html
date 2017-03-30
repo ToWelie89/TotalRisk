@@ -1,0 +1,6 @@
+<div class="popoverBodyColorBox"
+data-ng-repeat="color in popover.colors"
+style="background-color: {{color.mainColor}};"
+data-ng-class="{'popoverBodyColorBox--chosen': player.color.mainColor == color.mainColor}"
+data-ng-click="setup.updateColorOfPlayer(popover.player, color)"
+role="button"></div>
