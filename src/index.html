@@ -56,7 +56,7 @@
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
                     <div class="col-xs-4 text-shadow" style="text-align: right;">
                         <div class="colorSelectorBox" style="background-color: {{player.color.mainColor}};"
-                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="popover.templateUrl" data-ng-controller="colorPopoverController as popover" data-ng-init="popover.init(player)">
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverTemplate.html'" data-ng-controller="colorPopoverController as popover" data-ng-init="popover.init(player)">
                         </div>
                     </div>
                     <div class="col-xs-4" style="text-align: left;">

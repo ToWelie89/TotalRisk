@@ -6,7 +6,7 @@ import {MainController} from './mainController';
 import {GameSetupController} from './gameSetupController';
 import {AttackModalController} from './attackModalController';
 import {MovementModalController} from './movementModalController';
-import {ColorPopoverController} from './colorPopoverController';
+import ColorPopoverController from './colorPopoverController';
 import {SoundService} from './../sound/soundService';
 import GameEngine from './../gameEngine';
 
