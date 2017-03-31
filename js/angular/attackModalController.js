@@ -36,6 +36,11 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
         vm.attacker = response.attacker;
         vm.defender = response.defender;
 
+        if (vm.attacker.numberOfTroops === 0) {
+            // the invasion failed
+            vm.fightIsOver = true;
+        }
+
         delay(100).then(() => {
             // Animate shake effect on side(s) affected by casualties
             if (response.defenderCasualties > response.attackerCasualties) {
@@ -68,19 +73,22 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
         if (vm.defender.numberOfTroops === 0) {
             // the invasion succeded
             soundService.cheer.play();
-
             vm.fightIsOver = true;
 
-            vm.movementSliderOptions = {
-                floor: 1,
-                ceil: vm.attacker.numberOfTroops
-            };
-            vm.showMoveTroops = true;
+            if (vm.attacker.numberOfTroops > 1) {
+                vm.movementSliderOptions = {
+                    floor: 1,
+                    ceil: vm.attacker.numberOfTroops
+                };
+                vm.showMoveTroops = true;
+            } else {
+                delay(2500).then(() => {
+                    this.moveTroops();
+                });
+            }
         }
         if (vm.attacker.numberOfTroops === 0) {
             delay(2500).then(() => {
-                // the invasion failed
-                vm.fightIsOver = true;
                 // update state
                 $rootScope.$broadcast('battleIsOver', {
                     attackFrom: vm.attacker,

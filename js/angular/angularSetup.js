@@ -8,6 +8,7 @@ import {AttackModalController} from './attackModalController';
 import {MovementModalController} from './movementModalController';
 import ColorPopoverController from './colorPopoverController';
 import {SoundService} from './../sound/soundService';
+import MapService from './../map/mapService';
 import GameEngine from './../gameEngine';
 
 const app = angular.module('risk', ['rzModule', 'ui.bootstrap']);
@@ -22,3 +23,4 @@ app.controller('movementModalController', MovementModalController);
 app.controller('colorPopoverController', ColorPopoverController);
 /* SERVICES */
 app.service('soundService', SoundService);
+app.service('mapService', MapService);

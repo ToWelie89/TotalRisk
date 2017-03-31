@@ -13,6 +13,7 @@ import DeploymentHandler from './deploymentHandler';
 export default class GameEngine {
 
     constructor() {
+        this.filter = 'byOwner';
         // Initialize game announcer voice
         this.gameAnnouncer = new GameAnnouncer();
         // Initialize world map

@@ -1,8 +1,7 @@
-import MapController from './../map/mapController';
 import {GAME_PHASES, TURN_PHASES} from './../gameConstants';
 import {getTerritoryByName} from './../map/mapHelpers';
 
-export function MainController($scope, $rootScope, $log, gameEngine, soundService) {
+export function MainController($scope, $rootScope, $log, gameEngine, soundService, mapService) {
     var vm = this;
 
     // PUBLIC FUNCTIONS
@@ -20,8 +19,6 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
 
     vm.turn = {};
-
-    var mapController;
 
     function init() {
         setupEvents();
@@ -48,8 +45,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             territoryAttacked.owner = data.attackTo.owner;
             territoryAttacked.numberOfTroops = data.attackTo.numberOfTroops;
 
-            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-
+            mapService.updateMap(vm.filter);
             checkIfPlayerWonTheGame();
         });
 
@@ -64,7 +60,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
 
             movementToTerritory.numberOfTroops = data.to.numberOfTroops;
 
-            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+            mapService.updateMap(vm.filter);
             nextTurn();
         });
     }
@@ -74,7 +70,6 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         vm.currentGamePhase = vm.gamePhases.GAME;
         vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
-        mapController = new MapController(gameEngine.players, gameEngine.map);
         document.querySelectorAll('.country').forEach(country => {
             country.addEventListener('click', (e) => {
                 clickCountry(e);
@@ -82,8 +77,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         });
 
         vm.turn = gameEngine.turn;
-        vm.filter = 'byOwner';
-        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+        vm.filter = gameEngine.filter;
+        mapService.updateMap(gameEngine.filter);
     }
 
     function checkIfPlayerWonTheGame() {
@@ -92,17 +87,19 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
 
     function filterByOwner() {
         vm.filter = 'byOwner';
-        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+        gameEngine.filter = 'byOwner';
+        mapService.updateMap(gameEngine.filter);
     }
 
     function filterByRegion() {
         vm.filter = 'byRegion';
-        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+        gameEngine.filter = 'byRegion';
+        mapService.updateMap(gameEngine.filter);
     }
 
     function nextTurn() {
         vm.turn = gameEngine.nextTurn();
-        mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+        mapService.updateMap(gameEngine.filter);
         if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
         }
@@ -128,11 +125,13 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         const clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            soundService.addTroopSound.play();
-            gameEngine.addTroopToTerritory(country);
-            mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-            vm.troopsToDeploy = gameEngine.troopsToDeploy;
-            $scope.$apply();
+            if (gameEngine.troopsToDeploy > 0) {
+                soundService.addTroopSound.play();
+                gameEngine.addTroopToTerritory(country);
+                mapService.updateMap(gameEngine.filter);
+                vm.troopsToDeploy = gameEngine.troopsToDeploy;
+                $scope.$apply();
+            }
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
             if (gameEngine.selectedTerritory &&
                 clickedTerritory.owner !== gameEngine.turn.player.name &&
@@ -147,14 +146,14 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
                 });
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
-                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-                mapController.hightlightTerritory(country, vm.turn);
+                mapService.updateMap(gameEngine.filter);
+                mapService.hightlightTerritory(country);
             }
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
             if (gameEngine.selectedTerritory &&
                 gameEngine.selectedTerritory.name === clickedTerritory.name) {
                 gameEngine.selectedTerritory = undefined;
-                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
+                mapService.updateMap(gameEngine.filter);
             } else if (gameEngine.selectedTerritory &&
                        clickedTerritory.owner === gameEngine.turn.player.name &&
                        gameEngine.selectedTerritory.numberOfTroops > 1 &&
@@ -166,8 +165,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
                 });
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
-                mapController.updateMap(gameEngine.map, vm.filter, gameEngine.turn);
-                mapController.hightlightTerritory(country, vm.turn);
+                mapService.updateMap(gameEngine.filter);
+                mapService.hightlightTerritory(country);
             }
         }
     }
