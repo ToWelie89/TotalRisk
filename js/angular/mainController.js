@@ -22,7 +22,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
 
     function init() {
         setupEvents();
-        console.log('Initialization of mainController');
+        $log.debug('Initialization of mainController');
     }
 
     function toggleMusicVolume() {
@@ -67,6 +67,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
 
     function startGame(players) {
         gameEngine.startGame(players);
+        $rootScope.$emit('turnPresenterStartGame');
         vm.currentGamePhase = vm.gamePhases.GAME;
         vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
@@ -79,6 +80,16 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         vm.turn = gameEngine.turn;
         vm.filter = gameEngine.filter;
         mapService.updateMap(gameEngine.filter);
+    }
+
+    function nextTurn() {
+        vm.turn = gameEngine.nextTurn();
+        $rootScope.$emit('turnPresenterNewTurn');
+        mapService.updateMap(gameEngine.filter);
+        if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            vm.troopsToDeploy = gameEngine.troopsToDeploy;
+        }
+        $log.debug('New turn: ', vm.turn);
     }
 
     function checkIfPlayerWonTheGame() {
@@ -95,15 +106,6 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         vm.filter = 'byRegion';
         gameEngine.filter = 'byRegion';
         mapService.updateMap(gameEngine.filter);
-    }
-
-    function nextTurn() {
-        vm.turn = gameEngine.nextTurn();
-        mapService.updateMap(gameEngine.filter);
-        if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            vm.troopsToDeploy = gameEngine.troopsToDeploy;
-        }
-        console.log(vm.turn);
     }
 
     function checkIfNextIsDisabled() {
@@ -125,11 +127,13 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         const clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            if (gameEngine.troopsToDeploy > 0) {
-                soundService.addTroopSound.play();
-                gameEngine.addTroopToTerritory(country);
-                mapService.updateMap(gameEngine.filter);
-                vm.troopsToDeploy = gameEngine.troopsToDeploy;
+            soundService.addTroopSound.play();
+            gameEngine.addTroopToTerritory(country);
+            mapService.updateMap(gameEngine.filter);
+            vm.troopsToDeploy = gameEngine.troopsToDeploy;
+            $scope.$apply();
+            if (gameEngine.troopsToDeploy === 0) {
+                nextTurn();
                 $scope.$apply();
             }
         } else if (gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {

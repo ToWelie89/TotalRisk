@@ -1,0 +1,84 @@
+<div data-ng-controller="turnPresentationController as turnPresentation" data-ng-init="turnPresentation.init()">
+    <div id="turnPresentationModal" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 0">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Deployment phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                        <div id="troops" class="textCenter paddingBottom">
+                            <span data-ng-repeat="troop in turnPresentation.troopsToDeploy track by $index" class="troop_{{ turnPresentation.turn.player.color.name }}">
+                                <span class="troopIcon troop">
+                                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 59.868 59.868" style="enable-background:new 0 0 59.868 59.868;" xml:space="preserve" width="512px" height="512px">
+<g>
+	<g>
+		<path d="M25.439,15.323c0,2.345,1.906,4.25,4.25,4.25c2.343,0,4.248-1.905,4.248-4.25    c0-0.157-0.029-0.306-0.046-0.458h1.428V5.629C35.319,2.52,32.797,0,29.689,0c-3.11,0-5.632,2.52-5.632,5.629v9.236h1.428    C25.469,15.017,25.439,15.166,25.439,15.323z M33.411,15.323c0,2.052-1.671,3.722-3.722,3.722c-2.053,0-3.723-1.669-3.723-3.722    c0-0.157,0.027-0.306,0.046-0.458h7.353C33.384,15.017,33.411,15.166,33.411,15.323z" fill="#D80027"/>
+		<path d="M30.512,57.542c0,1.261,1.051,2.281,2.344,2.281c1.296,0,2.345-1.021,2.345-2.281l0.058-11.99    h-4.744L30.512,57.542z" fill="#D80027"/>
+		<path d="M24.248,57.589c0,1.258,0.921,2.279,2.217,2.279c1.293,0,2.343-1.021,2.343-2.279V45.552h-4.56    V57.589z" fill="#D80027"/>
+		<path d="M19.184,39.177c0.085,1.27,1.06,1.938,2.053,2.02v-4.195h-2.175    C19.097,37.81,19.142,38.551,19.184,39.177z" fill="#D80027"/>
+		<path d="M21.236,32.593H20.92l0.248-8.962c-2.096,3.287-2.27,8.827-2.126,12.842h2.194V32.593z" fill="#D80027"/>
+		<path d="M34.189,21.055c-0.002,0-0.006,0.001-0.008,0.001c-2.201-0.543-7.701-0.223-8.375-0.182    c-0.043,0.001-0.083-0.008-0.128-0.005c-0.427,0.027-0.823,0.099-1.197,0.199l0.317,11.525h-0.313v3.527h2.398V22.06h1.049v14.062    h7.326v2.736h-7.326v5.418h-1.049v-5.418h-2.398v3.312h-0.679l-0.085,2.767h5.089h1.702h5.275c0,0-0.495-15.25-0.488-18.173    c0,0,0.031-0.143,0.076-0.368c0.831,1.785,0.98,5.188,1.053,6.104c0.105,1.402,0.141,2.822,0.121,4.238h4.276    C41.041,30.8,40.588,21.445,34.189,21.055z M30.726,33.895c-0.395,0-0.715-0.319-0.715-0.716c0-0.395,0.319-0.715,0.715-0.715    s0.716,0.32,0.716,0.715C31.442,33.576,31.122,33.895,30.726,33.895z M30.726,31.646c-0.395,0-0.715-0.318-0.715-0.713    c0-0.396,0.319-0.717,0.715-0.717s0.716,0.32,0.716,0.717C31.442,31.328,31.122,31.646,30.726,31.646z M30.779,29.396    c-0.395,0-0.717-0.32-0.717-0.714c0-0.395,0.322-0.715,0.717-0.715c0.396,0,0.716,0.32,0.716,0.715S31.176,29.396,30.779,29.396z" fill="#D80027"/>
+		<path d="M36.451,39.363c-0.182,2.725,4.053,2.706,4.232,0c0.041-0.605,0.082-1.318,0.119-2.097h-4.263    C36.525,37.966,36.499,38.665,36.451,39.363z" fill="#D80027"/>
+		<rect x="25.96" y="36.473" width="5.699" height="2.034" fill="#D80027"/>
+		<polygon points="23.685,20.008 22.956,20.008 22.956,12.093 22.436,12.093 22.436,20.008 21.917,20.008     21.606,31.281 21.917,31.281 21.917,41.465 23.685,41.465 23.685,31.281 23.995,31.281   " fill="#D80027"/>
+	</g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
+
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 1">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Attack phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                    </div>
+
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 2">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Movement phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

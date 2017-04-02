@@ -29,9 +29,9 @@
                                         @@troopSvg
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.attacker.numberOfTroops == 0">
+                                <div data-ng-show="attack.attacker.numberOfTroops == 0" class="deadLabel">
                                     <strong>DEAD!</strong>
-                                </span>
+                                </div>
                             </div>
                             <div class="col-xs-6" id="defenderTroops">
                                 <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}">
@@ -45,9 +45,9 @@
                                         @@troopSvg
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.defender.numberOfTroops == 0">
+                                <div data-ng-show="attack.defender.numberOfTroops == 0" class="deadLabel">
                                     <strong>DEAD!</strong>
-                                </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -63,11 +63,11 @@
                             <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
                         </div>
                         <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver">
-                            <button type="button" class="button button-blue" data-ng-click="attack.fight()">
+                            <button type="button" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons">
                                 <i class="fa fa-times"></i>
                                 <strong>Fight!</strong>
                             </button>
-                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()">
+                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons">
                                 <i class="fa fa-times"></i>
                                 <strong>Retreat!</strong>
                             </button>

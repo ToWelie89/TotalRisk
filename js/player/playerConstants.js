@@ -1,20 +1,20 @@
-export const PLAYER_COLORS = {
+const PLAYER_COLORS = {
     RED: {
         name: 'Red',
-        mainColor: '#EF5C5C',
-        borderColor: '#CC3030',
+        mainColor: '#dd4444',
+        borderColor: '#b22525',
         highlightColor: '#fe8c8c'
     },
     GREEN: {
         name: 'Green',
-        mainColor: '#92F381',
-        borderColor: '#53E239',
+        mainColor: '#4acd61',
+        borderColor: '#35a749',
         highlightColor: '#caf6c2'
     },
     BLUE: {
         name: 'Blue',
-        mainColor: '#3333ff',
-        borderColor: '#1a1a9c',
+        mainColor: '#4770ea',
+        borderColor: '#234abe',
         highlightColor: '#7272fa'
     },
     PINK: {
@@ -25,19 +25,19 @@ export const PLAYER_COLORS = {
     },
     BLACK: {
         name: 'Black',
-        mainColor: '#3c3c3c',
-        borderColor: '#202020',
+        mainColor: '#564848',
+        borderColor: '#362d2d',
         highlightColor: '#525252'
     },
     YELLOW: {
         name: 'Yellow',
-        mainColor: '#ffff66',
-        borderColor: '#dbdb39',
+        mainColor: '#eaea67',
+        borderColor: '#bbbb42',
         highlightColor: '#ffffae'
     }
 };
 
-export const PLAYER_PREDEFINED_NAMES = [
+const PLAYER_PREDEFINED_NAMES = [
     'Julius Caesar',
     'Napoleon Bonaparte',
     'Hannibal Barca',
@@ -46,7 +46,7 @@ export const PLAYER_PREDEFINED_NAMES = [
     'Attila the Hun'
 ];
 
-export function playerIterator(playerMap, turnPhases) {
+const playerIterator = (playerMap, turnPhases) => {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;
     let newPlayer = true;
@@ -91,3 +91,5 @@ export function playerIterator(playerMap, turnPhases) {
         }
     };
 }
+
+export {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES, playerIterator};

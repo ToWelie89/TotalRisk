@@ -7,6 +7,32 @@
                     <div class="modal-body textCenter">
                         <div class="row">
                             <div class="col-xs-12">
+                                <p>Move from <strong>{{movement.moveFrom.name}}</strong> to <strong>{{movement.moveTo.name}}</strong></p>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-xs-4">
+                                <svg id="moveFromSvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                                </svg>
+                            </div>
+                            <div class="col-xs-4">
+                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            </div>
+                            <div class="col-xs-4">
+                                <svg id="moveToSvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                                </svg>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1>{{ movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops }}</h1>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1>{{ movement.moveTo.numberOfTroops + movement.moveNumberOfTroops }}</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
                                 <rzslider rz-slider-model="movement.moveNumberOfTroops" rz-slider-options="movement.movementSliderOptions"></rzslider>
                             </div>
                             <div class="col-xs-12 paddingTop">

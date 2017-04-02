@@ -31,7 +31,8 @@ export let worldMap = {
                 "Congo",
                 "North Africa",
                 "Egypt",
-                "Middle East"
+                "Middle East",
+                "South Africa"
             ]
         }, {
             name: "Congo",

@@ -1,9 +1,9 @@
 import { TURN_PHASES } from './../gameConstants';
 
 export default class GameAnnouncer {
-    constructor(announcerType = 'UK English Male', pitch = 0.7) {
-        this.announcerType = announcerType;
-        this.pitch = pitch;
+    constructor() {
+        this.announcerType = 'UK English Male';
+        this.pitch = 0.7;
     }
 
     speak(text, onstartCallback, onendCallback) {

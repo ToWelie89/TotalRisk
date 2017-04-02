@@ -1,0 +1,37 @@
+<div data-ng-controller="turnPresentationController as turnPresentation" data-ng-init="turnPresentation.init()">
+    <div id="turnPresentationModal" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 0">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Deployment phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                        <div id="troops" class="textCenter paddingBottom">
+                            <span data-ng-repeat="troop in turnPresentation.troopsToDeploy track by $index" class="troop_{{ turnPresentation.turn.player.color.name }}">
+                                <span class="troopIcon troop">
+                                    @@troopSvg
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 1">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Attack phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                    </div>
+
+                    <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 2">
+                        <div class="textCenter text-shadow col-xs-12">
+                            <h1 class="paddingTop">Movement phase</h1>
+                            <p class="paddingBottom--double" data-ng-bind="turnPresentation.turn.player.name" style="color: {{ turnPresentation.turn.player.color.mainColor }};"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

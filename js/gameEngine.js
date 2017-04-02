@@ -5,17 +5,16 @@
 import WorldMap from './map/worldMap';
 import { getTerritoryByName } from './map/mapHelpers';
 import { playerIterator } from './player/playerConstants';
-import { TURN_PHASES } from './gameConstants';
+import { TURN_PHASES, MAIN_MUSIC } from './gameConstants';
 import { shuffle } from './helpers';
-import GameAnnouncer from './voice/gameAnnouncer';
 import DeploymentHandler from './deploymentHandler';
 
 export default class GameEngine {
 
-    constructor() {
+    constructor($log, gameAnnouncerService) {
+        this.$log = $log;
+        this.gameAnnouncerService = gameAnnouncerService;
         this.filter = 'byOwner';
-        // Initialize game announcer voice
-        this.gameAnnouncer = new GameAnnouncer();
         // Initialize world map
         this.map = new WorldMap();
         this.playSound = true;
@@ -37,12 +36,12 @@ export default class GameEngine {
                 this.setMusic();
             }
         } else {
-            this.gameAnnouncer.mute();
+            this.gameAnnouncerService.mute();
             this.bgMusic.pause();
         }
     }
 
-    setMusic(music = './audio/bgmusic.mp3') {
+    setMusic(music = MAIN_MUSIC) {
         if (this.playSound) {
             if (this.bgMusic) {
                 this.bgMusic.pause();
@@ -56,7 +55,7 @@ export default class GameEngine {
     }
 
     startGame(players) {
-        console.log('game started!');
+        this.$log.debug('Game started!');
 
         // Initialize player list
         this.players = new Map();
@@ -72,33 +71,13 @@ export default class GameEngine {
         // Setup game table
         this.setupInitDeployment();
 
-        if (this.playSound) {
-            this.gameAnnouncer.speak('Game started', () => {
-                this.setMusicVolume(0.3);
-            }, () => {
-                this.gameAnnouncer.stateTurn(this.turn, () => {
-                    this.setMusicVolume(0.3);
-                }, () => {
-                    this.setMusicVolume(1.0);
-                });
-            });
-        }
-
-        console.log(this.turn);
+        this.$log.debug('Current turn: ', this.turn);
         this.handleTurnPhase();
     }
 
     nextTurn() {
-        console.log('New turn!');
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
-        if (this.playSound) {
-            this.gameAnnouncer.stateTurn(this.turn, () => {
-                this.setMusicVolume(0.3);
-            }, () => {
-                this.setMusicVolume(1.0);
-            });
-        }
         this.handleTurnPhase();
         return this.turn;
     }
@@ -129,7 +108,6 @@ export default class GameEngine {
         if (this.troopsToDeploy > 0 && territory.owner === this.turn.player.name) {
             this.troopsToDeploy--;
             territory.numberOfTroops++;
-            console.log(territory);
         }
     }
 }

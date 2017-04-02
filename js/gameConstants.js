@@ -1,16 +1,22 @@
-export const TURN_PHASES = {
+const TURN_PHASES = {
     DEPLOYMENT: 0,
     ATTACK: 1,
     MOVEMENT: 2
 };
 
-export const GAME_PHASES = {
+const GAME_PHASES = {
     PLAYER_SETUP: 0,
     GAME: 1
 };
 
-export const CONSTANTS = {
+const CONSTANTS = {
     MIN_NUMBER_OF_PLAYERS: 2,
     MAX_NUMBER_OF_PLAYERS: 6,
     MIN_REINFORCEMENTS: 3
 };
+
+const MAIN_MUSIC = './audio/bgmusic.mp3';
+
+const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 0.3;
+
+export {TURN_PHASES, GAME_PHASES, CONSTANTS, MAIN_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING};

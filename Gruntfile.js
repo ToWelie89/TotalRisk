@@ -87,6 +87,9 @@ module.exports = function(grunt) {
                 files: [{
                     src: ['src/attackModal.html'],
                     dest: 'attackModal.html'
+                }, {
+                    src: ['src/turnPresentationModal.html'],
+                    dest: 'turnPresentationModal.html'
                 }]
             }
         }

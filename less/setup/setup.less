@@ -5,6 +5,10 @@
         float:right;
         border-radius: 3px;
         border: 1px solid black;
+        transition: all 0.5s;
+        &:hover {
+            border: 3px solid white;
+        }
     }
     .popoverBody {
         display: none;
@@ -17,8 +21,13 @@
         height: 25px;
         float: left;
         margin-bottom: 11px;
+        border: 1px solid transparent;
+        transition: all 0.5s;
+        &:hover {
+            border: 1px solid black;
+        }
         &--chosen {
-            border: 2px dotted black;
+            border: 2px dotted black !important;
         }
     }
 }

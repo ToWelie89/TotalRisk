@@ -2,7 +2,7 @@ import Player from './../player/player';
 import {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
-export function GameSetupController($scope, soundService) {
+export function GameSetupController($scope, $log, soundService) {
     let vm = this;
 
     // PUBLIC FIELDS
@@ -19,9 +19,9 @@ export function GameSetupController($scope, soundService) {
     vm.updateColorOfPlayer = updateColorOfPlayer;
 
     function init() {
-        console.log('Initialize game setup controller');
+        $log.debug('Initialize game setup controller');
         vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(PLAYER_PREDEFINED_NAMES[i], Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
-        console.log(vm.players);
+        $log.debug('Players: ', vm.players);
     }
 
     function updateColorOfPlayer(player, color) {
