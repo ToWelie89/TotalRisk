@@ -1,4 +1,4 @@
-export function getTerritoryByName(map, name) {
+const getTerritoryByName = (map, name) => {
     let terr;
     map.regions.forEach(region => {
         region.territories.forEach(territory => {
@@ -8,4 +8,6 @@ export function getTerritoryByName(map, name) {
         });
     });
     return terr;
-}
+};
+
+export {getTerritoryByName};

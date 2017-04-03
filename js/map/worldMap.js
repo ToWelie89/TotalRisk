@@ -28,7 +28,7 @@ export default class WorldMap {
     }
 
     getAllTerritoriesAsList() {
-        let arr = [];
+        const arr = [];
         this.regions.forEach(region => {
             region.territories.forEach(territory => {
                 arr.push(territory);
@@ -38,20 +38,13 @@ export default class WorldMap {
     }
 
     getNumberOfTerritoriesByOwner(owner) {
-        let count = 0;
-        this.regions.forEach(region => {
-            region.territories.forEach(territory => {
-                if (territory.owner === owner) {
-                    count++;
-                }
-            });
-        });
-        return count;
+        return this.getAllTerritoriesAsList().filter(territory => (territory.owner === owner)).length;
     }
 
     calculateRegionBonusesForPlayer(owner) {
-        let regionBonuses = [];
+        const regionBonuses = [];
         this.regions.forEach(region => {
+            // if (Array.from(region.territories.values()).filter(territory => (territory.owner === owner)).length === region.territories.length) {
             if (this.allTerritoriesOwnedByPlayer(owner, region.territories)) {
                 regionBonuses.push(region);
             }

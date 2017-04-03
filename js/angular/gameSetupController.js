@@ -2,63 +2,63 @@ import Player from './../player/player';
 import {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
-export function GameSetupController($scope, $log, soundService) {
-    let vm = this;
+export default class GameSetupController {
 
-    // PUBLIC FIELDS
-    vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
-    vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
+    constructor($scope, $log, soundService) {
+        this.vm = this;
+        this.$log = $log;
+        this.soundService = soundService;
 
-    // PUBLIC FUNCTIONS
-    vm.init = init;
-    vm.addPlayer = addPlayer;
-    vm.removePlayer = removePlayer;
-    vm.startGameIsDisabled = startGameIsDisabled;
-    vm.hasDuplicates = hasDuplicates;
-    vm.emptyNamesExists = emptyNamesExists;
-    vm.updateColorOfPlayer = updateColorOfPlayer;
+        // PUBLIC FIELDS
+        this.vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
+        this.vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
 
-    function init() {
-        $log.debug('Initialize game setup controller');
-        vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(PLAYER_PREDEFINED_NAMES[i], Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
-        $log.debug('Players: ', vm.players);
+        // PUBLIC FUNCTIONS
+        this.vm.init = this.init;
+        this.vm.addPlayer = this.addPlayer;
+        this.vm.removePlayer = this.removePlayer;
+        this.vm.startGameIsDisabled = this.startGameIsDisabled;
+        this.vm.hasDuplicates = this.hasDuplicates;
+        this.vm.emptyNamesExists = this.emptyNamesExists;
+        this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
     }
 
-    function updateColorOfPlayer(player, color) {
+    init() {
+        this.$log.debug('Initialize game setup controller');
+        this.vm.players = Array.from(new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) => new Player(PLAYER_PREDEFINED_NAMES[i], Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i]));
+        this.$log.debug('Players: ', this.vm.players);
+    }
+
+    updateColorOfPlayer(player, color) {
         let colorIsUsedBy;
         let colorIsUsed = false;
-        vm.players.forEach(currentPlayer => {
+        this.vm.players.forEach(currentPlayer => {
             if (player.name === currentPlayer.name) {
-                vm.players.forEach(player => {
+                this.vm.players.forEach(player => {
                     if (player.color.name.toUpperCase() === color.name.toUpperCase()) {
                         colorIsUsed = true;
                         colorIsUsedBy = player;
                     }
                 });
-                if (!colorIsUsed) {
-                    player.color = color;
-                } else {
-                    // change the color of the player currently using this color then
-                    player.color = color;
-                }
+                player.color = color;
             }
         });
         if (colorIsUsed) {
-            colorIsUsedBy.color = getUnusedColor();
+            colorIsUsedBy.color = this.getUnusedColor();
         }
     }
 
-    function addPlayer() {
-        soundService.bleep.play();
+    addPlayer() {
+        this.soundService.bleep.play();
 
-        if (vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
+        if (this.vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
         let colorToUse;
 
         Array.from(Object.keys(PLAYER_COLORS)).forEach(color => {
             let colorIsUsed = false;
-            vm.players.forEach(player => {
+            this.vm.players.forEach(player => {
                 if (player.color.name.toUpperCase() === color) {
                     colorIsUsed = true;
                 }
@@ -68,25 +68,25 @@ export function GameSetupController($scope, $log, soundService) {
             }
         });
         if (colorToUse) {
-            vm.players.push(new Player(getFirstUnusedName(), PLAYER_COLORS[colorToUse]));
+            this.vm.players.push(new Player(this.getFirstUnusedName(), PLAYER_COLORS[colorToUse]));
         }
     }
 
-    function removePlayer(playerToRemove) {
-        vm.players = vm.players.filter(player => {
+    removePlayer(playerToRemove) {
+        this.vm.players = this.vm.players.filter(player => {
             if (player !== playerToRemove) {
                 return player;
             }
         });
     }
 
-    function getUnusedColor() {
-        const usedColors = vm.players.map((player) => player.color);
+    getUnusedColor() {
+        const usedColors = this.vm.players.map(player => player.color);
         const availableColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
 
         let colorToReturn;
 
-        availableColors.forEach((color) => {
+        availableColors.forEach(color => {
             if (!usedColors.includes(color)) {
                 colorToReturn = color;
             }
@@ -95,11 +95,11 @@ export function GameSetupController($scope, $log, soundService) {
         return colorToReturn;
     }
 
-    function getFirstUnusedName() {
+    getFirstUnusedName() {
         let name;
-        const usedNames = vm.players.map((player) => player.name);
+        const usedNames = this.vm.players.map(player => player.name);
 
-        PLAYER_PREDEFINED_NAMES.forEach((playerName) => {
+        PLAYER_PREDEFINED_NAMES.forEach(playerName => {
             if (!usedNames.includes(playerName)) {
                 name = playerName;
             }
@@ -108,26 +108,26 @@ export function GameSetupController($scope, $log, soundService) {
         return name;
     }
 
-    function startGameIsDisabled() {
+    startGameIsDisabled() {
         let returnValue = false;
         // Check that all players has a name set
-        returnValue = emptyNamesExists();
+        returnValue = this.emptyNamesExists();
         // Check that names aren't identical
         if (!returnValue) {
-            returnValue = hasDuplicates();
+            returnValue = this.hasDuplicates();
         }
 
         return returnValue;
     }
 
-    function hasDuplicates() {
-        const names = Array.from(vm.players, x => x.name.toLowerCase());
+    hasDuplicates() {
+        const names = Array.from(this.vm.players, x => x.name.toLowerCase());
         return (new Set(names)).size !== names.length;
     }
 
-    function emptyNamesExists() {
+    emptyNamesExists() {
         let returnValue = false;
-        vm.players.forEach(player => {
+        this.vm.players.forEach(player => {
             if (!player.name) {
                 returnValue = true;
             }
