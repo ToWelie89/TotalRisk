@@ -46,16 +46,43 @@ const PLAYER_PREDEFINED_NAMES = [
     'Attila the Hun'
 ];
 
+const avatars = {
+    'Julius Caesar': {
+        picture: '',
+        selectSound: ''
+    },
+    'Napoleon Bonaparte': {
+        picture: '',
+        selectSound: ''
+    },
+    'Hannibal Barca': {
+        picture: '',
+        selectSound: ''
+    },
+    'Alexander the Great': {
+        picture: '',
+        selectSound: ''
+    },
+    'Genghis Khan': {
+        picture: '',
+        selectSound: ''
+    },
+    'Attila the Hun': {
+        picture: '',
+        selectSound: ''
+    }
+};
+
 const playerIterator = (playerMap, turnPhases) => {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;
     let newPlayer = true;
 
     return {
-        next: function() {
+        next: () => {
             if ((currentTurnPhaseIndex + 1) < turnPhases.length) {
-                let turn = turnPhases[currentTurnPhaseIndex++];
-                let player = playerMap[currentPlayerIndex];
+                const turn = turnPhases[currentTurnPhaseIndex++];
+                const player = playerMap[currentPlayerIndex];
                 newPlayer = false;
                 return {
                     player: player[1],
@@ -65,8 +92,8 @@ const playerIterator = (playerMap, turnPhases) => {
                 };
             }
             currentTurnPhaseIndex = 0;
-            let turn = turnPhases[currentTurnPhaseIndex];
-            let player = playerMap[currentPlayerIndex];
+            const turn = turnPhases[currentTurnPhaseIndex];
+            const player = playerMap[currentPlayerIndex];
             newPlayer = true;
 
             if ((currentPlayerIndex + 1) < (playerMap.length)) {
@@ -81,7 +108,7 @@ const playerIterator = (playerMap, turnPhases) => {
                 newPlayer
             };
         },
-        getCurrent: function() {
+        getCurrent: () => {
             return {
                 player: playerMap[currentPlayerIndex][1],
                 turnPhase: turnPhases[currentTurnPhaseIndex],
@@ -90,6 +117,6 @@ const playerIterator = (playerMap, turnPhases) => {
             };
         }
     };
-}
+};
 
-export {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES, playerIterator};
+export {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES, playerIterator, avatars};

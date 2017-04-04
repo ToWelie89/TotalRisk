@@ -1,4 +1,4 @@
-export let worldMap = {
+export const worldMap = {
     regions: [{
         name: "Africa",
         bonusTroops: 3,
