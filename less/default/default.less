@@ -28,6 +28,10 @@ a:hover {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.68);
 }
 
+.box-shadow {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.68);
+}
+
 .rz-pointer.rz-pointer-min {
     &:focus {
         outline: none;
@@ -52,6 +56,7 @@ header {
     .createdBy {
         font-size: 12px;
         color: black;
+        margin-top: -10px;
         a {
             color: white;
         }
@@ -66,7 +71,7 @@ header {
         width: 100%;
         height: 100%;
         background: url(/assets/img/smoke.png) no-repeat;
-        -webkit-animation: 60s fog infinite;
+        -webkit-animation: 45s fog infinite;
         background-size: 4000px;
         position: absolute;
         top: 0;
@@ -87,7 +92,7 @@ header {
 }
 
 .pulsate {
-    -webkit-animation: pulsate 3s cubic-bezier(0.22, 0.61, 0.36, 1);
+    -webkit-animation: pulsate 5s cubic-bezier(0.22, 0.61, 0.36, 1);
     -webkit-animation-iteration-count: infinite;
 }
 
@@ -135,6 +140,7 @@ header {
     margin: 0;
     color: #FFFFFF;
     font-family: 'ScorchedEarth';
+    letter-spacing: 8px;
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.72);
 }
 

@@ -21,17 +21,37 @@ export default class GameSetupController {
         this.vm.hasDuplicates = this.hasDuplicates;
         this.vm.emptyNamesExists = this.emptyNamesExists;
         this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
+        this.vm.updateAvatarOfPlayer = this.updateAvatarOfPlayer;
     }
 
     init() {
         this.$log.debug('Initialize game setup controller');
         this.vm.players = Array.from(
             new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
-                new Player(PLAYER_PREDEFINED_NAMES[i],
+                new Player(Object.keys(avatars).map(key => key)[i],
                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
                            Object.keys(avatars).map(key => avatars[key])[i])
         );
         this.$log.debug('Players: ', this.vm.players);
+    }
+
+    updateAvatarOfPlayer(player, avatar) {
+        let avatarIsUsedBy;
+        let avatarIsUsed = false;
+        this.vm.players.forEach(currentPlayer => {
+            if (player.name === currentPlayer.name) {
+                this.vm.players.forEach(player => {
+                    if (player.avatar === avatar) {
+                        avatarIsUsed = true;
+                        avatarIsUsedBy = player;
+                    }
+                });
+                player.avatar = avatar;
+            }
+        });
+        if (avatarIsUsed) {
+            avatarIsUsedBy.avatar = this.getUnusedAvatar();
+        }
     }
 
     updateColorOfPlayer(player, color) {
@@ -54,27 +74,11 @@ export default class GameSetupController {
     }
 
     addPlayer() {
-        this.soundService.bleep.play();
-
         if (this.vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
-        let colorToUse;
-
-        Array.from(Object.keys(PLAYER_COLORS)).forEach(color => {
-            let colorIsUsed = false;
-            this.vm.players.forEach(player => {
-                if (player.color.name.toUpperCase() === color) {
-                    colorIsUsed = true;
-                }
-            });
-            if (!colorIsUsed) {
-                colorToUse = color;
-            }
-        });
-        if (colorToUse) {
-            this.vm.players.push(new Player(this.getFirstUnusedName(), PLAYER_COLORS[colorToUse]));
-        }
+        this.soundService.bleep.play();
+        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar()));
     }
 
     removePlayer(playerToRemove) {
@@ -100,17 +104,45 @@ export default class GameSetupController {
         return colorToReturn;
     }
 
+    getUnusedAvatar() {
+        const usedAvatars = this.vm.players.map(player => player.avatar);
+        const availableAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
+
+        let avatarToReturn;
+
+        availableAvatars.forEach(avatar => {
+            if (!usedAvatars.includes(avatar)) {
+                avatarToReturn = avatar;
+            }
+        });
+
+        return avatarToReturn;
+    }
+
     getFirstUnusedName() {
         let name;
         const usedNames = this.vm.players.map(player => player.name);
 
-        PLAYER_PREDEFINED_NAMES.forEach(playerName => {
+        Array.from(Object.keys(avatars)).forEach(playerName => {
             if (!usedNames.includes(playerName)) {
                 name = playerName;
             }
         });
 
         return name;
+    }
+
+    getFirstUnusedAvatar() {
+        let avatarToReturn;
+        const usedAvatars = this.vm.players.map(player => player.avatar);
+
+        avatars.forEach(avatar => {
+            if (!usedAvatars.includes(avatar)) {
+                avatarToReturn = avatar;
+            }
+        });
+
+        return avatarToReturn;
     }
 
     startGameIsDisabled() {

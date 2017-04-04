@@ -39,9 +39,9 @@
     <header>
         <span id="sizeIndicator"></span>
         <div class="wrapper">
-            <h1 class="pulsate">ECMA6 Risk</h1>
+            <h1 class="pulsate">Risk</h1>
             <div class="createdBy">
-                ECMA6 Risk web application game made by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
             </div>
         </div>
         <div class="smoke"></div>
@@ -50,7 +50,7 @@
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" id="gameSetupBox">
                 <div class="row">
-                    <div id="filters" class="paddingBottom--double col-xs-4" style="padding-right:0px;">
+                    <div id="filters" class="col-xs-4" style="padding-right:0px;">
                         <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-green': main.playSound, 'button-red': !main.playSound}">
                             <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
@@ -59,15 +59,20 @@
                     </div>
                 </div>
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
-                    <div class="col-xs-4 text-shadow" style="text-align: right;">
-                        <div class="colorSelectorBox" style="background-color: {{player.color.mainColor}};"
-                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverTemplate.html'" data-ng-controller="colorPopoverController as popover" data-ng-init="popover.init(player)">
+                    <div class="col-xs-3 text-shadow" style="text-align: right; margin-top: 12px;">
+                        <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)">
                         </div>
                     </div>
-                    <div class="col-xs-4" style="text-align: left;">
-                        <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control" style="width: 100%;" />
+                    <div class="col-xs-5" style="text-align: left; margin-top: 12px;">
+                        <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
                     </div>
-                    <div class="col-xs-4" style="text-align: left;">
+                    <div class="col-xs-1" style="text-align: left;">
+                        <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select an avatar" popover-trigger="'focus'" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)">
+                        </div>
+                    </div>
+                    <div class="col-xs-3" style="text-align: left; margin-top: 12px;">
                         <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
                             <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -87,11 +92,12 @@
                 <div class="row marginTop">
                     <div class="col-xs-12 textCenter">
                         <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
-                            <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
+                        <button type="button" class="button button-green" data-ng-disabled="true">
+                            <strong>Tutorial</strong>
+                        </button>
                         <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
-                            <i class="fa fa-times"></i>
                             <strong>Start</strong>
                         </button>
                     </div>

@@ -7,6 +7,7 @@ import GameSetupController from './gameSetupController';
 import {AttackModalController} from './attackModalController';
 import {MovementModalController} from './movementModalController';
 import ColorPopoverController from './colorPopoverController';
+import AvatarPopoverController from './avatarPopoverController';
 import {TurnPresentationController} from './turnPresentationController';
 import {SoundService} from './../sound/soundService';
 import MapService from './../map/mapService';
@@ -23,6 +24,7 @@ app.controller('gameSetupController', GameSetupController);
 app.controller('attackModalController', AttackModalController);
 app.controller('movementModalController', MovementModalController);
 app.controller('colorPopoverController', ColorPopoverController);
+app.controller('avatarPopoverController', AvatarPopoverController);
 app.controller('turnPresentationController', TurnPresentationController);
 /* SERVICES */
 app.service('soundService', SoundService);

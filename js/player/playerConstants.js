@@ -37,38 +37,29 @@ const PLAYER_COLORS = {
     }
 };
 
-const PLAYER_PREDEFINED_NAMES = [
-    'Julius Caesar',
-    'Napoleon Bonaparte',
-    'Hannibal Barca',
-    'Alexander the Great',
-    'Genghis Khan',
-    'Attila the Hun'
-];
-
 const avatars = {
     'Julius Caesar': {
-        picture: '',
+        picture: 'http://www.bbc.co.uk/staticarchive/837022b3d9ba8c0664db08d3ab4f16e15a73a683.jpg',
         selectSound: ''
     },
     'Napoleon Bonaparte': {
-        picture: '',
+        picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Napoleon_-_2.jpg/170px-Napoleon_-_2.jpg',
         selectSound: ''
     },
     'Hannibal Barca': {
-        picture: '',
+        picture: 'http://www.leadershipgeeks.com/wp-content/uploads/hannibal-239x300.jpg',
         selectSound: ''
     },
     'Alexander the Great': {
-        picture: '',
+        picture: 'http://blog.oup.com/wp-content/uploads/2014/01/Alexander-the-Great.jpg',
         selectSound: ''
     },
     'Genghis Khan': {
-        picture: '',
+        picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/YuanEmperorAlbumGenghisPortrait.jpg/468px-YuanEmperorAlbumGenghisPortrait.jpg',
         selectSound: ''
     },
     'Attila the Hun': {
-        picture: '',
+        picture: 'http://historythings.com/wp-content/uploads/2016/08/things-you-didn-t-know-about-attila-the-hun-u1.jpg',
         selectSound: ''
     }
 };
@@ -119,4 +110,4 @@ const playerIterator = (playerMap, turnPhases) => {
     };
 };
 
-export {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES, playerIterator, avatars};
+export {PLAYER_COLORS, playerIterator, avatars};

@@ -1,13 +1,27 @@
 #gameSetupBox {
-    .colorSelectorBox {
-        height: 33px;
-        width: 33px;
-        float:right;
+    .colorSelectorBox,
+    .avatarSelectorBox {
         border-radius: 3px;
         border: 1px solid black;
         transition: all 0.5s;
         &:hover {
             border: 3px solid white;
+        }
+    }
+    .colorSelectorBox {
+        float: right;
+        height: 33px;
+        width: 33px;
+    }
+    .avatarSelectorBox {
+        float: left;
+        background-size: cover;
+        background-position: center center;
+        border-radius: 50%;
+        height: 60px;
+        width: 60px;
+        &:focus {
+            outline: none;
         }
     }
     .popoverBody {
@@ -16,18 +30,30 @@
 }
 
 .popover-content {
-    .popoverBodyColorBox {
+    .popoverBodyColorBox,
+    .popoverBodyAvatarBox {
         width: 25px;
         height: 25px;
         float: left;
         margin-bottom: 11px;
         border: 1px solid transparent;
         transition: all 0.5s;
+        background-size: contain;
+        background-position: center center;
         &:hover {
             border: 1px solid black;
         }
         &--chosen {
             border: 2px dotted black !important;
         }
+    }
+    .popoverBodyColorBox {
+        width: 25px;
+        height: 25px;
+    }
+    .popoverBodyAvatarBox {
+        width: 33px;
+        height: 33px;
+        background-size: cover;
     }
 }
