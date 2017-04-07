@@ -2,6 +2,11 @@
     <div id="turnPresentationModal" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="turnAvatarContainer">
+                    <div class="turnAvatar" style="background-image: url({{ turnPresentation.turn.player.avatar.picture }});">
+                    </div>
+                </div>
+
                 <div class="modal-body">
                     <div class="row" data-ng-show="turnPresentation.turn.turnPhase === 0">
                         <div class="textCenter text-shadow col-xs-12">

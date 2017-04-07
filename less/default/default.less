@@ -38,14 +38,8 @@ a:hover {
     }
 }
 
-.modal {
-    top: 160px;
-}
-
-#attackModal {
-    .modal-dialog {
-        margin: 70px auto;
-    }
+span.rz-bubble.rz-limit.rz-floor {
+    display: none;
 }
 
 header {
@@ -82,6 +76,15 @@ header {
 
 #playerName {
     font-size: 30px;
+    .turnAvatar {
+        height: 30px;
+        width: 30px;
+        background-size: cover;
+        background-position: center center;
+        border-radius: 50%;
+        border: 1px solid white;
+        float: left;
+    }
 }
 
 #turnInfo {
@@ -96,52 +99,19 @@ header {
     -webkit-animation-iteration-count: infinite;
 }
 
-@-webkit-keyframes pulsate {
-    0% {
-        text-shadow: none
-    }
-    50% {
-        text-shadow: 3px 3px 0 rgba(255, 0, 0, 0.5), -1px -1px 0 rgba(255, 0, 0, 0.5), 1px -1px 0 rgba(255, 0, 0, 0.5), -1px 1px 0 rgba(255, 0, 0, 0.5), 1px 1px 0 rgba(255, 0, 0, 0.5);
-    }
-    100% {
-        text-shadow: none;
-    }
-}
-
-@keyframes fog {
-        0% {background-position:left;}
-        30% {opacity:.5;}
-        80% {opacity: .8;}
-        100%{background-position:right; opacity:1;}
-    }
-
-@-moz-keyframes fog {
-   0% {background-position:left;}
-    30% {opacity:.5;}
-    80% {opacity: .8;}
-    100%{background-position:right; opacity:1;}
-}
-
-@-webkit-keyframes fog {
-    0% {background-position:left;}
-    30% {opacity:.5;}
-    80% {opacity: .8;}
-    100%{background-position:right; opacity:1;}
-}
-
 .wrapper {
     max-width: 1170px;
     margin: 0 auto;
-}
 
-.wrapper > h1 {
-    font-weight: 300;
-    font-size: 52px;
-    margin: 0;
-    color: #FFFFFF;
-    font-family: 'ScorchedEarth';
-    letter-spacing: 8px;
-    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.72);
+    h1 {
+        font-weight: 300;
+        font-size: 52px;
+        margin: 0;
+        color: #FFFFFF;
+        font-family: 'ScorchedEarth';
+        letter-spacing: 8px;
+        text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.72);
+    }
 }
 
 .mainWrapper {
@@ -170,10 +140,6 @@ footer {
     font-size: 12px;
     color: #8A8A8A;
     margin-bottom: 20px;
-}
-
-span.rz-bubble.rz-limit.rz-floor {
-    display: none;
 }
 
 #sizeIndicator:before{

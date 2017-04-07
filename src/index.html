@@ -124,7 +124,8 @@
                     </div>
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
-                            <strong><span data-ng-bind="main.turn.player.name"></span></strong>
+                            <div class="turnAvatar" style="background-image: url({{ main.turn.player.avatar.picture }});"></div>
+                            <strong style="float: left; padding-left: 15px;"><span data-ng-bind="main.turn.player.name"></span></strong>
                         </div>
                     </div>
                     <div class="col-xs-4" id="turnInfo">
