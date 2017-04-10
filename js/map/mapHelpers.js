@@ -10,4 +10,15 @@ const getTerritoryByName = (map, name) => {
     return terr;
 };
 
-export {getTerritoryByName};
+const getApplicableTerritoriesForMovement = (map, territory, applicableTerritories = []) => {
+    const adjacentApplicableTerritories = territory.adjacentTerritories.filter(currentTerritory => getTerritoryByName(map, currentTerritory).owner === territory.owner &&
+                                                                                                         !applicableTerritories.includes(currentTerritory));
+    if (adjacentApplicableTerritories) {
+        const newApplicableTerritories = applicableTerritories.concat(adjacentApplicableTerritories);
+        getApplicableTerritoriesForMovement(map, territory, newApplicableTerritories);
+    }
+
+    return applicableTerritories;
+};
+
+export {getTerritoryByName, getApplicableTerritoriesForMovement};

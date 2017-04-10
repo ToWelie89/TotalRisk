@@ -1,9 +1,10 @@
-import { getTerritoryByName } from './mapHelpers';
+import { getTerritoryByName, getApplicableTerritoriesForMovement } from './mapHelpers';
 import { TURN_PHASES } from './../gameConstants';
 
 export default class MapService {
-    constructor(gameEngine) {
+    constructor(gameEngine, $log) {
         this.gameEngine = gameEngine;
+        this.$log = $log;
 
         this.svg = document.getElementById('svgMap');
         this.doc = this.svg.ownerDocument;
@@ -32,9 +33,13 @@ export default class MapService {
 
                 this.svg.getElementById(territory.name).classList.remove('highlighted');
                 this.svg.getElementById(territory.name).classList.remove('addTroopCursor');
+                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('addTroopCursor');
+                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('addTroopCursor');
 
                 if (this.gameEngine.turn && this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.turn.player.name === territory.owner) {
                     this.svg.getElementById(territory.name).classList.add('addTroopCursor');
+                    this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('addTroopCursor');
+                    this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('addTroopCursor');
                 }
             });
         });
@@ -61,6 +66,11 @@ export default class MapService {
                     }
                 });
             } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
+
+                /* const adjacentApplicableTerritories = [];
+                const territoriesForMovement = getApplicableTerritoriesForMovement(this.gameEngine.map, territory, adjacentApplicableTerritories);
+                this.$log.debug('Territories for movement ', territoriesForMovement); */
+
                 this.gameEngine.map.regions.forEach(region => {
                     region.territories.forEach(currentTerritory => {
                         if (currentTerritory.owner === this.gameEngine.turn.player.name && currentTerritory.name !== territory.name) {

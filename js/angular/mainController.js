@@ -76,6 +76,16 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
                 clickCountry(e);
             });
         });
+        document.querySelectorAll('.troopCounter').forEach(country => {
+            country.addEventListener('click', (e) => {
+                clickCountry(e);
+            });
+        });
+        document.querySelectorAll('.troopCounterText').forEach(country => {
+            country.addEventListener('click', (e) => {
+                clickCountry(e);
+            });
+        });
 
         vm.turn = gameEngine.turn;
         vm.filter = gameEngine.filter;
@@ -123,7 +133,10 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     }
 
     function clickCountry(evt) {
-        const country = evt.target.getAttribute('id');
+        let country = evt.target.getAttribute('id');
+        if (!country) {
+            country = evt.target.getAttribute('for');
+        }
         const clickedTerritory = getTerritoryByName(gameEngine.map, country);
 
         if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
