@@ -1,4 +1,4 @@
-import { getTerritoryByName, getApplicableTerritoriesForMovement } from './mapHelpers';
+import { getTerritoryByName, getAdjacentApplicableTerritories } from './mapHelpers';
 import { TURN_PHASES } from './../gameConstants';
 
 export default class MapService {
@@ -23,18 +23,11 @@ export default class MapService {
                 this.updateColorOfTerritory(territory, color);
                 this.updateTroopIndicator(territory, color);
 
-                this.svg.getElementById(territory.name).classList.remove('attackCursor');
-                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('attackCursor');
-                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('attackCursor');
+                this.svg.getElementById(territory.name).classList.remove('attackCursor', 'movementCursor', 'highlighted', 'addTroopCursor');
 
-                this.svg.getElementById(territory.name).classList.remove('movementCursor');
-                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('movementCursor');
-                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('movementCursor');
-
-                this.svg.getElementById(territory.name).classList.remove('highlighted');
-                this.svg.getElementById(territory.name).classList.remove('addTroopCursor');
-                this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.remove('addTroopCursor');
-                this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.remove('addTroopCursor');
+                this.svg.querySelectorAll(`.troopCounter[for="${territory.name}"], .troopCounterText[for="${territory.name}"]`).forEach(el => {
+                    el.classList.remove('attackCursor', 'movementCursor', 'addTroopCursor');
+                });
 
                 if (this.gameEngine.turn && this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.turn.player.name === territory.owner) {
                     this.svg.getElementById(territory.name).classList.add('addTroopCursor');
@@ -55,10 +48,9 @@ export default class MapService {
                 country.classList.add('highlighted');
                 territory.adjacentTerritories.forEach(currentTerritory => {
                     if (this.gameEngine.turn.player.name !== getTerritoryByName(this.gameEngine.map, currentTerritory).owner) {
-                        this.svg.getElementById(currentTerritory).classList.add('attackCursor');
+                        this.svg.getElementById(currentTerritory).classList.add('attackCursor', 'highlighted');
                         this.svg.querySelector(`.troopCounter[for="${currentTerritory}"]`).classList.add('attackCursor');
                         this.svg.querySelector(`.troopCounterText[for="${currentTerritory}"]`).classList.add('attackCursor');
-                        this.svg.getElementById(currentTerritory).classList.add('highlighted');
                     } else {
                         this.svg.getElementById(currentTerritory).classList.remove('attackCursor');
                         this.svg.querySelector(`.troopCounterText[for="${currentTerritory}"]`).classList.remove('attackCursor');
@@ -66,27 +58,38 @@ export default class MapService {
                     }
                 });
             } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
-
-                /* const adjacentApplicableTerritories = [];
-                const territoriesForMovement = getApplicableTerritoriesForMovement(this.gameEngine.map, territory, adjacentApplicableTerritories);
-                this.$log.debug('Territories for movement ', territoriesForMovement); */
-
                 this.gameEngine.map.regions.forEach(region => {
                     region.territories.forEach(currentTerritory => {
-                        if (currentTerritory.owner === this.gameEngine.turn.player.name && currentTerritory.name !== territory.name) {
-                            this.svg.getElementById(currentTerritory.name).classList.add('movementCursor');
-                            this.svg.querySelector(`.troopCounter[for="${currentTerritory.name}"]`).classList.add('movementCursor');
-                            this.svg.querySelector(`.troopCounterText[for="${currentTerritory.name}"]`).classList.add('movementCursor');
-                            this.svg.getElementById(currentTerritory.name).classList.add('highlighted');
-                        } else {
-                            this.svg.getElementById(currentTerritory.name).classList.remove('movementCursor');
-                            this.svg.querySelector(`.troopCounter[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
-                            this.svg.querySelector(`.troopCounterText[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
-                        }
+                        this.svg.getElementById(currentTerritory.name).classList.remove('movementCursor');
+                        this.svg.querySelector(`.troopCounter[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
+                        this.svg.querySelector(`.troopCounterText[for="${currentTerritory.name}"]`).classList.remove('movementCursor');
                     });
+                });
+
+                const adjacentApplicableTerritories = this.getTerritoriesForMovement(territory);
+                this.$log.debug('Territories for movement ', adjacentApplicableTerritories);
+
+                adjacentApplicableTerritories.forEach(territory => {
+                    territory = getTerritoryByName(this.gameEngine.map, territory);
+                    this.svg.getElementById(territory.name).classList.add('movementCursor', 'highlighted');
+                    this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('movementCursor');
+                    this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('movementCursor');
                 });
             }
         }
+    }
+
+    getTerritoriesForMovement(territory) {
+        let adjacentApplicableTerritories = territory.adjacentTerritories.filter(currentTerritory => getTerritoryByName(this.gameEngine.map, currentTerritory).owner === territory.owner);
+        while (getAdjacentApplicableTerritories(this.gameEngine.map, adjacentApplicableTerritories, territory).length > 0) {
+            adjacentApplicableTerritories = adjacentApplicableTerritories.concat(getAdjacentApplicableTerritories(this.gameEngine.map, adjacentApplicableTerritories, territory));
+        }
+        const indexOfTerritory = adjacentApplicableTerritories.indexOf(territory.name);
+        if (indexOfTerritory > -1) {
+            adjacentApplicableTerritories.splice(indexOfTerritory, 1);
+        }
+
+        return adjacentApplicableTerritories;
     }
 
     updateColorOfTerritory(territory, color) {

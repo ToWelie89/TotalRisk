@@ -18,6 +18,7 @@ export default class GameEngine {
         // Initialize world map
         this.map = new WorldMap();
         this.playSound = true;
+        this.selectedTerritory = undefined;
         this.setMusic();
     }
 
@@ -76,6 +77,7 @@ export default class GameEngine {
     }
 
     nextTurn() {
+        this.selectedTerritory = undefined;
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
         this.handleTurnPhase();

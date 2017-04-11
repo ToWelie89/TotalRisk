@@ -174,7 +174,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             } else if (gameEngine.selectedTerritory &&
                        clickedTerritory.owner === gameEngine.turn.player.name &&
                        gameEngine.selectedTerritory.numberOfTroops > 1 &&
-                       clickedTerritory.name !== gameEngine.selectedTerritory.name) {
+                       clickedTerritory.name !== gameEngine.selectedTerritory.name &&
+                       mapService.getTerritoriesForMovement(gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
                 // move troops
                 $rootScope.$emit('engageMovementPhase', {
                     moveTo: clickedTerritory,
@@ -183,7 +184,9 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
                 mapService.updateMap(gameEngine.filter);
-                mapService.hightlightTerritory(country);
+                if (gameEngine.selectedTerritory.numberOfTroops > 1) {
+                    mapService.hightlightTerritory(country);
+                }
             }
         }
     }

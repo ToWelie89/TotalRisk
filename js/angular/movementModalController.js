@@ -41,7 +41,8 @@ export function MovementModalController($scope, $rootScope, $log) {
                 floor: 1,
                 ceil: vm.moveFrom.numberOfTroops - 1,
                 hidePointerLabels: true,
-                hideLimitLabels: true
+                hideLimitLabels: true,
+                showTicks: true
             };
 
             $scope.$apply();
