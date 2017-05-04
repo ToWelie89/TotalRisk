@@ -1,5 +1,5 @@
 import Player from './../player/player';
-import {PLAYER_COLORS, PLAYER_PREDEFINED_NAMES, avatars} from './../player/playerConstants';
+import {PLAYER_COLORS, avatars} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
 export default class GameSetupController {
@@ -36,40 +36,26 @@ export default class GameSetupController {
     }
 
     updateAvatarOfPlayer(player, avatar) {
-        let avatarIsUsedBy;
-        let avatarIsUsed = false;
-        this.vm.players.forEach(currentPlayer => {
-            if (player.name === currentPlayer.name) {
-                this.vm.players.forEach(player => {
-                    if (player.avatar === avatar) {
-                        avatarIsUsed = true;
-                        avatarIsUsedBy = player;
-                    }
-                });
-                player.avatar = avatar;
-            }
-        });
-        if (avatarIsUsed) {
-            avatarIsUsedBy.avatar = this.getUnusedAvatar();
+        const currentPlayer = this.vm.players.find((currentPlayer) => currentPlayer.name === player.name);
+        const currentOwnerOfAvatar = this.vm.players.find((currentPlayer) => currentPlayer.avatar === avatar);
+
+        if (currentPlayer) {
+            currentPlayer.avatar = avatar;
+        }
+        if (currentOwnerOfAvatar) {
+            currentOwnerOfAvatar.avatar = this.getUnusedAvatar();
         }
     }
 
     updateColorOfPlayer(player, color) {
-        let colorIsUsedBy;
-        let colorIsUsed = false;
-        this.vm.players.forEach(currentPlayer => {
-            if (player.name === currentPlayer.name) {
-                this.vm.players.forEach(player => {
-                    if (player.color.name.toUpperCase() === color.name.toUpperCase()) {
-                        colorIsUsed = true;
-                        colorIsUsedBy = player;
-                    }
-                });
-                player.color = color;
-            }
-        });
-        if (colorIsUsed) {
-            colorIsUsedBy.color = this.getUnusedColor();
+        const currentPlayer = this.vm.players.find((currentPlayer) => currentPlayer.name === player.name);
+        const currentOwnerOfColor = this.vm.players.find((currentPlayer) => currentPlayer.color.name.toUpperCase() === color.name.toUpperCase());
+
+        if (currentPlayer) {
+            currentPlayer.color = color;
+        }
+        if (currentOwnerOfColor) {
+            currentOwnerOfColor.color = this.getUnusedColor();
         }
     }
 
@@ -130,19 +116,6 @@ export default class GameSetupController {
         });
 
         return name;
-    }
-
-    getFirstUnusedAvatar() {
-        let avatarToReturn;
-        const usedAvatars = this.vm.players.map(player => player.avatar);
-
-        avatars.forEach(avatar => {
-            if (!usedAvatars.includes(avatar)) {
-                avatarToReturn = avatar;
-            }
-        });
-
-        return avatarToReturn;
     }
 
     startGameIsDisabled() {
