@@ -4,9 +4,8 @@ import {CONSTANTS} from './../gameConstants';
 
 export default class GameSetupController {
 
-    constructor($scope, $log, soundService) {
+    constructor($scope, soundService) {
         this.vm = this;
-        this.$log = $log;
         this.soundService = soundService;
 
         // PUBLIC FIELDS
@@ -25,14 +24,14 @@ export default class GameSetupController {
     }
 
     init() {
-        this.$log.debug('Initialize game setup controller');
+        console.log('Initialize game setup controller');
         this.vm.players = Array.from(
             new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
                 new Player(Object.keys(avatars).map(key => key)[i],
                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
                            Object.keys(avatars).map(key => avatars[key])[i])
         );
-        this.$log.debug('Players: ', this.vm.players);
+        console.log('Players: ', this.vm.players);
     }
 
     updateAvatarOfPlayer(player, avatar) {

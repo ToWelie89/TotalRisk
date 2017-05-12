@@ -114,4 +114,13 @@ export default class GameEngine {
             territory.numberOfTroops++;
         }
     }
+
+    takeCard(player) {
+        if (!this.turn.playerHasWonAnAttackThisTurn) {
+            const cardToTake = this.cardDeck[0];
+            this.cardDeck.shift();
+            this.players.get(player).cards.push(cardToTake);
+            this.turn.playerHasWonAnAttackThisTurn = true;
+        }
+    }
 }

@@ -45,6 +45,10 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             territoryAttacked.owner = data.attackTo.owner;
             territoryAttacked.numberOfTroops = data.attackTo.numberOfTroops;
 
+            if (data.battleWasWon) {
+                gameEngine.takeCard(data.attackFrom.owner);
+            }
+
             mapService.updateMap(vm.filter);
             checkIfPlayerWonTheGame();
         });

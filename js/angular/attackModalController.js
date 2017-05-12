@@ -105,7 +105,8 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
         vm.defender.numberOfTroops = vm.moveNumberOfTroops;
         $rootScope.$broadcast('battleIsOver', {
             attackFrom: vm.attacker,
-            attackTo: vm.defender
+            attackTo: vm.defender,
+            battleWasWon: true
         });
         $("#attackModal").modal('toggle');
         $('#territorySvg').html('');
