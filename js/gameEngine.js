@@ -7,6 +7,7 @@ import { getTerritoryByName } from './map/mapHelpers';
 import { playerIterator } from './player/playerConstants';
 import { TURN_PHASES, MAIN_MUSIC } from './gameConstants';
 import { shuffle } from './helpers';
+import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
 
 export default class GameEngine {
@@ -17,6 +18,7 @@ export default class GameEngine {
         this.filter = 'byOwner';
         // Initialize world map
         this.map = new WorldMap();
+        this.cardDeck = initiatieCardDeck();
         this.playSound = true;
         this.selectedTerritory = undefined;
         this.setMusic();

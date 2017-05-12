@@ -140,12 +140,12 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
     }
 
     function getCountrySvg() {
-        let territorySvg = $(`#svgMap .country[id='${vm.defender.name}']`).clone();
+        const territorySvg = $(`#svgMap .country[id='${vm.defender.name}']`).clone();
         territorySvg.removeClass('attackCursor highlighted');
         $('#territorySvg').html(territorySvg);
 
-        let bB = document.getElementById('territorySvg').getBBox();
-        document.getElementById('territorySvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
+        const bB = document.getElementById('territorySvg').getBBox();
+        document.getElementById('territorySvg').setAttribute('viewBox', `${bB.x},${bB.y},${bB.width},${bB.height}`);
     }
 
     function init() {

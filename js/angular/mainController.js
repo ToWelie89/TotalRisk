@@ -35,12 +35,12 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             gameEngine.setMusic();
             $log.debug('Battle is over ', data);
             // update map in gameEngine by changing owner and numberOfTroops
-            let territoryAttacking = getTerritoryByName(gameEngine.map, data.attackFrom.name);
+            const territoryAttacking = getTerritoryByName(gameEngine.map, data.attackFrom.name);
 
             territoryAttacking.owner = data.attackFrom.owner;
             territoryAttacking.numberOfTroops = data.attackFrom.numberOfTroops === 0 ? 1 : data.attackFrom.numberOfTroops;
 
-            let territoryAttacked = getTerritoryByName(gameEngine.map, data.attackTo.name);
+            const territoryAttacked = getTerritoryByName(gameEngine.map, data.attackTo.name);
 
             territoryAttacked.owner = data.attackTo.owner;
             territoryAttacked.numberOfTroops = data.attackTo.numberOfTroops;
@@ -52,11 +52,11 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         $rootScope.$on('movementIsOver', function(event, data) {
             gameEngine.setMusic();
             $log.debug('Movement complete ', data);
-            let movementFromTerritory = getTerritoryByName(gameEngine.map, data.from.name);
+            const movementFromTerritory = getTerritoryByName(gameEngine.map, data.from.name);
 
             movementFromTerritory.numberOfTroops = data.from.numberOfTroops === 0 ? 1 : data.from.numberOfTroops;
 
-            let movementToTerritory = getTerritoryByName(gameEngine.map, data.to.name);
+            const movementToTerritory = getTerritoryByName(gameEngine.map, data.to.name);
 
             movementToTerritory.numberOfTroops = data.to.numberOfTroops;
 
