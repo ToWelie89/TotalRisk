@@ -169,12 +169,14 @@ export function AttackModalController($scope, $rootScope, $log, soundService) {
         $rootScope.$on('engageAttackPhase', function(event, data) {
             resetController();
 
-            $log.debug('Attack: ', data);
+            console.log('Attack: ', data);
             vm.attacker = data.attackFrom;
             vm.attacker.color = data.attacker.color;
+            vm.attacker.avatar = data.attacker.avatar;
             vm.attacker.numberOfTroops--;
             vm.defender = data.territoryAttacked;
             vm.defender.color = data.defender.color;
+            vm.defender.avatar = data.defender.avatar;
             $scope.$apply();
             $("#attackModal").modal('toggle');
             getCountrySvg();

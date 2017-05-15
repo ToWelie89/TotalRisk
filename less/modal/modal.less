@@ -13,7 +13,7 @@
         }
     }
 
-    &#turnPresentationModal {
+    &#turnPresentationModal, &#attackModal {
         .turnAvatarContainer {
             position: fixed;
             height: 100%;
@@ -28,6 +28,18 @@
                 background-position: center center;
                 border-radius: 50%;
                 border: 3px solid white;
+            }
+        }
+    }
+
+    &#attackModal {
+        .turnAvatarContainer {
+            margin-top: 70px;
+            &.right {
+                right: 0;
+                .turnAvatar {
+                    margin-right: -30px;
+                }
             }
         }
     }

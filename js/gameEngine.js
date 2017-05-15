@@ -12,8 +12,7 @@ import DeploymentHandler from './deploymentHandler';
 
 export default class GameEngine {
 
-    constructor($log, gameAnnouncerService) {
-        this.$log = $log;
+    constructor(gameAnnouncerService) {
         this.gameAnnouncerService = gameAnnouncerService;
         this.filter = 'byOwner';
         // Initialize world map
@@ -58,7 +57,7 @@ export default class GameEngine {
     }
 
     startGame(players) {
-        this.$log.debug('Game started!');
+        console.log('Game started!');
 
         // Initialize player list
         this.players = new Map();
@@ -74,7 +73,7 @@ export default class GameEngine {
         // Setup game table
         this.setupInitDeployment();
 
-        this.$log.debug('Current turn: ', this.turn);
+        console.log('Current turn: ', this.turn);
         this.handleTurnPhase();
     }
 

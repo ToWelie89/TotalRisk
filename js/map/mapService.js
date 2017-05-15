@@ -2,10 +2,8 @@ import { getTerritoryByName, getAdjacentApplicableTerritories } from './mapHelpe
 import { TURN_PHASES } from './../gameConstants';
 
 export default class MapService {
-    constructor(gameEngine, $log) {
+    constructor(gameEngine) {
         this.gameEngine = gameEngine;
-        this.$log = $log;
-
         this.svg = document.getElementById('svgMap');
         this.doc = this.svg.ownerDocument;
 
@@ -67,7 +65,7 @@ export default class MapService {
                 });
 
                 const adjacentApplicableTerritories = this.getTerritoriesForMovement(territory);
-                this.$log.debug('Territories for movement ', adjacentApplicableTerritories);
+                console.log('Territories for movement ', adjacentApplicableTerritories);
 
                 adjacentApplicableTerritories.forEach(territory => {
                     territory = getTerritoryByName(this.gameEngine.map, territory);

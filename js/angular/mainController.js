@@ -104,6 +104,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
         }
         $log.debug('New turn: ', vm.turn);
+        $log.debug('Current carddeck: ', gameEngine.cardDeck);
     }
 
     function checkIfPlayerWonTheGame() {
