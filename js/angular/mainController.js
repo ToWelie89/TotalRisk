@@ -1,4 +1,4 @@
-import {GAME_PHASES, TURN_PHASES} from './../gameConstants';
+import {GAME_PHASES, TURN_PHASES, MAX_CARDS_ON_HAND} from './../gameConstants';
 import {getTerritoryByName} from './../map/mapHelpers';
 
 export function MainController($scope, $rootScope, $log, gameEngine, soundService, mapService) {
@@ -8,6 +8,7 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     vm.filterByOwner = filterByOwner;
     vm.filterByRegion = filterByRegion;
     vm.nextTurn = nextTurn;
+    vm.turnInCards = turnInCards;
     vm.checkIfNextIsDisabled = checkIfNextIsDisabled;
     vm.getCurrentPlayerColor = getCurrentPlayerColor;
     vm.init = init;
@@ -96,15 +97,23 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         mapService.updateMap(gameEngine.filter);
     }
 
+    function turnInCards() {
+        $rootScope.$emit('inititateCardTurnIn');
+    }
+
     function nextTurn() {
         vm.turn = gameEngine.nextTurn();
         $rootScope.$emit('turnPresenterNewTurn');
         mapService.updateMap(gameEngine.filter);
         if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
+
+            if (vm.turn.player.cards.length === MAX_CARDS_ON_HAND) {
+                $rootScope.$emit('inititateCardTurnIn');
+            }
         }
-        $log.debug('New turn: ', vm.turn);
-        $log.debug('Current carddeck: ', gameEngine.cardDeck);
+        console.log('New turn: ', vm.turn);
+        console.log('Current carddeck: ', gameEngine.cardDeck);
     }
 
     function checkIfPlayerWonTheGame() {
