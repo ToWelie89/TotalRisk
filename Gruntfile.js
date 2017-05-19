@@ -90,6 +90,9 @@ module.exports = function(grunt) {
                 }, {
                     src: ['src/turnPresentationModal.html'],
                     dest: 'turnPresentationModal.html'
+                }, {
+                    src: ['src/cardTurnInModal.html'],
+                    dest: 'cardTurnInModal.html'
                 }]
             }
         }

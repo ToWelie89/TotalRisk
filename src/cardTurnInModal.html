@@ -1,0 +1,35 @@
+<div data-ng-controller="cardTurnInModalController as cardTurnIn" data-ng-init="cardTurnIn.init()">
+    <div id="cardTurnInModal" class="modal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div class="row marginBottom--double" style="margin-top: 50px;">
+                            <div class="col-xs-12">
+                                <div class="card"
+                                     data-ng-repeat="card in cardTurnIn.cards"
+                                     data-territory-name="{{card.name}}"
+                                     data-region-name="{{card.regionName}}"
+                                     data-ng-class="{'card__selected': card.isSelected}"
+                                     data-ng-click="cardTurnIn.toggleCardSelection(card)">
+                                        <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
+                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.CANNON" class="troopIcon cannon">
+                                                @@cannonSvg
+                                            </span>
+                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.HORSE" class="troopIcon horse">
+                                                @@horseSvg
+                                            </span>
+                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.TROOP" class="troopIcon troop">
+                                                @@troopSvg
+                                            </span>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

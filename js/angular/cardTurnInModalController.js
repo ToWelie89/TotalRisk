@@ -10,11 +10,16 @@ export function CardTurnInModalController($scope, $rootScope, gameEngine) {
 
     // PUBLIC FUNCTIONS
     vm.init = init;
+    vm.toggleCardSelection = toggleCardSelection;
 
     function init() {
         console.log('Initialization of CardTurnInModalController');
         vm.CARD_TYPE = CARD_TYPE;
         setupEvents();
+    }
+
+    function toggleCardSelection(card) {
+        card.isSelected = !card.isSelected;
     }
 
     function setupEvents() {

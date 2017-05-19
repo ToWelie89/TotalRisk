@@ -65,6 +65,12 @@ export default class GameEngine {
             this.players.set(player.name, player);
         });
 
+        for (var i = 0; i < 3; i++) {
+            const cardToTake = this.cardDeck[0];
+            this.cardDeck.shift();
+            this.players.get('Julius Caesar').cards.push(cardToTake);
+        }
+
         this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
         this.turn = this.iterator.getCurrent();
 
