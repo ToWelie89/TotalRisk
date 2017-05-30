@@ -13,18 +13,23 @@
                                      data-region-name="{{card.regionName}}"
                                      data-ng-class="{'card__selected': card.isSelected}"
                                      data-ng-click="cardTurnIn.toggleCardSelection(card)">
-                                        <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
-                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.CANNON" class="troopIcon cannon">
+                                        <span>
+                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.CANNON" class="troopIcon cannon">
                                                 @@cannonSvg
                                             </span>
-                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.HORSE" class="troopIcon horse">
+                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.HORSE" class="troopIcon horse">
                                                 @@horseSvg
                                             </span>
-                                            <span data-ng-show="cardTurnIn.cardType === cardTurnIn.CARD_TYPE.TROOP" class="troopIcon troop">
+                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.TROOP" class="troopIcon troop">
                                                 @@troopSvg
                                             </span>
                                         </span>
                                 </div>
+                            </div>
+                            <div data-ng-show="cardTurnIn.illegalCombination()">
+                                <h1>
+                                    Illegal card combination, try again.
+                                </h1>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import {MAX_CARDS_ON_HAND} from './../gameConstants';
-import {CARD_TYPE} from './../card/cardConstants';
+import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
 
 export function CardTurnInModalController($scope, $rootScope, gameEngine) {
     var vm = this;
@@ -8,9 +8,13 @@ export function CardTurnInModalController($scope, $rootScope, gameEngine) {
     vm.playerMustTurnIn = false;
     vm.cards = [];
 
+    // PRIVATE FIELDS
+    const maxNumberOfSelectedCards = 3;
+
     // PUBLIC FUNCTIONS
     vm.init = init;
     vm.toggleCardSelection = toggleCardSelection;
+    vm.illegalCombination = illegalCombination;
 
     function init() {
         console.log('Initialization of CardTurnInModalController');
@@ -18,12 +22,37 @@ export function CardTurnInModalController($scope, $rootScope, gameEngine) {
         setupEvents();
     }
 
+    function illegalCombination() {
+        return vm.cards.filter(x => x.isSelected).length === maxNumberOfSelectedCards && !getCardCombination();
+    }
+
+    function getCardCombination() {
+        const selectedCards = vm.cards.filter(x => x.isSelected);
+        if (selectedCards.length === maxNumberOfSelectedCards) {
+            if (selectedCards.find(x => x.cardType === CARD_TYPE.TROOP || x.cardType === CARD_TYPE.JOKER) &&
+                selectedCards.find(x => x.cardType === CARD_TYPE.HORSE || x.cardType === CARD_TYPE.JOKER) &&
+                selectedCards.find(x => x.cardType === CARD_TYPE.CANNON || x.cardType === CARD_TYPE.JOKER)) {
+                return CARD_COMBINATIONS.ONE_OF_EACH;
+            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.CANNON || x.cardType === CARD_TYPE.JOKER)) {
+                return CARD_COMBINATIONS.THREE_CANNONS;
+            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.HORSE || x.cardType === CARD_TYPE.JOKER)) {
+                return CARD_COMBINATIONS.THREE_HORSES;
+            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.TROOP || x.cardType === CARD_TYPE.JOKER)) {
+                return CARD_COMBINATIONS.THREE_TROOPS;
+            }
+            return null;
+        }
+        return null;
+    }
+
     function toggleCardSelection(card) {
-        card.isSelected = !card.isSelected;
+        if (vm.cards.filter(x => x.isSelected).length < maxNumberOfSelectedCards) {
+            card.isSelected = !card.isSelected;
+        }
     }
 
     function setupEvents() {
-        $rootScope.$on('inititateCardTurnIn', function(event, data) {
+        $rootScope.$on('inititateCardTurnIn', () => {
             vm.cards = gameEngine.turn.player.cards;
             vm.cards.map(card => {
                 card.isSelected = false;

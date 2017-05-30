@@ -14,8 +14,8 @@ svg {
             stroke-width: 4;
         }
         &[country-color='RED'] {
-            fill: #dd4444;
-            stroke: #b22525;
+            fill: @redColor;
+            stroke: @redColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #5f1010;
             }
@@ -24,8 +24,8 @@ svg {
             }
         }
         &[country-color='GREEN'] {
-            fill: #4acd61;
-            stroke: #35a749;
+            fill: @greenColor;
+            stroke: @greenColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #377d2b;
             }
@@ -34,8 +34,8 @@ svg {
             }
         }
         &[country-color='BLUE'] {
-            fill: #4770ea;
-            stroke: #234abe;
+            fill: @blueColor;
+            stroke: @blueColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #151594;
             }
@@ -44,8 +44,8 @@ svg {
             }
         }
         &[country-color='PINK'] {
-            fill: #ff99cc;
-            stroke: #ff6699;
+            fill: @pinkColor;
+            stroke: @pinkColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #cc4f8d;
             }
@@ -54,8 +54,8 @@ svg {
             }
         }
         &[country-color='BLACK'] {
-            fill: #564848;
-            stroke: #362d2d;
+            fill: @blackColor;
+            stroke: @blackColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #000000;
             }
@@ -64,8 +64,8 @@ svg {
             }
         }
         &[country-color='YELLOW'] {
-            fill: #eaea67;
-            stroke: #bbbb42;
+            fill: @yellowColor;
+            stroke: @yellowColorStroke;
             &.highlighted, &.highlighted:hover {
                 fill: #e0e019;
             }
@@ -74,56 +74,56 @@ svg {
             }
         }
         &[country-color='AFRICA'] {
-            fill: #564848;
-            stroke: #362d2d;
+            fill: @blackColor;
+            stroke: @blackColorStroke;
         }
         &[country-color='SOUTH AMERICA'] {
-            fill: #dd4444;
-            stroke: #b22525;
+            fill: @redColor;
+            stroke: @redColorStroke;
         }
         &[country-color='EUROPE'] {
-            fill: #4acd61;
-            stroke: #35a749;
+            fill: @greenColor;
+            stroke: @greenColorStroke;
         }
         &[country-color='NORTH AMERICA'] {
-            fill: #4770ea;
-            stroke: #234abe;
+            fill: @blueColor;
+            stroke: @blueColorStroke;
         }
         &[country-color='ASIA'] {
-            fill: #eaea67;
-            stroke: #bbbb42;
+            fill: @yellowColor;
+            stroke: @yellowColorStroke;
         }
         &[country-color='AUSTRALIA'] {
-            fill: #a55eec;
-            stroke: #8442c6;
+            fill: @purpleColor;
+            stroke: @purpleColorStroke;
         }
     }
     .troopCounter {
         &[country-color='RED'],
         &[country-color='SOUTH AMERICA'] {
-            stroke: #b22525;
+            stroke: @redColorStroke;
         }
         &[country-color='GREEN'],
         &[country-color='EUROPE'] {
-            stroke: #35a749;
+            stroke: @greenColorStroke;
         }
         &[country-color='BLUE'],
         &[country-color='NORTH AMERICA'] {
-            stroke: #234abe;
+            stroke: @blueColorStroke;
         }
         &[country-color='PINK'] {
-            stroke: #ff6699;
+            stroke: @pinkColorStroke;
         }
         &[country-color='BLACK'],
         &[country-color='AFRICA'] {
-            stroke: #362d2d;
+            stroke: @blackColorStroke;
         }
         &[country-color='YELLOW'],
         &[country-color='ASIA'] {
-            stroke: #bbbb42;
+            stroke: @yellowColorStroke;
         }
         &[country-color='AUSTRALIA'] {
-            stroke: #8442c6;
+            stroke: @purpleColorStroke;
         }
     }
     .troopCounterText {
@@ -142,36 +142,36 @@ svg {
         }
         &[country-color='RED'],
         &[country-color='SOUTH AMERICA'] {
-            fill: #dd4444;
-            stroke: #b22525;
+            fill: @redColor;
+            stroke: @redColorStroke;
         }
         &[country-color='GREEN'],
         &[country-color='EUROPE'] {
-            fill: #4acd61;
-            stroke: #35a749;
+            fill: @greenColor;
+            stroke: @greenColorStroke;
         }
         &[country-color='BLUE'],
         &[country-color='NORTH AMERICA'] {
-            fill: #4770ea;
-            stroke: #234abe;
+            fill: @blueColor;
+            stroke: @blueColorStroke;
         }
         &[country-color='PINK'] {
-            fill: #ff99cc;
-            stroke: #ff6699;
+            fill: @pinkColor;
+            stroke: @pinkColorStroke;
         }
         &[country-color='BLACK'],
         &[country-color='AFRICA'] {
-            fill: #564848;
-            stroke: #362d2d;
+            fill: @blackColor;
+            stroke: @blackColorStroke;
         }
         &[country-color='YELLOW'],
         &[country-color='ASIA'] {
-            fill: #eaea67;
-            stroke: #bbbb42;
+            fill: @yellowColor;
+            stroke: @yellowColorStroke;
         }
         &[country-color='AUSTRALIA'] {
-            fill: #a55eec;
-            stroke: #8442c6;
+            fill: @purpleColor;
+            stroke: @purpleColorStroke;
         }
     }
 }
