@@ -95,6 +95,11 @@ module.exports = function(grunt) {
                     dest: 'cardTurnInModal.html'
                 }]
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'my.conf.js'
+            }
         }
     });
 
@@ -107,6 +112,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jsonlint');
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-karma');
 
     // Default task for building
     grunt.registerTask('default', [
