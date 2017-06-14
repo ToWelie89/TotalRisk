@@ -34,6 +34,7 @@ grunt
 ```
 npm run start
 ```
+Open http://127.0.0.1:8080 in your browser.
 
 ## How to test locally
 
@@ -42,8 +43,6 @@ npm run start
 ```
 grunt test
 ```
-
-Open http://127.0.0.1:8080 in your browser.
 
 ## Default Grunt build job explained
 
