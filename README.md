@@ -55,7 +55,7 @@ Open http://127.0.0.1:8080 in your browser.
 + **notify:build**: Notify the user that the build is complete
 
 ## Repository structure
-
+```
 ├───assets
 │   ├───cursors
 │   ├───fonts
@@ -88,3 +88,4 @@ Open http://127.0.0.1:8080 in your browser.
 │   ├───troops
 │   └───variables
 └───src
+```
