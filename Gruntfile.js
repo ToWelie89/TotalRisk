@@ -26,7 +26,8 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            build: ['build/*']
+            build: ['build/app.bundle.js', 'build/default.css'],
+            test: ['build/testApp.bundle.js']
         },
         watch: {
             scripts: {
@@ -35,23 +36,50 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            tests: {
+                files: ['js/test/**/*.js'],
+                tasks: ['test'],
+                options: {
+                    spawn: false
+                }
             }
         },
-        shell: {
-            webpack: {
-                command: 'npm run webpack'
+        browserify: {
+            build: {
+                files: {
+                    'build/app.bundle.js': 'js/app.js'
+                },
+                options: {
+                    transform: [['babelify', { presets: "es2015" }]],
+                    browserifyOptions: {
+                        debug: true
+                    }
+                }
+            },
+            test: {
+                files: {
+                    'build/testApp.bundle.js': 'js/test/test.js'
+                },
+                options: {
+                    transform: [['babelify', { presets: "es2015" }]],
+                    browserifyOptions: {
+                        debug: true
+                    }
+                }
             }
-        },
-        jsonlint: {
-            src: [
-                'package.json'
-            ]
         },
         notify: {
-            watch: {
+            build: {
                 options: {
                     title: 'Grunt watch', // optional
                     message: 'Build complete' // required
+                }
+            },
+            test: {
+                options: {
+                    title: 'Grunt watch', // optional
+                    message: 'Test complete' // required
                 }
             }
         },
@@ -98,7 +126,7 @@ module.exports = function(grunt) {
         },
         karma: {
             unit: {
-                configFile: 'my.conf.js'
+                configFile: 'karma.conf.js'
             }
         }
     });
@@ -108,21 +136,27 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-jsonlint');
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-browserify');
 
     // Default task for building
     grunt.registerTask('default', [
-        // 'jsonlint',
-        'clean', // Clean previous build files
-        'shell:webpack',
-        'uglify', // Minify and uglify css and put it in build folder
+        'clean:build', // Clean previous build files
+        'browserify:build', // Use browserify to transpile ES6 source code with babel
+        // 'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
         'replace:inlineModalSvgs',
         'replace:inlineSvg',
-        'notify'
+        'notify:build'
+    ]);
+
+    // Default task for building
+    grunt.registerTask('test', [
+        'clean:test', // Clean previous build files
+        'browserify:test', // Use browserify to transpile ES6 source code with babel
+        'karma',
+        'notify:test'
     ]);
 };

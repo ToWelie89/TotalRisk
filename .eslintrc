@@ -3,6 +3,7 @@
         "angular",
         "babel",
         "json",
+        "describe"
     ],
 
     "extends": "google",

@@ -1,7 +1,7 @@
 import {GAME_PHASES, TURN_PHASES, MAX_CARDS_ON_HAND} from './../gameConstants';
 import {getTerritoryByName} from './../map/mapHelpers';
 
-export function MainController($scope, $rootScope, $log, gameEngine, soundService, mapService) {
+export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, soundService, mapService) {
     var vm = this;
 
     // PUBLIC FUNCTIONS
@@ -32,28 +32,6 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
     }
 
     function setupEvents() {
-        $rootScope.$on('battleIsOver', function(event, data) {
-            gameEngine.setMusic();
-            $log.debug('Battle is over ', data);
-            // update map in gameEngine by changing owner and numberOfTroops
-            const territoryAttacking = getTerritoryByName(gameEngine.map, data.attackFrom.name);
-
-            territoryAttacking.owner = data.attackFrom.owner;
-            territoryAttacking.numberOfTroops = data.attackFrom.numberOfTroops === 0 ? 1 : data.attackFrom.numberOfTroops;
-
-            const territoryAttacked = getTerritoryByName(gameEngine.map, data.attackTo.name);
-
-            territoryAttacked.owner = data.attackTo.owner;
-            territoryAttacked.numberOfTroops = data.attackTo.numberOfTroops;
-
-            if (data.battleWasWon) {
-                gameEngine.takeCard(data.attackFrom.owner);
-            }
-
-            mapService.updateMap(vm.filter);
-            checkIfPlayerWonTheGame();
-        });
-
         $rootScope.$on('movementIsOver', function(event, data) {
             gameEngine.setMusic();
             $log.debug('Movement complete ', data);
@@ -146,6 +124,46 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
         return gameEngine.players ? gameEngine.players.get(vm.turn.player.name).color.mainColor : '';
     }
 
+    function engageAttackPhase(clickedTerritory) {
+        $uibModal.open({
+            templateUrl: 'attackModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'attackModalController',
+            controllerAs: 'attack',
+            resolve: {
+                attackData: () => {
+                    return {
+                        territoryAttacked: clickedTerritory,
+                        attackFrom: gameEngine.selectedTerritory,
+                        attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
+                        defender: gameEngine.players.get(clickedTerritory.owner)
+                    }
+                }
+            }
+        }).result.then(closeResponse => {
+            gameEngine.setMusic();
+            $log.debug('Battle is over ', closeResponse);
+            // update map in gameEngine by changing owner and numberOfTroops
+            const territoryAttacking = getTerritoryByName(gameEngine.map, closeResponse.attackFrom.name);
+
+            territoryAttacking.owner = closeResponse.attackFrom.owner;
+            territoryAttacking.numberOfTroops = closeResponse.attackFrom.numberOfTroops === 0 ? 1 : closeResponse.attackFrom.numberOfTroops;
+
+            const territoryAttacked = getTerritoryByName(gameEngine.map, closeResponse.attackTo.name);
+
+            territoryAttacked.owner = closeResponse.attackTo.owner;
+            territoryAttacked.numberOfTroops = closeResponse.attackTo.numberOfTroops;
+
+            if (closeResponse.battleWasWon) {
+                gameEngine.takeCard(closeResponse.attackFrom.owner);
+            }
+
+            mapService.updateMap(vm.filter);
+            checkIfPlayerWonTheGame();
+        });
+    }
+
     function clickCountry(evt) {
         let country = evt.target.getAttribute('id');
         if (!country) {
@@ -169,12 +187,8 @@ export function MainController($scope, $rootScope, $log, gameEngine, soundServic
                 clickedTerritory.adjacentTerritories.includes(gameEngine.selectedTerritory.name) &&
                 gameEngine.selectedTerritory.numberOfTroops > 1) {
                 gameEngine.setMusic('./audio/bgmusic_attack.mp3');
-                $rootScope.$emit('engageAttackPhase', {
-                    territoryAttacked: clickedTerritory,
-                    attackFrom: gameEngine.selectedTerritory,
-                    attacker: gameEngine.players.get(gameEngine.selectedTerritory.owner),
-                    defender: gameEngine.players.get(clickedTerritory.owner)
-                });
+
+                engageAttackPhase(clickedTerritory);
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
                 mapService.updateMap(gameEngine.filter);

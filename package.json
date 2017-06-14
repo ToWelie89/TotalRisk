@@ -1,23 +1,44 @@
 {
   "name": "ECMA6Risk",
   "version": "1.0.0",
-  "description": "",
+  "description": "A web application game of the classic board game Risk",
   "main": "js/main.js",
   "scripts": {
-    "start": "http-server",
-    "webpack": "webpack"
+    "start": "http-server"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "angular",
+    "babel",
+    "karma",
+    "jasmine",
+    "workflow",
+    "ecma6",
+    "es2015",
+    "less",
+    "grunt",
+    "risk",
+    "game"
+  ],
+  "author": "Martin Sonesson <sonesson8909@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ToWelie89/ECMA6Risk/issues",
+    "email": "sonesson8909@hotmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ToWelie89/ECMA6Risk.git"
+  },
   "devDependencies": {
     "angular": "^1.5.7",
     "angular-ui-bootstrap": "^2.5.0",
     "angularjs-slider": "^5.8.0",
-    "babel-cli": "^6.10.1",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.10.4",
     "babel-eslint": "6.1.2",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
     "bootstrap": "^3.3.6",
     "eslint": "^3.4.0",
     "eslint-config-google": "0.6.0",
@@ -28,25 +49,27 @@
     "eslint-plugin-json": "1.2.0",
     "eslint-plugin-protractor": "1.27.1",
     "grunt": "^0.4.5",
+    "grunt-browserify": "^5.0.0",
     "grunt-contrib-clean": "0.7.0",
     "grunt-contrib-less": "~0.8.3",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-watch": "1.0.0",
-    "grunt-jsonlint": "1.0.7",
     "grunt-karma": "^2.0.0",
     "grunt-notify": "^0.4.5",
     "grunt-replace": "^1.0.1",
-    "grunt-run": "^0.6.0",
-    "grunt-shell": "1.3.0",
     "grunt-usemin": "3.1.1",
     "http-server": "^0.9.0",
-    "jasmine-core": "^2.6.2",
+    "jasmine-core": "^2.4.1",
     "jquery": "^2.2.4",
-    "karma": "^1.7.0",
+    "karma": "^0.13.22",
+    "karma-babel-polyfill": "0.0.5",
+    "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.1.1",
-    "karma-jasmine": "^1.1.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-spec-reporter": "0.0.31",
     "load-grunt-config": "^0.17.2",
-    "load-grunt-tasks": "^3.3.0",
-    "webpack": "^1.13.1"
+    "load-grunt-tasks": "^3.5.2"
   }
 }

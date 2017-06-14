@@ -59,7 +59,7 @@ export default class GameSetupController {
     }
 
     addPlayer() {
-        if (this.vm.players.count === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
+        if (this.vm.players.length === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
         this.soundService.bleep.play();
@@ -67,6 +67,9 @@ export default class GameSetupController {
     }
 
     removePlayer(playerToRemove) {
+        if (this.vm.players.length === CONSTANTS.MIN_NUMBER_OF_PLAYERS) {
+            return;
+        }
         this.vm.players = this.vm.players.filter(player => {
             if (player !== playerToRemove) {
                 return player;
@@ -78,14 +81,7 @@ export default class GameSetupController {
         const usedColors = this.vm.players.map(player => player.color);
         const availableColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
 
-        let colorToReturn;
-
-        availableColors.forEach(color => {
-            if (!usedColors.includes(color)) {
-                colorToReturn = color;
-            }
-        });
-
+        const colorToReturn = availableColors.find(color => !usedColors.includes(color));
         return colorToReturn;
     }
 
@@ -93,26 +89,13 @@ export default class GameSetupController {
         const usedAvatars = this.vm.players.map(player => player.avatar);
         const availableAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
 
-        let avatarToReturn;
-
-        availableAvatars.forEach(avatar => {
-            if (!usedAvatars.includes(avatar)) {
-                avatarToReturn = avatar;
-            }
-        });
-
+        const avatarToReturn = availableAvatars.find(avatar => !usedAvatars.includes(avatar));
         return avatarToReturn;
     }
 
     getFirstUnusedName() {
-        let name;
         const usedNames = this.vm.players.map(player => player.name);
-
-        Array.from(Object.keys(avatars)).forEach(playerName => {
-            if (!usedNames.includes(playerName)) {
-                name = playerName;
-            }
-        });
+        const name = Array.from(Object.keys(avatars)).find(playerName => !usedNames.includes(playerName));
 
         return name;
     }
