@@ -29,7 +29,7 @@
     "type": "git",
     "url": "https://github.com/ToWelie89/ECMA6Risk.git"
   },
-  "devDependencies": {
+  "dependencies": {
     "angular": "^1.5.7",
     "angular-ui-bootstrap": "^2.5.0",
     "angularjs-slider": "^5.8.0",
@@ -40,14 +40,6 @@
     "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
     "bootstrap": "^3.3.6",
-    "eslint": "^3.4.0",
-    "eslint-config-google": "0.6.0",
-    "eslint-plugin-angular": "1.3.1",
-    "eslint-plugin-babel": "3.3.0",
-    "eslint-plugin-fp": "^2.2.0",
-    "eslint-plugin-jasmine": "^1.8.1",
-    "eslint-plugin-json": "1.2.0",
-    "eslint-plugin-protractor": "1.27.1",
     "grunt": "^0.4.5",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-clean": "0.7.0",
@@ -59,8 +51,12 @@
     "grunt-replace": "^1.0.1",
     "grunt-usemin": "3.1.1",
     "http-server": "^0.9.0",
-    "jasmine-core": "^2.4.1",
     "jquery": "^2.2.4",
+    "load-grunt-config": "^0.17.2",
+    "load-grunt-tasks": "^3.5.2"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-babel-polyfill": "0.0.5",
     "karma-babel-preprocessor": "^6.0.1",
@@ -69,7 +65,13 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-spec-reporter": "0.0.31",
-    "load-grunt-config": "^0.17.2",
-    "load-grunt-tasks": "^3.5.2"
+    "eslint": "^3.4.0",
+    "eslint-config-google": "0.6.0",
+    "eslint-plugin-angular": "1.3.1",
+    "eslint-plugin-babel": "3.3.0",
+    "eslint-plugin-fp": "^2.2.0",
+    "eslint-plugin-jasmine": "^1.8.1",
+    "eslint-plugin-json": "1.2.0",
+    "eslint-plugin-protractor": "1.27.1"
   }
 }
