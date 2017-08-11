@@ -1,6 +1,6 @@
 import {delay} from './../helpers';
 
-export function MovementModalController($scope, $rootScope, $log) {
+export function MovementModalController($scope, $log, $uibModalInstance, moveTo, moveFrom) {
     var vm = this;
 
     // PUBLIC FIELDS
@@ -12,7 +12,19 @@ export function MovementModalController($scope, $rootScope, $log) {
     vm.moveTroops = moveTroops;
 
     function init() {
-        setupEvents();
+        $log.debug('Movement: ', moveTo, moveFrom);
+        vm.moveNumberOfTroops = 1;
+        vm.moveTo = moveTo;
+        vm.moveFrom = moveFrom;
+        vm.movementSliderOptions = {
+            floor: 1,
+            ceil: vm.moveFrom.numberOfTroops - 1,
+            hidePointerLabels: true,
+            hideLimitLabels: true,
+            showTicks: true
+        };
+
+        // $scope.$apply();
     }
 
     function getCountrySvg() {
@@ -31,32 +43,13 @@ export function MovementModalController($scope, $rootScope, $log) {
         document.getElementById('moveToSvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
     }
 
-    function setupEvents() {
-        $rootScope.$on('engageMovementPhase', function(event, data) {
-            $log.debug('Movement: ', data);
-            vm.moveNumberOfTroops = 1;
-            vm.moveTo = data.moveTo;
-            vm.moveFrom = data.moveFrom;
-            vm.movementSliderOptions = {
-                floor: 1,
-                ceil: vm.moveFrom.numberOfTroops - 1,
-                hidePointerLabels: true,
-                hideLimitLabels: true,
-                showTicks: true
-            };
-
-            $scope.$apply();
-            $("#movementModal").modal('toggle');
-        });
-    }
-
     function moveTroops() {
         vm.moveFrom.numberOfTroops -= vm.moveNumberOfTroops;
         vm.moveTo.numberOfTroops = vm.moveNumberOfTroops + vm.moveTo.numberOfTroops;
-        $rootScope.$broadcast('movementIsOver', {
+
+        $uibModalInstance.close({
             from: vm.moveFrom,
             to: vm.moveTo
         });
-        $("#movementModal").modal('toggle');
     }
 }

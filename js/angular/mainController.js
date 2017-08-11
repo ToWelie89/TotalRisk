@@ -22,7 +22,6 @@ export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, 
     vm.turn = {};
 
     function init() {
-        setupEvents();
         $log.debug('Initialization of mainController');
     }
 
@@ -31,26 +30,9 @@ export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, 
         gameEngine.toggleSound(vm.playSound);
     }
 
-    function setupEvents() {
-        $rootScope.$on('movementIsOver', function(event, data) {
-            gameEngine.setMusic();
-            $log.debug('Movement complete ', data);
-            const movementFromTerritory = getTerritoryByName(gameEngine.map, data.from.name);
-
-            movementFromTerritory.numberOfTroops = data.from.numberOfTroops === 0 ? 1 : data.from.numberOfTroops;
-
-            const movementToTerritory = getTerritoryByName(gameEngine.map, data.to.name);
-
-            movementToTerritory.numberOfTroops = data.to.numberOfTroops;
-
-            mapService.updateMap(vm.filter);
-            nextTurn();
-        });
-    }
-
     function startGame(players) {
         gameEngine.startGame(players);
-        $rootScope.$emit('turnPresenterStartGame');
+
         vm.currentGamePhase = vm.gamePhases.GAME;
         vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
@@ -73,21 +55,55 @@ export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, 
         vm.turn = gameEngine.turn;
         vm.filter = gameEngine.filter;
         mapService.updateMap(gameEngine.filter);
+
+        $uibModal.open({
+            templateUrl: 'turnPresentationModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'turnPresentationController',
+            controllerAs: 'turnPresentation',
+            resolve: {
+                presentType: () => {
+                    return 'startGame';
+                }
+            }
+        }).result.then(closeResponse => {
+
+        });
     }
 
     function turnInCards() {
-        $rootScope.$emit('inititateCardTurnIn');
+        $uibModal.open({
+            templateUrl: 'cardTurnInModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'cardTurnInModalController',
+            controllerAs: 'cardTurnIn'
+        });
     }
 
     function nextTurn() {
         vm.turn = gameEngine.nextTurn();
-        $rootScope.$emit('turnPresenterNewTurn');
+
+        $uibModal.open({
+            templateUrl: 'turnPresentationModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'turnPresentationController',
+            controllerAs: 'turnPresentation',
+            resolve: {
+                presentType: () => {
+                    return 'newTurn';
+                }
+            }
+        });
+
         mapService.updateMap(gameEngine.filter);
         if (vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             vm.troopsToDeploy = gameEngine.troopsToDeploy;
 
             if (vm.turn.player.cards.length === MAX_CARDS_ON_HAND) {
-                $rootScope.$emit('inititateCardTurnIn');
+                turnInCards();
             }
         }
         console.log('New turn: ', vm.turn);
@@ -205,10 +221,7 @@ export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, 
                        clickedTerritory.name !== gameEngine.selectedTerritory.name &&
                        mapService.getTerritoriesForMovement(gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
                 // move troops
-                $rootScope.$emit('engageMovementPhase', {
-                    moveTo: clickedTerritory,
-                    moveFrom: gameEngine.selectedTerritory
-                });
+                engageMovementPhase(clickedTerritory);
             } else {
                 gameEngine.selectedTerritory = clickedTerritory;
                 mapService.updateMap(gameEngine.filter);
@@ -217,5 +230,36 @@ export function MainController($scope, $rootScope, $log, $uibModal, gameEngine, 
                 }
             }
         }
+    }
+
+    function engageMovementPhase(toTerritory) {
+        $uibModal.open({
+            templateUrl: 'movementModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'movementModalController',
+            controllerAs: 'movement',
+            resolve: {
+                moveTo: () => {
+                    return toTerritory;
+                },
+                moveFrom: () => {
+                    return gameEngine.selectedTerritory;
+                }
+            }
+        }).result.then(closeResponse => {
+            gameEngine.setMusic();
+            $log.debug('Movement complete ', closeResponse);
+            const movementFromTerritory = getTerritoryByName(gameEngine.map, closeResponse.from.name);
+
+            movementFromTerritory.numberOfTroops = closeResponse.from.numberOfTroops === 0 ? 1 : closeResponse.from.numberOfTroops;
+
+            const movementToTerritory = getTerritoryByName(gameEngine.map, closeResponse.to.name);
+
+            movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
+
+            mapService.updateMap(vm.filter);
+            nextTurn();
+        });
     }
 }

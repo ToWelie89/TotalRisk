@@ -1,7 +1,7 @@
 import {MAX_CARDS_ON_HAND} from './../gameConstants';
 import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
 
-export function CardTurnInModalController($scope, $rootScope, gameEngine) {
+export function CardTurnInModalController($scope, $rootScope, $uibModalInstance, gameEngine) {
     var vm = this;
 
     // PUBLIC FIELDS
@@ -19,7 +19,11 @@ export function CardTurnInModalController($scope, $rootScope, gameEngine) {
     function init() {
         console.log('Initialization of CardTurnInModalController');
         vm.CARD_TYPE = CARD_TYPE;
-        setupEvents();
+        vm.cards = gameEngine.turn.player.cards;
+        vm.cards.map(card => {
+            card.isSelected = false;
+        });
+        vm.playerMustTurnIn = (vm.cards.length === MAX_CARDS_ON_HAND);
     }
 
     function illegalCombination() {
@@ -49,16 +53,5 @@ export function CardTurnInModalController($scope, $rootScope, gameEngine) {
         if (vm.cards.filter(x => x.isSelected).length < maxNumberOfSelectedCards) {
             card.isSelected = !card.isSelected;
         }
-    }
-
-    function setupEvents() {
-        $rootScope.$on('inititateCardTurnIn', () => {
-            vm.cards = gameEngine.turn.player.cards;
-            vm.cards.map(card => {
-                card.isSelected = false;
-            });
-            vm.playerMustTurnIn = (vm.cards.length === MAX_CARDS_ON_HAND);
-            $('#cardTurnInModal').modal('toggle');
-        });
     }
 }
