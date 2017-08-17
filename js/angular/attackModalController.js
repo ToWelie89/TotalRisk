@@ -1,74 +1,98 @@
 import BattleHandler from './../battleHandler';
-import {delay} from './../helpers';
 
-export function AttackModalController($scope, $rootScope, $log, $uibModalInstance, $timeout, soundService, attackData) {
-    var vm = this;
+export default class AttackModalController {
+    constructor($scope, $uibModalInstance, soundService, attackData) {
+        this.vm = this;
 
-    // PUBLIC FIELDS
-    vm.attacker = {};
-    vm.defender = {};
-    vm.attackerDice = [];
-    vm.defenderDice = [];
-    vm.fightIsOver = false;
-    vm.showMoveTroops = false;
-    vm.disableButtons = false;
+        // PUBLIC FIELDS
+        this.vm.attackerDice = [];
+        this.vm.defenderDice = [];
+        this.vm.fightIsOver = false;
+        this.vm.showMoveTroops = false;
+        this.vm.disableButtons = false;
 
-    vm.moveNumberOfTroops = 1;
-    vm.movementSliderOptions = {};
+        this.vm.moveNumberOfTroops = 1;
+        this.vm.movementSliderOptions = {};
 
-    vm.countrySvg = '';
+        this.vm.countrySvg = '';
 
-    // PUBLIC FUNCTIONS
-    vm.init = init;
-    vm.fight = fight;
-    vm.retreat = retreat;
-    vm.moveTroops = moveTroops;
-    vm.convertTroopAmountToTroopTypes = convertTroopAmountToTroopTypes;
+        // PUBLIC FUNCTIONS
+        this.vm.fight = this.fight;
+        this.vm.retreat = this.retreat;
+        this.vm.moveTroops = this.moveTroops;
+        this.vm.convertTroopAmountToTroopTypes = this.convertTroopAmountToTroopTypes;
 
-    function fight() {
+        this.$scope = $scope;
+        this.$uibModalInstance = $uibModalInstance;
+        this.soundService = soundService;
+        this.attackData = attackData;
+
+        this.vm.battleHandler = new BattleHandler();
+
+        console.log('Initialization of AttackModalController');
+        console.log('Attack: ', attackData);
+        this.vm.attacker = attackData.attackFrom;
+        this.vm.attacker.color = attackData.attacker.color;
+        this.vm.attacker.avatar = attackData.attacker.avatar;
+        this.vm.attacker.numberOfTroops--;
+        this.vm.defender = attackData.territoryAttacked;
+        this.vm.defender.color = attackData.defender.color;
+        this.vm.defender.avatar = attackData.defender.avatar;
+
+        this.getCountrySvgDelay = 500;
+        this.moveTroopsDelay = 2500;
+        this.closeModalDelay = 2500;
+        this.startShakeAnimationDelay = 100;
+        this.stopShakeAnimationDelay = 500;
+
+        const defendingNationName = this.vm.defender.name;
+        setTimeout(() => {
+            this.getCountrySvg(defendingNationName);
+        }, this.getCountrySvgDelay);
+    }
+
+    fight() {
         // If one player loses 2 troops a scream sound is heard
-        const response = vm.battleHandler.handleAttack(vm.attacker, vm.defender);
+        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender);
         if (response.defenderCasualties === 2 || response.attackerCasualties === 2) {
-            soundService.screamSound.play();
+            this.soundService.screamSound.play();
         }
 
-        vm.attackerDice = response.attackDice;
-        vm.defenderDice = response.defendDice;
-        vm.attacker = response.attacker;
-        vm.defender = response.defender;
+        this.vm.attackerDice = response.attackDice;
+        this.vm.defenderDice = response.defendDice;
+        this.vm.attacker = response.attacker;
+        this.vm.defender = response.defender;
 
-        if (vm.attacker.numberOfTroops === 0 || vm.defender.numberOfTroops === 0) {
+        if (this.vm.attacker.numberOfTroops === 0 || this.vm.defender.numberOfTroops === 0) {
             // the invasion failed
-            vm.fightIsOver = true;
-            if (vm.defender.numberOfTroops === 0) {
+            this.vm.fightIsOver = true;
+            if (this.vm.defender.numberOfTroops === 0) {
                 // the invasion succeded
-                soundService.cheer.play();
-                vm.fightIsOver = true;
+                this.soundService.cheer.play();
+                //$('#attackerTroops .troopIcon svg').addClass('animated infinite bounce');
 
-                $('#attackerTroops .troopIcon svg').addClass('animated infinite bounce');
-
-                if (vm.attacker.numberOfTroops > 1) {
-                    vm.movementSliderOptions = {
+                if (this.vm.attacker.numberOfTroops > 1) {
+                    this.vm.movementSliderOptions = {
                         floor: 1,
-                        ceil: vm.attacker.numberOfTroops,
+                        ceil: this.vm.attacker.numberOfTroops,
                         showTicks: true
                     };
-                    vm.showMoveTroops = true;
+                    this.vm.showMoveTroops = true;
                 } else {
-                    delay(2500).then(() => {
+                    setTimeout(() => {
                         this.moveTroops();
-                    });
+                    }, this.moveTroopsDelay);
                 }
             }
-            if (vm.attacker.numberOfTroops === 0) {
+            if (this.vm.attacker.numberOfTroops === 0) {
                 $('#defenderTroops .troopIcon svg').addClass('animated infinite bounce');
-                delay(2500).then(() => {
-                    closeModal(false);
-                });
+                setTimeout(() => {
+                    this.closeModal(false);
+                }, this.closeModalDelay);
             }
         } else {
-            vm.disableButtons = true;
-            delay(100).then(() => {
+            this.vm.disableButtons = true;
+            setTimeout(() => {
                 // Animate shake effect on side(s) affected by casualties
                 let icons;
                 if (response.defenderCasualties > response.attackerCasualties) {
@@ -78,40 +102,38 @@ export function AttackModalController($scope, $rootScope, $log, $uibModalInstanc
                 } else if (response.attackerCasualties === response.defenderCasualties) {
                     icons = $('.troopIcon');
                 }
-                new Promise((resolve, reject) => {
-                    icons.addClass('shake shake-constant');
-                    resolve();
-                }).then(() => delay(500))
-                .then(() => {
+                icons.addClass('shake shake-constant');
+
+                setTimeout(() => {
                     icons.removeClass('shake shake-constant');
-                    vm.disableButtons = false;
-                    $scope.$apply();
-                });
-            });
+                    this.vm.disableButtons = false;
+                    this.$scope.$apply();
+                }, this.stopShakeAnimationDelay);
+            }, this.startShakeAnimationDelay);
         }
     }
 
-    function closeModal(battleWasWon) {
-        $uibModalInstance.close({
-            attackFrom: vm.attacker,
-            attackTo: vm.defender,
+    closeModal(battleWasWon) {
+        this.$uibModalInstance.close({
+            attackFrom: this.vm.attacker,
+            attackTo: this.vm.defender,
             battleWasWon
         });
     }
 
-    function moveTroops() {
-        vm.defender.owner = vm.attacker.owner;
-        vm.attacker.numberOfTroops = vm.attacker.numberOfTroops - vm.moveNumberOfTroops + 1;
-        vm.defender.numberOfTroops = vm.moveNumberOfTroops;
-        closeModal(true);
+    moveTroops() {
+        this.vm.defender.owner = this.vm.attacker.owner;
+        this.vm.attacker.numberOfTroops = this.vm.attacker.numberOfTroops - this.vm.moveNumberOfTroops + 1;
+        this.vm.defender.numberOfTroops = this.vm.moveNumberOfTroops;
+        this.closeModal(true);
     }
 
-    function retreat() {
-        vm.attacker.numberOfTroops++;
-        closeModal(false);
+    retreat() {
+        this.vm.attacker.numberOfTroops++;
+        this.closeModal(false);
     }
 
-    function convertTroopAmountToTroopTypes(troops) {
+    convertTroopAmountToTroopTypes(troops) {
         if (!troops) {
             return [];
         }
@@ -128,29 +150,15 @@ export function AttackModalController($scope, $rootScope, $log, $uibModalInstanc
         return array;
     }
 
-    function getCountrySvg() {
-        const territorySvg = $(`#svgMap .country[id='${vm.defender.name}']`).clone();
+    getCountrySvg(territoryName) {
+        const territorySvg = $(`#svgMap .country[id='${territoryName}']`).clone();
         territorySvg.removeClass('attackCursor highlighted');
         $('#territorySvg').html(territorySvg);
 
-        const bB = document.getElementById('territorySvg').getBBox();
-        document.getElementById('territorySvg').setAttribute('viewBox', `${bB.x},${bB.y},${bB.width},${bB.height}`);
-    }
-
-    function init() {
-        $log.debug('Initialization of AttackModalController');
-
-        vm.battleHandler = new BattleHandler();
-
-        console.log('Attack: ', attackData);
-        vm.attacker = attackData.attackFrom;
-        vm.attacker.color = attackData.attacker.color;
-        vm.attacker.avatar = attackData.attacker.avatar;
-        vm.attacker.numberOfTroops--;
-        vm.defender = attackData.territoryAttacked;
-        vm.defender.color = attackData.defender.color;
-        vm.defender.avatar = attackData.defender.avatar;
-
-        $timeout(getCountrySvg, 500);
+        const svg = document.getElementById('territorySvg');
+        if (svg) {
+            const bB = svg.getBBox();
+            document.getElementById('territorySvg').setAttribute('viewBox', `${bB.x},${bB.y},${bB.width},${bB.height}`);
+        }
     }
 }

@@ -3,6 +3,7 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
         reporters: ['spec', 'progress'],
         files: [
+            'node_modules/jquery/dist/jquery.min.js',
             'node_modules/angular/angular.js',
             'build/testApp.bundle.js'
         ],

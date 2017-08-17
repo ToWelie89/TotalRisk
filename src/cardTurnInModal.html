@@ -1,5 +1,5 @@
 <div data-ng-init="cardTurnIn.init()">
-    <div id="cardTurnInModal" class="modal riskModal" role="dialog" data-backdrop="static">
+    <div id="cardTurnInModal" class="riskModal" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -27,9 +27,14 @@
                                 </div>
                             </div>
                             <div data-ng-show="cardTurnIn.illegalCombination()">
-                                <h1>
+                                <h3>
                                     Illegal card combination, try again.
-                                </h1>
+                                </h3>
+                            </div>
+                            <div>
+                                <h3>
+                                    Chosen combination worth {{cardTurnIn.currentCardCombination.value}} reinforcements
+                                </h3>
                             </div>
                         </div>
                     </div>

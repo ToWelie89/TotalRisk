@@ -10,8 +10,15 @@ const shuffle = a => {
     }
 };
 
-const delay = ms => new Promise((resolve, reject) => {
-    setTimeout(resolve, ms);
-});
+const arraysEqual = (a, b) => {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
 
-export {delay, shuffle};
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
+export {shuffle, arraysEqual};

@@ -29,9 +29,6 @@
 </head>
 
 <body ng-app="risk">
-    <!-- Card turn in modal -->
-    <div data-ng-include="'cardTurnInModal.html'"></div>
-
     <header>
         <span id="sizeIndicator"></span>
         <div class="wrapper">
@@ -42,7 +39,7 @@
         </div>
         <div class="smoke"></div>
     </header>
-    <div class="wrapper mainWrapper" data-ng-controller="mainController as main" data-ng-init="main.init()">
+    <div class="wrapper mainWrapper" data-ng-controller="mainController as main">
         <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" id="gameSetupBox">
                 <div class="row">

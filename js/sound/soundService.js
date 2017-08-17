@@ -1,33 +1,14 @@
-export function SoundService(gameEngine) {
-    class Sound {
-        constructor(reference) {
-            this.reference = reference;
-            this.audio = new Audio(this.reference);
-        }
+import Sound from './sound';
 
-        play() {
-            if (gameEngine && gameEngine.playSound) {
-                if (!this.audio.paused) {
-                    // If the current audio is currently playing then instantiate a new audio with the same sound reference and play that
-                    // This way the same sound can be played many times and overlap each other
-                    new Audio(this.reference).play();
-                }
-                this.audio.play();
-            }
-        }
+export default class SoundService {
+    constructor(gameEngine) {
+        this.gameEngine = gameEngine;
+
+        this.soundPath = './audio/';
+
+        this.bleep = new Sound(`${this.soundPath}/bleep.wav`, this.gameEngine);
+        this.cheer = new Sound(`${this.soundPath}/victory_cheer.wav`, this.gameEngine);
+        this.screamSound = new Sound(`${this.soundPath}/wilhelm.wav`, this.gameEngine);
+        this.addTroopSound = new Sound(`${this.soundPath}/troop.wav`, this.gameEngine);
     }
-
-    const soundPath = './audio/';
-
-    const bleep = new Sound(`${soundPath}/bleep.wav`);
-    const cheer = new Sound(`${soundPath}/victory_cheer.wav`);
-    const screamSound = new Sound(`${soundPath}/wilhelm.wav`);
-    const addTroopSound = new Sound(`${soundPath}/troop.wav`);
-
-    return {
-        bleep,
-        cheer,
-        screamSound,
-        addTroopSound
-    };
 }

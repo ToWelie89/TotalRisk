@@ -5,11 +5,4 @@ const CARD_TYPE = {
     JOKER: 3
 };
 
-const CARD_COMBINATIONS = {
-    THREE_TROOPS: 0,
-    THREE_HORSES: 1,
-    THREE_CANNONS: 2,
-    ONE_OF_EACH: 3
-};
-
-export {CARD_TYPE, CARD_COMBINATIONS};
+export {CARD_TYPE};

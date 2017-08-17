@@ -4,4 +4,6 @@ console.log = () => {
 
 require('babel-polyfill');
 require('./../app');
-require('./gameSetupController.test');
+require('./../angular/attackModalController.test');
+require('./../angular/cardTurnInModalController.test');
+require('./../angular/gameSetupController.test');

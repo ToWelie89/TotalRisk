@@ -1,41 +1,41 @@
-import {delay} from './../helpers';
+export default class MovementModalController {
 
-export function MovementModalController($scope, $log, $uibModalInstance, moveTo, moveFrom) {
-    var vm = this;
+    constructor($scope, $uibModalInstance, moveTo, moveFrom) {
+        this.vm = this;
 
-    // PUBLIC FIELDS
-    vm.moveNumberOfTroops = 1;
-    vm.movementSliderOptions = {};
+        // PUBLIC FIELDS
+        this.vm.moveNumberOfTroops = 1;
+        this.vm.movementSliderOptions = {};
 
-    // PUBLIC FUNCTIONS
-    vm.init = init;
-    vm.moveTroops = moveTroops;
+        // PUBLIC FUNCTIONS
+        this.vm.moveTroops = this.moveTroops;
 
-    function init() {
-        $log.debug('Movement: ', moveTo, moveFrom);
-        vm.moveNumberOfTroops = 1;
-        vm.moveTo = moveTo;
-        vm.moveFrom = moveFrom;
-        vm.movementSliderOptions = {
+        console.log('Movement: ', moveTo, moveFrom);
+        this.vm.moveNumberOfTroops = 1;
+        this.vm.moveTo = moveTo;
+        this.vm.moveFrom = moveFrom;
+        this.vm.movementSliderOptions = {
             floor: 1,
-            ceil: vm.moveFrom.numberOfTroops - 1,
+            ceil: this.vm.moveFrom.numberOfTroops - 1,
             hidePointerLabels: true,
             hideLimitLabels: true,
             showTicks: true
         };
 
-        // $scope.$apply();
+        this.$uibModalInstance = $uibModalInstance;
+        this.moveTo = moveTo;
+        this.moveFrom = moveFrom;
     }
 
-    function getCountrySvg() {
-        let moveFromSvg = $(`#svgMap .country[id='${vm.moveFrom.name}']`).clone();
+    getCountrySvg() {
+        let moveFromSvg = $(`#svgMap .country[id='${this.vm.moveFrom.name}']`).clone();
         moveFromSvg.removeClass('attackCursor highlighted movementCursor');
         $('#moveFromSvg').html(moveFromSvg);
 
         let bB = document.getElementById('moveFromSvg').getBBox();
         document.getElementById('moveFromSvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
 
-        let moveToSvg = $(`#svgMap .country[id='${vm.moveTo.name}']`).clone();
+        let moveToSvg = $(`#svgMap .country[id='${this.vm.moveTo.name}']`).clone();
         moveToSvg.removeClass('attackCursor highlighted movementCursor');
         $('#moveToSvg').html(moveToSvg);
 
@@ -43,13 +43,13 @@ export function MovementModalController($scope, $log, $uibModalInstance, moveTo,
         document.getElementById('moveToSvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
     }
 
-    function moveTroops() {
-        vm.moveFrom.numberOfTroops -= vm.moveNumberOfTroops;
-        vm.moveTo.numberOfTroops = vm.moveNumberOfTroops + vm.moveTo.numberOfTroops;
+    moveTroops() {
+        this.vm.moveFrom.numberOfTroops -= this.vm.moveNumberOfTroops;
+        this.vm.moveTo.numberOfTroops = this.vm.moveNumberOfTroops + this.vm.moveTo.numberOfTroops;
 
-        $uibModalInstance.close({
-            from: vm.moveFrom,
-            to: vm.moveTo
+        this.$uibModalInstance.close({
+            from: this.vm.moveFrom,
+            to: this.vm.moveTo
         });
     }
 }

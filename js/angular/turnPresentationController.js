@@ -1,59 +1,59 @@
-import { delay } from './../helpers';
 import {TURN_PHASES} from './../gameConstants';
 import { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './../gameConstants';
 
-export function TurnPresentationController($scope, $rootScope, $uibModalInstance, gameAnnouncerService, gameEngine, presentType) {
-    var vm = this;
+export default class TurnPresentationController {
 
-    // PUBLIC FIELDS
-    // PUBLIC FUNCTIONS
-    vm.init = init;
-    vm.turn;
-    vm.troopsToDeploy;
+    constructor($scope, $uibModalInstance, gameAnnouncerService, gameEngine, presentType) {
+        this.vm = this;
 
-    function presentTurnSilently() {
-        delay(2000)
-        .then(() => {
-            $uibModalInstance.close();
-        });
+        this.$uibModalInstance = $uibModalInstance;
+        this.gameAnnouncerService = gameAnnouncerService;
+        this.gameEngine = gameEngine;
+        this.presentType = presentType;
+
+        this.init();
     }
 
-    function init() {
-        // $('#turnPresentationModal').velocity('transition.bounceLeftIn');
+    presentTurnSilently() {
+        setTimeout(() => {
+            this.$uibModalInstance.close();
+        }, 2000);
+    }
 
-        if (presentType === 'startGame') {
-            vm.turn = gameEngine.turn;
-            vm.troopsToDeploy = new Array(gameEngine.troopsToDeploy);
+    init() {
+        if (this.presentType === 'startGame') {
+            this.vm.turn = this.gameEngine.turn;
+            this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
 
-            if (gameEngine.playSound) {
-                gameAnnouncerService.speak('Game started', () => {
-                    gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+            if (this.gameEngine.playSound) {
+                this.gameAnnouncerService.speak('Game started', () => {
+                    this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {
-                    gameAnnouncerService.stateTurn(vm.turn, () => {
-                        gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
+                        this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                     }, () => {
-                        gameEngine.setMusicVolume(1.0);
-                        $uibModalInstance.close();
+                        this.gameEngine.setMusicVolume(1.0);
+                        this.$uibModalInstance.close();
                     });
                 });
             } else {
-                presentTurnSilently();
+                this.presentTurnSilently();
             }
-        } else if (presentType === 'newTurn') {
-            vm.turn = gameEngine.turn;
-            if (gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-                vm.troopsToDeploy = new Array(gameEngine.troopsToDeploy);
+        } else if (this.presentType === 'newTurn') {
+            this.vm.turn = this.gameEngine.turn;
+            if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+                this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
             }
 
-            if (gameEngine.playSound) {
-                gameAnnouncerService.stateTurn(vm.turn, () => {
-                    gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+            if (this.gameEngine.playSound) {
+                this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
+                    this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {
-                    gameEngine.setMusicVolume(1.0);
-                    $uibModalInstance.close();
+                    this.gameEngine.setMusicVolume(1.0);
+                    this.$uibModalInstance.close();
                 });
             } else {
-                presentTurnSilently();
+                this.presentTurnSilently();
             }
         }
     }

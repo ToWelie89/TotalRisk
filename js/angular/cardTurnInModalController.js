@@ -1,57 +1,73 @@
 import {MAX_CARDS_ON_HAND} from './../gameConstants';
-import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
+import {CARD_TYPE} from './../card/cardConstants';
+import {arraysEqual} from './../helpers';
 
-export function CardTurnInModalController($scope, $rootScope, $uibModalInstance, gameEngine) {
-    var vm = this;
+export default class CardTurnInModalController {
+    constructor($scope, $uibModalInstance, gameEngine) {
+        this.vm = this;
 
-    // PUBLIC FIELDS
-    vm.playerMustTurnIn = false;
-    vm.cards = [];
+        // PUBLIC FIELDS
+        this.vm.playerMustTurnIn = false;
+        this.vm.cards = [];
 
-    // PRIVATE FIELDS
-    const maxNumberOfSelectedCards = 3;
+        // PRIVATE FIELDS
+        this.maxNumberOfSelectedCards = 3;
 
-    // PUBLIC FUNCTIONS
-    vm.init = init;
-    vm.toggleCardSelection = toggleCardSelection;
-    vm.illegalCombination = illegalCombination;
+        // PUBLIC FUNCTIONS
+        this.vm.toggleCardSelection = this.toggleCardSelection;
+        this.vm.illegalCombination = this.illegalCombination;
+        this.vm.getCardCombination = this.getCardCombination;
 
-    function init() {
+        this.$uibModalInstance = $uibModalInstance;
+        this.gameEngine = gameEngine;
+
         console.log('Initialization of CardTurnInModalController');
-        vm.CARD_TYPE = CARD_TYPE;
-        vm.cards = gameEngine.turn.player.cards;
-        vm.cards.map(card => {
+
+        this.vm.CARD_TYPE = CARD_TYPE;
+        this.vm.cards = this.gameEngine.turn.player.cards;
+        this.vm.cards.map(card => {
             card.isSelected = false;
         });
-        vm.playerMustTurnIn = (vm.cards.length === MAX_CARDS_ON_HAND);
+        this.vm.playerMustTurnIn = (this.vm.cards.length === MAX_CARDS_ON_HAND);
+
+        this.possibleCombinations = [
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.CANNON], value: 10},
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.CANNON, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.HORSE, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.CANNON, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.CANNON, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 10},
+            {combination: [CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON], value: 7},
+            {combination: [CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.JOKER], value: 7},
+            {combination: [CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE], value: 5},
+            {combination: [CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 5},
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP], value: 3},
+            {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER], value: 3}
+        ];
     }
 
-    function illegalCombination() {
-        return vm.cards.filter(x => x.isSelected).length === maxNumberOfSelectedCards && !getCardCombination();
+    illegalCombination() {
+        return this.vm.cards.filter(x => x.isSelected).length === this.maxNumberOfSelectedCards && !this.vm.currentCardCombination;
     }
 
-    function getCardCombination() {
-        const selectedCards = vm.cards.filter(x => x.isSelected);
-        if (selectedCards.length === maxNumberOfSelectedCards) {
-            if (selectedCards.find(x => x.cardType === CARD_TYPE.TROOP || x.cardType === CARD_TYPE.JOKER) &&
-                selectedCards.find(x => x.cardType === CARD_TYPE.HORSE || x.cardType === CARD_TYPE.JOKER) &&
-                selectedCards.find(x => x.cardType === CARD_TYPE.CANNON || x.cardType === CARD_TYPE.JOKER)) {
-                return CARD_COMBINATIONS.ONE_OF_EACH;
-            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.CANNON || x.cardType === CARD_TYPE.JOKER)) {
-                return CARD_COMBINATIONS.THREE_CANNONS;
-            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.HORSE || x.cardType === CARD_TYPE.JOKER)) {
-                return CARD_COMBINATIONS.THREE_HORSES;
-            } else if (selectedCards.every(x => x.cardType === CARD_TYPE.TROOP || x.cardType === CARD_TYPE.JOKER)) {
-                return CARD_COMBINATIONS.THREE_TROOPS;
+    getCardCombination() {
+        const selectedCards = this.vm.cards.filter(x => x.isSelected).map(card => card.cardType);
+        if (selectedCards.length === this.maxNumberOfSelectedCards) {
+            for (let combination of this.possibleCombinations) {
+                if (arraysEqual(combination.combination.sort(), selectedCards.sort())) {
+                    return combination;
+                }
             }
-            return null;
         }
         return null;
     }
 
-    function toggleCardSelection(card) {
-        if (vm.cards.filter(x => x.isSelected).length < maxNumberOfSelectedCards) {
+    toggleCardSelection(card) {
+        if (this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
             card.isSelected = !card.isSelected;
         }
+
+        this.vm.currentCardCombination = this.getCardCombination();
     }
 }

@@ -2,15 +2,15 @@
 * IMPORTS
 */
 
-import {MainController} from './angular/mainController';
+import MainController from './angular/mainController';
 import GameSetupController from './angular/gameSetupController';
-import {AttackModalController} from './angular/attackModalController';
-import {MovementModalController} from './angular/movementModalController';
-import {CardTurnInModalController} from './angular/cardTurnInModalController';
+import AttackModalController from './angular/attackModalController';
+import MovementModalController from './angular/movementModalController';
+import CardTurnInModalController from './angular/cardTurnInModalController';
 import ColorPopoverController from './angular/colorPopoverController';
 import AvatarPopoverController from './angular/avatarPopoverController';
-import {TurnPresentationController} from './angular/turnPresentationController';
-import {SoundService} from './sound/soundService';
+import TurnPresentationController from './angular/turnPresentationController';
+import SoundService from './sound/soundService';
 import MapService from './map/mapService';
 import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
