@@ -39,27 +39,27 @@ const PLAYER_COLORS = {
 
 const avatars = {
     'Julius Caesar': {
-        picture: 'http://www.bbc.co.uk/staticarchive/837022b3d9ba8c0664db08d3ab4f16e15a73a683.jpg',
+        picture: './assets/img/juliuscaesar.jpg',
         selectSound: ''
     },
     'Napoleon Bonaparte': {
-        picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Napoleon_-_2.jpg/170px-Napoleon_-_2.jpg',
+        picture: './assets/img/napoleon.jpg',
         selectSound: ''
     },
     'Hannibal Barca': {
-        picture: 'http://www.leadershipgeeks.com/wp-content/uploads/hannibal-239x300.jpg',
+        picture: './assets/img/hannibal.jpg',
         selectSound: ''
     },
     'Alexander the Great': {
-        picture: 'http://blog.oup.com/wp-content/uploads/2014/01/Alexander-the-Great.jpg',
+        picture: './assets/img/alexander.jpg',
         selectSound: ''
     },
     'Genghis Khan': {
-        picture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/YuanEmperorAlbumGenghisPortrait.jpg/468px-YuanEmperorAlbumGenghisPortrait.jpg',
+        picture: './assets/img/genghiskhan.jpg',
         selectSound: ''
     },
     'Attila the Hun': {
-        picture: 'http://historythings.com/wp-content/uploads/2016/08/things-you-didn-t-know-about-attila-the-hun-u1.jpg',
+        picture: './assets/img/attila.jpg',
         selectSound: ''
     }
 };
