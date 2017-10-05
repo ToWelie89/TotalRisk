@@ -10,8 +10,7 @@ export default class DeploymentHandler {
         numberOfReinforcements = numberOfReinforcements < 3 ? 3 : numberOfReinforcements;
 
         const regionBonuses = map.calculateRegionBonusesForPlayer(currentPlayer.name);
-        console.log('Region bonuses: ');
-        console.log(regionBonuses);
+        console.log('Region bonuses: ', regionBonuses);
 
         regionBonuses.forEach(region => {
             numberOfReinforcements += region.bonusTroops;

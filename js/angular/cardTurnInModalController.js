@@ -17,11 +17,13 @@ export default class CardTurnInModalController {
         this.vm.toggleCardSelection = this.toggleCardSelection;
         this.vm.illegalCombination = this.illegalCombination;
         this.vm.getCardCombination = this.getCardCombination;
+        this.vm.turnIn = this.turnIn;
+        this.vm.autoSelect = this.autoSelect;
 
         this.$uibModalInstance = $uibModalInstance;
         this.gameEngine = gameEngine;
 
-        console.log('Initialization of CardTurnInModalController');
+        //console.log('Initialization of CardTurnInModalController');
 
         this.vm.CARD_TYPE = CARD_TYPE;
         this.vm.cards = this.gameEngine.turn.player.cards;
@@ -64,10 +66,29 @@ export default class CardTurnInModalController {
     }
 
     toggleCardSelection(card) {
-        if (this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
+        if (card.isSelected || this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
             card.isSelected = !card.isSelected;
         }
 
         this.vm.currentCardCombination = this.getCardCombination();
+    }
+
+    turnIn() {
+
+    }
+
+    autoSelect() {
+
+    }
+
+    getBestPossibleCombination() {
+        // TODO check if array is subset of another array
+        // The following method does not work correctly
+        const cardTypes = this.vm.cards.map(card => card.cardType);
+        for (let combination of this.possibleCombinations) {
+            if (combination.combination.every(x => cardTypes.includes(x))) {
+                return combination;
+            }
+        }
     }
 }

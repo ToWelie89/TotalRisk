@@ -26,15 +26,33 @@
                                         </span>
                                 </div>
                             </div>
-                            <div data-ng-show="cardTurnIn.illegalCombination()">
-                                <h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12" data-ng-show="cardTurnIn.illegalCombination()">
+                                <h4>
                                     Illegal card combination, try again.
-                                </h3>
+                                </h4>
                             </div>
-                            <div>
-                                <h3>
-                                    Chosen combination worth {{cardTurnIn.currentCardCombination.value}} reinforcements
-                                </h3>
+                            <div class="col-xs-12" data-ng-show="cardTurnIn.currentCardCombination">
+                                <h4>
+                                    Chosen combination worth <strong data-ng-bind="cardTurnIn.currentCardCombination.value"></strong> reinforcements
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.cancel()" data-ng-disabled="cardTurnIn.playerMustTurnIn">
+                                    <i class="fa fa-times"></i>
+                                    <strong>Cancel</strong>
+                                </button>
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()">
+                                    <i class="fa fa-times"></i>
+                                    <strong>Autoselect best combination</strong>
+                                </button>
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination">
+                                    <i class="fa fa-times"></i>
+                                    <strong>Turn in</strong>
+                                </button>
                             </div>
                         </div>
                     </div>

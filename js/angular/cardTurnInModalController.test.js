@@ -107,4 +107,51 @@ describe('cardTurnInModalController', () => {
         expect(cardTurnInModalController.getCardCombination().value).toEqual(10);
     });
 
+    it('getBestPossibleCombination return the best possible combination on the hand', () => {
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER, CARD_TYPE.TROOP]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER, CARD_TYPE.CANNON]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
+        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(3);
+
+        // Arrange
+        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.TROOP]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(5);
+
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(7);
+    });
+
 });
