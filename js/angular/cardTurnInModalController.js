@@ -18,6 +18,7 @@ export default class CardTurnInModalController {
         this.vm.illegalCombination = this.illegalCombination;
         this.vm.getCardCombination = this.getCardCombination;
         this.vm.turnIn = this.turnIn;
+        this.vm.cancel = this.cancel;
         this.vm.autoSelect = this.autoSelect;
 
         this.$uibModalInstance = $uibModalInstance;
@@ -74,21 +75,62 @@ export default class CardTurnInModalController {
     }
 
     turnIn() {
+        const newHand = this.vm.cards.filter(card => !card.isSelected);
+        this.gameEngine.turn.player.cards = newHand;
 
+        this.$uibModalInstance.close({
+            newTroops: this.getCardCombination().value
+        });
+    }
+
+    cancel() {
+        this.$uibModalInstance.close();
     }
 
     autoSelect() {
+        const bestCombination = this.getBestPossibleCombination();
 
+        if (bestCombination) {
+            this.vm.cards.map(card => {
+                card.isSelected = false;
+            });
+
+            bestCombination.combination.forEach(item => {
+                const card = this.vm.cards.find(card => !card.isSelected && card.cardType === item);
+                if (card) {
+                    card.isSelected = true;
+                }
+            });
+
+            this.turnIn();
+        }
     }
 
     getBestPossibleCombination() {
-        // TODO check if array is subset of another array
-        // The following method does not work correctly
-        const cardTypes = this.vm.cards.map(card => card.cardType);
+        if (this.vm.cards.length === 0) {
+            return null;
+        }
+
         for (let combination of this.possibleCombinations) {
-            if (combination.combination.every(x => cardTypes.includes(x))) {
+            const indexes = [];
+            let result = true;
+            const cardTypes = this.vm.cards.map(card => card.cardType);
+
+            combination.combination.forEach(x => {
+                const indexOf = cardTypes.indexOf(x);
+
+                if (indexOf !== -1 && !indexes.includes(indexOf)) {
+                    cardTypes[indexOf] = null;
+                } else {
+                    result = false;
+                }
+            });
+
+            if (result) {
                 return combination;
             }
         }
+
+        return null;
     }
 }

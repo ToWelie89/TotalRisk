@@ -144,14 +144,76 @@ describe('cardTurnInModalController', () => {
         expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(3);
 
         // Arrange
+        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(3);
+
+        // Arrange
         generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.TROOP]);
         // Assert
         expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(5);
 
         // Arrange
+        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(5);
+
+        // Arrange
+        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.CANNON]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
+
+        // Arrange
         generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP]);
         // Assert
         expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(7);
+
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(7);
+    });
+
+    it('getBestPossibleCombination return null for invalid combinations', () => {
+        // Arrange
+        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.HORSE]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.CANNON]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.TROOP]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
+
+        // Arrange
+        generateCards([CARD_TYPE.JOKER, CARD_TYPE.CANNON]);
+        // Assert
+        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
     });
 
 });

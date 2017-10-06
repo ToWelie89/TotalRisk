@@ -91,6 +91,13 @@ export default class MainController {
             windowClass: 'riskModal',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn'
+        }).result.then(closeResponse => {
+            console.log(`Cards turned in for ${closeResponse.newTroops} new troops`)
+            this.gameEngine.troopsToDeploy += closeResponse.newTroops;
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            setTimeout(() => {
+                this.$scope.$apply();
+            }, 100);
         });
     }
 
