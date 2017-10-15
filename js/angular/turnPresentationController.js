@@ -11,6 +11,15 @@ export default class TurnPresentationController {
         this.gameEngine = gameEngine;
         this.presentType = presentType;
 
+        document.addEventListener('keypress', (e) => {
+            if (e.keyCode === 0 || e.keyCode === 32) {
+                e.preventDefault()
+                this.$uibModalInstance.close({presenterWasCancelled: true});
+                this.gameAnnouncerService.mute();
+                this.gameEngine.setMusicVolume(1.0);
+            }
+        });
+
         this.init();
     }
 

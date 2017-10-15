@@ -40,10 +40,15 @@ export default class GameSetupController {
 
         if (currentPlayer) {
             currentPlayer.avatar = avatar;
+            currentPlayer.name = Object.keys(avatars).find(name => avatars[name] === avatar);
         }
         if (currentOwnerOfAvatar) {
-            currentOwnerOfAvatar.avatar = this.getUnusedAvatar();
+            const newAvatar = this.getUnusedAvatar();
+            currentOwnerOfAvatar.avatar = newAvatar.avatar;
+            currentOwnerOfAvatar.name = newAvatar.name;
         }
+
+        this.soundService.changeColor.play();
     }
 
     updateColorOfPlayer(player, color) {
@@ -56,6 +61,8 @@ export default class GameSetupController {
         if (currentOwnerOfColor) {
             currentOwnerOfColor.color = this.getUnusedColor();
         }
+
+        this.soundService.changeColor.play();
     }
 
     addPlayer() {
@@ -63,7 +70,7 @@ export default class GameSetupController {
             return;
         }
         this.soundService.bleep.play();
-        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar()));
+        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar));
     }
 
     removePlayer(playerToRemove) {
@@ -90,7 +97,12 @@ export default class GameSetupController {
         const availableAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
 
         const avatarToReturn = availableAvatars.find(avatar => !usedAvatars.includes(avatar));
-        return avatarToReturn;
+        const nameOfAvatar = Object.keys(avatars).find(name => avatars[name] === avatarToReturn);
+
+        return {
+            avatar: avatarToReturn,
+            name: nameOfAvatar
+        };
     }
 
     getFirstUnusedName() {

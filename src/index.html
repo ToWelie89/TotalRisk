@@ -5,9 +5,12 @@
     <link rel="shortcut icon" href="assets/img/icon.ico">
     <title>ECMA6 Risk</title>
     <script src='js/libs/responsivevoice.js'></script>
+    <script src='js/libs/three.min.js'></script>
+    <script src='js/libs/cannon.min.js'></script>
+    <script src='js/libs/dice.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
-    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
-    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-2.0.0-SNAPSHOT.min.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls-2.0.0-SNAPSHOT.min.js"></script>
     <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
     <script src="build/app.bundle.js"></script>
 
@@ -52,12 +55,12 @@
                     </div>
                 </div>
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
-                    <div class="col-xs-3 text-shadow" style="text-align: right; margin-top: 12px;">
+                    <div class="col-xs-3 text-shadow" style="text-align: right; margin-top: 22px;">
                         <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
                         role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)">
                         </div>
                     </div>
-                    <div class="col-xs-5" style="text-align: left; margin-top: 12px;">
+                    <div class="col-xs-5" style="text-align: left; margin-top: 22px;">
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
                     </div>
                     <div class="col-xs-1" style="text-align: left;">
@@ -65,7 +68,7 @@
                         role="button" tabIndex="0" popover-placement="left" popover-title="Select an avatar" popover-trigger="'focus'" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)">
                         </div>
                     </div>
-                    <div class="col-xs-3" style="text-align: left; margin-top: 12px;">
+                    <div class="col-xs-3" style="text-align: left; margin-top: 22px;">
                         <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
                             <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
@@ -118,26 +121,25 @@
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
                             <div class="turnAvatar" style="background-image: url({{ main.turn.player.avatar.picture }});"></div>
-                            <strong style="float: left; padding-left: 15px;"><span data-ng-bind="main.turn.player.name"></span></strong>
+                            <strong class="floatLeft" style="padding-left: 15px;"><span data-ng-bind="main.turn.player.name"></span></strong>
                         </div>
-                        <button
-                        type="button"
-                        class="button button-green"
-                        data-ng-click="main.turnInCards()"
-                        data-ng-disabled="main.turn.turnPhase != 0"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Turn in cards">
-                            <i class="fa fa-times"></i>
-                            <strong>CARDS</strong>
-                        </button>
+                        <img src="assets/img/cards.png"
+                             id="cardButton"
+                             class="floatLeft marginLeft"
+                             style="width: 30px;"
+                             data-ng-disabled="main.turn.turnPhase !== 0"
+                             data-ng-click="main.turnInCards()"
+                             data-ng-disabled="main.turn.turnPhase != 0"
+                             data-toggle="tooltip"
+                             data-placement="bottom" />
+                        <h4 class="floatLeft marginLeft" id="cardCounter">({{main.turn.player.cards.length}})</h4>
                     </div>
                     <div class="col-xs-4" id="turnInfo">
                         <div class="row">
                             <div class="col-xs-8" style="line-height: 40px;">
                                 <div data-ng-show="main.turn.turnPhase == 0" class="troop_{{ main.turn.player.color.name }}">
                                     <div class="floatLeft">Deploy <span data-ng-bind="main.troopsToDeploy"></span></div>
-                                    <div class="floatLeft">@@troopSvg</div>
+                                    <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
                                 </div>
                                 <span data-ng-show="main.turn.turnPhase == 1">
                                     Attack
@@ -154,9 +156,10 @@
                                 data-ng-disabled="main.checkIfNextIsDisabled()"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
+                                id="nextButton"
                                 title="Go to next phase of the turn when you are done">
                                     <i class="fa fa-times"></i>
-                                    <strong>NEXT</strong>
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
                                 </button>
                             </div>
                         </div>

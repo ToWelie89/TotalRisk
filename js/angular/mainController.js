@@ -62,13 +62,15 @@ export default class MainController {
         this.vm.filter = this.gameEngine.filter;
         this.mapService.updateMap(this.gameEngine.filter);
 
-        this.gameEngine.takeCard(this.vm.turn.player.name);
+        /*this.gameEngine.takeCard(this.vm.turn.player.name);
         this.gameEngine.turn.playerHasWonAnAttackThisTurn = false;
         this.gameEngine.takeCard(this.vm.turn.player.name);
         this.gameEngine.turn.playerHasWonAnAttackThisTurn = false;
         this.gameEngine.takeCard(this.vm.turn.player.name);
         this.gameEngine.turn.playerHasWonAnAttackThisTurn = false;
         this.gameEngine.takeCard(this.vm.turn.player.name);
+        this.gameEngine.turn.playerHasWonAnAttackThisTurn = false;
+        this.gameEngine.takeCard(this.vm.turn.player.name);*/
 
         this.$uibModal.open({
             templateUrl: 'turnPresentationModal.html',
@@ -81,7 +83,19 @@ export default class MainController {
                     return 'startGame';
                 }
             }
+        }).result.then(closeResponse => {
+            this.checkIfPlayerMustTurnInCards();
         });
+    }
+
+    checkIfPlayerMustTurnInCards() {
+        if (this.vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+
+            if (this.vm.turn.player.cards.length >= MAX_CARDS_ON_HAND) {
+                this.turnInCards();
+            }
+        }
     }
 
     turnInCards() {
@@ -92,12 +106,19 @@ export default class MainController {
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn'
         }).result.then(closeResponse => {
-            console.log(`Cards turned in for ${closeResponse.newTroops} new troops`)
-            this.gameEngine.troopsToDeploy += closeResponse.newTroops;
-            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-            setTimeout(() => {
-                this.$scope.$apply();
-            }, 100);
+            if (closeResponse && closeResponse.newTroops) {
+                console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
+                $('#mainTroopIndicator').addClass('animated infinite bounce');
+                this.soundService.cardTurnIn.play();
+                this.gameEngine.troopsToDeploy += closeResponse.newTroops;
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                setTimeout(() => {
+                    this.$scope.$apply();
+                }, 100);
+                setTimeout(() => {
+                    $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                }, 1000);
+            }
         });
     }
 
@@ -115,18 +136,12 @@ export default class MainController {
                     return 'newTurn';
                 }
             }
+        }).result.then(closeResponse => {
+            this.mapService.updateMap(this.gameEngine.filter);
+            this.checkIfPlayerMustTurnInCards();
+            console.log('New turn: ', this.vm.turn);
+            console.log('Current carddeck: ', this.gameEngine.cardDeck);
         });
-
-        this.mapService.updateMap(this.gameEngine.filter);
-        if (this.vm.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-
-            if (this.vm.turn.player.cards.length === MAX_CARDS_ON_HAND) {
-                this.turnInCards();
-            }
-        }
-        console.log('New turn: ', this.vm.turn);
-        console.log('Current carddeck: ', this.gameEngine.cardDeck);
     }
 
     checkIfPlayerWonTheGame() {
@@ -191,6 +206,9 @@ export default class MainController {
             territoryAttacked.numberOfTroops = closeResponse.attackTo.numberOfTroops;
 
             if (closeResponse.battleWasWon) {
+                if (!this.gameEngine.turn.playerHasWonAnAttackThisTurn) {
+                    this.soundService.cardSelect.play();
+                }
                 this.gameEngine.takeCard(closeResponse.attackFrom.owner);
             }
 
@@ -207,7 +225,9 @@ export default class MainController {
         const clickedTerritory = getTerritoryByName(this.gameEngine.map, country);
 
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.soundService.addTroopSound.play();
+            if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
+                this.soundService.addTroopSound.play();
+            }
             this.gameEngine.addTroopToTerritory(country);
             this.mapService.updateMap(this.gameEngine.filter);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;

@@ -3,7 +3,7 @@ import {CARD_TYPE} from './../card/cardConstants';
 import {arraysEqual} from './../helpers';
 
 export default class CardTurnInModalController {
-    constructor($scope, $uibModalInstance, gameEngine) {
+    constructor($scope, $uibModalInstance, gameEngine, soundService) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -23,15 +23,16 @@ export default class CardTurnInModalController {
 
         this.$uibModalInstance = $uibModalInstance;
         this.gameEngine = gameEngine;
+        this.soundService = soundService;
 
-        //console.log('Initialization of CardTurnInModalController');
+        this.vm.phaseIsDeployment = this.gameEngine.turn.turnPhase === 0;
 
         this.vm.CARD_TYPE = CARD_TYPE;
         this.vm.cards = this.gameEngine.turn.player.cards;
         this.vm.cards.map(card => {
             card.isSelected = false;
         });
-        this.vm.playerMustTurnIn = (this.vm.cards.length === MAX_CARDS_ON_HAND);
+        this.vm.playerMustTurnIn = (this.vm.cards.length >= MAX_CARDS_ON_HAND);
 
         this.possibleCombinations = [
             {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.CANNON], value: 10},
@@ -68,6 +69,7 @@ export default class CardTurnInModalController {
 
     toggleCardSelection(card) {
         if (card.isSelected || this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
+            this.soundService.cardSelect.play();
             card.isSelected = !card.isSelected;
         }
 

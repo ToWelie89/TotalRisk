@@ -26,32 +26,32 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6" id="attackerTroops">
-                                <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}">
-                                    <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
-                                        @@cannonSvg
-                                    </span>
-                                    <span data-ng-show="troop == 'horse'" class="troopIcon horse">
-                                        @@horseSvg
-                                    </span>
-                                    <span data-ng-show="troop == 'troop'" class="troopIcon troop">
+                                <span data-ng-repeat="troop in attack.getAsArray(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}" data-ng-show="attack.attacker.numberOfTroops <= 20">
+                                    <span class="troopIcon troop">
                                         @@troopSvg
                                     </span>
                                 </span>
-                                <div data-ng-show="attack.attacker.numberOfTroops == 0" class="deadLabel">
+                                <span data-ng-show="attack.attacker.numberOfTroops > 20">
+                                    <span class="troopIcon troop">
+                                        @@troopSvg
+                                    </span>
+                                    <span>x{{attack.attacker.numberOfTroops}}</span>
+                                </span>
+                                <div data-ng-show="attack.attacker.numberOfTroops == 0 && !attack.diceAreRolling" class="deadLabel">
                                     <strong>DEAD!</strong>
                                 </div>
                             </div>
                             <div class="col-xs-6" id="defenderTroops">
-                                <span data-ng-repeat="troop in attack.convertTroopAmountToTroopTypes(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}">
-                                    <span data-ng-show="troop == 'cannon'" class="troopIcon cannon">
-                                        @@cannonSvg
-                                    </span>
-                                    <span data-ng-show="troop == 'horse'" class="troopIcon horse">
-                                        @@horseSvg
-                                    </span>
-                                    <span data-ng-show="troop == 'troop'" class="troopIcon troop">
+                                <span data-ng-repeat="troop in attack.getAsArray(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}" data-ng-show="attack.defender.numberOfTroops <= 20">
+                                    <span class="troopIcon troop">
                                         @@troopSvg
                                     </span>
+                                </span>
+                                <span data-ng-show="attack.defender.numberOfTroops > 20">
+                                    <span class="troopIcon troop">
+                                        @@troopSvg
+                                    </span>
+                                    <span>x{{attack.defender.numberOfTroops}}</span>
                                 </span>
                                 <div data-ng-show="attack.defender.numberOfTroops == 0" class="deadLabel">
                                     <strong>DEAD!</strong>
@@ -70,7 +70,7 @@
                             <div class="col-xs-6" data-ng-bind="attack.attacker.owner"></div>
                             <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
                         </div>
-                        <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver">
+                        <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver || attack.diceAreRolling">
                             <button type="button" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons">
                                 <i class="fa fa-times"></i>
                                 <strong>Fight!</strong>
@@ -81,113 +81,22 @@
                             </button>
                         </div>
                         <div class="row" data-ng-show="attack.attackerDice.length > 0 || attack.defenderDice.length > 0">
-                          <h2>Dice:</h2>
+                            <h2>Dice:</h2>
                         </div>
                         <div class="row">
                             <div class="col-xs-6" data-ng-if="attack.attackerDice">
-                                <div data-ng-repeat="dice in attack.attackerDice track by $index" class="dice">
-                                    <div class="first-face" data-ng-show="dice == 1">
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="second-face" data-ng-show="dice == 2">
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="third-face" data-ng-show="dice == 3">
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="fourth-face" data-ng-show="dice == 4">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                    <div class="fifth-face" data-ng-show="dice == 5">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                    <div class="sixth-face" data-ng-show="dice == 6">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="attackerCanvas"></div>
                             </div>
                             <div class="col-xs-6" data-ng-if="attack.defenderDice">
-                                <div data-ng-repeat="dice in attack.defenderDice track by $index" class="dice">
-                                    <div class="first-face" data-ng-show="dice == 1">
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="second-face" data-ng-show="dice == 2">
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="third-face" data-ng-show="dice == 3">
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                        <span class="pip"></span>
-                                    </div>
-                                    <div class="fourth-face" data-ng-show="dice == 4">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                    <div class="fifth-face" data-ng-show="dice == 5">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                    <div class="sixth-face" data-ng-show="dice == 6 ">
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                        <div class="column">
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                            <span class="pip"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="defenderCanvas"></div>
                             </div>
                         </div>
                         <div class="row" data-ng-show="attack.showMoveTroops">
+                            <div class="col-xs-12 marginTop">
+                                <h4>
+                                    Choose the number of troops to move the newly conquered territory.
+                                </h4>
+                            </div>
                             <div class="col-xs-12">
                                 <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
                             </div>

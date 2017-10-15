@@ -5,6 +5,17 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="modal-body textCenter">
+                        <div class="row">
+                            <h4 data-ng-show="cardTurnIn.playerMustTurnIn">
+                                You have reached the maxiumum number of allowed cards on hand. You must turn in a combination.
+                            </h4>
+                            <h4 data-ng-show="cardTurnIn.cards.length === 0">
+                                You have no cards on hand.
+                            </h4>
+                            <h4 data-ng-show="!cardTurnIn.phaseIsDeployment">
+                                You can only turn in cards in deployment phase.
+                            </h4>
+                        </div>
                         <div class="row marginBottom--double" style="margin-top: 50px;">
                             <div class="col-xs-12">
                                 <div class="card"
@@ -45,14 +56,87 @@
                                     <i class="fa fa-times"></i>
                                     <strong>Cancel</strong>
                                 </button>
-                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()" data-ng-disabled="cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment">
                                     <i class="fa fa-times"></i>
                                     <strong>Autoselect best combination</strong>
                                 </button>
-                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination || cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment">
                                     <i class="fa fa-times"></i>
                                     <strong>Turn in</strong>
                                 </button>
+                            </div>
+                        </div>
+                        <div class="cardTurnInCombinations marginTop--double">
+                            <div class="row marginBottom">
+                                <div class="col-xs-12">
+                                    <h4>
+                                        Available combinations
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align: right;">
+                                    <span class="troopIcon troop_Black cannon">
+                                        @@cannonSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black horse">
+                                        @@horseSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black troop">
+                                        @@troopSvg
+                                    </span>
+                                </div>
+                                <div class="col-xs-6"" style="text-align: left;">
+                                    10 troops
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align: right;">
+                                    <span class="troopIcon troop_Black cannon">
+                                        @@cannonSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black cannon">
+                                        @@cannonSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black cannon">
+                                        @@cannonSvg
+                                    </span>
+                                </div>
+                                <div class="col-xs-6"" style="text-align: left;">
+                                    7 troops
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align: right;">
+                                    <span class="troopIcon troop_Black horse">
+                                        @@horseSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black horse">
+                                        @@horseSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black horse">
+                                        @@horseSvg
+                                    </span>
+                                </div>
+                                <div class="col-xs-6"" style="text-align: left;">
+                                    5 troops
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6" style="text-align: right;">
+                                    <span class="troopIcon troop_Black troop">
+                                        @@troopSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black troop">
+                                        @@troopSvg
+                                    </span>
+                                    <span class="troopIcon troop_Black troop">
+                                        @@troopSvg
+                                    </span>
+                                </div>
+                                <div class="col-xs-6"" style="text-align: left;">
+                                    3 troops
+                                </div>
                             </div>
                         </div>
                     </div>

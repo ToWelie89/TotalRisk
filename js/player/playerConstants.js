@@ -39,27 +39,27 @@ const PLAYER_COLORS = {
 
 const avatars = {
     'Julius Caesar': {
-        picture: './assets/img/juliuscaesar.jpg',
+        picture: './assets/img/caesar.png',
         selectSound: ''
     },
     'Napoleon Bonaparte': {
-        picture: './assets/img/napoleon.jpg',
+        picture: './assets/img/napoleon.png',
         selectSound: ''
     },
     'Hannibal Barca': {
-        picture: './assets/img/hannibal.jpg',
+        picture: './assets/img/hannibal_barca.png',
         selectSound: ''
     },
     'Alexander the Great': {
-        picture: './assets/img/alexander.jpg',
+        picture: './assets/img/alexander.png',
         selectSound: ''
     },
     'Genghis Khan': {
-        picture: './assets/img/genghiskhan.jpg',
+        picture: './assets/img/genghiskhan.png',
         selectSound: ''
     },
     'Attila the Hun': {
-        picture: './assets/img/attila.jpg',
+        picture: './assets/img/attila.png',
         selectSound: ''
     }
 };

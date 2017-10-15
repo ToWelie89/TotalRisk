@@ -1,5 +1,8 @@
 export default class BattleHandler {
     handleAttack(attacker, defender) {
+        const newAttacker = Object.assign({}, attacker);
+        const newDefender = Object.assign({}, defender);
+
         const attackDice = Array.from(new Array(attacker.numberOfTroops > 3 ? 3 : attacker.numberOfTroops), (x, i) => this.getRandomDiceValue());
         const defendDice = Array.from(new Array(defender.numberOfTroops > 2 ? 2 : defender.numberOfTroops), (x, i) => this.getRandomDiceValue());
 
@@ -12,10 +15,10 @@ export default class BattleHandler {
         [0, 1].forEach(x => {
             if (attackDice[x] && defendDice[x]) {
                 if (attackDice[x] > defendDice[x]) {
-                    defender.numberOfTroops--;
+                    newDefender.numberOfTroops--;
                     defenderCasualties++;
                 } else {
-                    attacker.numberOfTroops--;
+                    newAttacker.numberOfTroops--;
                     attackerCasualties++;
                 }
             }
@@ -24,8 +27,8 @@ export default class BattleHandler {
         return {
             attackDice,
             defendDice,
-            attacker,
-            defender,
+            attacker: newAttacker,
+            defender: newDefender,
             defenderCasualties,
             attackerCasualties
         };
