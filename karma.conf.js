@@ -5,7 +5,10 @@ module.exports = function(config) {
         files: [
             'node_modules/jquery/dist/jquery.min.js',
             'node_modules/angular/angular.js',
-            'build/testApp.bundle.js'
+            'build/testApp.bundle.js',
+            'js/libs/three.min.js',
+            'js/libs/cannon.min.js',
+            'js/libs/dice.js'
         ],
         browsers: ['PhantomJS'],
         colors: true,

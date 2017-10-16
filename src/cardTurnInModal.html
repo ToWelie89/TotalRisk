@@ -12,7 +12,7 @@
                             <h4 data-ng-show="cardTurnIn.cards.length === 0">
                                 You have no cards on hand.
                             </h4>
-                            <h4 data-ng-show="!cardTurnIn.phaseIsDeployment">
+                            <h4 data-ng-show="!cardTurnIn.phaseIsDeployment()">
                                 You can only turn in cards in deployment phase.
                             </h4>
                         </div>
@@ -56,11 +56,11 @@
                                     <i class="fa fa-times"></i>
                                     <strong>Cancel</strong>
                                 </button>
-                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()" data-ng-disabled="cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()" data-ng-disabled="cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment()">
                                     <i class="fa fa-times"></i>
                                     <strong>Autoselect best combination</strong>
                                 </button>
-                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination || cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination || cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment()">
                                     <i class="fa fa-times"></i>
                                     <strong>Turn in</strong>
                                 </button>

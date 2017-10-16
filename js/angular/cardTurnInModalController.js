@@ -25,7 +25,7 @@ export default class CardTurnInModalController {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
 
-        this.vm.phaseIsDeployment = this.gameEngine.turn.turnPhase === 0;
+        this.vm.phaseIsDeployment = () => this.gameEngine.turn.turnPhase === 0;
 
         this.vm.CARD_TYPE = CARD_TYPE;
         this.vm.cards = this.gameEngine.turn.player.cards;

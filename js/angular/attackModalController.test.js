@@ -1,5 +1,5 @@
 import AttackModalController from './attackModalController';
-import {createUibModalInstance, createSoundService} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createScope} from './../test/mockHelper';
 import Territory from './../map/territory';
 import { worldMap } from './../map/worldMapConfiguration';
 import Player from './../player/player';
@@ -13,6 +13,7 @@ describe('attackModalController', () => {
     let player1;
     let player2;
 
+    let mockScope;
     let mockSoundService;
     let mockUibModalInstance;
 
@@ -35,8 +36,9 @@ describe('attackModalController', () => {
 
         mockSoundService = createSoundService();
         mockUibModalInstance = createUibModalInstance();
+        mockScope = createScope();
 
-        attackModalController = new AttackModalController({}, mockUibModalInstance, mockSoundService, mockAttackData);
+        attackModalController = new AttackModalController(mockScope, mockUibModalInstance, mockSoundService, mockAttackData);
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;
@@ -44,6 +46,15 @@ describe('attackModalController', () => {
         attackModalController.closeModalDelay = 0;
         attackModalController.startShakeAnimationDelay = 0;
         attackModalController.stopShakeAnimationDelay = 0;
+
+        // Mock dice boxes
+        const dice_box = function(container, dimentions) {
+        }
+        dice_box.prototype.throw = function(diceRolls, after_roll, context) {
+            after_roll.call({}, [], context);
+        }
+        attackModalController.attacker_box = new dice_box('container', { w: 500, h: 300 });
+        attackModalController.defender_box = new dice_box('container', { w: 500, h: 300 });
     });
 
     it('On construction scope variables should be set correctly', () => {
@@ -134,6 +145,7 @@ describe('attackModalController', () => {
         expect(mockSoundService.cheer.play).toHaveBeenCalled();
         expect(attackModalController.fightIsOver).toEqual(true);
         expect(attackModalController.showMoveTroops).toEqual(true);
+        expect(mockScope.$apply).toHaveBeenCalled();
     });
 
     it('fight where defender wins', () => {
@@ -218,5 +230,10 @@ describe('attackModalController', () => {
         expect(arraysEqual(attackModalController.convertTroopAmountToTroopTypes(10).sort(), ['cannon'].sort())).toEqual(true);
         expect(arraysEqual(attackModalController.convertTroopAmountToTroopTypes(15).sort(), ['cannon', 'horse'].sort())).toEqual(true);
         expect(arraysEqual(attackModalController.convertTroopAmountToTroopTypes(20).sort(), ['cannon', 'cannon'].sort())).toEqual(true);
+    });
+
+    it('getAsArray should return an array of empty objects with same lengt as input', () => {
+        // Assert
+        expect(attackModalController.getAsArray(5).length).toEqual(5);
     });
 });

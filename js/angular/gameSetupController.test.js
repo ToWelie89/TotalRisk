@@ -35,6 +35,7 @@ describe('gameSetupController', () => {
         gameSetupController.updateAvatarOfPlayer({name: 'Pelle'}, newAvatar);
         // Assert
         expect(gameSetupController.players[0].avatar).toEqual(newAvatar);
+        expect(mockSoundService.changeColor.play).toHaveBeenCalled();
     });
 
     it('updateColorOfPlayer should update the color of a player properly', () => {
