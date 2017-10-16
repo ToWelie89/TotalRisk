@@ -5,6 +5,13 @@ const createUibModalInstance = () => {
     return mock;
 };
 
+const createUibModal = () => {
+    const mock = jasmine.createSpyObj('$uibModal', [
+        'open'
+    ]);
+    return mock;
+};
+
 const createSoundService = () => {
     const mock = {
         bleep: jasmine.createSpyObj('bleep', ['play']),
@@ -27,8 +34,26 @@ const createScope = () => {
     return mock;
 };
 
+const createGameEngine = () => {
+    const mock = jasmine.createSpyObj('gameEngine', [
+        'toggleSound',
+        'startGame'
+    ]);
+    return mock;
+};
+
+const createMapService = () => {
+    const mock = jasmine.createSpyObj('mapService', [
+        'updateMap'
+    ]);
+    return mock;
+};
+
 export {
     createSoundService,
     createUibModalInstance,
-    createScope
+    createScope,
+    createGameEngine,
+    createMapService,
+    createUibModal
 };
