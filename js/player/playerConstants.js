@@ -61,6 +61,70 @@ const avatars = {
     'Attila the Hun': {
         picture: './assets/img/attila.png',
         selectSound: ''
+    },
+    'Scipio Africanus': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Miltiades': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Leonidas': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Henry V': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Charles XII': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Saladin': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'William the Conqueror': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Gustavus Adolphus': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Duke of Wellington': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Hernán Cortés': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Shaka Zulu': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Erich Ludendorff': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Bernard Montgomery': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'George Patton': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Jeanne d\'Arc': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
+    },
+    'Boudicca': {
+        picture: './assets/img/attila.png',
+        selectSound: ''
     }
 };
 
