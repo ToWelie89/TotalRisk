@@ -40,83 +40,103 @@ const PLAYER_COLORS = {
 const avatars = {
     'Julius Caesar': {
         picture: './assets/img/caesar.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'http://i.imgur.com/8MpJNmA.png'
     },
     'Napoleon Bonaparte': {
         picture: './assets/img/napoleon.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://i.pinimg.com/originals/42/0e/bd/420ebd5c48ff17a5cbfc0b8c6fe0dd3d.png'
     },
     'Hannibal Barca': {
         picture: './assets/img/hannibal_barca.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://vignette.wikia.nocookie.net/althistory/images/e/ea/Carthage_Flag_Romae.jpg/revision/latest?cb=20130803001213'
     },
     'Alexander the Great': {
         picture: './assets/img/alexander.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://en.wikipedia.org/wiki/Vergina_Sun#/media/File:Vergina_Sun_-_Golden_Larnax.png'
     },
     'Genghis Khan': {
         picture: './assets/img/genghiskhan.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://en.wikipedia.org/wiki/Golden_Horde#/media/File:Golden_Horde_flag_1339.svg'
     },
     'Attila the Hun': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/en/0/07/Hunnic_Empire_flag.jpg'
     },
     'Scipio Africanus': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'http://i.imgur.com/8MpJNmA.png'
     },
     'Miltiades': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://img00.deviantart.net/6cb9/i/2017/063/a/d/flag_of_the_athenian_empire__2_by_arthurdrakoni-db15r0x.png'
     },
     'Leonidas': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://vignette.wikia.nocookie.net/cybernations/images/1/19/Flag_of_Sparta.svg/revision/latest?cb=20100122152927'
     },
     'Henry V': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'http://www.crwflags.com/fotw/images/g/gb-1399.gif'
     },
     'Charles XII': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://d1e2j7xcnt57hx.cloudfront.net/se/img/20170922142134/flags/swe.svg'
     },
     'Saladin': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://sv.wikipedia.org/wiki/Ayyubiderna#/media/File:Flag_of_Ayyubid_Dynasty.svg'
     },
     'William the Conqueror': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'http://www.angusbreeder.net/media/FRN/lower%20normandy.png'
     },
     'Gustavus Adolphus': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://d1e2j7xcnt57hx.cloudfront.net/se/img/20170922142134/flags/swe.svg'
     },
     'Duke of Wellington': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1280px-Flag_of_the_United_Kingdom.svg.png'
     },
     'Hernán Cortés': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Flag_of_Cross_of_Burgundy.svg/1200px-Flag_of_Cross_of_Burgundy.svg.png'
     },
     'Shaka Zulu': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Conjectural_flag_of_Zululand_%281884-1897%29_by_Roberto_Breschi_taken_from_The_South_African_Flag_Book_by_A.P.Burgers.png/800px-Conjectural_flag_of_Zululand_%281884-1897%29_by_Roberto_Breschi_taken_from_The_South_African_Flag_Book_by_A.P.Burgers.png'
     },
     'Erich Ludendorff': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://i.ebayimg.com/00/s/MzQ3WDYwMA==/z/3IsAAOxyBvZTUSwH/$_58.JPG'
     },
     'Bernard Montgomery': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1280px-Flag_of_the_United_Kingdom.svg.png'
     },
     'George Patton': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1280px-Flag_of_the_United_States.svg.png'
     },
     'Jeanne d\'Arc': {
         picture: './assets/img/attila.png',
@@ -124,7 +144,8 @@ const avatars = {
     },
     'Boudicca': {
         picture: './assets/img/attila.png',
-        selectSound: ''
+        selectSound: '',
+        flag: 'https://www.honga.net/totalwar/rome2/images/rome2/flags/iceni/mon_256.png'
     }
 };
 
