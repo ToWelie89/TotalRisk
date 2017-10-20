@@ -7,6 +7,7 @@ export default class SoundService {
         this.soundPath = './audio/';
 
         this.bleep = new Sound(`${this.soundPath}/bleep.wav`, this.gameEngine);
+        this.bleep2 = new Sound(`${this.soundPath}/bleep2.wav`, this.gameEngine);
         this.cheer = new Sound(`${this.soundPath}/victory_cheer.wav`, this.gameEngine);
         this.screamSound = new Sound(`${this.soundPath}/wilhelm.wav`, this.gameEngine);
         this.addTroopSound = new Sound(`${this.soundPath}/troop.wav`, this.gameEngine);
@@ -14,5 +15,6 @@ export default class SoundService {
         this.cardSelect = new Sound(`${this.soundPath}/card.wav`, this.gameEngine);
         this.changeColor = new Sound(`${this.soundPath}/beep.wav`, this.gameEngine);
         this.diceRoll = new Sound(`${this.soundPath}/dice.wav`, this.gameEngine);
+        this.remove = new Sound(`${this.soundPath}/remove.wav`, this.gameEngine);
     }
 }

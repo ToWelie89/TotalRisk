@@ -18,9 +18,9 @@
                               <h2 class="banner">Battle of {{ attack.defender.name }}</h2>
                           </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="opacity: 0; max-height: 250px; height: 250px; min-height: 250px;" id="territoryContainer">
                             <div class="col-xs-12">
-                                <svg id="territorySvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                                <svg id="territorySvg" xmlns="http://www.w3.org/2000/svg">
                                 </svg>
                             </div>
                         </div>
@@ -71,11 +71,11 @@
                             <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
                         </div>
                         <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver || attack.diceAreRolling">
-                            <button type="button" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons">
+                            <button type="button" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons || attack.loading">
                                 <i class="fa fa-times"></i>
                                 <strong>Fight!</strong>
                             </button>
-                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons">
+                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons || attack.loading">
                                 <i class="fa fa-times"></i>
                                 <strong>Retreat!</strong>
                             </button>
@@ -83,7 +83,7 @@
                         <div class="row" data-ng-show="attack.attackerDice.length > 0 || attack.defenderDice.length > 0">
                             <h2>Dice:</h2>
                         </div>
-                        <div class="row">
+                        <div class="row" style="height: 0; opacity: 0;" id="diceContainer">
                             <div class="col-xs-6" data-ng-if="attack.attackerDice">
                                 <div id="attackerCanvas"></div>
                             </div>

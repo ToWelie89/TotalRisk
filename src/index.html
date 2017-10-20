@@ -36,7 +36,7 @@
         <span id="sizeIndicator"></span>
         <div class="wrapper">
             <h1 class="pulsate">Risk</h1>
-            <div class="createdBy">
+            <div class="createdBy paddingTop">
                 Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
             </div>
         </div>
@@ -95,6 +95,14 @@
                         </button>
                         <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
                             <strong>Start</strong>
+                        </button>
+                    </div>
+                </div>
+                <!-- TESTING STUFF -->
+                <div class="row marginTop">
+                    <div class="col-xs-12 textCenter">
+                        <button type="button" class="button button-blue" data-ng-click="main.testAttackPhase(setup.players)" data-ng-disabled="setup.players.length == setup.maxPlayers">
+                            <strong>Test battle modal</strong>
                         </button>
                     </div>
                 </div>

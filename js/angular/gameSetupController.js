@@ -69,7 +69,7 @@ export default class GameSetupController {
         if (this.vm.players.length === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
-        this.soundService.bleep.play();
+        this.soundService.bleep2.play();
         this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar));
     }
 
@@ -77,6 +77,7 @@ export default class GameSetupController {
         if (this.vm.players.length === CONSTANTS.MIN_NUMBER_OF_PLAYERS) {
             return;
         }
+        this.soundService.remove.play();
         this.vm.players = this.vm.players.filter(player => {
             if (player !== playerToRemove) {
                 return player;

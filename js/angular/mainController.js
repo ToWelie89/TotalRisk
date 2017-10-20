@@ -15,6 +15,7 @@ export default class MainController {
         this.vm.getCurrentPlayerColor = this.getCurrentPlayerColor;
         this.vm.startGame = this.startGame;
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
+        this.vm.testAttackPhase = this.testAttackPhase;
         this.vm.playSound = true;
 
         this.vm.gamePhases = GAME_PHASES;
@@ -174,6 +175,21 @@ export default class MainController {
         return this.gameEngine.players ? this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor : '';
     }
 
+    testAttackPhase(players) {
+        this.gameEngine.startGame(players);
+        this.vm.turn = this.gameEngine.turn;
+        const clickedTerritory = getTerritoryByName(this.gameEngine.map, 'Egypt');
+        const attackFrom = getTerritoryByName(this.gameEngine.map, 'Scandinavia');
+        clickedTerritory.owner = 'Julius Caesar';
+        clickedTerritory.numberOfTroops = 5;
+        attackFrom.owner = 'Napoleon Bonaparte';
+        attackFrom.numberOfTroops = 8;
+        this.gameEngine.selectedTerritory = attackFrom;
+
+        this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
+        this.engageAttackPhase(clickedTerritory);
+    }
+
     engageAttackPhase(clickedTerritory) {
         this.$uibModal.open({
             templateUrl: 'attackModal.html',
@@ -241,8 +257,8 @@ export default class MainController {
                 clickedTerritory.owner !== this.gameEngine.turn.player.name &&
                 clickedTerritory.adjacentTerritories.includes(this.gameEngine.selectedTerritory.name) &&
                 this.gameEngine.selectedTerritory.numberOfTroops > 1) {
-                this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
 
+                this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
                 this.engageAttackPhase(clickedTerritory);
             } else {
                 this.gameEngine.selectedTerritory = clickedTerritory;

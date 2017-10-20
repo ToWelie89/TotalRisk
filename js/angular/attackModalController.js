@@ -17,6 +17,7 @@ export default class AttackModalController {
         this.vm.countrySvg = '';
 
         this.vm.diceAreRolling = false;
+        this.vm.loading = true;
 
         // PUBLIC FUNCTIONS
         this.vm.fight = this.fight;
@@ -54,20 +55,36 @@ export default class AttackModalController {
 
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');
-            this.attacker_box = new dice_box(attackerCanvas, { w: 500, h: 300 });
-            this.defender_box = new dice_box(defenderCanvas, { w: 500, h: 300 });
+            this.attacker_box = new dice_box(attackerCanvas, { w: 500, h: 300 }, {
+                dice_color: '#6b0a05'
+            });
+            this.defender_box = new dice_box(defenderCanvas, { w: 500, h: 300 }, {
+                dice_color: '#061a7f'
+            });
+
+            $('#territoryContainer').animate({
+                opacity: 1
+            }, 400);
+
+            $('#diceContainer').animate({
+                height: '160px'
+            }, 400, () => {
+                $('#diceContainer').animate({
+                    opacity: 1
+                }, 400, () => {
+                    this.vm.loading = false;
+                    this.$scope.$apply();
+                });
+            });
+
         }, this.getCountrySvgDelay);
     }
 
     fight() {
         this.soundService.diceRoll.play();
         this.vm.diceAreRolling = true;
-        // If one player loses 2 troops a scream sound is heard
-        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender);
-        if (response.defenderCasualties === 2 || response.attackerCasualties === 2) {
-            this.soundService.screamSound.play();
-        }
 
+        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender);
         this.vm.attackerDice = response.attackDice;
         this.vm.defenderDice = response.defendDice;
         this.battleHandlerResponse = response;
@@ -82,6 +99,11 @@ export default class AttackModalController {
         context.numberOfRollsComplete++;
         if (context.numberOfRollsComplete !== 2) {
             return;
+        }
+
+        // If one player loses 2 troops a scream sound is heard
+        if (context.battleHandlerResponse.defenderCasualties === 2 || context.battleHandlerResponse.attackerCasualties === 2) {
+            context.soundService.screamSound.play();
         }
 
         context.vm.attacker = context.battleHandlerResponse.attacker;
