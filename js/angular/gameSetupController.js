@@ -1,5 +1,5 @@
 import Player from './../player/player';
-import {PLAYER_COLORS, avatars} from './../player/playerConstants';
+import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
 
 export default class GameSetupController {
@@ -21,6 +21,8 @@ export default class GameSetupController {
         this.vm.emptyNamesExists = this.emptyNamesExists;
         this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
         this.vm.updateAvatarOfPlayer = this.updateAvatarOfPlayer;
+        this.vm.choosePlayerType = this.choosePlayerType;
+        this.vm.onlyAIsExists = this.onlyAIsExists;
     }
 
     init() {
@@ -29,7 +31,8 @@ export default class GameSetupController {
             new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
                 new Player(Object.keys(avatars).map(key => key)[i],
                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
-                           Object.keys(avatars).map(key => avatars[key])[i])
+                           Object.keys(avatars).map(key => avatars[key])[i],
+                           PLAYER_TYPES.HUMAN)
         );
         console.log('Players: ', this.vm.players);
     }
@@ -70,7 +73,7 @@ export default class GameSetupController {
             return;
         }
         this.soundService.bleep2.play();
-        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar));
+        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar, PLAYER_TYPES.HUMAN));
     }
 
     removePlayer(playerToRemove) {
@@ -106,6 +109,10 @@ export default class GameSetupController {
         };
     }
 
+    choosePlayerType(player, type) {
+        player.type = PLAYER_TYPES[type];
+    }
+
     getFirstUnusedName() {
         const usedNames = this.vm.players.map(player => player.name);
         const name = Array.from(Object.keys(avatars)).find(playerName => !usedNames.includes(playerName));
@@ -114,15 +121,7 @@ export default class GameSetupController {
     }
 
     startGameIsDisabled() {
-        let returnValue = false;
-        // Check that all players has a name set
-        returnValue = this.emptyNamesExists();
-        // Check that names aren't identical
-        if (!returnValue) {
-            returnValue = this.hasDuplicates();
-        }
-
-        return returnValue;
+        return (this.hasDuplicates() || this.onlyAIsExists() || this.emptyNamesExists());
     }
 
     hasDuplicates() {
@@ -130,13 +129,13 @@ export default class GameSetupController {
         return (new Set(names)).size !== names.length;
     }
 
+    onlyAIsExists() {
+        const types = this.vm.players.map(x => x.type);
+        return types.every(type => type === PLAYER_TYPES.AI);
+    }
+
     emptyNamesExists() {
-        let returnValue = false;
-        this.vm.players.forEach(player => {
-            if (!player.name) {
-                returnValue = true;
-            }
-        });
-        return returnValue;
+        const names = this.vm.players.map(x => x.name);
+        return names.some(name => name === undefined || name === null || name === '');
     }
 }

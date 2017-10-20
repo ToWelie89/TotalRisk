@@ -55,13 +55,28 @@
                     </div>
                 </div>
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
-                    <div class="col-xs-3 text-shadow" style="text-align: right; margin-top: 22px;">
+                    <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
                         <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
                         role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)">
                         </div>
                     </div>
-                    <div class="col-xs-5" style="text-align: left; margin-top: 22px;">
+                    <div class="col-xs-4" style="text-align: left; margin-top: 22px;">
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
+                    </div>
+                    <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
+                                {{ player.type === 0 ? 'Human' : 'AI' }}
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'HUMAN')">Human</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI')">AI</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-xs-1" style="text-align: left;">
                         <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
@@ -76,13 +91,18 @@
                     </div>
                 </div>
                 <div class="row marginTop">
-                    <div class="col-xs-12 textCenter" style="color: red;" data-ng-show="setup.hasDuplicates()">
+                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.hasDuplicates()">
                         You are not allowed to have duplicate names
                     </div>
                 </div>
                 <div class="row marginTop">
-                    <div class="col-xs-12 textCenter" style="color: red;" data-ng-show="setup.emptyNamesExists()">
+                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.emptyNamesExists()">
                         Empty player names are not allowed
+                    </div>
+                </div>
+                <div class="row marginTop">
+                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.onlyAIsExists()">
+                        Only AI players exists. You must have at least one human player
                     </div>
                 </div>
                 <div class="row marginTop">

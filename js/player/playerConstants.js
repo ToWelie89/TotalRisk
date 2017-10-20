@@ -1,3 +1,8 @@
+const PLAYER_TYPES = {
+    HUMAN: 0,
+    AI: 1
+};
+
 const PLAYER_COLORS = {
     RED: {
         name: 'Red',
@@ -195,4 +200,4 @@ const playerIterator = (playerMap, turnPhases) => {
     };
 };
 
-export {PLAYER_COLORS, playerIterator, avatars};
+export {PLAYER_COLORS, playerIterator, avatars, PLAYER_TYPES};
