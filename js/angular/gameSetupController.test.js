@@ -56,7 +56,7 @@ describe('gameSetupController', () => {
         gameSetupController.addPlayer();
         // Assert
         expect(gameSetupController.players.length).toEqual(3);
-        expect(mockSoundService.bleep.play).toHaveBeenCalled();
+        expect(mockSoundService.bleep2.play).toHaveBeenCalled();
     });
 
     it('addPlayer should not add if max limit is reached', () => {
@@ -77,6 +77,7 @@ describe('gameSetupController', () => {
         gameSetupController.removePlayer(playerToRemove);
         // Assert
         expect(gameSetupController.players.length).toEqual(CONSTANTS.MIN_NUMBER_OF_PLAYERS);
+        expect(mockSoundService.remove.play).toHaveBeenCalled();
         expect(gameSetupController.players.find(p => p.name === 'Pelle')).not.toBeDefined();
     });
 
@@ -88,6 +89,7 @@ describe('gameSetupController', () => {
         gameSetupController.removePlayer(gameSetupController.players[0]);
         // Assert
         expect(gameSetupController.players.length).toEqual(CONSTANTS.MIN_NUMBER_OF_PLAYERS);
+        expect(mockSoundService.remove.play).not.toHaveBeenCalled();
         expect(gameSetupController.players.find(p => p.name === 'Pelle')).toBeDefined();
     });
 

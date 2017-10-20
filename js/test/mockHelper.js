@@ -21,7 +21,9 @@ const createSoundService = () => {
         cardTurnIn: jasmine.createSpyObj('cardTurnIn', ['play']),
         cardSelect: jasmine.createSpyObj('cardSelect', ['play']),
         changeColor: jasmine.createSpyObj('changeColor', ['play']),
-        diceRoll: jasmine.createSpyObj('diceRoll', ['play'])
+        diceRoll: jasmine.createSpyObj('diceRoll', ['play']),
+        bleep2: jasmine.createSpyObj('bleep2', ['play']),
+        remove: jasmine.createSpyObj('remove', ['play']),
 
     };
     return mock;

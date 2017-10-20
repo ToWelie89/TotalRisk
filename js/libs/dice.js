@@ -186,7 +186,7 @@ this.create_d6 = function(dice_color) {
 
 var that = this;
 
-this.dice_box = function(container, dimentions, options = {}) {
+this.dice_box = function(container, dimentions, options) {
     this.use_adapvite_timestep = true;
 
     this.dice_color = '#000000';
