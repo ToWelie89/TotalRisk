@@ -14,6 +14,21 @@ export default class GameAnnouncer {
         });
     }
 
+    speakAsPromise(text, onstartCallback, onendCallback) {
+        return new Promise((resolve, reject) => {
+            responsiveVoice.speak(text, this.announcerType, {
+                pitch: this.pitch,
+                onstart: onstartCallback,
+                onend: () => {
+                    if (onendCallback) {
+                        onendCallback();
+                    }
+                    resolve();
+                }
+            });
+        });
+    }
+
     mute() {
         responsiveVoice.cancel();
     }
@@ -25,7 +40,7 @@ export default class GameAnnouncer {
             onend: onendCallback
         };
 
-        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.name}'s turn`) : '', this.announcerType, {
+        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`) : '', this.announcerType, {
             pitch: this.pitch,
             onstart: onstartCallback,
             onend: () => {

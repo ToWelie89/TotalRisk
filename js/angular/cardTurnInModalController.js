@@ -1,9 +1,10 @@
 import {MAX_CARDS_ON_HAND} from './../gameConstants';
 import {CARD_TYPE} from './../card/cardConstants';
 import {arraysEqual} from './../helpers';
+import {delay} from './../helpers';
 
 export default class CardTurnInModalController {
-    constructor($scope, $uibModalInstance, gameEngine, soundService) {
+    constructor($scope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -24,6 +25,7 @@ export default class CardTurnInModalController {
         this.$uibModalInstance = $uibModalInstance;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
+        this.tutorialService = tutorialService;
 
         this.vm.phaseIsDeployment = () => this.gameEngine.turn.turnPhase === 0;
 
@@ -49,6 +51,19 @@ export default class CardTurnInModalController {
             {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP], value: 3},
             {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER], value: 3}
         ];
+
+        if (data.type === 'tutorial') {
+            this.runTutorial();
+        }
+    }
+
+    runTutorial() {
+        this.tutorialService.cardModalOpenExplanation()
+        .then(() => delay(2000))
+        .then(() => this.tutorialService.cardModalOpenExplanation2())
+        .then(() => {
+            this.$uibModalInstance.close();
+        });
     }
 
     illegalCombination() {

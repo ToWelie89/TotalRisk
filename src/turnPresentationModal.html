@@ -1,8 +1,8 @@
-<div data-ng-init="turnPresentation.init()">
+<div>
     <div id="turnPresentationModal" class="riskModal" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="turnAvatarContainer">
+                <div class="turnAvatarContainer" data-ng-hide="turnPresentation.tutorial">
                     <div class="turnAvatar" style="background-image: url({{ turnPresentation.turn.player.avatar.picture }});">
                     </div>
                 </div>
@@ -36,7 +36,10 @@
                         </div>
                     </div>
 
-                    <h4 class="marginTop textCenter">
+                    <h4 class="marginTop paddingLeft paddingRight paddingBottom" data-ng-repeat="message in turnPresentation.messages" data-ng-show="turnPresentation.tutorial" data-ng-bind-html="message.markup ? message.markup : message.message">
+                    </h4>
+
+                    <h4 class="marginTop--double textCenter">
                         Press <strong>SPACE</strong> to skip
                     </h4>
                 </div>

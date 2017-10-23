@@ -1,7 +1,8 @@
 import BattleHandler from './../battleHandler';
+import {delay} from './../helpers';
 
 export default class AttackModalController {
-    constructor($scope, $uibModalInstance, soundService, attackData) {
+    constructor($scope, $uibModalInstance, soundService, tutorialService, attackData) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -30,6 +31,7 @@ export default class AttackModalController {
         this.$uibModalInstance = $uibModalInstance;
         this.soundService = soundService;
         this.attackData = attackData;
+        this.tutorialService = tutorialService;
 
         this.vm.battleHandler = new BattleHandler();
 
@@ -73,6 +75,9 @@ export default class AttackModalController {
                     opacity: 1
                 }, 400, () => {
                     this.vm.loading = false;
+                    if (attackData.tutorialMode) {
+                        this.runTutorial();
+                    }
                     this.$scope.$apply();
                 });
             });
@@ -80,11 +85,37 @@ export default class AttackModalController {
         }, this.getCountrySvgDelay);
     }
 
-    fight() {
+    runTutorial() {
+        this.tutorialService.attackModalExplanation()
+        .then(() => this.tutorialService.attackModalFightExplanation())
+        .then(() => this.tutorialService.attackModalRetreatExplanation())
+        .then(() => this.tutorialService.startAttack(this.attackData))
+        .then(() => {
+            this.fight([6, 4, 2], [3]);
+            return delay(2500);
+        })
+        .then(() => this.tutorialService.afterAttack(this.attackData))
+        .then(() => this.tutorialService.afterAttack2(this.attackData))
+        .then(() => this.tutorialService.moveAfterAttackExplanation(this.attackData))
+        .then(() => this.tutorialService.performMoveAfterAttack(this.attackData, this.vm.attacker.numberOfTroops))
+        .then(() => {
+            return new Promise((resolve, reject) => {
+                this.vm.moveNumberOfTroops = this.vm.attacker.numberOfTroops;
+                this.$scope.$apply();
+                resolve();
+            });
+        })
+        .then(() => this.tutorialService.moveButtonExplanation())
+        .then(() => {
+            this.moveTroops();
+        });
+    }
+
+    fight(preDeterminedAttackDice = null, preDeterminedDefendDice = null) {
         this.soundService.diceRoll.play();
         this.vm.diceAreRolling = true;
 
-        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender);
+        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender, preDeterminedAttackDice, preDeterminedDefendDice);
         this.vm.attackerDice = response.attackDice;
         this.vm.defenderDice = response.defendDice;
         this.battleHandlerResponse = response;
@@ -136,6 +167,7 @@ export default class AttackModalController {
                 }
             }
             if (context.vm.attacker.numberOfTroops === 0) {
+                context.$scope.$apply();
                 $('#defenderTroops .troopIcon svg').addClass('animated infinite bounce');
                 setTimeout(() => {
                     context.closeModal(false);
@@ -168,11 +200,13 @@ export default class AttackModalController {
         this.$uibModalInstance.close({
             attackFrom: this.vm.attacker,
             attackTo: this.vm.defender,
-            battleWasWon
+            battleWasWon,
+            previousOwner: this.vm.previousOwner
         });
     }
 
     moveTroops() {
+        this.vm.previousOwner = this.vm.defender.owner;
         this.vm.defender.owner = this.vm.attacker.owner;
         this.vm.attacker.numberOfTroops = this.vm.attacker.numberOfTroops - this.vm.moveNumberOfTroops + 1;
         this.vm.defender.numberOfTroops = this.vm.moveNumberOfTroops;

@@ -52,7 +52,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.cancel()" data-ng-disabled="cardTurnIn.playerMustTurnIn">
+                                <button type="button" class="button button-blue" data-ng-click="cardTurnIn.cancel()" data-ng-disabled="cardTurnIn.playerMustTurnIn && cardTurnIn.phaseIsDeployment()">
                                     <i class="fa fa-times"></i>
                                     <strong>Cancel</strong>
                                 </button>
