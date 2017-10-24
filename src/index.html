@@ -9,6 +9,7 @@
     <script src='js/libs/cannon.min.js'></script>
     <script src='js/libs/dice.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
@@ -110,7 +111,7 @@
                         <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="button button-green" data-ng-disabled="true">
+                        <button type="button" class="button button-green" data-ng-click="main.startTutorial()">
                             <strong>Tutorial</strong>
                         </button>
                         <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
@@ -119,10 +120,13 @@
                     </div>
                 </div>
                 <!-- TESTING STUFF -->
-                <div class="row marginTop">
+                <div class="row marginTop--double">
                     <div class="col-xs-12 textCenter">
-                        <button type="button" class="button button-blue" data-ng-click="main.testAttackPhase(setup.players)" data-ng-disabled="setup.players.length == setup.maxPlayers">
+                        <button type="button" class="button button-blue" data-ng-click="main.testAttackPhase(setup.players)">
                             <strong>Test battle modal</strong>
+                        </button>
+                        <button type="button" class="button button-blue" data-ng-click="main.testPresentationModal()">
+                            <strong>Test presentation modal</strong>
                         </button>
                     </div>
                 </div>
@@ -149,7 +153,7 @@
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
                             <div class="turnAvatar" style="background-image: url({{ main.turn.player.avatar.picture }});"></div>
-                            <strong class="floatLeft" style="padding-left: 15px;"><span data-ng-bind="main.turn.player.name"></span></strong>
+                            <strong class="floatLeft" style="padding-left: 15px; letter-spacing: -3px;"><span data-ng-bind="main.turn.player.name"></span></strong>
                         </div>
                         <img src="assets/img/cards.png"
                              id="cardButton"
@@ -164,7 +168,7 @@
                     </div>
                     <div class="col-xs-4" id="turnInfo">
                         <div class="row">
-                            <div class="col-xs-8" style="line-height: 40px;">
+                            <div class="col-xs-8" style="line-height: 40px;" id="currentPhaseIndicator">
                                 <div data-ng-show="main.turn.turnPhase == 0" class="troop_{{ main.turn.player.color.name }}">
                                     <div class="floatLeft">Deploy <span data-ng-bind="main.troopsToDeploy"></span></div>
                                     <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
@@ -179,6 +183,7 @@
                             <div class="col-xs-4" style="line-height: 30px;">
                                 <button
                                 type="button"
+                                id="nextButton"
                                 class="button button-green"
                                 data-ng-click="main.nextTurn()"
                                 data-ng-disabled="main.checkIfNextIsDisabled()"

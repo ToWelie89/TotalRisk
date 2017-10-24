@@ -3,34 +3,58 @@ import { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './../gameConstants';
 
 export default class TurnPresentationController {
 
-    constructor($scope, $uibModalInstance, gameAnnouncerService, gameEngine, presentType) {
+    constructor($scope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, data) {
         this.vm = this;
 
         this.$uibModalInstance = $uibModalInstance;
         this.gameAnnouncerService = gameAnnouncerService;
         this.gameEngine = gameEngine;
-        this.presentType = presentType;
+        this.data = data;
 
-        document.addEventListener('keypress', (e) => {
-            if (e.keyCode === 0 || e.keyCode === 32) {
-                e.preventDefault()
-                this.$uibModalInstance.close({presenterWasCancelled: true});
-                this.gameAnnouncerService.mute();
-                this.gameEngine.setMusicVolume(1.0);
-            }
-        });
+        this.vm.messages = this.data.messages ? this.data.messages : [];
+        this.vm.tutorial = this.data.type === 'tutorial';
+
+        this.boundListener = evt => this.spaceEventListener(evt);
+        document.addEventListener('keypress', this.boundListener);
+
+        this.$sce = $sce;
 
         this.init();
     }
 
+    spaceEventListener(e) {
+        if ((e.keyCode === 0 || e.keyCode === 32) && this.data) {
+            e.preventDefault()
+            this.$uibModalInstance.close();
+            this.close({presenterWasCancelled: true});
+            document.removeEventListener('keypress', this.boundListener);
+            this.gameAnnouncerService.mute();
+            if (!this.vm.tutorial) {
+                this.gameEngine.setMusicVolume(1.0);
+            }
+            if (this.data.afterSpeech) {
+                this.data.afterSpeech();
+            }
+        }
+    }
+
     presentTurnSilently() {
         setTimeout(() => {
-            this.$uibModalInstance.close();
+            this.close();
         }, 2000);
     }
 
+    close(closingResponse = null) {
+        if (closingResponse) {
+            this.$uibModalInstance.close(closingResponse);
+        } else {
+            this.$uibModalInstance.close();
+        }
+        document.removeEventListener('keypress', this.boundListener);
+    }
+
     init() {
-        if (this.presentType === 'startGame') {
+        if (this.data.type === 'startGame') {
             this.vm.turn = this.gameEngine.turn;
             this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
 
@@ -42,13 +66,13 @@ export default class TurnPresentationController {
                         this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                     }, () => {
                         this.gameEngine.setMusicVolume(1.0);
-                        this.$uibModalInstance.close();
+                        this.close();
                     });
                 });
             } else {
                 this.presentTurnSilently();
             }
-        } else if (this.presentType === 'newTurn') {
+        } else if (this.data.type === 'newTurn') {
             this.vm.turn = this.gameEngine.turn;
             if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
                 this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
@@ -59,11 +83,43 @@ export default class TurnPresentationController {
                     this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {
                     this.gameEngine.setMusicVolume(1.0);
-                    this.$uibModalInstance.close();
+                    this.close();
                 });
             } else {
                 this.presentTurnSilently();
             }
+        } else if (this.data.type === 'tutorial') {
+            this.data.messages.forEach(message => {
+                if (message.markup) {
+                    message.markup = this.$sce.trustAsHtml(message.markup);
+                }
+            });
+
+            if (this.data.beforeSpeech) {
+                setTimeout(this.data.beforeSpeech, 50);
+            }
+
+            setTimeout(() => {
+                this.currentMessageIndex = 0;
+                this.speakTutorialMessages();
+            }, this.data.delayBefore ? this.data.delayBefore : 50);
         }
+    }
+
+    speakTutorialMessages() {
+        this.gameAnnouncerService.speak(this.data.messages[this.currentMessageIndex].message, () => {}, () => {
+            if ((this.data.messages.length - 1) === this.currentMessageIndex) {
+                // Last message was spoken
+                if (this.data.afterSpeech) {
+                    this.data.afterSpeech();
+                }
+                setTimeout(() => {
+                    this.close();
+                }, this.data.delayAfter ? this.data.delayAfter : 0)
+            } else {
+                this.currentMessageIndex++;
+                this.speakTutorialMessages();
+            }
+        });
     }
 }

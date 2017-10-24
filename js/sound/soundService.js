@@ -16,5 +16,6 @@ export default class SoundService {
         this.changeColor = new Sound(`${this.soundPath}/beep.wav`, this.gameEngine);
         this.diceRoll = new Sound(`${this.soundPath}/dice.wav`, this.gameEngine);
         this.remove = new Sound(`${this.soundPath}/remove.wav`, this.gameEngine);
+        this.click = new Sound(`${this.soundPath}/click.wav`, this.gameEngine);
     }
 }

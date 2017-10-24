@@ -11,11 +11,12 @@ import ColorPopoverController from './angular/colorPopoverController';
 import AvatarPopoverController from './angular/avatarPopoverController';
 import TurnPresentationController from './angular/turnPresentationController';
 import SoundService from './sound/soundService';
+import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
 import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
 
-const app = angular.module('risk', ['rzModule', 'ui.bootstrap']);
+const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 
 /* MAIN GAME ENGINE */
 app.service('gameEngine', GameEngine);
@@ -32,3 +33,4 @@ app.controller('turnPresentationController', TurnPresentationController);
 app.service('soundService', SoundService);
 app.service('mapService', MapService);
 app.service('gameAnnouncerService', GameAnnouncer);
+app.service('tutorialService', TutorialService);

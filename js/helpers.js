@@ -21,4 +21,8 @@ const arraysEqual = (a, b) => {
     return true;
 }
 
-export {shuffle, arraysEqual};
+const delay = ms => new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+});
+
+export {shuffle, arraysEqual, delay};

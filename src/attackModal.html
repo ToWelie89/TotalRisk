@@ -71,11 +71,11 @@
                             <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
                         </div>
                         <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver || attack.diceAreRolling">
-                            <button type="button" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons || attack.loading">
+                            <button type="button" id="fightButton" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons || attack.loading">
                                 <i class="fa fa-times"></i>
                                 <strong>Fight!</strong>
                             </button>
-                            <button type="button" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons || attack.loading">
+                            <button type="button" id="retreatButton" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons || attack.loading">
                                 <i class="fa fa-times"></i>
                                 <strong>Retreat!</strong>
                             </button>
@@ -97,11 +97,11 @@
                                     Choose the number of troops to move the newly conquered territory.
                                 </h4>
                             </div>
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" id="sliderContainer">
                                 <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
                             </div>
                             <div class="col-xs-12 paddingTop">
-                                <button type="button" class="button button-blue" data-ng-click="attack.moveTroops()">
+                                <button type="button" class="button button-blue" data-ng-click="attack.moveTroops()" id="moveButton">
                                     <i class="fa fa-times"></i>
                                     <strong>Move troops</strong>
                                 </button>

@@ -5,7 +5,7 @@
 import WorldMap from './map/worldMap';
 import { getTerritoryByName } from './map/mapHelpers';
 import { playerIterator } from './player/playerConstants';
-import { TURN_PHASES, MAIN_MUSIC } from './gameConstants';
+import { TURN_PHASES, MAIN_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './gameConstants';
 import { shuffle } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
@@ -20,6 +20,7 @@ export default class GameEngine {
         this.cardDeck = initiatieCardDeck();
         this.playSound = true;
         this.selectedTerritory = undefined;
+        this.isTutorialMode = false;
         this.setMusic();
     }
 
@@ -81,6 +82,12 @@ export default class GameEngine {
         this.selectedTerritory = undefined;
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
+        if (this.turn.player.dead) {
+            this.iterator.next();
+            this.iterator.next();
+            this.iterator.next();
+            this.turn = this.iterator.getCurrent();
+        }
         this.handleTurnPhase();
         return this.turn;
     }
@@ -116,10 +123,27 @@ export default class GameEngine {
 
     takeCard(player) {
         if (!this.turn.playerHasWonAnAttackThisTurn) {
+            if (this.cardDeck.length === 0) {
+                this.cardDeck = initiatieCardDeck();
+            }
+
             const cardToTake = this.cardDeck[0];
             this.cardDeck.shift();
             this.players.get(player).cards.push(cardToTake);
             this.turn.playerHasWonAnAttackThisTurn = true;
         }
+    }
+
+    handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim) {
+        this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game`, () => {
+            this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+        }, () => {
+            this.setMusicVolume(1.0);
+        });
+
+        this.players.get(defeatedPlayer).dead = true;
+        const cards = this.players.get(defeatedPlayer).cards;
+        this.players.get(playerWhoDefeatedHim).cards = this.players.get(playerWhoDefeatedHim).cards.concat(cards);
+        return cards;
     }
 }
