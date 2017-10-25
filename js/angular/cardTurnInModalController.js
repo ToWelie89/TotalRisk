@@ -58,6 +58,7 @@ export default class CardTurnInModalController {
     }
 
     runTutorial() {
+        this.tutorialService.initTutorialData();
         this.tutorialService.cardModalOpenExplanation()
         .then(() => delay(2000))
         .then(() => this.tutorialService.cardModalOpenExplanation2())

@@ -75,10 +75,10 @@ export default class AttackModalController {
                     opacity: 1
                 }, 400, () => {
                     this.vm.loading = false;
+                    this.$scope.$apply();
                     if (attackData.tutorialMode) {
                         this.runTutorial();
                     }
-                    this.$scope.$apply();
                 });
             });
 
@@ -86,6 +86,7 @@ export default class AttackModalController {
     }
 
     runTutorial() {
+        this.tutorialService.initTutorialData();
         this.tutorialService.attackModalExplanation()
         .then(() => this.tutorialService.attackModalFightExplanation())
         .then(() => this.tutorialService.attackModalRetreatExplanation())

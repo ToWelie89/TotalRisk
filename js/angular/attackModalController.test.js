@@ -1,5 +1,5 @@
 import AttackModalController from './attackModalController';
-import {createUibModalInstance, createSoundService, createScope} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createScope, createTutorialService} from './../test/mockHelper';
 import Territory from './../map/territory';
 import { worldMap } from './../map/worldMapConfiguration';
 import Player from './../player/player';
@@ -16,6 +16,7 @@ describe('attackModalController', () => {
     let mockScope;
     let mockSoundService;
     let mockUibModalInstance;
+    let mockTutorialService;
 
     beforeEach(() => {
         territory1 = new Territory(worldMap.regions[0].territories[0]); // North Africa
@@ -37,8 +38,9 @@ describe('attackModalController', () => {
         mockSoundService = createSoundService();
         mockUibModalInstance = createUibModalInstance();
         mockScope = createScope();
+        mockTutorialService = createTutorialService();
 
-        attackModalController = new AttackModalController(mockScope, mockUibModalInstance, mockSoundService, mockAttackData);
+        attackModalController = new AttackModalController(mockScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData);
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;
@@ -78,7 +80,8 @@ describe('attackModalController', () => {
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
             attackFrom: territory2,
             attackTo: territory1,
-            battleWasWon: true
+            battleWasWon: true,
+            previousOwner: undefined
         });
     });
 
@@ -97,7 +100,8 @@ describe('attackModalController', () => {
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
             attackFrom: territory2,
             attackTo: territory1,
-            battleWasWon: true
+            battleWasWon: true,
+            previousOwner: 'Pelle'
         });
     });
 
@@ -116,7 +120,8 @@ describe('attackModalController', () => {
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
             attackFrom: territory2,
             attackTo: territory1,
-            battleWasWon: true
+            battleWasWon: true,
+            previousOwner: 'Pelle'
         });
     });
 
@@ -181,7 +186,8 @@ describe('attackModalController', () => {
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
             attackFrom: territory2,
             attackTo: territory1,
-            battleWasWon: false
+            battleWasWon: false,
+            previousOwner: undefined
         });
     });
 
@@ -216,7 +222,8 @@ describe('attackModalController', () => {
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
             attackFrom: territory2,
             attackTo: territory1,
-            battleWasWon: false
+            battleWasWon: false,
+            previousOwner: undefined
         });
     });
 

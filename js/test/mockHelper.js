@@ -12,6 +12,11 @@ const createUibModal = () => {
     return mock;
 };
 
+const createTutorialService = () => {
+    const mock = jasmine.createSpyObj('tutorialService', ['lol']);
+    return mock;
+};
+
 const createSoundService = () => {
     const mock = {
         bleep: jasmine.createSpyObj('bleep', ['play']),
@@ -57,5 +62,6 @@ export {
     createScope,
     createGameEngine,
     createMapService,
-    createUibModal
+    createUibModal,
+    createTutorialService
 };

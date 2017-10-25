@@ -1,4 +1,4 @@
-import {GAME_PHASES, TURN_PHASES, MAX_CARDS_ON_HAND, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING} from './../gameConstants';
+import {GAME_PHASES, TURN_PHASES, MAX_CARDS_ON_HAND, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MUSIC_VOLUME_DURING_TUTORIAL} from './../gameConstants';
 import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
@@ -197,20 +197,7 @@ export default class MainController {
     }
 
     testPresentationModal() {
-        this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
-        this.openTutorialPresenter(
-            [{
-                message: `What the fuck did you just fucking say about me, you little bitch? I’ll have you know I graduated top of my class in the Navy Seals, and I’ve been involved in numerous secret raids on Al-Qaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I’m the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You’re fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that’s just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little “clever” comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn’t, you didn’t, and now you’re paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You’re fucking dead, kiddo.`,
-                markup: `8========D`
-            }],
-            () => {
-                $('#turnPresentationModal').css('background-color', 'red');
-            },
-            () => {
-                this.gameEngine.setMusicVolume(1.0);
-            },
-            1000
-        );
+        this.tutorialService.testPresentationModal();
     }
 
     engageAttackPhase(clickedTerritory) {
@@ -349,6 +336,10 @@ export default class MainController {
         });
     }
 
+    /*
+     *  EVERYTHING BELOW THIS LINE IS FOR THE TUTORIAL MODE
+     */
+
     startTutorial() {
         if (!this.vm.playSound) {
             this.toggleMusicVolume()
@@ -373,7 +364,9 @@ export default class MainController {
         this.vm.filter = this.gameEngine.filter;
         this.mapService.updateMap(this.gameEngine.filter);
 
-        this.gameEngine.setMusicVolume(0.1);
+        this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
+
+        this.tutorialService.initTutorialData();
 
         this.tutorialService.openingMessage()
         .then(() => this.tutorialService.phasesAndMapExplanation())
@@ -381,70 +374,78 @@ export default class MainController {
         .then(() => this.tutorialService.deploymentIndicatorExplanation())
         .then(() => this.tutorialService.reinforcementRulesExplanation())
         .then(() => this.tutorialService.regionFilterExplanation())
-        .then(() => {
-            return new Promise((resolve, reject) => {
-                this.filterByRegion();
-                resolve();
-            });
-        })
+        .then(() => this.filterByRegionForTutorial())
         .then(() => delay(1500))
         .then(() => this.tutorialService.ownerFilterExplanation())
-        .then(() => {
-            return new Promise((resolve, reject) => {
-                this.filterByOwner();
-                resolve();
-            });
-        })
+        .then(() => this.filterByOwnerForTutorial())
         .then(() => delay(1500))
         .then(() => this.tutorialService.reinforcementIntoTerritoryDemonstration())
-        .then(() => {
-            const currentPlayer = this.gameEngine.turn.player.name;
-            const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-            const territory = territories.find(terr => {
-                return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-            });
-            const promises = [];
-            for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
-                promises.push(new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.simulateClickCountry(territory.name);
-                        resolve();
-                    }, 700 * (i + 1));
-                }));
-            }
-            return Promise.all(promises);
-        })
+        .then(() => this.deployTroopsToTerritoryForTutorial())
         .then(() => this.tutorialService.goingForwardToAttackPhase())
-        .then(() => {
-            this.vm.turn = this.gameEngine.nextTurn();
-            return this.tutorialService.attackPhaseExplanation();
-        })
+        .then(() => { this.vm.turn = this.gameEngine.nextTurn() })
+        .then(() => this.tutorialService.attackPhaseExplanation())
         .then(() => this.tutorialService.readyToInvadeExplanation())
-        .then(() => {
-            const currentPlayer = this.gameEngine.turn.player.name;
-            const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-            const territory = territories.find(terr => {
-                return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-            });
-            return new Promise((resolve, reject) => {
-                this.simulateClickCountry(territory.name);
-                this.soundService.click.play();
-                resolve();
-            });
-        })
+        .then(() => this.selectTerritoryToAttackFromForTutorial())
         .then(() => this.tutorialService.hightlightExplanation())
         .then(() => this.tutorialService.attackModalStart())
-        .then((closeResponse) => {
-            return new Promise((resolve, reject) => {
-                this.gameEngine.setMusic();
-                this.gameEngine.setMusicVolume(0.1);
-                this.updatePlayerDataAfterAttack(closeResponse);
-                resolve();
-            });
-        })
+        .then((closeResponse) => this.handleAttackModalResponseForTutorial(closeResponse))
         .then(() => this.tutorialService.cardExplanation())
         .then(() => this.tutorialService.cardExplanation2())
         .then(() => this.tutorialService.openCardModal());
+    }
+
+    filterByRegionForTutorial() {
+        return new Promise((resolve, reject) => {
+            this.filterByRegion();
+            resolve();
+        });
+    }
+
+    filterByOwnerForTutorial() {
+        return new Promise((resolve, reject) => {
+            this.filterByOwner();
+            resolve();
+        });
+    }
+
+    deployTroopsToTerritoryForTutorial() {
+        const currentPlayer = this.gameEngine.turn.player.name;
+        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
+        const territory = territories.find(terr => {
+            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
+        });
+        const promises = [];
+        for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
+            promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    this.simulateClickCountry(territory.name);
+                    resolve();
+                }, 700 * (i + 1));
+            }));
+        }
+        return Promise.all(promises);
+    }
+
+    selectTerritoryToAttackFromForTutorial() {
+        const currentPlayer = this.gameEngine.turn.player.name;
+        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
+        const territory = territories.find(terr => {
+            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
+        });
+        return new Promise((resolve, reject) => {
+            this.simulateClickCountry(territory.name);
+            this.soundService.click.play();
+            resolve();
+        });
+    }
+
+    handleAttackModalResponseForTutorial(closeResponse) {
+        return new Promise((resolve, reject) => {
+            this.gameEngine.setMusic();
+            this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
+            this.updatePlayerDataAfterAttack(closeResponse);
+            resolve();
+        });
     }
 
     simulateClickCountry(territory) {

@@ -2,7 +2,7 @@ import CardTurnInModalController from './cardTurnInModalController';
 import GameEngine from './../gameEngine';
 import Card from './../card/card';
 import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
-import {createUibModalInstance, createSoundService} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createTutorialService} from './../test/mockHelper';
 
 describe('cardTurnInModalController', () => {
     let cardTurnInModalController;
@@ -10,6 +10,7 @@ describe('cardTurnInModalController', () => {
     let mockUibModalInstance;
     let mockSoundService;
     let mockGameEngine;
+    let mockTutorialService;
 
     const generateCards = (types) => {
         cardTurnInModalController.cards = [];
@@ -25,6 +26,11 @@ describe('cardTurnInModalController', () => {
     beforeEach(() => {
         mockUibModalInstance = createUibModalInstance();
         mockSoundService = createSoundService();
+        mockTutorialService = createTutorialService();
+
+        let mockData = {
+            type: 'normal'
+        }
 
         mockGameEngine = {
             turn: {
@@ -35,7 +41,7 @@ describe('cardTurnInModalController', () => {
             }
         };
 
-        cardTurnInModalController = new CardTurnInModalController({}, mockUibModalInstance, mockGameEngine, mockSoundService);
+        cardTurnInModalController = new CardTurnInModalController({}, mockUibModalInstance, mockGameEngine, mockSoundService, mockTutorialService, mockData);
     });
 
     it('On construction scope variables should be set correctly', () => {

@@ -1,4 +1,5 @@
 import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
+import {MUSIC_VOLUME_DURING_TUTORIAL} from './../gameConstants';
 
 export default class TutorialService {
     constructor(gameEngine, $uibModal, soundService) {
@@ -6,6 +7,45 @@ export default class TutorialService {
         this.$uibModal = $uibModal;
         this.soundService = soundService;
     }
+
+    initTutorialData() {
+        this.currentPlayerName = this.gameEngine.turn.player.name;
+        this.currentPlayerPronunciation = this.gameEngine.turn.player.avatar.pronounciation ? this.gameEngine.turn.player.avatar.pronounciation : this.gameEngine.turn.player.name;
+        this.currentPlayerColor = this.gameEngine.turn.player.color.mainColor
+
+        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
+        const territory = territories.find(terr => {
+            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== this.currentPlayerName);
+        });
+        this.territoryToAttackFrom = territory;
+
+        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== this.currentPlayerName);
+        territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
+        this.territoryToAttack = territoryToAttack;
+
+        this.defenderColor = this.gameEngine.players.get(territoryToAttack.owner).color.mainColor;
+    }
+
+    testPresentationModal() {
+        this.openTutorialPresenter(
+            [{
+                message: `What the fuck did you just fucking say about me, you little bitch? I’ll have you know I graduated top of my class in the Navy Seals, and I’ve been involved in numerous secret raids on Al-Qaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I’m the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You’re fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that’s just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little “clever” comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn’t, you didn’t, and now you’re paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You’re fucking dead, kiddo.`,
+                markup: `8========D`
+            }],
+            () => {
+                this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
+                $('#turnPresentationModal').css('background-color', 'red');
+            },
+            () => {
+                this.gameEngine.setMusicVolume(1.0);
+            },
+            1000
+        );
+    }
+
+    /*
+        TUTORIAL STEPS
+     */
 
     openingMessage() {
         return this.openTutorialPresenter([
@@ -33,12 +73,10 @@ export default class TutorialService {
     }
 
     deploymentPhaseExplanation() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
         return this.openTutorialPresenter(
             [{
-                message: `Right now it's ${currentPlayer}s turn, whose name is presented here. The first phase is the deployment phase in which the player can reinforce his territories with fresh troops.`,
-                markup: `Right now it's <strong style="color: ${currentPlayerColor};">${currentPlayer}s</strong> turn, whose name is presented here. The first phase is the <strong>deployment phase</strong> in which the player can reinforce his territories with fresh troops.`
+                message: `Right now it's ${this.currentPlayerPronunciation}s turn, whose name is presented here. The first phase is the deployment phase in which the player can reinforce his territories with fresh troops.`,
+                markup: `Right now it's <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}s</strong> turn, whose name is presented here. The first phase is the <strong>deployment phase</strong> in which the player can reinforce his territories with fresh troops.`
             }],
             () => {
                 $('#playerName').addClass('animated infinite bounce');
@@ -51,12 +89,10 @@ export default class TutorialService {
     deploymentIndicatorExplanation() {
         $('#playerName').removeClass('animated infinite bounce');
 
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
         return this.openTutorialPresenter(
             [{
-                message: `Here you can see the amount of troops that ${currentPlayer} have to distribute between the different territories that he controls.`,
-                markup: `Here you can see the amount of troops that <strong style="color: ${currentPlayerColor};">${currentPlayer}</strong> have to distribute between the different territories that he controls.`
+                message: `Here you can see the amount of troops that ${this.currentPlayerPronunciation} have to distribute between the different territories that he controls.`,
+                markup: `Here you can see the amount of troops that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have to distribute between the different territories that he controls.`
             }],
             () => {
                 $('#currentPhaseIndicator').addClass('animated infinite bounce');
@@ -69,17 +105,10 @@ export default class TutorialService {
     reinforcementRulesExplanation() {
         $('#currentPhaseIndicator').removeClass('animated infinite bounce');
 
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-
         return this.openTutorialPresenter(
             [{
-                message: `${currentPlayer} have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`,
-                markup: `<strong style="color: ${currentPlayerColor};">${currentPlayer}</strong> have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`
+                message: `${this.currentPlayerPronunciation} have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`,
+                markup: `<strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`
             },{
                 message: `The amount of reinforcements is determined by how many territories the player controls. Also, if a player has control over an entire region then he will gain additional troops as a region bonus.`
             }]
@@ -118,38 +147,26 @@ export default class TutorialService {
     }
 
     reinforcementIntoTerritoryDemonstration() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-
         return this.openTutorialPresenter(
             [{
-                message: `${currentPlayer} decides he wants to put all his reinforcements in ${territory.name}.`,
-                markup: `<strong style="color: ${currentPlayerColor};">${currentPlayer}</strong> decides he wants to put all his reinforcements in ${territory.name}.`
+                message: `${this.currentPlayerPronunciation} decides he wants to put all his reinforcements in ${this.territoryToAttackFrom.name}.`,
+                markup: `<strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> decides he wants to put all his reinforcements in ${this.territoryToAttackFrom.name}.`
             }],
             () => {
-                $(`#svgMap .country[id="${territory.name}"]`).addClass('blink_me');
+                $(`#svgMap .country[id="${this.territoryToAttackFrom.name}"]`).addClass('blink_me');
             },
             () => {
-                $(`#svgMap .country[id="${territory.name}"]`).removeClass('blink_me');
+                $(`#svgMap .country[id="${this.territoryToAttackFrom.name}"]`).removeClass('blink_me');
             },
             1000
         );
     }
 
     goingForwardToAttackPhase() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
         return this.openTutorialPresenter(
             [{
-                message: `${territory.name} is now inhabited by ${territory.numberOfTroops} troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the next button.`,
-                markup: `<strong>${territory.name}</strong> is now inhabited by <strong>${territory.numberOfTroops}</strong> troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the <strong>NEXT</strong> button.`
+                message: `${this.territoryToAttackFrom.name} is now inhabited by ${this.territoryToAttackFrom.numberOfTroops} troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the next button.`,
+                markup: `<strong>${this.territoryToAttackFrom.name}</strong> is now inhabited by <strong>${this.territoryToAttackFrom.numberOfTroops}</strong> troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the <strong>NEXT</strong> button.`
             }],
             () => {
                 $('#nextButton').addClass('blink_me');
@@ -171,19 +188,10 @@ export default class TutorialService {
     }
 
     readyToInvadeExplanation() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
-        const defenderColor = this.gameEngine.players.get(territoryToAttack.owner).color.mainColor;
         return this.openTutorialPresenter(
             [{
-                message: `Since ${currentPlayer} have reinforced ${territory.name} with additional troops he is now ready to invade. Let's say he wants to invade ${territoryToAttack.name} which is currently owned by ${territoryToAttack.owner}. First click the region from where to attack to select it.`,
-                markup: `Since <strong style="color: ${currentPlayerColor};">${currentPlayer}</strong> have reinforced ${territory.name} with additional troops he is now ready to invade. Let's say he wants to invade ${territoryToAttack.name} which is currently owned by <strong style="color: ${defenderColor};">${territoryToAttack.owner}</strong>. First click the region from where to attack to select it.`
+                message: `Since ${this.currentPlayerPronunciation} have reinforced ${this.territoryToAttackFrom.name} with additional troops he is now ready to invade. Let's say he wants to invade ${this.territoryToAttack.name} which is currently owned by ${this.territoryToAttack.owner}. First click the region from where to attack to select it.`,
+                markup: `Since <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have reinforced ${this.territoryToAttackFrom.name} with additional troops he is now ready to invade. Let's say he wants to invade ${this.territoryToAttack.name} which is currently owned by <strong style="color: ${this.defenderColor};">${this.territoryToAttack.owner}</strong>. First click the region from where to attack to select it.`
             }],
             () => {},
             () => {},
@@ -193,36 +201,21 @@ export default class TutorialService {
     }
 
     hightlightExplanation() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
         return this.openTutorialPresenter(
             [{
-                message: `As you can see, all of the adjacent territories that the player can attack from here are now highlighted. To invade ${territoryToAttack.name} from ${territory.name} simply click it.`,
-                markup: `As you can see, all of the adjacent territories that the player can attack from here are now highlighted. To invade <strong>${territoryToAttack.name}</strong> from <strong>${territory.name}</strong> simply click it.`
+                message: `As you can see, all of the adjacent territories that the player can attack from here are now highlighted. To invade ${this.territoryToAttack.name} from ${this.territoryToAttackFrom.name} simply click it.`,
+                markup: `As you can see, all of the adjacent territories that the player can attack from here are now highlighted. To invade <strong>${this.territoryToAttack.name}</strong> from <strong>${this.territoryToAttackFrom.name}</strong> simply click it.`
             }],
             () => {},
             () => {
                 this.soundService.click.play();
                 this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
-                this.gameEngine.setMusicVolume(0.1);
+                this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
             }
         );
     }
 
     attackModalStart() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        const clickedTerritory = getTerritoryByName(this.gameEngine.map, territoryToAttack);
-
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
                 templateUrl: 'attackModal.html',
@@ -233,10 +226,10 @@ export default class TutorialService {
                 resolve: {
                     attackData: () => {
                         return {
-                            territoryAttacked: clickedTerritory,
+                            territoryAttacked: this.territoryToAttack,
                             attackFrom: this.gameEngine.selectedTerritory,
                             attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
-                            defender: this.gameEngine.players.get(clickedTerritory.owner),
+                            defender: this.gameEngine.players.get(this.territoryToAttack.owner),
                             tutorialMode: true
                         }
                     }
@@ -344,17 +337,16 @@ export default class TutorialService {
             },
             () => {
                 $('#moveButton').removeClass('blink_me');
+                this.soundService.click.play();
             }
         );
     }
 
     cardExplanation() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
         return this.openTutorialPresenter(
             [{
-                message: `Now that ${currentPlayer} has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`,
-                markup: `Now that <strong style="color: ${currentPlayerColor};">${currentPlayer}</strong> has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`
+                message: `Now that ${this.currentPlayerPronunciation} has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`,
+                markup: `Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`
             }],
             () => {
                 $('#cardButton').addClass('blink_me');
