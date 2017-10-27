@@ -1,6 +1,6 @@
 export default class MovementModalController {
 
-    constructor($scope, $uibModalInstance, moveTo, moveFrom) {
+    constructor($scope, $uibModalInstance, data) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -10,10 +10,10 @@ export default class MovementModalController {
         // PUBLIC FUNCTIONS
         this.vm.moveTroops = this.moveTroops;
 
-        console.log('Movement: ', moveTo, moveFrom);
+        console.log('Movement: ', data.moveTo, data.moveFrom);
         this.vm.moveNumberOfTroops = 1;
-        this.vm.moveTo = moveTo;
-        this.vm.moveFrom = moveFrom;
+        this.vm.moveTo = data.moveTo;
+        this.vm.moveFrom = data.moveFrom;
         this.vm.movementSliderOptions = {
             floor: 1,
             ceil: this.vm.moveFrom.numberOfTroops - 1,
@@ -23,8 +23,6 @@ export default class MovementModalController {
         };
 
         this.$uibModalInstance = $uibModalInstance;
-        this.moveTo = moveTo;
-        this.moveFrom = moveFrom;
     }
 
     getCountrySvg() {

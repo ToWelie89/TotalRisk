@@ -313,11 +313,11 @@ export default class MainController {
             controller: 'movementModalController',
             controllerAs: 'movement',
             resolve: {
-                moveTo: () => {
-                    return toTerritory;
-                },
-                moveFrom: () => {
-                    return this.gameEngine.selectedTerritory;
+                data: () => {
+                    return {
+                        moveTo: toTerritory,
+                        moveFrom: this.gameEngine.selectedTerritory
+                    };
                 }
             }
         }).result.then(closeResponse => {
@@ -391,7 +391,12 @@ export default class MainController {
         .then((closeResponse) => this.handleAttackModalResponseForTutorial(closeResponse))
         .then(() => this.tutorialService.cardExplanation())
         .then(() => this.tutorialService.cardExplanation2())
-        .then(() => this.tutorialService.openCardModal());
+        .then(() => this.tutorialService.openCardModal())
+        .then(() => this.tutorialService.endOfAttackPhase())
+        .then(() => { this.vm.turn = this.gameEngine.nextTurn() })
+        .then(() => this.tutorialService.startOfMovementPhase())
+        .then(() => this.tutorialService.startOfMovementPhase2())
+        .then(() => this.tutorialService.selectTerritoryToMoveFromForTutorial());
     }
 
     filterByRegionForTutorial() {
@@ -432,6 +437,12 @@ export default class MainController {
         const territory = territories.find(terr => {
             return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
         });
+
+
+        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== this.currentPlayerName);
+        this.territoryToAttackFrom = territory;
+        this.territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
+
         return new Promise((resolve, reject) => {
             this.simulateClickCountry(territory.name);
             this.soundService.click.play();
@@ -455,6 +466,14 @@ export default class MainController {
                     return territory;
                 }
             }
+        });
+    }
+
+    selectTerritoryToMoveFromForTutorial() {
+        return new Promise((resolve, reject) => {
+            this.simulateClickCountry(this.territoryToAttack.name);
+            this.soundService.click.play();
+            resolve();
         });
     }
 }

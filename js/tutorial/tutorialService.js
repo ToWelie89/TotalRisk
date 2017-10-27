@@ -423,6 +423,74 @@ export default class TutorialService {
         );
     }
 
+    endOfAttackPhase() {
+        return this.openTutorialPresenter(
+            [{
+                message: `During the attack phase a player can keep attacking for as long as he wants. Now that ${this.currentPlayerPronunciation} has taken over ${this.territoryToAttack} and moved forces there he can keep invading new territories from there if he wants. When the player feels he is done he can end the attack phase by pressing the next-button.`,
+                markup: `During the attack phase a player can keep attacking for as long as he wants. Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has taken over ${this.territoryToAttack} and moved forces there he can keep invading new territories from there if he wants. When the player feels he is done he can end the attack phase by pressing the <strong>NEXT</strong> button.`,
+            }],
+            () => {
+                $('#nextButton').addClass('blink_me');
+            },
+            () => {
+                $('#nextButton').removeClass('blink_me');
+                this.soundService.click.play();
+            }
+        );
+    }
+
+    startOfMovementPhase() {
+        return this.openTutorialPresenter(
+            [{
+                message: `This is the last phase of a players turn, the movement phase. In this phase the players get to make one strategic movement of troops from one territory to another. Both territories must be connected by not necessarily directly adjacent.`
+            }]
+        );
+    }
+
+    startOfMovementPhase2() {
+        return this.openTutorialPresenter(
+            [{
+                message: `Let's say the player changes his mind and wants to move 1 troop back from ${this.territoryToAttack.name} to ${this.territoryToAttackFrom.name}. To perform a movement, first select the territory to move from. `,
+                message: `Let's say the player changes his mind and wants to move 1 troop back from <strong>${this.territoryToAttack.name}</strong> to <strong>${this.territoryToAttackFrom.name}</strong>. To perform a movement, first select the territory to move from.`
+            }]
+        );
+    }
+
+    openMovementModal() {
+        return new Promise((resolve, reject) => {
+            return this.$uibModal.open({
+                templateUrl: 'movementModal.html',
+                backdrop: 'static',
+                windowClass: 'riskModal',
+                controller: 'movementModalController',
+                controllerAs: 'movement',
+                resolve: {
+                    data: () => {
+                        return {
+                            moveTo: this.this.territoryToAttackFrom,
+                            moveFrom: this.territoryToAttack
+                        };
+                    }
+                }
+            }).result.then(closeResponse => {
+                if (closeResponse && closeResponse.newTroops) {
+                    console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
+                    $('#mainTroopIndicator').addClass('animated infinite bounce');
+                    this.soundService.cardTurnIn.play();
+                    this.gameEngine.troopsToDeploy += closeResponse.newTroops;
+                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                    setTimeout(() => {
+                        this.$scope.$apply();
+                    }, 100);
+                    setTimeout(() => {
+                        $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                    }, 1000);
+                }
+                resolve();
+            });
+        });
+    }
+
     openTutorialPresenter(messages, beforeSpeech = null, afterSpeech = null, delayBefore = null, delayAfter = null) {
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
