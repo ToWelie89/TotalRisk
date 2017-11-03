@@ -34,6 +34,13 @@ export default class GameSetupController {
                            Object.keys(avatars).map(key => avatars[key])[i],
                            PLAYER_TYPES.HUMAN)
         );
+
+        $(document).ready(function() {
+            if ($('[data-toggle="tooltip"]').length) {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+
         console.log('Players: ', this.vm.players);
     }
 

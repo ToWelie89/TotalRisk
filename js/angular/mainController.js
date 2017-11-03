@@ -35,7 +35,9 @@ export default class MainController {
         this.tutorialService = tutorialService;
 
         $(document).ready(function() {
-            $('[data-toggle="tooltip"]').tooltip();
+            if ($('[data-toggle="tooltip"]').length) {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
         });
 
         console.log('Initialization of mainController');

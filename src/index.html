@@ -59,14 +59,16 @@
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
                     <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
                         <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
-                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)">
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)" data-toggle="tooltip"
+                             data-placement="top" title="Select color of player">
                         </div>
                     </div>
                     <div class="col-xs-4" style="text-align: left; margin-top: 22px;">
                         <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
                     </div>
                     <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
-                        <div class="dropdown">
+                        <div class="dropdown" data-toggle="tooltip"
+                             data-placement="top" title="Select if the player should be AI or human controlled">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
                                 {{ player.type === 0 ? 'Human' : 'AI' }}
                             <span class="caret"></span></button>
@@ -82,11 +84,13 @@
                     </div>
                     <div class="col-xs-1" style="text-align: left;">
                         <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
-                        role="button" tabIndex="0" popover-placement="left" popover-title="Select an avatar" popover-trigger="'focus'" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)">
+                        role="button" tabIndex="0" popover-placement="left" popover-title="Select an avatar" popover-trigger="'focus'" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)" data-toggle="tooltip"
+                             data-placement="bottom" title="Select an avatar for the player">
                         </div>
                     </div>
                     <div class="col-xs-3" style="text-align: left; margin-top: 22px;">
-                        <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers">
+                        <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers" data-toggle="tooltip"
+                             data-placement="bottom" title="Remove player">
                             <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
@@ -109,19 +113,22 @@
                 </div>
                 <div class="row marginTop">
                     <div class="col-xs-12 textCenter">
-                        <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers">
+                        <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
+                             data-placement="bottom" title="Add player">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="button button-green" data-ng-click="main.startTutorial()">
+                        <button type="button" class="button button-green" data-ng-click="main.startTutorial()" data-toggle="tooltip"
+                             data-placement="bottom" title="Run tutorial">
                             <strong>Tutorial</strong>
                         </button>
-                        <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)">
+                        <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)" data-toggle="tooltip"
+                             data-placement="bottom" title="Start the game">
                             <strong>Start</strong>
                         </button>
                     </div>
                 </div>
                 <!-- TESTING STUFF -->
-                <div class="row marginTop--double">
+                <div class="row marginTop--double" data-ng-hide="true">
                     <div class="col-xs-12 textCenter">
                         <button type="button" class="button button-blue" data-ng-click="main.testAttackPhase(setup.players)">
                             <strong>Test battle modal</strong>
@@ -150,6 +157,7 @@
                             <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
                             <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
                         </button>
+                        <div bajs-kuk></div>
                     </div>
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
@@ -164,7 +172,8 @@
                              data-ng-click="main.turnInCards()"
                              data-ng-disabled="main.turn.turnPhase != 0"
                              data-toggle="tooltip"
-                             data-placement="bottom" />
+                             data-placement="bottom"
+                             value="Open cards view" />
                         <h4 class="floatLeft marginLeft" id="cardCounter">({{main.turn.player.cards.length}})</h4>
                     </div>
                     <div class="col-xs-4" id="turnInfo">
