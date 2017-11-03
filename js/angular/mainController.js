@@ -34,6 +34,10 @@ export default class MainController {
         this.mapService = mapService;
         this.tutorialService = tutorialService;
 
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
         console.log('Initialization of mainController');
     }
 

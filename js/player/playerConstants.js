@@ -155,6 +155,19 @@ const avatars = {
     }
 };
 
+/*
+Timur (teemur)
+Sargon of Akkad
+harald hardrada (harold ha-drada)
+Rollo (rolo)
+Ragnar Lodbrok
+Ivar the Boneless (I-var the Boneless)
+Richard I
+Bohemond of Taranto
+Rommel
+någon samuraj
+*/
+
 const playerIterator = (playerMap, turnPhases) => {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;

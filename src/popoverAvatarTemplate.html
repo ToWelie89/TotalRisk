@@ -3,4 +3,7 @@
     style="background-image: url({{avatar.picture}});"
     data-ng-class="{'popoverBodyColorBox--chosen': player.avatar == avatar}"
     data-ng-click="setup.updateAvatarOfPlayer(avatarPopover.player, avatar)"
-    role="button"></div>
+    role="button"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="{{avatarPopover.getNameOfAvatar(avatar)}}"></div>

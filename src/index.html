@@ -22,6 +22,7 @@
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" type="text/css" href="node_modules/angularjs-slider/dist/rzslider.css">
     <link href="cssLibs/animate.css" rel="stylesheet" type="text/css">
     <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
@@ -48,7 +49,7 @@
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" id="gameSetupBox">
                 <div class="row">
                     <div id="filters" class="col-xs-4" style="padding-right:0px;">
-                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-green': main.playSound, 'button-red': !main.playSound}">
+                        <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-green': main.playSound, 'button-red': !main.playSound}" data-toggle="tooltip" data-placement="bottom" title="Mute/unmute">
                             <i class="fa fa-times"></i>
                             <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
                             <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
