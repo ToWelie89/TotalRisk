@@ -22,6 +22,20 @@ const getTerritoriesByOwner = (map, ownerName) => {
     return territories;
 };
 
+const getTerritoriesInRegionByOwner = (map, regionName, ownerName) => {
+    let territories = [];
+    map.regions.forEach(region => {
+        if (region.name === regionName) {
+            region.territories.forEach(territory => {
+                if (territory.owner === ownerName) {
+                    territories.push(territory);
+                }
+            });
+        }
+    });
+    return territories;
+};
+
 const getAdjacentApplicableTerritories = (map, adjacentApplicableTerritories, fromTerritory) => {
     let newTerrirories = new Set([]);
     adjacentApplicableTerritories.forEach(currentTerritory => {
@@ -34,4 +48,4 @@ const getAdjacentApplicableTerritories = (map, adjacentApplicableTerritories, fr
     return Array.from(newTerrirories);
 };
 
-export {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner};
+export {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner};

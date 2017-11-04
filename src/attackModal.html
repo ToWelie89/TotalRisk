@@ -31,7 +31,7 @@
                                         @@troopSvg
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.attacker.numberOfTroops > 20">
+                                <span data-ng-show="attack.attacker.numberOfTroops > 20" class="troop_{{ attack.attacker.color.name }}">
                                     <span class="troopIcon troop">
                                         @@troopSvg
                                     </span>
@@ -47,7 +47,7 @@
                                         @@troopSvg
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.defender.numberOfTroops > 20">
+                                <span data-ng-show="attack.defender.numberOfTroops > 20" class="troop_{{ attack.defender.color.name }}">
                                     <span class="troopIcon troop">
                                         @@troopSvg
                                     </span>

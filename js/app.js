@@ -13,6 +13,7 @@ import TurnPresentationController from './angular/turnPresentationController';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
+import AiHandler from './ai/aiHandler';
 import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
 
@@ -34,3 +35,4 @@ app.service('soundService', SoundService);
 app.service('mapService', MapService);
 app.service('gameAnnouncerService', GameAnnouncer);
 app.service('tutorialService', TutorialService);
+app.service('aiHandler', AiHandler);

@@ -1,7 +1,8 @@
-import {MAX_CARDS_ON_HAND} from './../gameConstants';
+import {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
 import {CARD_TYPE} from './../card/cardConstants';
 import {arraysEqual} from './../helpers';
 import {delay} from './../helpers';
+import {getBestPossibleCombination} from './../cardHelpers';
 
 export default class CardTurnInModalController {
     constructor($scope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {
@@ -36,22 +37,6 @@ export default class CardTurnInModalController {
         });
         this.vm.playerMustTurnIn = (this.vm.cards.length >= MAX_CARDS_ON_HAND);
 
-        this.possibleCombinations = [
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.CANNON], value: 10},
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.CANNON, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.HORSE, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.CANNON, CARD_TYPE.JOKER, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.CANNON, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 10},
-            {combination: [CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON], value: 7},
-            {combination: [CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.JOKER], value: 7},
-            {combination: [CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE], value: 5},
-            {combination: [CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.JOKER], value: 5},
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP], value: 3},
-            {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER], value: 3}
-        ];
-
         if (data.type === 'tutorial') {
             this.runTutorial();
         }
@@ -74,7 +59,7 @@ export default class CardTurnInModalController {
     getCardCombination() {
         const selectedCards = this.vm.cards.filter(x => x.isSelected).map(card => card.cardType);
         if (selectedCards.length === this.maxNumberOfSelectedCards) {
-            for (let combination of this.possibleCombinations) {
+            for (let combination of POSSIBLE_CARD_COMBINATIONS) {
                 if (arraysEqual(combination.combination.sort(), selectedCards.sort())) {
                     return combination;
                 }
@@ -106,7 +91,7 @@ export default class CardTurnInModalController {
     }
 
     autoSelect() {
-        const bestCombination = this.getBestPossibleCombination();
+        const bestCombination = getBestPossibleCombination(this.vm.cards);
 
         if (bestCombination) {
             this.vm.cards.map(card => {
@@ -122,33 +107,5 @@ export default class CardTurnInModalController {
 
             this.turnIn();
         }
-    }
-
-    getBestPossibleCombination() {
-        if (this.vm.cards.length === 0) {
-            return null;
-        }
-
-        for (let combination of this.possibleCombinations) {
-            const indexes = [];
-            let result = true;
-            const cardTypes = this.vm.cards.map(card => card.cardType);
-
-            combination.combination.forEach(x => {
-                const indexOf = cardTypes.indexOf(x);
-
-                if (indexOf !== -1 && !indexes.includes(indexOf)) {
-                    cardTypes[indexOf] = null;
-                } else {
-                    result = false;
-                }
-            });
-
-            if (result) {
-                return combination;
-            }
-        }
-
-        return null;
     }
 }

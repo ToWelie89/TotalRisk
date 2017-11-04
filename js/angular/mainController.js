@@ -6,7 +6,7 @@ import {delay} from './../helpers';
 
 export default class MainController {
 
-    constructor($scope, $uibModal, gameEngine, soundService, mapService, tutorialService) {
+    constructor($scope, $uibModal, gameEngine, soundService, mapService, tutorialService, aiHandler) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -33,11 +33,20 @@ export default class MainController {
         this.soundService = soundService;
         this.mapService = mapService;
         this.tutorialService = tutorialService;
+        this.aiHandler = aiHandler;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
                 $('[data-toggle="tooltip"]').tooltip();
             }
+        });
+
+        this.$scope.$watch('this.gameEngine.troopsToDeploy', (newValue, oldValue) => {
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+        });
+
+        this.$scope.$watch('gameEngine.troopsToDeploy', (newValue, oldValue) => {
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
         });
 
         console.log('Initialization of mainController');
@@ -88,8 +97,22 @@ export default class MainController {
                 }
             }
         }).result.then(closeResponse => {
-            this.checkIfPlayerMustTurnInCards();
+            if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
+                this.checkIfPlayerMustTurnInCards();
+            } else {
+                this.handleAi();
+            }
         });
+    }
+
+    handleAi() {
+        if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            this.aiHandler.turnInCards()
+            .then(() => this.aiHandler.deployTroops(() => {
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                this.$scope.$apply();
+            }));
+        }
     }
 
     checkIfPlayerMustTurnInCards() {
@@ -154,6 +177,10 @@ export default class MainController {
             this.checkIfPlayerMustTurnInCards();
             console.log('New turn: ', this.vm.turn);
             console.log('Current carddeck: ', this.gameEngine.cardDeck);
+
+            if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI) {
+                this.handleAi();
+            }
         });
     }
 
@@ -252,7 +279,7 @@ export default class MainController {
             if (territories.length === 0) {
                 // The losing player was defeated entirely
                 const resp = this.gameEngine.handleDefeatedPlayer(closeResponse.previousOwner, territoryAttacking.owner);
-                if (resp.legth > 0) {
+                if (resp.length > 0) {
                     this.soundService.cardSelect.play();
                 }
             }
@@ -402,7 +429,8 @@ export default class MainController {
         .then(() => { this.vm.turn = this.gameEngine.nextTurn() })
         .then(() => this.tutorialService.startOfMovementPhase())
         .then(() => this.tutorialService.startOfMovementPhase2())
-        .then(() => this.tutorialService.selectTerritoryToMoveFromForTutorial());
+        .then(() => this.selectTerritoryToMoveFromForTutorial())
+        .then(() => delay(500));
     }
 
     filterByRegionForTutorial() {
