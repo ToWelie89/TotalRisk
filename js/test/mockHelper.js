@@ -36,7 +36,8 @@ const createSoundService = () => {
 
 const createScope = () => {
     const mock = jasmine.createSpyObj('$scope', [
-        '$apply'
+        '$apply',
+        '$watch'
     ]);
     return mock;
 };

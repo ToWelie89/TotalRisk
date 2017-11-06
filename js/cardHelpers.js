@@ -6,7 +6,7 @@ const getBestPossibleCombination = (cards) => {
         return null;
     }
 
-    for (let combination of POSSIBLE_COMBINATIONS) {
+    for (let combination of POSSIBLE_CARD_COMBINATIONS) {
         const indexes = [];
         let result = true;
         const cardTypes = cards.map(card => card.cardType);

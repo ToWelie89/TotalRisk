@@ -3,6 +3,7 @@ import GameEngine from './../gameEngine';
 import Card from './../card/card';
 import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
 import {createUibModalInstance, createSoundService, createTutorialService} from './../test/mockHelper';
+import {POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
 
 describe('cardTurnInModalController', () => {
     let cardTurnInModalController;
@@ -47,7 +48,7 @@ describe('cardTurnInModalController', () => {
     it('On construction scope variables should be set correctly', () => {
         // Assert
         expect(cardTurnInModalController.playerMustTurnIn).toEqual(false);
-        expect(cardTurnInModalController.possibleCombinations.length).toEqual(13);
+        expect(POSSIBLE_CARD_COMBINATIONS.length).toEqual(13);
     });
 
     it('illegalCombination returns true if the selected combination is illegal', () => {
@@ -114,115 +115,6 @@ describe('cardTurnInModalController', () => {
         generateCards([CARD_TYPE.CANNON, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
         // Assert
         expect(cardTurnInModalController.getCardCombination().value).toEqual(10);
-    });
-
-    it('getBestPossibleCombination return the best possible combination on the hand', () => {
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER, CARD_TYPE.TROOP]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER, CARD_TYPE.CANNON]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(3);
-
-        // Arrange
-        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(3);
-
-        // Arrange
-        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.TROOP]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(5);
-
-        // Arrange
-        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(5);
-
-        // Arrange
-        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.CANNON]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(10);
-
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(7);
-
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination().value).toEqual(7);
-    });
-
-    it('getBestPossibleCombination return null for invalid combinations', () => {
-        // Arrange
-        generateCards([CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.HORSE]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.JOKER]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.HORSE, CARD_TYPE.HORSE, CARD_TYPE.CANNON]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.CANNON, CARD_TYPE.CANNON, CARD_TYPE.TROOP]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.TROOP]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
-
-        // Arrange
-        generateCards([CARD_TYPE.JOKER, CARD_TYPE.CANNON]);
-        // Assert
-        expect(cardTurnInModalController.getBestPossibleCombination()).toEqual(null);
     });
 
     it('phaseIsDeployment should be true if current turn phase is deployment phase', () => {
