@@ -72,13 +72,11 @@ export default class AiHandler {
                 }
                 const currentIndex = territoryIndex;
                 promises.push(new Promise((resolve, reject) => {
-                    $(`#svgMap .country[id="${territoriesToReinforce[currentIndex].name}"]`).addClass('blink_me');
                     setTimeout(() => {
                         this.gameEngine.addTroopToTerritory(territoriesToReinforce[currentIndex].name);
                         this.mapService.updateMap(this.gameEngine.filter);
                         this.soundService.addTroopSound.play();
                         callback();
-                        $(`#svgMap .country[id="${territoriesToReinforce[currentIndex].name}"]`).removeClass('blink_me');
                         resolve();
                     }, (200 * (i + 1)));
                 }));
@@ -97,13 +95,11 @@ export default class AiHandler {
             const promises = [];
             for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
                 promises.push(new Promise((resolve, reject) => {
-                    $(`#svgMap .country[id="${territoriesWithDangerousBorders[0].name}"]`).addClass('blink_me');
                     setTimeout(() => {
                         this.gameEngine.addTroopToTerritory(territoriesWithDangerousBorders[0].name);
                         this.mapService.updateMap(this.gameEngine.filter);
                         this.soundService.addTroopSound.play();
                         callback();
-                        $(`#svgMap .country[id="${territoriesWithDangerousBorders[0].name}"]`).removeClass('blink_me');
                         resolve();
                     }, (200 * (i + 1)));
                 }));
