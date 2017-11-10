@@ -8,7 +8,8 @@ const TURN_PHASES = {
 
 const GAME_PHASES = {
     PLAYER_SETUP: 0,
-    GAME: 1
+    GAME: 1,
+    END_SCREEN: 2
 };
 
 const CONSTANTS = {
@@ -16,6 +17,29 @@ const CONSTANTS = {
     MAX_NUMBER_OF_PLAYERS: 6,
     MIN_REINFORCEMENTS: 3
 };
+
+const VICTORY_GOALS = [
+    {
+        type: 'mapControl',
+        percentage: 60
+    },
+    {
+        type: 'mapControl',
+        percentage: 70
+    },
+    {
+        type: 'mapControl',
+        percentage: 80
+    },
+    {
+        type: 'mapControl',
+        percentage: 90
+    },
+    {
+        type: 'mapControl',
+        percentage: 100
+    },
+];
 
 const POSSIBLE_CARD_COMBINATIONS = [
     {combination: [CARD_TYPE.TROOP, CARD_TYPE.HORSE, CARD_TYPE.CANNON], value: 10},
@@ -41,4 +65,4 @@ const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 0.3;
 
 const MAX_CARDS_ON_HAND = 5;
 
-export {TURN_PHASES, GAME_PHASES, CONSTANTS, MAIN_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MAX_CARDS_ON_HAND, MUSIC_VOLUME_DURING_TUTORIAL, POSSIBLE_CARD_COMBINATIONS};
+export {TURN_PHASES, GAME_PHASES, CONSTANTS, MAIN_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MAX_CARDS_ON_HAND, MUSIC_VOLUME_DURING_TUTORIAL, VICTORY_GOALS, POSSIBLE_CARD_COMBINATIONS};

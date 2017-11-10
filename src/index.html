@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="assets/img/icon.ico">
-    <title>ECMA6 Risk</title>
+    <title>Risk</title>
     <script src='js/libs/responsivevoice.js'></script>
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
@@ -54,6 +54,19 @@
                             <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
                             <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
                         </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 textCenter">
+                        <div class="buttonGroup" style="height: 40px;">
+                            <button type="button" class="button button-green button-unclickable">
+                                <strong>Map control percentage for victory</strong>
+                            </button>
+                            <button type="button" class="button button-green" data-ng-repeat="goal in setup.victoryGoals"
+                            data-ng-class="{'button--selected': goal === setup.chosenGoal}" data-ng-click="setup.setGoal(goal)">
+                                <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
@@ -121,7 +134,7 @@
                              data-placement="bottom" title="Run tutorial">
                             <strong>Tutorial</strong>
                         </button>
-                        <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players)" data-toggle="tooltip"
+                        <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)" data-toggle="tooltip"
                              data-placement="bottom" title="Start the game">
                             <strong>Start</strong>
                         </button>

@@ -57,7 +57,7 @@ export default class GameEngine {
         }
     }
 
-    startGame(players) {
+    startGame(players, winningCondition) {
         console.log('Game started!');
 
         // Initialize player list
@@ -70,6 +70,8 @@ export default class GameEngine {
         this.turn = this.iterator.getCurrent();
 
         this.deploymentHandler = new DeploymentHandler();
+
+        this.winningCondition = winningCondition;
 
         // Setup game table
         this.setupInitDeployment();

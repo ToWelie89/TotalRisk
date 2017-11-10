@@ -57,8 +57,8 @@ export default class MainController {
         this.gameEngine.toggleSound(this.vm.playSound);
     }
 
-    startGame(players) {
-        this.gameEngine.startGame(players);
+    startGame(players, winningCondition) {
+        this.gameEngine.startGame(players, winningCondition);
 
         this.vm.currentGamePhase = GAME_PHASES.GAME;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
@@ -185,7 +185,16 @@ export default class MainController {
     }
 
     checkIfPlayerWonTheGame() {
-        // to do
+        if (this.gameEngine.winningCondition.type === 'mapControl') {
+            const goalPercentage = this.gameEngine.winningCondition.percentage;
+
+            const territoriesOwned = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name).length;
+            const territoriesTotal = getAllTerritories(this.gameEngine.map).length;
+
+            if ((territoriesOwned / territoriesTotal * 100) >= goalPercentage) {
+                // player won, do something
+            }
+        }
     }
 
     filterByOwner() {
@@ -409,10 +418,10 @@ export default class MainController {
         .then(() => this.tutorialService.deploymentIndicatorExplanation())
         .then(() => this.tutorialService.reinforcementRulesExplanation())
         .then(() => this.tutorialService.regionFilterExplanation())
-        .then(() => this.filterByRegionForTutorial())
+        .then(() => { this.filterByRegion(); })
         .then(() => delay(1500))
         .then(() => this.tutorialService.ownerFilterExplanation())
-        .then(() => this.filterByOwnerForTutorial())
+        .then(() => { this.filterByOwner(); })
         .then(() => delay(1500))
         .then(() => this.tutorialService.reinforcementIntoTerritoryDemonstration())
         .then(() => this.deployTroopsToTerritoryForTutorial())
@@ -444,20 +453,6 @@ export default class MainController {
             this.vm.isTutorialMode = false;
             this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
             this.$scope.$apply();
-        });
-    }
-
-    filterByRegionForTutorial() {
-        return new Promise((resolve, reject) => {
-            this.filterByRegion();
-            resolve();
-        });
-    }
-
-    filterByOwnerForTutorial() {
-        return new Promise((resolve, reject) => {
-            this.filterByOwner();
-            resolve();
         });
     }
 

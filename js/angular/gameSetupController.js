@@ -1,6 +1,6 @@
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
-import {CONSTANTS} from './../gameConstants';
+import {CONSTANTS, VICTORY_GOALS} from './../gameConstants';
 
 export default class GameSetupController {
 
@@ -11,6 +11,9 @@ export default class GameSetupController {
         // PUBLIC FIELDS
         this.vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
         this.vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
+        this.vm.victoryGoals = VICTORY_GOALS;
+
+        this.vm.chosenGoal = this.vm.victoryGoals[0];
 
         // PUBLIC FUNCTIONS
         this.vm.init = this.init;
@@ -23,6 +26,7 @@ export default class GameSetupController {
         this.vm.updateAvatarOfPlayer = this.updateAvatarOfPlayer;
         this.vm.choosePlayerType = this.choosePlayerType;
         this.vm.onlyAIsExists = this.onlyAIsExists;
+        this.vm.setGoal = this.setGoal;
     }
 
     init() {
@@ -42,6 +46,11 @@ export default class GameSetupController {
         });
 
         console.log('Players: ', this.vm.players);
+    }
+
+    setGoal(goal) {
+        this.vm.chosenGoal = goal;
+        this.soundService.changeColor.play();
     }
 
     updateAvatarOfPlayer(player, avatar) {
@@ -118,6 +127,7 @@ export default class GameSetupController {
 
     choosePlayerType(player, type) {
         player.type = PLAYER_TYPES[type];
+        this.soundService.changeColor.play();
     }
 
     getFirstUnusedName() {
