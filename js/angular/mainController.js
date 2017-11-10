@@ -60,7 +60,7 @@ export default class MainController {
     startGame(players) {
         this.gameEngine.startGame(players);
 
-        this.vm.currentGamePhase = this.vm.gamePhases.GAME;
+        this.vm.currentGamePhase = GAME_PHASES.GAME;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         document.querySelectorAll('.country').forEach(country => {
@@ -356,17 +356,19 @@ export default class MainController {
         }).result.then(closeResponse => {
             this.gameEngine.setMusic();
             console.log('Movement complete ', closeResponse);
-            const movementFromTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.from.name);
-
-            movementFromTerritory.numberOfTroops = closeResponse.from.numberOfTroops === 0 ? 1 : closeResponse.from.numberOfTroops;
-
-            const movementToTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.to.name);
-
-            movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
-
-            this.mapService.updateMap(this.vm.filter);
+            this.updateGameAfterMovement(closeResponse);
             this.nextTurn();
         });
+    }
+
+    updateGameAfterMovement(closeResponse) {
+        const movementFromTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.from.name);
+        movementFromTerritory.numberOfTroops = closeResponse.from.numberOfTroops === 0 ? 1 : closeResponse.from.numberOfTroops;
+
+        const movementToTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.to.name);
+        movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
+
+        this.mapService.updateMap(this.vm.filter);
     }
 
     /*
@@ -390,7 +392,7 @@ export default class MainController {
         this.gameEngine.isTutorialMode = true;
         this.vm.isTutorialMode = true;
 
-        this.vm.currentGamePhase = this.vm.gamePhases.GAME;
+        this.vm.currentGamePhase = GAME_PHASES.GAME;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         this.vm.turn = this.gameEngine.turn;
@@ -430,7 +432,19 @@ export default class MainController {
         .then(() => this.tutorialService.startOfMovementPhase())
         .then(() => this.tutorialService.startOfMovementPhase2())
         .then(() => this.selectTerritoryToMoveFromForTutorial())
-        .then(() => delay(500));
+        .then(() => delay(1500))
+        .then(() => this.tutorialService.startOfMovementPhase3())
+        .then(() => this.tutorialService.openMovementModal())
+        .then((resp) => this.updateGameAfterMovement(resp))
+        .then(() => this.tutorialService.endOfTurnExplanation())
+        .then(() => delay(1500))
+        .then(() => {
+            this.gameEngine.setMusicVolume(1.0);
+            this.gameEngine.isTutorialMode = false;
+            this.vm.isTutorialMode = false;
+            this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
+            this.$scope.$apply();
+        });
     }
 
     filterByRegionForTutorial() {
@@ -472,8 +486,7 @@ export default class MainController {
             return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
         });
 
-
-        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== this.currentPlayerName);
+        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
         this.territoryToAttackFrom = territory;
         this.territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
 

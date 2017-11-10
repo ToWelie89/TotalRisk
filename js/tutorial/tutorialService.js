@@ -23,6 +23,10 @@ export default class TutorialService {
         territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
         this.territoryToAttack = territoryToAttack;
 
+        let territoryToMoveTo = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner === this.currentPlayerName);
+        territoryToMoveTo = getTerritoryByName(this.gameEngine.map, territoryToAttack);
+        this.territoryToMoveTo = territoryToMoveTo;
+
         this.defenderColor = this.gameEngine.players.get(territoryToAttack.owner).color.mainColor;
     }
 
@@ -235,6 +239,9 @@ export default class TutorialService {
                     }
                 }
             }).result.then(closeResponse => {
+                this.territoryToAttackFrom.numberOfTroops = 1;
+                this.territoryToAttack.owner = this.territoryToAttackFrom.owner;
+                this.territoryToAttack.numberOfTroops = 3;
                 resolve(closeResponse);
             });
         });
@@ -456,6 +463,19 @@ export default class TutorialService {
         );
     }
 
+    startOfMovementPhase3() {
+        return this.openTutorialPresenter(
+            [{
+                message: `Now that you have selected a territory to move from, click a connected territory to move to. In this case the player will move back forces to ${this.territoryToAttackFrom.name}`,
+                markup: `Now that you have selected a territory to move FROM, click a connected territory to move TO. In this case the player will move back forces to ${this.territoryToAttackFrom.name}`
+            }],
+            () => {},
+            () => {
+                this.soundService.click.play();
+            }
+        );
+    }
+
     openMovementModal() {
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
@@ -467,28 +487,50 @@ export default class TutorialService {
                 resolve: {
                     data: () => {
                         return {
-                            moveTo: this.this.territoryToAttackFrom,
-                            moveFrom: this.territoryToAttack
+                            moveTo: this.territoryToAttackFrom,
+                            moveFrom: this.gameEngine.selectedTerritory,
+                            tutorial: true
                         };
                     }
                 }
             }).result.then(closeResponse => {
-                if (closeResponse && closeResponse.newTroops) {
-                    console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
-                    $('#mainTroopIndicator').addClass('animated infinite bounce');
-                    this.soundService.cardTurnIn.play();
-                    this.gameEngine.troopsToDeploy += closeResponse.newTroops;
-                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-                    setTimeout(() => {
-                        this.$scope.$apply();
-                    }, 100);
-                    setTimeout(() => {
-                        $('#mainTroopIndicator').removeClass('animated infinite bounce');
-                    }, 1000);
-                }
-                resolve();
+                this.gameEngine.setMusic();
+                resolve(closeResponse);
             });
         });
+    }
+
+    movementModalExplanation() {
+        return this.openTutorialPresenter(
+            [{
+                message: `This is the movement modal. Here you get to choose how many troops to move from one territory to another by adjusting the slider. In this case the player wants to move 1 troop back from ${this.territoryToAttack.name} to ${this.territoryToAttackFrom.name}.`,
+                markup: `This is the movement modal. Here you get to choose how many troops to move from one territory to another by adjusting the slider. In this case the player wants to move 1 troop back from <strong>${this.territoryToAttack.name}</strong> to <strong>${this.territoryToAttackFrom.name}</strong>.`
+            }]
+        );
+    }
+
+    movementModalExplanation2() {
+        return this.openTutorialPresenter(
+            [{
+                message: `When you are done simply click the move button to perform the move.`,
+                markup: `When you are done simply click the <strong>MOVE</strong>-button to perform the move.`,
+            }],
+            () => {
+                $('#moveButton').addClass('blink_me');
+            },
+            () => {
+                $('#moveButton').removeClass('blink_me');
+                this.soundService.click.play();
+            }
+        );
+    }
+
+    endOfTurnExplanation() {
+        return this.openTutorialPresenter(
+            [{
+                message: `Now that the movement phase is complete this is the end of the players turn. After this it would be the next players turn. The game will go on until one player meets the terms for victory.`
+            }]
+        );
     }
 
     openTutorialPresenter(messages, beforeSpeech = null, afterSpeech = null, delayBefore = null, delayAfter = null) {

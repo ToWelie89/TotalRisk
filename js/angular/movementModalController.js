@@ -1,6 +1,8 @@
+import {delay} from './../helpers';
+
 export default class MovementModalController {
 
-    constructor($scope, $uibModalInstance, data) {
+    constructor($scope, $uibModalInstance, tutorialService, data) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -11,7 +13,6 @@ export default class MovementModalController {
         this.vm.moveTroops = this.moveTroops;
 
         console.log('Movement: ', data.moveTo, data.moveFrom);
-        this.vm.moveNumberOfTroops = 1;
         this.vm.moveTo = data.moveTo;
         this.vm.moveFrom = data.moveFrom;
         this.vm.movementSliderOptions = {
@@ -23,6 +24,21 @@ export default class MovementModalController {
         };
 
         this.$uibModalInstance = $uibModalInstance;
+        this.tutorialService = tutorialService;
+
+        if (data.tutorial) {
+            this.runTutorial();
+        }
+    }
+
+    runTutorial() {
+        this.tutorialService.initTutorialData();
+        this.tutorialService.movementModalExplanation()
+        .then(() => delay(1500))
+        .then(() => this.tutorialService.movementModalExplanation2())
+        .then(() => {
+            this.moveTroops();
+        })
     }
 
     getCountrySvg() {

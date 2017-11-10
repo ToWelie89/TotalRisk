@@ -8,6 +8,8 @@ export default class AiHandler {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.mapService = mapService;
+
+        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 200;
     }
 
     turnInCards() {
@@ -42,6 +44,18 @@ export default class AiHandler {
     }
 
     deployTroops(callback) {
+        const createPromise = (territoryName, index) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    this.gameEngine.addTroopToTerritory(territoryName);
+                    this.mapService.updateMap(this.gameEngine.filter);
+                    this.soundService.addTroopSound.play();
+                    callback();
+                    resolve();
+                }, (this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (index + 1)));
+            });
+        };
+
         const regionOwnership = this.calculatePlayerOwnershipForEachRegion();
         console.log(regionOwnership);
 
@@ -71,15 +85,7 @@ export default class AiHandler {
                     territoryIndex = 0;
                 }
                 const currentIndex = territoryIndex;
-                promises.push(new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.gameEngine.addTroopToTerritory(territoriesToReinforce[currentIndex].name);
-                        this.mapService.updateMap(this.gameEngine.filter);
-                        this.soundService.addTroopSound.play();
-                        callback();
-                        resolve();
-                    }, (200 * (i + 1)));
-                }));
+                promises.push(createPromise(territoriesToReinforce[currentIndex].name, i));
                 territoryIndex++;
             }
             return Promise.all(promises);
@@ -94,15 +100,7 @@ export default class AiHandler {
             console.log(territoriesWithDangerousBorders);
             const promises = [];
             for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
-                promises.push(new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.gameEngine.addTroopToTerritory(territoriesWithDangerousBorders[0].name);
-                        this.mapService.updateMap(this.gameEngine.filter);
-                        this.soundService.addTroopSound.play();
-                        callback();
-                        resolve();
-                    }, (200 * (i + 1)));
-                }));
+                promises.push(createPromise(territoriesWithDangerousBorders[0].name, i));
             }
             return Promise.all(promises);
         }
