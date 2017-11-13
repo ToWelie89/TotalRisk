@@ -1,6 +1,6 @@
 import {getBestPossibleCombination} from './cardHelpers';
-import Card from './card/card';
-import {CARD_TYPE} from './card/cardConstants';
+import Card from './card';
+import {CARD_TYPE} from './cardConstants';
 
 describe('cardHelpers', () => {
     let cards = [];

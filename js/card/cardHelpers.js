@@ -1,5 +1,5 @@
-import {CARD_TYPE} from './card/cardConstants';
-import {POSSIBLE_CARD_COMBINATIONS} from './gameConstants';
+import {CARD_TYPE} from './cardConstants';
+import {POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
 
 const getBestPossibleCombination = (cards) => {
     if (cards.length === 0) {

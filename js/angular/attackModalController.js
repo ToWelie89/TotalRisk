@@ -153,9 +153,10 @@ export default class AttackModalController {
                 context.soundService.cheer.play();
                 $('#attackerTroops .troopIcon svg').addClass('animated infinite bounce');
 
-                if (context.vm.attacker.numberOfTroops > 1) {
+                if (context.vm.attacker.numberOfTroops > 3) {
+                    context.vm.moveNumberOfTroops = 3;
                     context.vm.movementSliderOptions = {
-                        floor: 1,
+                        floor: 3,
                         ceil: context.vm.attacker.numberOfTroops,
                         showTicks: true
                     };
@@ -163,6 +164,7 @@ export default class AttackModalController {
                     context.$scope.$apply();
                 } else {
                     setTimeout(() => {
+                        context.vm.moveNumberOfTroops = context.vm.attacker.numberOfTroops;
                         context.moveTroops();
                     }, context.moveTroopsDelay);
                 }

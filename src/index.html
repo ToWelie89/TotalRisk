@@ -143,24 +143,26 @@
                 <!-- TESTING STUFF -->
                 <div class="row marginTop--double" data-ng-hide="true">
                     <div class="col-xs-12 textCenter">
-                        <button type="button" class="button button-blue" data-ng-click="main.testAttackPhase(setup.players)">
+                        <button type="button" class="button button-blue" data-ng-click="game.testAttackPhase(setup.players)">
                             <strong>Test battle modal</strong>
                         </button>
-                        <button type="button" class="button button-blue" data-ng-click="main.testPresentationModal()">
+                        <button type="button" class="button button-blue" data-ng-click="game.testPresentationModal()">
                             <strong>Test presentation modal</strong>
                         </button>
                     </div>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME">
+        </div>
+        <div class="container mainContent" data-ng-controller="gameController as game">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.TUTORIAL">
                 <div class="row">
                     <div id="filters" class="paddingBottom--double col-xs-4" style="padding-right:0px;">
                         <div class="btn-group">
-                            <button type="button" class="button button-blue" id="showByOwner" data-ng-click="main.filterByOwner()">
+                            <button type="button" class="button button-blue" id="showByOwner" data-ng-click="game.filterByOwner()">
                                 <i class="fa fa-times"></i>
                                 <strong>Color by owner</strong>
                             </button>
-                            <button type="button" class="button button-blue" id="showByRegion" data-ng-click="main.filterByRegion()" data-ng-class="{'active': main.filter == 'byRegion'}">
+                            <button type="button" class="button button-blue" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
                                 <i class="fa fa-times"></i>
                                 <strong>Color by region</strong>
                             </button>
@@ -170,36 +172,34 @@
                             <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
                             <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
                         </button>
-                        <div bajs-kuk></div>
                     </div>
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
-                        <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ main.getCurrentPlayerColor() }}">
-                            <div class="turnAvatar" style="background-image: url({{ main.turn.player.avatar.picture }});"></div>
-                            <strong class="floatLeft" style="padding-left: 15px; letter-spacing: -3px;"><span data-ng-bind="main.turn.player.name"></span></strong>
+                        <div class="text-shadow" id="playerName" style="line-height: 30px; color: {{ game.getCurrentPlayerColor() }}">
+                            <div class="turnAvatar" style="background-image: url({{ game.turn.player.avatar.picture }});"></div>
+                            <strong class="floatLeft" style="padding-left: 15px; letter-spacing: -3px;"><span data-ng-bind="game.turn.player.name"></span></strong>
                         </div>
                         <img src="assets/img/cards.png"
                              id="cardButton"
                              class="floatLeft marginLeft"
                              style="width: 30px;"
-                             data-ng-disabled="main.turn.turnPhase !== 0"
-                             data-ng-click="main.turnInCards()"
-                             data-ng-disabled="main.turn.turnPhase != 0"
+                             data-ng-disabled="game.turn.turnPhase !== 0"
+                             data-ng-click="game.turnInCards()"
                              data-toggle="tooltip"
                              data-placement="bottom"
                              value="Open cards view" />
-                        <h4 class="floatLeft marginLeft" id="cardCounter">({{main.turn.player.cards.length}})</h4>
+                        <h4 class="floatLeft marginLeft" id="cardCounter">({{game.turn.player.cards.length}})</h4>
                     </div>
                     <div class="col-xs-4" id="turnInfo">
                         <div class="row">
                             <div class="col-xs-8" style="line-height: 40px;" id="currentPhaseIndicator">
-                                <div data-ng-show="main.turn.turnPhase == 0" class="troop_{{ main.turn.player.color.name }}">
-                                    <div class="floatLeft">Deploy <span data-ng-bind="main.troopsToDeploy"></span></div>
+                                <div data-ng-show="game.turn.turnPhase == 0" class="troop_{{ game.turn.player.color.name }}">
+                                    <div class="floatLeft">Deploy <span data-ng-bind="game.troopsToDeploy"></span></div>
                                     <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
                                 </div>
-                                <span data-ng-show="main.turn.turnPhase == 1">
+                                <span data-ng-show="game.turn.turnPhase == 1">
                                     Attack
                                 </span>
-                                <span data-ng-show="main.turn.turnPhase == 2">
+                                <span data-ng-show="game.turn.turnPhase == 2">
                                     Movement
                                 </span>
                             </div>
@@ -208,8 +208,8 @@
                                 type="button"
                                 id="nextButton"
                                 class="button button-green"
-                                data-ng-click="main.nextTurn()"
-                                data-ng-disabled="main.checkIfNextIsDisabled()"
+                                data-ng-click="game.nextTurn()"
+                                data-ng-disabled="game.checkIfNextIsDisabled()"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 id="nextButton"

@@ -3,6 +3,7 @@
 */
 
 import MainController from './angular/mainController';
+import GameController from './angular/gameController';
 import GameSetupController from './angular/gameSetupController';
 import AttackModalController from './angular/attackModalController';
 import MovementModalController from './angular/movementModalController';
@@ -23,6 +24,7 @@ const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 app.service('gameEngine', GameEngine);
 /* CONTROLLERS */
 app.controller('mainController', MainController);
+app.controller('gameController', GameController);
 app.controller('gameSetupController', GameSetupController);
 app.controller('attackModalController', AttackModalController);
 app.controller('movementModalController', MovementModalController);

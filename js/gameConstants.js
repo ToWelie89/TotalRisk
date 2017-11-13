@@ -9,7 +9,8 @@ const TURN_PHASES = {
 const GAME_PHASES = {
     PLAYER_SETUP: 0,
     GAME: 1,
-    END_SCREEN: 2
+    TUTORIAL: 2,
+    END_SCREEN: 3
 };
 
 const CONSTANTS = {
@@ -21,23 +22,28 @@ const CONSTANTS = {
 const VICTORY_GOALS = [
     {
         type: 'mapControl',
-        percentage: 60
+        percentage: 60,
+        requiredAmountOfPlayers: 3
     },
     {
         type: 'mapControl',
-        percentage: 70
+        percentage: 70,
+        requiredAmountOfPlayers: 3
     },
     {
         type: 'mapControl',
-        percentage: 80
+        percentage: 80,
+        requiredAmountOfPlayers: 2
     },
     {
         type: 'mapControl',
-        percentage: 90
+        percentage: 90,
+        requiredAmountOfPlayers: 2
     },
     {
         type: 'mapControl',
-        percentage: 100
+        percentage: 100,
+        requiredAmountOfPlayers: 2
     },
 ];
 

@@ -1,4 +1,4 @@
-import { getBestPossibleCombination } from './../cardHelpers';
+import { getBestPossibleCombination } from './../card/cardHelpers';
 import { TURN_PHASES } from './../gameConstants';
 import { getTerritoriesInRegionByOwner, getTerritoryByName } from './../map/mapHelpers';
 import {delay} from './../helpers';

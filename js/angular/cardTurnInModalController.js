@@ -2,7 +2,7 @@ import {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS} from './../gameConstants'
 import {CARD_TYPE} from './../card/cardConstants';
 import {arraysEqual} from './../helpers';
 import {delay} from './../helpers';
-import {getBestPossibleCombination} from './../cardHelpers';
+import {getBestPossibleCombination} from './../card/cardHelpers';
 
 export default class CardTurnInModalController {
     constructor($scope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {

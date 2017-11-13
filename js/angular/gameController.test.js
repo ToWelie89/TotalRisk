@@ -1,9 +1,9 @@
-import AttackModalController from './mainController.js';
+import GameModalController from './gameController.js';
 import {createUibModal, createSoundService, createScope, createGameEngine, createMapService} from './../test/mockHelper';
 import Player from './../player/player';
 
-describe('mainController', () => {
-    let mainController;
+describe('gameController', () => {
+    let gameController;
 
     let mockGameEngine;
     let mockScope;
@@ -18,14 +18,14 @@ describe('mainController', () => {
         mockScope = createScope();
         mockMapService = createMapService();
 
-        mainController = new AttackModalController(mockScope, mockUibModal, mockGameEngine, mockSoundService, mockMapService);
+        gameController = new GameModalController(mockScope, mockUibModal, mockGameEngine, mockSoundService, mockMapService);
     });
 
     it('toggleMusicVolume should mute sound and toggle game engine', () => {
         // Act
-        mainController.toggleMusicVolume();
+        gameController.toggleMusicVolume();
         // Assert
-        expect(mainController.playSound).toEqual(false);
+        expect(gameController.playSound).toEqual(false);
         expect(mockGameEngine.toggleSound).toHaveBeenCalledWith(false);
     });
 
@@ -46,7 +46,7 @@ describe('mainController', () => {
             }
         };
         // Act
-        mainController.startGame(players);
+        gameController.startGame(players);
         // Assert
         expect(mockGameEngine.startGame).toHaveBeenCalledWith(players);
         expect(mockMapService.updateMap).toHaveBeenCalled();
