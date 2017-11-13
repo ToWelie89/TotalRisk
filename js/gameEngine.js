@@ -84,12 +84,6 @@ export default class GameEngine {
         this.selectedTerritory = undefined;
         this.iterator.next();
         this.turn = this.iterator.getCurrent();
-        if (this.turn.player.dead) {
-            this.iterator.next();
-            this.iterator.next();
-            this.iterator.next();
-            this.turn = this.iterator.getCurrent();
-        }
         this.handleTurnPhase();
         return this.turn;
     }
@@ -137,15 +131,16 @@ export default class GameEngine {
     }
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim) {
-        this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game`, () => {
+        this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game by ${playerWhoDefeatedHim}`, () => {
             this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
         }, () => {
             this.setMusicVolume(1.0);
         });
 
-        this.players.get(defeatedPlayer).dead = true;
         const cards = this.players.get(defeatedPlayer).cards;
         this.players.get(playerWhoDefeatedHim).cards = this.players.get(playerWhoDefeatedHim).cards.concat(cards);
+        this.players.get(defeatedPlayer).dead = true;
+        this.iterator.handleDefeatedPlayer(this.players.get(defeatedPlayer).name);
         return cards;
     }
 }

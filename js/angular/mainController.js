@@ -189,10 +189,10 @@ export default class MainController {
             const goalPercentage = this.gameEngine.winningCondition.percentage;
 
             const territoriesOwned = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name).length;
-            const territoriesTotal = getAllTerritories(this.gameEngine.map).length;
+            const territoriesTotal = this.gameEngine.map.getAllTerritoriesAsList().length;
 
             if ((territoriesOwned / territoriesTotal * 100) >= goalPercentage) {
-                // player won, do something
+                console.log(`Player ${this.gameEngine.turn.player.name} won!`);
             }
         }
     }

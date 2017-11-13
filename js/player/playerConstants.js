@@ -175,6 +175,14 @@ const playerIterator = (playerMap, turnPhases) => {
 
     return {
         next: () => {
+            while (playerMap[currentPlayerIndex][1].dead) {
+                if ((currentPlayerIndex + 1) < (playerMap.length)) {
+                    currentPlayerIndex++;
+                } else {
+                    currentPlayerIndex = 0;
+                }
+            }
+
             if ((currentTurnPhaseIndex + 1) < turnPhases.length) {
                 const turn = turnPhases[currentTurnPhaseIndex++];
                 const player = playerMap[currentPlayerIndex];
@@ -210,6 +218,12 @@ const playerIterator = (playerMap, turnPhases) => {
                 done: false,
                 newPlayer
             };
+        },
+        handleDefeatedPlayer: (defeatedPlayer) => {
+            const player = playerMap.map(x => x[1]).find(x => x.name === defeatedPlayer);
+            if (player) {
+                player.dead = true;
+            }
         }
     };
 };
