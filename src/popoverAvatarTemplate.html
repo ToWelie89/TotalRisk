@@ -1,18 +1,18 @@
-<div class="row">
+<div class="row avatarSelection">
     <div class="popoverBodyAvatarBox"
         data-ng-repeat="avatar in avatarPopover.avatars"
         style="background-image: url({{avatar.picture}});"
         data-ng-class="{'popoverBodyColorBox--chosen': player.avatar == avatar}"
         data-ng-click="setup.updateAvatarOfPlayer(avatarPopover.player, avatar)"
         role="button"
-        data-toggle="tooltip"
-        data-placement="bottom"
-        title="{{avatarPopover.getNameOfAvatar(avatar)}}"
         ng-mouseleave="avatarPopover.mouseLeave()"
         ng-mouseover="avatarPopover.mouseEnter(avatar)"></div>
 </div>
 <div class="row">
-    <div style="min-width: 250px; min-height: 250px; background: gainsboro;" data-ng-bind="avatarPopover.bioText">
+    <div class="avatarInfoBox">
+        <h4 data-ng-bind="avatarPopover.avatarName"></h4>
+        <div class="flag" style="background-image: url({{ avatarPopover.avatarFlag }})" data-ng-show="avatarPopover.avatarFlag"></div>
+        <p data-ng-bind-html="avatarPopover.bioText"></p>
     </div>
 </div>
 
