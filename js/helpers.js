@@ -25,4 +25,6 @@ const delay = ms => new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
 });
 
-export {shuffle, arraysEqual, delay};
+const allValuesInArrayAreEqual = (array) => !!array.reduce((a, b) => { return (a === b) ? a : NaN; });
+
+export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual};

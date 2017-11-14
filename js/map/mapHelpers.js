@@ -1,3 +1,5 @@
+import {allValuesInArrayAreEqual} from './../helpers';
+
 const getTerritoryByName = (map, name) => {
     let terr;
     map.regions.forEach(region => {
@@ -48,4 +50,32 @@ const getAdjacentApplicableTerritories = (map, adjacentApplicableTerritories, fr
     return Array.from(newTerrirories);
 };
 
-export {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner};
+const getCurrentOwnershipStandings = (map, players) => {
+    const playersArray = Array.from(players.values());
+    let standings = playersArray.map(x => {
+        return {
+            name: x.name,
+            totalTroops: 0,
+            regionsOwned: [],
+            totalTerritories: 0,
+            cardsOwned: x.cards.length
+        };
+    });
+
+    map.regions.forEach(region => {
+        const territoriesInRegionAsArray = Array.from(region.territories.values());
+        if (allValuesInArrayAreEqual(territoriesInRegionAsArray.map(x => x.owner))) {
+            const player = standings.find(x => x.name === territoriesInRegionAsArray[0].owner);
+            player.regionsOwned.push(region.name);
+        }
+
+        region.territories.forEach(territory => {
+            const player = standings.find(x => x.name === territory.owner);
+            player.totalTroops += territory.numberOfTroops;
+            player.totalTerritories++;
+        });
+    });
+    return standings;
+}
+
+export {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings};

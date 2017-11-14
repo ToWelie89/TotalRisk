@@ -108,7 +108,8 @@ export default class GameController {
 
     handleAi() {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.aiHandler.turnInCards()
+            this.aiHandler.contemplateAlternativesForAttack()
+            .then(() => this.aiHandler.turnInCards())
             .then(() => this.aiHandler.deployTroops(() => {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();

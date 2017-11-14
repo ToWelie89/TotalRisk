@@ -5,6 +5,10 @@ export default class AvatarPopoverController {
         this.vm = this;
         this.vm.init = this.init;
         this.vm.getNameOfAvatar = this.getNameOfAvatar;
+        this.vm.mouseLeave = this.mouseLeave;
+        this.vm.mouseEnter = this.mouseEnter;
+
+        this.vm.bioText = '';
     }
 
     init(player) {
@@ -14,5 +18,13 @@ export default class AvatarPopoverController {
 
     getNameOfAvatar(avatar) {
         return Object.entries(avatars).find(a => a[1] === avatar)[0];
+    }
+
+    mouseLeave() {
+        this.vm.bioText = '';
+    }
+
+    mouseEnter(avatar) {
+        this.vm.bioText = avatar.biography ? avatar.biography : '';
     }
 }

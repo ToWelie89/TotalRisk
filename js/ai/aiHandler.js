@@ -1,7 +1,7 @@
 import { getBestPossibleCombination } from './../card/cardHelpers';
 import { TURN_PHASES } from './../gameConstants';
-import { getTerritoriesInRegionByOwner, getTerritoryByName } from './../map/mapHelpers';
-import {delay} from './../helpers';
+import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } from './../map/mapHelpers';
+import { delay, allValuesInArrayAreEqual } from './../helpers';
 
 export default class AiHandler {
     constructor(gameEngine, soundService, mapService) {
@@ -10,6 +10,78 @@ export default class AiHandler {
         this.mapService = mapService;
 
         this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 200;
+    }
+
+    contemplateAlternativesForAttack() {
+        const territoriesInRegionAsArray = (region) => Array.from(region.territories.values());
+
+        const possibleTerritoriesToAttack = [];
+        const territoriesByOwner = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
+        territoriesByOwner.forEach(territory => {
+            territory.adjacentTerritories.forEach(adjacentTerritory => {
+                const terr = getTerritoryByName(this.gameEngine.map, adjacentTerritory);
+                if (terr.owner !== this.gameEngine.turn.player.name && !possibleTerritoriesToAttack.find(x => x.territory.name === terr.name)) {
+                    possibleTerritoriesToAttack.push({
+                        territory: terr
+                    });
+                }
+            });
+        });
+        this.possibleTerritoriesToAttack = possibleTerritoriesToAttack;
+
+        this.possibleTerritoriesToAttack.forEach(territory => {
+            const regionsAsArray = Array.from(this.gameEngine.map.regions.values());
+            const region = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(x => x.name === territory.territory.name));
+            const standings = this.calculateStandingsWithThreatPoints();
+            const owner = standings.find(x => x.name === territory.territory.owner);
+
+            // CAN I BREAK UP A REGION BY CONQUERING THIS TERRITORY?
+            // Check if territories in region have same owner
+            territory.canBeAttackedToBreakUpRegion = allValuesInArrayAreEqual(territoriesInRegionAsArray(region).map(x => x.owner));
+
+            // AM I CLOSE TO CAPTURING A REGION?
+            const totalTerritoriesInRegion = territoriesInRegionAsArray(region);
+            const totalTerritoriesInRegionOwnedByPlayer = totalTerritoriesInRegion.filter(x => x.owner === this.gameEngine.turn.player.name);
+            territory.closeToCaptureRegion = ((totalTerritoriesInRegionOwnedByPlayer.length / totalTerritoriesInRegion.length * 100) >= 60);
+
+            // IS THIS THE ONLY TERRITORY I NEED TO CAPTURE THE ENTIRE REGION?
+            const territoriesInRegionNotOwnedByPlayer = territoriesInRegionAsArray(region).filter(x => x.owner !== this.gameEngine.turn.player.name);
+            territory.lastTerritoryLeftInRegion = territoriesInRegionNotOwnedByPlayer.length === 1;
+
+            // ARE MOST MY TROOPS IN THIS REGION?
+            const ownership = this.calculatePlayerOwnershipForEachRegion();
+            const currentRegionOwnership = ownership.find(x => x.regionName === region.name);
+            territory.mostTroopsInThisRegion = (ownership.indexOf(currentRegionOwnership) === 0 || ownership.indexOf(currentRegionOwnership) === 1);
+
+            // DOES TERRITORY BELONG TO A BIG TRHEAT?
+            const playerThreatPoints = standings.find(x => x.name === this.gameEngine.turn.player.name).threatPoints;
+            const currentTerritoryPlayerThreatPoints = owner.threatPoints;
+            territory.belongsToBigThreat = currentTerritoryPlayerThreatPoints >= playerThreatPoints;
+
+            // IS THERE ANY PLAYER NEARBY THAT I CAN ELIMINATE?
+            territory.opportunityToEliminatePlayer = owner.totalTerritories === 1 && owner.cardsOwned > 0;
+        });
+
+        this.possibleTerritoriesToAttack.forEach(territory => {
+            const regionsAsArray = Array.from(this.gameEngine.map.regions.values());
+            const region = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(x => x.name === territory.territory.name));
+
+            territory.valuePoints = 0;
+            territory.valuePoints += territory.opportunityToEliminatePlayer ? 4 : 0;
+            territory.valuePoints += territory.belongsToBigThreat ? 2 : 0;
+            territory.valuePoints += territory.mostTroopsInThisRegion ? 5 : 0;
+            territory.valuePoints += territory.closeToCaptureRegion ? 5 : 0;
+            territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? 3 : 0;
+            territory.valuePoints += territory.lastTerritoryLeftInRegion ? 5: 0
+
+            if (territory.mostTroopsInThisRegion && territory.closeToCaptureRegion) {
+                territory.valuePoints += Math.floor(region.bonusTroops / 2);
+            }
+        });
+
+        this.possibleTerritoriesToAttack.sort((a, b) => b.valuePoints - a.valuePoints);
+
+        console.log(this.possibleTerritoriesToAttack);
     }
 
     turnInCards() {
@@ -123,5 +195,22 @@ export default class AiHandler {
         });
 
         return regionOwnership;
+    }
+
+    calculateStandingsWithThreatPoints() {
+        const currentStandings = getCurrentOwnershipStandings(this.gameEngine.map, this.gameEngine.players);
+        currentStandings.forEach(standing => {
+            standing.threatPoints = 0;
+            standing.threatPoints += standing.totalTroops;
+            standing.threatPoints += (Math.floor(standing.totalTerritories / 2));
+            standing.threatPoints += (standing.cardsOwned * 2);
+
+            standing.regionsOwned.forEach(region => {
+                standing.threatPoints += (Math.floor(this.gameEngine.map.get(region).bonusTroops * 1.5));
+            });
+        });
+
+        currentStandings.sort((a, b) => a.threatPoints - b.threatPoints);
+        return currentStandings;
     }
 }
