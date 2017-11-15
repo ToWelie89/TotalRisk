@@ -53,7 +53,7 @@ const avatars = {
         picture: './assets/img/napoleon.png',
         selectSound: '',
         flag: './assets/flags/france.png',
-        biography: 'Napoleon Bonaparte was a man who came from nothing, being a minor nobleman from the island of Corsica and a captain in the french army after the french revolution, but he would later become the empereor of France, the greatest empire in Europe during his time. Napoleon is regarded as one of the greatest military geniuses of all time, having defeated most of the mighty kingdoms and empires of Europe through tactical brilliance making him perhaps the most powerful man in the world. His greatest triumph was the battle of Austerlitz where he completely destroyed the organized Russian and Prussian resistance.'
+        biography: 'Napoleon Bonaparte was a man who came from nothing, being a minor nobleman from the island of Corsica and a captain in the french army after the french revolution, but he would later become the empereor of France, the greatest empire in Europe during his time. Napoleon is regarded as one of the greatest military geniuses of all time, having defeated most of the mighty kingdoms and empires of Europe through tactical brilliance making him perhaps the most powerful man in the world. His greatest triumph was the battle of Austerlitz where he completely destroyed the organized Russian and Austrian resistance.'
     },
     'Hannibal Barca': {
         picture: './assets/img/hannibal_barca.png',
