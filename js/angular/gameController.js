@@ -108,12 +108,13 @@ export default class GameController {
 
     handleAi() {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.aiHandler.contemplateAlternativesForAttack()
-            .then(() => this.aiHandler.turnInCards())
-            .then(() => this.aiHandler.deployTroops(() => {
+            this.aiHandler.turnInCards()
+            .then(() => this.aiHandler.contemplateAlternativesForAttack())
+            .then((response) => this.aiHandler.deployTroops(response, () => {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();
-            }));
+            }))
+            .then((terrotoriesToAttack) => this.aiHandler(terrotoriesToAttack));
         }
     }
 
