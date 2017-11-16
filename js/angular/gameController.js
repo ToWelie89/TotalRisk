@@ -114,7 +114,7 @@ export default class GameController {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();
             }))
-            .then((terrotoriesToAttack) => this.aiHandler(terrotoriesToAttack));
+            .then((terrotoriesToAttack) => this.aiHandler.attackTerritories(terrotoriesToAttack));
         }
     }
 

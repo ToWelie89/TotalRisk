@@ -2,6 +2,7 @@ import { getBestPossibleCombination } from './../card/cardHelpers';
 import { TURN_PHASES } from './../gameConstants';
 import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } from './../map/mapHelpers';
 import { delay, allValuesInArrayAreEqual } from './../helpers';
+import BattleHandler from './../battleHandler';
 
 export default class AiHandler {
     constructor(gameEngine, soundService, mapService) {
@@ -10,6 +11,7 @@ export default class AiHandler {
         this.mapService = mapService;
 
         this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 200;
+        this.DELAY_BETWEEN_EACH_BATTLE = 200;
     }
 
     turnInCards() {
@@ -181,60 +183,84 @@ export default class AiHandler {
             }
         });
         return Promise.all(promises).then(() => territoriesToDeploy);
-
-        /*
-        const regionOwnership = this.calculatePlayerOwnershipForEachRegion();
-        console.log(regionOwnership);
-
-        const controlledRegions = regionOwnership.filter(x => x.ownership === 1);
-        const uncontrolledRegions = regionOwnership.filter(x => x.ownership !== 1);
-
-        if (controlledRegions && controlledRegions.length > 0) {
-            controlledRegions.forEach(region => {
-                const currentRegion = this.gameEngine.map.regions.get(region.regionName);
-                const territoriesWithDangerousBorders = Array.from(currentRegion.territories.values()).filter(territory => {
-                    const adjacentTerritoryOwnedByEnemy = territory.adjacentTerritories.find(t => {
-                        return getTerritoryByName(this.gameEngine.map, t).owner !== this.gameEngine.turn.player.name;
-                    });
-                    return adjacentTerritoryOwnedByEnemy && territory.owner === this.gameEngine.turn.player.name;
-                });
-                region.territoriesWithDangerousBorders = territoriesWithDangerousBorders;
-                console.log(region);
-
-            });
-            const territoriesToReinforce = [].concat(controlledRegions.map(x => x.territoriesWithDangerousBorders));
-            const amountToDeploy = this.gameEngine.troopsToDeploy / Math.floor(territoriesToReinforce.length);
-
-            let territoryIndex = 0;
-            const promises = [];
-            for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
-                if (!territoriesToReinforce[territoryIndex]) {
-                    territoryIndex = 0;
-                }
-                const currentIndex = territoryIndex;
-                promises.push(createPromise(territoriesToReinforce[currentIndex].name, i));
-                territoryIndex++;
-            }
-            return Promise.all(promises);
-        } else {
-            const currentRegion = this.gameEngine.map.regions.get(uncontrolledRegions[0].regionName);
-            const territoriesWithDangerousBorders = Array.from(currentRegion.territories.values()).filter(territory => {
-                const adjacentTerritoryOwnedByEnemy = territory.adjacentTerritories.find(t => {
-                    return getTerritoryByName(this.gameEngine.map, t).owner !== this.gameEngine.turn.player.name;
-                });
-                return adjacentTerritoryOwnedByEnemy && territory.owner === this.gameEngine.turn.player.name;
-            });
-            console.log(territoriesWithDangerousBorders);
-            const promises = [];
-            for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
-                promises.push(createPromise(territoriesWithDangerousBorders[0].name, i));
-            }
-            return Promise.all(promises);
-        }*/
     }
 
-    terrotoriesToAttack(terrotoriesToAttack) {
+    attackTerritories(territoriesToDeploy) {
+        console.log('territoriesToDeploy', territoriesToDeploy);
+        const battleHandler = new BattleHandler();
 
+        const promises = [];
+        let battleIndex = 0;
+
+        territoriesToDeploy.forEach(territoryToDeploy => {
+
+            const currentInvasion = {
+                startingPosition: {
+                    attackFrom: territoryToDeploy.name,
+                    attackTo: territoryToDeploy.territoryToAttack.name,
+                    attackingTroops: (territoryToDeploy.numberOfTroops - 1),
+                    defendingTroops: territoryToDeploy.territoryToAttack.numberOfTroops
+                },
+                battles: []
+            };
+
+            while(currentInvasion.battles.length === 0 ||
+                  (currentInvasion.battles[currentInvasion.battles.length - 1].attackingTroops > 0 &&
+                   currentInvasion.battles[currentInvasion.battles.length - 1].defendingTroops > 0)) {
+                const attacker = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackFrom);
+                const newAttacker = Object.assign({}, attacker);
+                newAttacker.numberOfTroops--;
+                const defender = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackTo);
+
+                const response = battleHandler.handleAttack(newAttacker, defender);
+
+                const currentAttackingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles(currentInvasion.battles.length - 1).attackingTroops
+                                                                                  : currentInvasion.startingPosition.attackingTroops;
+                const currentDefendingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles(currentInvasion.battles.length - 1).defendingTroops
+                                                                                  : currentInvasion.startingPosition.defendingTroops;
+
+                currentInvasion.battles.push({
+                    response,
+                    attackingTroops: currentAttackingTroops - response.attackerCasualties,
+                    defendingTroops: currentDefendingTroops - response.defenderCasualties
+                });
+            }
+
+            currentInvasion.battles.forEach(battle => {
+                console.log(`AI Battle #${battleIndex + 1} between ${attacker.name} vs ${defender.name}`);
+                console.log(response);
+
+                const promise = new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const attacker = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackFrom);
+                        const defender = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackTo);
+
+                        if (battle.defendingTroops === 0) {
+                            // Attacker won
+                            defender.owner = attacker.owner;
+                            defender.numberOfTroops = battle.attackingTroops;
+                            attacker.numberOfTroops = 1; // as of now, always move all troops
+                        } else if (battle.attackingTroops === 0) {
+                            defender.numberOfTroops -= response.defenderCasualties;
+                            attacker.numberOfTroops = 1;
+                        } else {
+                            defender.numberOfTroops -= response.defenderCasualties;
+                            attacker.numberOfTroops -= response.attackerCasualties;
+                        }
+
+                        this.mapService.updateMap(this.gameEngine.filter);
+                        this.soundService.diceRoll.play();
+                        resolve();
+                    }, (this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex)));
+                });
+
+                promises.push(promise);
+
+                battleIndex++;
+            });
+        });
+
+        return Promise.all(promises);
     }
 
     calculatePlayerOwnershipForEachRegion() {
