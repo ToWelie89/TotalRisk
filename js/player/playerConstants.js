@@ -1,6 +1,7 @@
 const PLAYER_TYPES = {
     HUMAN: 0,
-    AI: 1
+    AI_NORMAL: 1,
+    AI_EXPERT: 2
 };
 
 const PLAYER_COLORS = {
@@ -39,6 +40,12 @@ const PLAYER_COLORS = {
         mainColor: '#eaea67',
         borderColor: '#bbbb42',
         highlightColor: '#ffffae'
+    },
+    PURPLE: {
+        name: 'Purple',
+        mainColor: '#a55eec',
+        borderColor: '#8442c6',
+        highlightColor: '#b68ae1'
     }
 };
 
@@ -77,7 +84,7 @@ const avatars = {
         picture: './assets/img/attila.png',
         selectSound: '',
         flag: './assets/flags/hunnicempire.png',
-        biography: 'During the later days of the Roman nomadic peoples, referred to as barbarians by the romans, terrorized and attack everywhere along the vast borders of the empire. None of these barbarian leader were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
+        biography: 'During the later days of the Roman empire nomadic peoples, referred to as barbarians by the romans, terrorized and attacked everywhere along the vast borders of the empire. None of these barbarian leaders were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
     },
     'Scipio Africanus': {
         picture: '/assets/img/scipio.png',

@@ -1,8 +1,9 @@
 import { getBestPossibleCombination } from './../card/cardHelpers';
 import { TURN_PHASES } from './../gameConstants';
 import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } from './../map/mapHelpers';
-import { delay, allValuesInArrayAreEqual } from './../helpers';
+import { delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } from './../helpers';
 import BattleHandler from './../battleHandler';
+import { PLAYER_TYPES } from './../player/playerConstants';
 
 export default class AiHandler {
     constructor(gameEngine, soundService, mapService) {
@@ -10,8 +11,9 @@ export default class AiHandler {
         this.soundService = soundService;
         this.mapService = mapService;
 
-        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 200;
-        this.DELAY_BETWEEN_EACH_BATTLE = 200;
+        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 500;
+        this.DELAY_BETWEEN_EACH_BATTLE = 500;
+        this.DELAY_BEFORE_MOVE = 500;
     }
 
     turnInCards() {
@@ -35,6 +37,8 @@ export default class AiHandler {
                 $('#mainTroopIndicator').addClass('animated infinite bounce');
                 this.soundService.cardTurnIn.play();
                 this.gameEngine.troopsToDeploy += bestCombo.value;
+
+                this.updateCallback();
                 setTimeout(() => {
                     resolve();
                     $('#mainTroopIndicator').removeClass('animated infinite bounce');
@@ -48,8 +52,9 @@ export default class AiHandler {
     contemplateAlternativesForAttack() {
         return new Promise((resolve, reject) => {
             const territoriesInRegionAsArray = (region) => Array.from(region.territories.values());
+            const standings = this.calculateStandingsWithThreatPoints();
 
-            const possibleTerritoriesToAttack = [];
+            let possibleTerritoriesToAttack = [];
             const territoriesByOwner = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
             territoriesByOwner.forEach(territory => {
                 territory.adjacentTerritories.forEach(adjacentTerritory => {
@@ -65,7 +70,6 @@ export default class AiHandler {
             possibleTerritoriesToAttack.forEach(territory => {
                 const regionsAsArray = Array.from(this.gameEngine.map.regions.values());
                 const region = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(x => x.name === territory.territory.name));
-                const standings = this.calculateStandingsWithThreatPoints();
                 const owner = standings.find(x => x.name === territory.territory.owner);
 
                 // CAN I BREAK UP A REGION BY CONQUERING THIS TERRITORY?
@@ -103,16 +107,55 @@ export default class AiHandler {
                 territory.valuePoints += territory.opportunityToEliminatePlayer ? 4 : 0;
                 territory.valuePoints += territory.belongsToBigThreat ? 2 : 0;
                 territory.valuePoints += territory.mostTroopsInThisRegion ? 5 : 0;
-                territory.valuePoints += territory.closeToCaptureRegion ? 5 : 0;
+                territory.valuePoints += territory.closeToCaptureRegion ? 7 : 0;
                 territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? 3 : 0;
                 territory.valuePoints += territory.lastTerritoryLeftInRegion ? 5: 0
 
-                if (territory.mostTroopsInThisRegion && territory.closeToCaptureRegion) {
+                if (territory.mostTroopsInThisRegion || territory.closeToCaptureRegion) {
                     territory.valuePoints += Math.floor(region.bonusTroops / 2);
+                }
+
+                const ownerThreatPoints = standings.find(x => x.name === territory.territory.owner).threatPoints;
+                const playerThreatPoints = standings.find(x => x.name === this.gameEngine.turn.player.name).threatPoints;
+
+                if (ownerThreatPoints >= (playerThreatPoints * 1.5)) {
+                    territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? 6 : 0;
+                }
+
+                if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
+                    if (chancePercentage(50)) {
+                        territory.valuePoints += Math.floor((Math.random() * 3) + 1);
+                    } else {
+                        territory.valuePoints -= Math.floor((Math.random() * 3) + 1);
+                    }
                 }
             });
 
+            if (this.gameEngine.troopsToDeploy === 0) {
+                // Deployment is already done, player is attacking again
+                possibleTerritoriesToAttack = possibleTerritoriesToAttack.filter(x => {
+                    return x.territory.adjacentTerritories.find(y => {
+                        const t = getTerritoryByName(this.gameEngine.map, y);
+                        return t.owner === this.gameEngine.turn.player.name && t.numberOfTroops > 3;
+                    });
+                });
+            }
+
             possibleTerritoriesToAttack.sort((a, b) => b.valuePoints - a.valuePoints);
+
+            if (possibleTerritoriesToAttack.filter(x => x.valuePoints > 0).length >= 2) {
+                possibleTerritoriesToAttack = possibleTerritoriesToAttack.filter(x => x.valuePoints > 0);
+            }
+
+            if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
+                let bestOptions = possibleTerritoriesToAttack.filter(x => x.valuePoints >= 8);
+                const worstOptions = possibleTerritoriesToAttack.filter(x => x.valuePoints < 8);
+
+                shuffle(bestOptions);
+
+                possibleTerritoriesToAttack = bestOptions.concat(worstOptions);
+            }
+
             console.log('Possible attack alternatives for AI', possibleTerritoriesToAttack);
             resolve(possibleTerritoriesToAttack);
         });
@@ -136,14 +179,23 @@ export default class AiHandler {
         let troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         while (troopsToDeploy > 0) {
+            console.log('territoryIndex', territoryIndex);
+
+            const lastOption = territoryIndex >= response.length;
+
+            territoryIndex = !lastOption ? territoryIndex : (response.length - 1);
+
+            if (lastOption && chancePercentage(50)) {
+                territoryIndex = 0; // Chance to reset index of deploy territories to start
+            }
+
             const currentTerritoryToAttack = response[territoryIndex].territory;
             const playerControlledAdjacentTerritories = currentTerritoryToAttack.adjacentTerritories.map(x => getTerritoryByName(this.gameEngine.map, x))
                                                       .filter(x => x.owner === this.gameEngine.turn.player.name);
-            playerControlledAdjacentTerritories.sort((a, b) => a.numberOfTroops > b.numberOfTroops);
+            playerControlledAdjacentTerritories.sort((a, b) => b.numberOfTroops - a.numberOfTroops);
 
             const selectedAdjacentTerritory = playerControlledAdjacentTerritories[0];
-
-            const predictedAmountOfTroops = (selectedAdjacentTerritory.numberOfTroops + selectedAdjacentTerritory.troopsToDeploy);
+            const predictedAmountOfTroops = (selectedAdjacentTerritory.numberOfTroops + (selectedAdjacentTerritory.troopsToDeploy ? selectedAdjacentTerritory.troopsToDeploy : 0));
 
             if (predictedAmountOfTroops >= (currentTerritoryToAttack.numberOfTroops * 2)
                 && predictedAmountOfTroops > 3) {
@@ -154,14 +206,14 @@ export default class AiHandler {
                     territoriesToDeploy.push(selectedAdjacentTerritory);
                 }
 
-                if (troopsToDeploy < 3) {
+                if (troopsToDeploy < 3 || lastOption) {
                     territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy += troopsToDeploy;
                     troopsToDeploy = 0;
                 } else {
                     territoryIndex++;
                 }
             } else {
-                if (!territoriesToDeploy.includes(selectedAdjacentTerritory)) {
+                if (!territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name)) {
                     selectedAdjacentTerritory.troopsToDeploy = 1;
                     selectedAdjacentTerritory.territoryToAttack = response[territoryIndex].territory;
                     territoriesToDeploy.push(selectedAdjacentTerritory);
@@ -177,22 +229,39 @@ export default class AiHandler {
         let totalIndex = 0;
         const promises = [];
         territoriesToDeploy.forEach(territory => {
+            promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    $(`#svgMap .country[id="${territory.name}"]`).addClass('blink_me');
+                    resolve();
+                }, this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (promises.length + 1));
+            }));
+
+            totalIndex++;
+
             for (let i = 0; i < territory.troopsToDeploy; i++) {
                 promises.push(createPromise(territory.name, totalIndex));
                 totalIndex++;
             }
+
+            promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    $(`#svgMap .country[id="${territory.name}"]`).removeClass('blink_me');
+                    resolve();
+                }, this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (promises.length + 1));
+            }));
         });
-        return Promise.all(promises).then(() => territoriesToDeploy);
+        this.territoriesToDeploy = territoriesToDeploy;
+        return Promise.all(promises);
     }
 
-    attackTerritories(territoriesToDeploy) {
-        console.log('territoriesToDeploy', territoriesToDeploy);
+    attackTerritories() {
+        console.log('territoriesToDeploy', this.territoriesToDeploy);
         const battleHandler = new BattleHandler();
 
         const promises = [];
         let battleIndex = 0;
 
-        territoriesToDeploy.forEach(territoryToDeploy => {
+        this.territoriesToDeploy.forEach(territoryToDeploy => {
 
             const currentInvasion = {
                 startingPosition: {
@@ -207,17 +276,13 @@ export default class AiHandler {
             while(currentInvasion.battles.length === 0 ||
                   (currentInvasion.battles[currentInvasion.battles.length - 1].attackingTroops > 0 &&
                    currentInvasion.battles[currentInvasion.battles.length - 1].defendingTroops > 0)) {
-                const attacker = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackFrom);
-                const newAttacker = Object.assign({}, attacker);
-                newAttacker.numberOfTroops--;
-                const defender = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackTo);
 
-                const response = battleHandler.handleAttack(newAttacker, defender);
-
-                const currentAttackingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles(currentInvasion.battles.length - 1).attackingTroops
+                const currentAttackingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles[currentInvasion.battles.length - 1].attackingTroops
                                                                                   : currentInvasion.startingPosition.attackingTroops;
-                const currentDefendingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles(currentInvasion.battles.length - 1).defendingTroops
+                const currentDefendingTroops = currentInvasion.battles.length > 0 ? currentInvasion.battles[currentInvasion.battles.length - 1].defendingTroops
                                                                                   : currentInvasion.startingPosition.defendingTroops;
+
+                const response = battleHandler.handleAttack({numberOfTroops: currentAttackingTroops}, {numberOfTroops: currentDefendingTroops});
 
                 currentInvasion.battles.push({
                     response,
@@ -226,9 +291,19 @@ export default class AiHandler {
                 });
             }
 
+            promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    $(`#svgMap .country[id="${currentInvasion.startingPosition.attackFrom}"]`).addClass('blink_me');
+                    $(`#svgMap .country[id="${currentInvasion.startingPosition.attackTo}"]`).addClass('blink_me');
+                    resolve();
+                }, this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex + 1));
+            }));
+
+            battleIndex++;
+
             currentInvasion.battles.forEach(battle => {
-                console.log(`AI Battle #${battleIndex + 1} between ${attacker.name} vs ${defender.name}`);
-                console.log(response);
+                console.log(`AI Battle`);
+                console.log(battle);
 
                 const promise = new Promise((resolve, reject) => {
                     setTimeout(() => {
@@ -236,22 +311,49 @@ export default class AiHandler {
                         const defender = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackTo);
 
                         if (battle.defendingTroops === 0) {
-                            // Attacker won
+                            const defeatedPlayer = defender.owner;
                             defender.owner = attacker.owner;
                             defender.numberOfTroops = battle.attackingTroops;
                             attacker.numberOfTroops = 1; // as of now, always move all troops
+
+                            if (!this.gameEngine.turn.playerHasWonAnAttackThisTurn) {
+                                this.soundService.cardSelect.play();
+                            }
+                            this.gameEngine.takeCard(attacker.owner);
+                            this.updateCallback();
+
+                            $(`#svgMap .country[id="${attacker.name}"]`).removeClass('blink_me');
+                            $(`#svgMap .country[id="${defender.name}"]`).removeClass('blink_me');
+
+                            const territories = getTerritoriesByOwner(this.gameEngine.map, defeatedPlayer);
+                            if (territories.length === 0) {
+                                // The losing player was defeated entirely
+                                const resp = this.gameEngine.handleDefeatedPlayer(defeatedPlayer, attacker.owner, false);
+                                if (resp.length > 0) {
+                                    this.soundService.cardSelect.play();
+                                }
+                            }
+
+                            const resp = this.gameEngine.checkIfPlayerWonTheGame();
+                            if (resp.playerWon) {
+                                reject('playerWon');
+                            }
                         } else if (battle.attackingTroops === 0) {
-                            defender.numberOfTroops -= response.defenderCasualties;
+                            defender.numberOfTroops = battle.defendingTroops;
                             attacker.numberOfTroops = 1;
+
+                            $(`#svgMap .country[id="${attacker.name}"]`).removeClass('blink_me');
+                            $(`#svgMap .country[id="${defender.name}"]`).removeClass('blink_me');
                         } else {
-                            defender.numberOfTroops -= response.defenderCasualties;
-                            attacker.numberOfTroops -= response.attackerCasualties;
+                            defender.numberOfTroops = battle.defendingTroops;
+                            attacker.numberOfTroops = battle.attackingTroops + 1;
                         }
 
                         this.mapService.updateMap(this.gameEngine.filter);
                         this.soundService.diceRoll.play();
+
                         resolve();
-                    }, (this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex)));
+                    }, (this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex + 1)));
                 });
 
                 promises.push(promise);
@@ -260,7 +362,184 @@ export default class AiHandler {
             });
         });
 
-        return Promise.all(promises);
+        return Promise.all(promises).then(() => {
+            return this.contemplateAlternativesForAttack()
+                    .then((response) => {
+                        // Determine if AI player should keep attacking
+
+                        this.territoriesToDeploy = [];
+                        response.forEach(t => {
+                            let terr = t.territory.adjacentTerritories.find(y => {
+                                const t = getTerritoryByName(this.gameEngine.map, y);
+                                return t.owner === this.gameEngine.turn.player.name && t.numberOfTroops > 3;
+                            });
+                            if (terr) {
+                                terr = getTerritoryByName(this.gameEngine.map, terr);
+                                terr.territoryToAttack = t.territory;
+
+                                if (!this.territoriesToDeploy.find(x => terr.name)) {
+                                    this.territoriesToDeploy.push(terr);
+                                }
+                            }
+                        });
+                        if (this.territoriesToDeploy.length) {
+                            return this.attackTerritories();
+                        }
+                    });
+        });
+    }
+
+    movementPhase() {
+        return new Promise((resolve, reject) => {
+            // GET ALL TERRITORIES WITH MORE THAN ONE TROOP FROM WHICH THE PLAYER CAN MOVE TROOPS
+            let territoriesByOwner = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
+            territoriesByOwner = territoriesByOwner.filter(t => t.numberOfTroops > 1);
+
+            if (!territoriesByOwner.length) {
+                // IF NO TROOPS WITH MORE THAN ONE TROOP, NO MOVEMENT CAN BE DONE
+                resolve();
+            }
+
+            let applicableMovements = [];
+
+            // GET ALL POSSIBLE MOVEMENT COMBINATIONS FOR EACH TERRITORY
+            territoriesByOwner.forEach(t => {
+                const applicableTerritoriesForMovement = this.mapService.getTerritoriesForMovement(t);
+                applicableTerritoriesForMovement.forEach(at => {
+                    const to = getTerritoryByName(this.gameEngine.map ,at);
+                    applicableMovements.push({
+                        from: t,
+                        to
+                    })
+                });
+            });
+
+            // DETERMINE WHICH MOVEMENTS TO TERRITORIES THAT DOES NOT HAVE BORDERS WITH AN ENEMY
+            applicableMovements.forEach(m => {
+                const territoryHasBorderWithEnemy = m.to.adjacentTerritories.find(x => {
+                    const terr = getTerritoryByName(this.gameEngine.map, x);
+                    return terr.owner !== this.gameEngine.turn.player.name;
+                });
+                m.territoryHasBorderWithEnemy = !!territoryHasBorderWithEnemy;
+            });
+
+            // DETERMINE HOW MANY ENEMY TROOPS BORDERS WITH EACH TO-TERRITORY
+            applicableMovements.forEach(x => {
+                const borderingTerritories = x.to.adjacentTerritories.map(y => getTerritoryByName(this.gameEngine.map, y))
+                                                .filter(z => z.owner !== this.gameEngine.turn.player.name);
+                const borderingTerritoriesWithMoreThanOneTroop = borderingTerritories.filter(x => x.numberOfTroops > 1).length;
+
+                 x.totalBorderingTroops = borderingTerritories.length;
+                 x.borderingTerritoriesWithMoreThanOneTroop = borderingTerritoriesWithMoreThanOneTroop;
+            });
+
+            // DETERMINE IF THE TO-TERRITORY IS IMPORTANT FOR HOLDING A REGION
+            applicableMovements.forEach(x => {
+                const territoriesInRegionAsArray = (region) => Array.from(region.territories.values());
+                const regionsAsArray = Array.from(this.gameEngine.map.regions.values());
+                const region = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(t => t.name === x.to.name));
+
+                const allTerritoriesInRegionBelongsToPlayer = territoriesInRegionAsArray(region).every(t => t.owner === this.gameEngine.turn.player.name);
+
+                let territoryCanBeUsedToDefendControlledRegion = false;
+                const adjacentTerritoriesControlledByPlayer = x.to.adjacentTerritories.map(y => getTerritoryByName(this.gameEngine.map, y))
+                                                                .filter(at => at.owner === this.gameEngine.turn.player.name);
+
+                let controlledRegion = allTerritoriesInRegionBelongsToPlayer ? region : undefined;
+
+                adjacentTerritoriesControlledByPlayer.forEach(t => {
+                    const currentRegion = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(x => x.name === t.name));
+                    const allTerritoriesInRegionBelongsToPlayer = territoriesInRegionAsArray(currentRegion).every(t => t.owner === this.gameEngine.turn.player.name);
+
+                    if (allTerritoriesInRegionBelongsToPlayer) {
+                        territoryCanBeUsedToDefendControlledRegion = true;
+                        controlledRegion = currentRegion;
+                    }
+                });
+
+                x.territoryIsFrontlineForControlledRegion = (allTerritoriesInRegionBelongsToPlayer || territoryCanBeUsedToDefendControlledRegion) && x.territoryHasBorderWithEnemy;
+                x.controlledRegion = controlledRegion;
+            });
+
+            // DETERMINE IF A BORDERING ENEMY TERRITORY BELONGS TO A BIG THREAT
+            const standings = this.calculateStandingsWithThreatPoints();
+
+            applicableMovements.forEach(t => {
+                if (t.territoryHasBorderWithEnemy) {
+                    let totalBorderingThreat = 0;
+                    let enemiesAtBorder = t.to.adjacentTerritories.map(x => getTerritoryByName(this.gameEngine.map, x))
+                                            .filter(y => y.owner !== this.gameEngine.turn.player.name)
+                                            .map(z => z.owner);
+                    enemiesAtBorder = removeDuplicates(enemiesAtBorder);
+                    enemiesAtBorder.forEach(x => {
+                        totalBorderingThreat += standings.find(y => y.name === x).threatPoints;
+                    });
+
+                    t.totalBorderingThreat = totalBorderingThreat;
+                } else {
+                    t.totalBorderingThreat = 0;
+                }
+            });
+
+            // DETERMINE IMPORTANCE SCORES BASED ON PREVIOUS DATA
+            applicableMovements.forEach(x => {
+                x.importance = 0;
+                x.importance += x.territoryIsFrontlineForControlledRegion ? 5 : 0;
+                x.importance += x.territoryHasBorderWithEnemy ? 3 : 0;
+                x.importance += Math.floor(x.totalBorderingTroops / 2);
+                x.importance += x.from.numberOfTroops;
+
+                if (x.territoryIsFrontlineForControlledRegion) {
+                    x.importance += Math.floor(x.controlledRegion.bonusTroops * 1.5);
+                }
+
+                if (x.territoryHasBorderWithEnemy) {
+                    const playerThreatPoints = standings.find(x => x.name === this.gameEngine.turn.player.name).threatPoints;
+                    x.importance += playerThreatPoints <= x.totalBorderingThreat ? 2 : 0;
+
+                    if (playerThreatPoints <= x.totalBorderingThreat) {
+                        x.importance += Math.floor(x.totalBorderingTroops / 3);
+                    }
+                }
+
+                if (!x.territoryHasBorderWithEnemy && x.from.numberOfTroops >= 5) {
+                    x.importance += 4;
+                }
+            });
+
+            applicableMovements.sort((a, b) => b.importance - a.importance);
+            console.log('applicableMovements', applicableMovements);
+
+            let movementIndex = 0;
+
+            if(this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
+                const rnd = Math.floor((Math.random() * 4) + 1);
+                movementIndex = applicableMovements[rnd] ? rnd : (applicableMovements.length - 1);
+            }
+
+            const movement = applicableMovements[movementIndex];
+
+            const playerIsWeak = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name).length <= 3;
+            const playerHasCard = this.gameEngine.turn.playerHasWonAnAttackThisTurn;
+            const doNotKeepAttacking = playerIsWeak && playerHasCard;
+
+            if (movement && movement.importance > 0 && !doNotKeepAttacking) {
+                // Move
+                setTimeout(() => {
+                    const from = getTerritoryByName(this.gameEngine.map, movement.from.name);
+                    const to = getTerritoryByName(this.gameEngine.map, movement.to.name);
+                    to.numberOfTroops += (from.numberOfTroops - 1);
+                    from.numberOfTroops = 1;
+
+                    this.mapService.updateMap(this.gameEngine.filter);
+                    this.soundService.movement.play();
+                    resolve();
+                }, this.DELAY_BEFORE_MOVE);
+            } else {
+                // No movement if only bad options exists
+                resolve();
+            }
+        });
     }
 
     calculatePlayerOwnershipForEachRegion() {

@@ -3,9 +3,9 @@
  */
 
 import WorldMap from './map/worldMap';
-import { getTerritoryByName } from './map/mapHelpers';
-import { playerIterator } from './player/playerConstants';
-import { TURN_PHASES, MAIN_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './gameConstants';
+import { getTerritoryByName, getTerritoriesByOwner } from './map/mapHelpers';
+import { playerIterator, PLAYER_TYPES } from './player/playerConstants';
+import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './gameConstants';
 import { shuffle } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
@@ -36,7 +36,7 @@ export default class GameEngine {
             if (this.bgmusic) {
                 this.bgMusic.play();
             } else {
-                this.setMusic();
+                this.setMusic((this.isTutorialMode || (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN)) ? MAIN_MUSIC : AI_MUSIC);
             }
         } else {
             this.gameAnnouncerService.mute();
@@ -46,14 +46,19 @@ export default class GameEngine {
 
     setMusic(music = MAIN_MUSIC) {
         if (this.playSound) {
-            if (this.bgMusic) {
-                this.bgMusic.pause();
-                this.bgMusic.currentTime = 0;
-            }
+            if (this.currentMusicPlaying && this.currentMusicPlaying === music && !this.bgMusic.paused) {
+                return;
+            } else {
+                if (this.bgMusic) {
+                    this.bgMusic.pause();
+                    this.bgMusic.currentTime = 0;
+                }
 
-            this.bgMusic = new Audio(music);
-            this.bgMusic.loop = true;
-            this.bgMusic.play();
+                this.bgMusic = new Audio(music);
+                this.currentMusicPlaying = music;
+                this.bgMusic.loop = true;
+                this.bgMusic.play();
+            }
         }
     }
 
@@ -78,6 +83,8 @@ export default class GameEngine {
 
         console.log('Current turn: ', this.turn);
         this.handleTurnPhase();
+
+        this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
     }
 
     nextTurn() {
@@ -130,11 +137,34 @@ export default class GameEngine {
         }
     }
 
-    handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim) {
+    checkIfPlayerWonTheGame() {
+        if (this.winningCondition.type === 'mapControl') {
+            const goalPercentage = this.winningCondition.percentage;
+
+            const territoriesOwned = getTerritoriesByOwner(this.map, this.turn.player.name).length;
+            const territoriesTotal = this.map.getAllTerritoriesAsList().length;
+            const currentPercentageForPlayer = (territoriesOwned / territoriesTotal * 100);
+
+            if (currentPercentageForPlayer >= goalPercentage) {
+                console.log(`Player ${this.turn.player.name} won!`);
+                return {
+                    playerWon: true,
+                    playerPercentage: currentPercentageForPlayer
+                };
+            } else {
+                return {
+                    playerWon: false,
+                    playerPercentage: currentPercentageForPlayer
+                };
+            }
+        }
+    }
+
+    handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
         this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game by ${playerWhoDefeatedHim}`, () => {
             this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
         }, () => {
-            this.setMusicVolume(1.0);
+            this.setMusicVolume(0.8);
         });
 
         const cards = this.players.get(defeatedPlayer).cards;

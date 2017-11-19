@@ -138,7 +138,7 @@ export default class GameSetupController {
     }
 
     startGameIsDisabled() {
-        return (this.hasDuplicates() || this.onlyAIsExists() || this.emptyNamesExists());
+        return (this.hasDuplicates() || this.emptyNamesExists());
     }
 
     hasDuplicates() {
@@ -148,7 +148,7 @@ export default class GameSetupController {
 
     onlyAIsExists() {
         const types = this.vm.players.map(x => x.type);
-        return types.every(type => type === PLAYER_TYPES.AI);
+        return types.every(type => type === PLAYER_TYPES.AI_NORMAL || type === PLAYER_TYPES.AI_EXPERT);
     }
 
     emptyNamesExists() {

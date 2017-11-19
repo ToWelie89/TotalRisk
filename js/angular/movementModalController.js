@@ -11,6 +11,7 @@ export default class MovementModalController {
 
         // PUBLIC FUNCTIONS
         this.vm.moveTroops = this.moveTroops;
+        this.vm.cancel = this.cancel;
 
         console.log('Movement: ', data.moveTo, data.moveFrom);
         this.vm.moveTo = data.moveTo;
@@ -27,6 +28,7 @@ export default class MovementModalController {
         this.tutorialService = tutorialService;
 
         if (data.tutorial) {
+            this.tutorial = true;
             this.runTutorial();
         }
     }
@@ -57,7 +59,19 @@ export default class MovementModalController {
         document.getElementById('moveToSvg').setAttribute('viewBox', bB.x + ',' + bB.y + ',' + bB.width + ',' + bB.height);
     }
 
+    cancel() {
+        if (this.tutorial) {
+            return;
+        }
+
+        this.$uibModalInstance.close('cancelled');
+    }
+
     moveTroops() {
+        if (this.tutorial) {
+            return;
+        }
+
         this.vm.moveFrom.numberOfTroops -= this.vm.moveNumberOfTroops;
         this.vm.moveTo.numberOfTroops = this.vm.moveNumberOfTroops + this.vm.moveTo.numberOfTroops;
 

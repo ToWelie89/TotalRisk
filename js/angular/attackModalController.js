@@ -77,6 +77,7 @@ export default class AttackModalController {
                     this.vm.loading = false;
                     this.$scope.$apply();
                     if (attackData.tutorialMode) {
+                        this.tutorial = this.attackData.tutorialMode
                         this.runTutorial();
                     }
                 });
@@ -98,7 +99,6 @@ export default class AttackModalController {
         .then(() => this.tutorialService.afterAttack(this.attackData))
         .then(() => this.tutorialService.afterAttack2(this.attackData))
         .then(() => this.tutorialService.moveAfterAttackExplanation(this.attackData))
-        .then(() => this.tutorialService.performMoveAfterAttack(this.attackData, this.vm.attacker.numberOfTroops))
         .then(() => {
             return new Promise((resolve, reject) => {
                 this.vm.moveNumberOfTroops = this.vm.attacker.numberOfTroops;
@@ -106,9 +106,11 @@ export default class AttackModalController {
                 resolve();
             });
         })
-        .then(() => this.tutorialService.moveButtonExplanation())
         .then(() => {
             this.moveTroops();
+        })
+        .catch((error) => {
+            console.log('Attack modal error', error);
         });
     }
 
@@ -162,7 +164,7 @@ export default class AttackModalController {
                     };
                     context.vm.showMoveTroops = true;
                     context.$scope.$apply();
-                } else {
+                } else if (!context.tutorial) {
                     setTimeout(() => {
                         context.vm.moveNumberOfTroops = context.vm.attacker.numberOfTroops;
                         context.moveTroops();

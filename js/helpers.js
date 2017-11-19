@@ -27,4 +27,22 @@ const delay = ms => new Promise((resolve, reject) => {
 
 const allValuesInArrayAreEqual = (array) => !!array.reduce((a, b) => { return (a === b) ? a : NaN; });
 
-export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual};
+const removeDuplicates = (array) => {
+    const dups = [];
+    const arr = array.filter((el) => {
+        // If it is not a duplicate, return true
+        if (dups.indexOf(el) === -1) {
+            dups.push(el);
+            return true;
+        }
+        return false;
+    });
+    return arr;
+}
+
+const chancePercentage = (x) => {
+    const perc = Math.floor((Math.random() * 100) + 1);
+    return x <= perc;
+}
+
+export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage};

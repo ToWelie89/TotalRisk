@@ -30,7 +30,7 @@ export default class TurnPresentationController {
             document.removeEventListener('keypress', this.boundListener);
             this.gameAnnouncerService.mute();
             if (!this.vm.tutorial) {
-                this.gameEngine.setMusicVolume(1.0);
+                this.gameEngine.setMusicVolume(0.8);
             }
             if (this.data.afterSpeech) {
                 this.data.afterSpeech();
@@ -65,7 +65,7 @@ export default class TurnPresentationController {
                     this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
                         this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                     }, () => {
-                        this.gameEngine.setMusicVolume(1.0);
+                        this.gameEngine.setMusicVolume(0.8);
                         this.close();
                     });
                 });
@@ -82,7 +82,7 @@ export default class TurnPresentationController {
                 this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
                     this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {
-                    this.gameEngine.setMusicVolume(1.0);
+                    this.gameEngine.setMusicVolume(0.8);
                     this.close();
                 });
             } else {

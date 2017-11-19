@@ -73,6 +73,16 @@ svg {
                 fill: #ffffae;
             }
         }
+        &[country-color='PURPLE'] {
+            fill: @purpleColor;
+            stroke: @purpleColorStroke;
+            &.highlighted, &.highlighted:hover {
+                fill: #5e4479;
+            }
+            &:hover {
+                fill: #b68ae1;
+            }
+        }
         &[country-color='AFRICA'] {
             fill: @blackColor;
             stroke: @blackColorStroke;
@@ -122,6 +132,7 @@ svg {
         &[country-color='ASIA'] {
             stroke: @yellowColorStroke;
         }
+        &[country-color='PURPLE'],
         &[country-color='AUSTRALIA'] {
             stroke: @purpleColorStroke;
         }
@@ -139,6 +150,10 @@ svg {
     .country {
         &:hover {
             stroke-width: 1;
+        }
+        &[country-color='PURPLE'] {
+            fill: @purpleColor;
+            stroke: @purpleColorStroke;
         }
         &[country-color='RED'],
         &[country-color='SOUTH AMERICA'] {

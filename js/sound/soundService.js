@@ -17,5 +17,6 @@ export default class SoundService {
         this.diceRoll = new Sound(`${this.soundPath}/dice.wav`, this.gameEngine);
         this.remove = new Sound(`${this.soundPath}/remove.wav`, this.gameEngine);
         this.click = new Sound(`${this.soundPath}/click.wav`, this.gameEngine);
+        this.movement = new Sound(`${this.soundPath}/armysound1.wav`, this.gameEngine);
     }
 }

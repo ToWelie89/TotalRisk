@@ -1,5 +1,6 @@
 import { getTerritoryByName, getAdjacentApplicableTerritories } from './mapHelpers';
 import { TURN_PHASES } from './../gameConstants';
+import { PLAYER_TYPES } from './../player/playerConstants';
 
 export default class MapService {
     constructor(gameEngine) {
@@ -27,7 +28,8 @@ export default class MapService {
                     el.classList.remove('attackCursor', 'movementCursor', 'addTroopCursor');
                 });
 
-                if (this.gameEngine.turn && this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.turn.player.name === territory.owner) {
+                if (this.gameEngine.turn && this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.turn.player.name === territory.owner
+                    && this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
                     this.svg.getElementById(territory.name).classList.add('addTroopCursor');
                     this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('addTroopCursor');
                     this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('addTroopCursor');
@@ -45,7 +47,7 @@ export default class MapService {
             if (this.gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
                 country.classList.add('highlighted');
                 territory.adjacentTerritories.forEach(currentTerritory => {
-                    if (this.gameEngine.turn.player.name !== getTerritoryByName(this.gameEngine.map, currentTerritory).owner) {
+                    if (this.gameEngine.turn.player.name !== getTerritoryByName(this.gameEngine.map, currentTerritory).owner && this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
                         this.svg.getElementById(currentTerritory).classList.add('attackCursor', 'highlighted');
                         this.svg.querySelector(`.troopCounter[for="${currentTerritory}"]`).classList.add('attackCursor');
                         this.svg.querySelector(`.troopCounterText[for="${currentTerritory}"]`).classList.add('attackCursor');
@@ -67,12 +69,14 @@ export default class MapService {
                 const adjacentApplicableTerritories = this.getTerritoriesForMovement(territory);
                 console.log('Territories for movement ', adjacentApplicableTerritories);
 
-                adjacentApplicableTerritories.forEach(territory => {
-                    territory = getTerritoryByName(this.gameEngine.map, territory);
-                    this.svg.getElementById(territory.name).classList.add('movementCursor', 'highlighted');
-                    this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('movementCursor');
-                    this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('movementCursor');
-                });
+                if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
+                    adjacentApplicableTerritories.forEach(territory => {
+                        territory = getTerritoryByName(this.gameEngine.map, territory);
+                        this.svg.getElementById(territory.name).classList.add('movementCursor', 'highlighted');
+                        this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('movementCursor');
+                        this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('movementCursor');
+                    });
+                }
             }
         }
     }

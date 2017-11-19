@@ -41,7 +41,7 @@ export default class TutorialService {
                 $('#turnPresentationModal').css('background-color', 'red');
             },
             () => {
-                this.gameEngine.setMusicVolume(1.0);
+                this.gameEngine.setMusicVolume(0.8);
             },
             1000
         );
@@ -313,39 +313,9 @@ export default class TutorialService {
     moveAfterAttackExplanation(attackData) {
         return this.openTutorialPresenter(
             [{
-                message: `Now that ${attackData.attacker.name} has won he can choose how many troops he wishes to transfer to the newly conquered territory, ${attackData.territoryAttacked.name}, by adjusting this slider.`,
-                markup: `Now that <strong style="color: ${attackData.attacker.color.mainColor}">${attackData.attacker.name}</strong> has won he can choose how many troops he wishes to transfer to the newly conquered territory, <strong>${attackData.territoryAttacked.name}</strong>, by adjusting this slider.`,
-            }],
-            () => {
-                $('#sliderContainer').addClass('blink_me');
-            },
-            () => {
-                $('#sliderContainer').removeClass('blink_me');
-            }
-        );
-    }
-
-    performMoveAfterAttack(attackData, attackerNumberOfTroops) {
-        return this.openTutorialPresenter(
-            [{
-                message: `${attackData.attacker.name} wants to move ${attackerNumberOfTroops} troops to the newly conquered territory.`,
-                markup: `<strong style="color: ${attackData.attacker.color.mainColor}">${attackData.attacker.name}</strong> wants to move <strong>${attackerNumberOfTroops}</strong> troops to the newly conquered territory.`,
+                message: `Now that ${attackData.attacker.name} has won he can choose how many troops he wishes to transfer to the newly conquered territory. You must always transfer a minimum of 3 troops though. Since ${attackData.attacker.name} only has 3 troops in this invasion all three are automatically moved after the battle.`,
+                markup: `Now that <strong style="color: ${attackData.attacker.color.mainColor}">${attackData.attacker.name}</strong> has won he can choose how many troops he wishes to transfer to the newly conquered territory. You must always transfer a minimum of 3 troops though. Since <strong style="color: ${attackData.attacker.color.mainColor}">${attackData.attacker.name}</strong> only has 3 troops in this invasion all three are automatically moved after the battle.`,
             }]
-        );
-    }
-
-    moveButtonExplanation() {
-        return this.openTutorialPresenter(
-            [{
-                message: `Now you simply click this move button to perform the move.`
-            }],
-            () => {
-                $('#moveButton').addClass('blink_me');
-            },
-            () => {
-                $('#moveButton').removeClass('blink_me');
-                this.soundService.click.play();
-            }
         );
     }
 

@@ -83,14 +83,25 @@
                         <div class="dropdown" data-toggle="tooltip"
                              data-placement="top" title="Select if the player should be AI or human controlled">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
-                                {{ player.type === 0 ? 'Human' : 'AI' }}
+                                <span data-ng-show="player.type === 0">
+                                    Human
+                                </span>
+                                <span data-ng-show="player.type === 1">
+                                    AI - Normal
+                                </span>
+                                <span data-ng-show="player.type === 2">
+                                    AI - Expert
+                                </span>
                             <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="#" data-ng-click="setup.choosePlayerType(player, 'HUMAN')">Human</a>
                                 </li>
                                 <li>
-                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI')">AI</a>
+                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_NORMAL')">AI - Normal</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_EXPERT')">AI - Expert</a>
                                 </li>
                             </ul>
                         </div>
@@ -109,7 +120,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="row marginTop">
+                <div class="row marginTop--double">
                     <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.hasDuplicates()">
                         You are not allowed to have duplicate names
                     </div>
@@ -184,6 +195,7 @@
                              style="width: 30px;"
                              data-ng-disabled="game.turn.turnPhase !== 0"
                              data-ng-click="game.turnInCards()"
+                             data-ng-class="{'cardButton--disabled': game.aiTurn}"
                              data-toggle="tooltip"
                              data-placement="bottom"
                              value="Open cards view" />
@@ -212,6 +224,7 @@
                                 data-ng-disabled="game.checkIfNextIsDisabled()"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
+                                data-ng-show="!game.aiTurn"
                                 id="nextButton"
                                 title="Go to next phase of the turn when you are done">
                                     <i class="fa fa-times"></i>

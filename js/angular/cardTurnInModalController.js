@@ -38,6 +38,7 @@ export default class CardTurnInModalController {
         this.vm.playerMustTurnIn = (this.vm.cards.length >= MAX_CARDS_ON_HAND);
 
         if (data.type === 'tutorial') {
+            this.tutorial = true;
             this.runTutorial();
         }
     }
@@ -69,6 +70,10 @@ export default class CardTurnInModalController {
     }
 
     toggleCardSelection(card) {
+        if (this.tutorial) {
+            return;
+        }
+
         if (card.isSelected || this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
             this.soundService.cardSelect.play();
             card.isSelected = !card.isSelected;
@@ -78,6 +83,10 @@ export default class CardTurnInModalController {
     }
 
     turnIn() {
+        if (this.tutorial) {
+            return;
+        }
+
         const newHand = this.vm.cards.filter(card => !card.isSelected);
         this.gameEngine.turn.player.cards = newHand;
 
@@ -87,10 +96,17 @@ export default class CardTurnInModalController {
     }
 
     cancel() {
+        if (this.tutorial) {
+            return;
+        }
         this.$uibModalInstance.close();
     }
 
     autoSelect() {
+        if (this.tutorial) {
+            return;
+        }
+
         const bestCombination = getBestPossibleCombination(this.vm.cards);
 
         if (bestCombination) {

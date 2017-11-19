@@ -180,7 +180,8 @@ export const worldMap = {
                 "Greenland",
                 "Ontario",
                 "Alaska",
-                "Alberta"
+                "Alberta",
+                "Quebec"
             ]
         }, {
             name: "Alaska",
@@ -228,7 +229,6 @@ export const worldMap = {
             adjacentTerritories: [
                 "Quebec",
                 "Ontario",
-                "Alberta",
                 "Western United States",
                 "Central America"
             ]

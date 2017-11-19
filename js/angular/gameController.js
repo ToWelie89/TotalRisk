@@ -1,4 +1,4 @@
-import {GAME_PHASES, TURN_PHASES, MAX_CARDS_ON_HAND, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MUSIC_VOLUME_DURING_TUTORIAL} from './../gameConstants';
+import {GAME_PHASES, TURN_PHASES, MAIN_MUSIC, AI_MUSIC, MAX_CARDS_ON_HAND, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MUSIC_VOLUME_DURING_TUTORIAL, ATTACK_MUSIC} from './../gameConstants';
 import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
@@ -6,7 +6,7 @@ import {delay} from './../helpers';
 
 export default class GameController {
 
-    constructor($scope, $rootScope, $uibModal, gameEngine, soundService, mapService, tutorialService, aiHandler) {
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -24,6 +24,7 @@ export default class GameController {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$uibModal = $uibModal;
+        this.$timeout = $timeout;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.mapService = mapService;
@@ -84,6 +85,8 @@ export default class GameController {
         this.vm.filter = this.gameEngine.filter;
         this.mapService.updateMap(this.gameEngine.filter);
 
+        this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
+
         this.$uibModal.open({
             templateUrl: 'turnPresentationModal.html',
             backdrop: 'static',
@@ -108,13 +111,31 @@ export default class GameController {
 
     handleAi() {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            this.aiHandler.updateCallback = () => {
+                this.$timeout(() => {
+                    this.$scope.$apply();
+                });
+            };
             this.aiHandler.turnInCards()
             .then(() => this.aiHandler.contemplateAlternativesForAttack())
             .then((response) => this.aiHandler.deployTroops(response, () => {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();
             }))
-            .then((terrotoriesToAttack) => this.aiHandler.attackTerritories(terrotoriesToAttack));
+            .then(() => this.nextTurnAI())
+            .then(() => this.aiHandler.attackTerritories())
+            .then(() => this.nextTurnAI())
+            .then(() => this.aiHandler.movementPhase())
+            .then(() => {
+                this.nextTurn();
+            })
+            .catch((reason) => {
+                if (reason === 'playerWon') {
+                    console.log('GAME OVER!');
+                } else {
+                    console.log('AI error', reason);
+                }
+            })
         }
     }
 
@@ -129,6 +150,10 @@ export default class GameController {
     }
 
     turnInCards() {
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
+            return;
+        }
+
         this.$uibModal.open({
             templateUrl: 'cardTurnInModal.html',
             backdrop: 'static',
@@ -161,6 +186,7 @@ export default class GameController {
 
     nextTurn() {
         this.vm.turn = this.gameEngine.nextTurn();
+        this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
         this.$uibModal.open({
             templateUrl: 'turnPresentationModal.html',
@@ -177,27 +203,27 @@ export default class GameController {
             }
         }).result.then(closeResponse => {
             this.mapService.updateMap(this.gameEngine.filter);
-            this.checkIfPlayerMustTurnInCards();
+            if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
+                this.checkIfPlayerMustTurnInCards();
+            }
             console.log('New turn: ', this.vm.turn);
             console.log('Current carddeck: ', this.gameEngine.cardDeck);
 
-            if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI) {
+            this.gameEngine.setMusic(this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
+
+            if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
                 this.handleAi();
             }
         });
     }
 
-    checkIfPlayerWonTheGame() {
-        if (this.gameEngine.winningCondition.type === 'mapControl') {
-            const goalPercentage = this.gameEngine.winningCondition.percentage;
-
-            const territoriesOwned = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name).length;
-            const territoriesTotal = this.gameEngine.map.getAllTerritoriesAsList().length;
-
-            if ((territoriesOwned / territoriesTotal * 100) >= goalPercentage) {
-                console.log(`Player ${this.gameEngine.turn.player.name} won!`);
-            }
-        }
+    nextTurnAI () {
+        return new Promise((resolve, reject) => {
+            this.vm.turn = this.gameEngine.nextTurn();
+            this.mapService.updateMap(this.gameEngine.filter);
+            this.$scope.$apply();
+            resolve();
+        });
     }
 
     filterByOwner() {
@@ -237,7 +263,7 @@ export default class GameController {
         attackFrom.numberOfTroops = 3;
         this.gameEngine.selectedTerritory = attackFrom;
 
-        this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
+        this.gameEngine.setMusic(ATTACK_MUSIC);
         this.engageAttackPhase(clickedTerritory);
     }
 
@@ -266,7 +292,7 @@ export default class GameController {
             this.gameEngine.setMusic();
             console.log('Battle is over ', closeResponse);
             this.updatePlayerDataAfterAttack(closeResponse);
-            this.checkIfPlayerWonTheGame();
+            this.gameEngine.checkIfPlayerWonTheGame();
         });
     }
 
@@ -301,6 +327,10 @@ export default class GameController {
     }
 
     clickCountry(evt) {
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
+            return;
+        }
+
         let country = evt.target.getAttribute('id');
         if (!country) {
             country = evt.target.getAttribute('for');
@@ -321,7 +351,7 @@ export default class GameController {
                 clickedTerritory.adjacentTerritories.includes(this.gameEngine.selectedTerritory.name) &&
                 this.gameEngine.selectedTerritory.numberOfTroops > 1) {
 
-                this.gameEngine.setMusic('./audio/bgmusic_attack.mp3');
+                this.gameEngine.setMusic(ATTACK_MUSIC);
                 this.engageAttackPhase(clickedTerritory);
             } else {
                 this.gameEngine.selectedTerritory = clickedTerritory;
@@ -366,9 +396,14 @@ export default class GameController {
                 }
             }
         }).result.then(closeResponse => {
+            if (closeResponse === 'cancelled') {
+                return;
+            }
+
             this.gameEngine.setMusic();
             console.log('Movement complete ', closeResponse);
             this.updateGameAfterMovement(closeResponse);
+            this.soundService.movement.play();
             this.nextTurn();
         });
     }
@@ -450,7 +485,7 @@ export default class GameController {
         .then(() => this.tutorialService.endOfTurnExplanation())
         .then(() => delay(1500))
         .then(() => {
-            this.gameEngine.setMusicVolume(1.0);
+            this.gameEngine.setMusicVolume(0.8);
             this.gameEngine.isTutorialMode = false;
             this.vm.isTutorialMode = false;
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
