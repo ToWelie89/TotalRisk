@@ -23,6 +23,13 @@ export default class MainController {
         this.$scope = $scope;
         this.gameEngine = gameEngine;
 
+        fetch('./package.json')
+        .then((resp) => resp.json())
+        .then((data) => {
+            this.vm.version = data.version;
+            $scope.$apply();
+        });
+
         console.log('Initialization of mainController');
     }
 

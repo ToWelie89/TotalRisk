@@ -5,6 +5,18 @@ const PLAYER_TYPES = {
 };
 
 const PLAYER_COLORS = {
+    PURPLE: {
+        name: 'Purple',
+        mainColor: '#a55eec',
+        borderColor: '#8442c6',
+        highlightColor: '#b68ae1'
+    },
+    BLACK: {
+        name: 'Black',
+        mainColor: '#564848',
+        borderColor: '#362d2d',
+        highlightColor: '#525252'
+    },
     RED: {
         name: 'Red',
         mainColor: '#dd4444',
@@ -29,23 +41,11 @@ const PLAYER_COLORS = {
         borderColor: '#ff6699',
         highlightColor: '#ffc9e4'
     },
-    BLACK: {
-        name: 'Black',
-        mainColor: '#564848',
-        borderColor: '#362d2d',
-        highlightColor: '#525252'
-    },
     YELLOW: {
         name: 'Yellow',
         mainColor: '#eaea67',
         borderColor: '#bbbb42',
         highlightColor: '#ffffae'
-    },
-    PURPLE: {
-        name: 'Purple',
-        mainColor: '#a55eec',
-        borderColor: '#8442c6',
-        highlightColor: '#b68ae1'
     }
 };
 

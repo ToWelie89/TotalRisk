@@ -28,6 +28,7 @@ export default class AvatarPopoverController {
         this.vm.bioText = '';
         this.vm.avatarName = '';
         this.vm.avatarFlag = '';
+        this.vm.avatarPortrait = '';
     }
 
     mouseEnter(avatar) {
@@ -36,5 +37,6 @@ export default class AvatarPopoverController {
 
         this.vm.avatarName = this.getNameOfAvatar(avatar);
         this.vm.avatarFlag = avatar.flag ? avatar.flag : '';
+        this.vm.avatarPortrait = avatar.picture;
     }
 }

@@ -11,6 +11,7 @@
 <div class="row">
     <div class="avatarInfoBox">
         <h4 data-ng-bind="avatarPopover.avatarName"></h4>
+        <div class="portrait" style="background-image: url({{ avatarPopover.avatarPortrait }})" data-ng-show="avatarPopover.avatarPortrait"></div>
         <div class="flag" style="background-image: url({{ avatarPopover.avatarFlag }})" data-ng-show="avatarPopover.avatarFlag"></div>
         <p data-ng-bind-html="avatarPopover.bioText"></p>
     </div>

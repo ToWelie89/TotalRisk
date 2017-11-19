@@ -13,8 +13,6 @@ export default class GameSetupController {
         this.vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
         this.vm.victoryGoals = VICTORY_GOALS;
 
-        this.vm.chosenGoal = this.vm.victoryGoals[0];
-
         // PUBLIC FUNCTIONS
         this.vm.init = this.init;
         this.vm.addPlayer = this.addPlayer;
@@ -44,6 +42,8 @@ export default class GameSetupController {
                 $('[data-toggle="tooltip"]').tooltip();
             }
         });
+
+        this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];
 
         console.log('Players: ', this.vm.players);
     }
@@ -88,20 +88,30 @@ export default class GameSetupController {
         if (this.vm.players.length === CONSTANTS.MAX_NUMBER_OF_PLAYERS) {
             return;
         }
+
         this.soundService.bleep2.play();
         this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar, PLAYER_TYPES.HUMAN));
+
+        if (this.vm.chosenGoal.requiredAmountOfPlayers > this.vm.players.length) {
+            this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];
+        }
     }
 
     removePlayer(playerToRemove) {
         if (this.vm.players.length === CONSTANTS.MIN_NUMBER_OF_PLAYERS) {
             return;
         }
+
         this.soundService.remove.play();
         this.vm.players = this.vm.players.filter(player => {
             if (player !== playerToRemove) {
                 return player;
             }
         });
+
+        if (this.vm.chosenGoal.requiredAmountOfPlayers > this.vm.players.length) {
+            this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];
+        }
     }
 
     getUnusedColor() {

@@ -157,11 +157,12 @@ export default class AiHandler {
             }
 
             console.log('Possible attack alternatives for AI', possibleTerritoriesToAttack);
-            resolve(possibleTerritoriesToAttack);
+            this.possibleTerritoriesToAttack = possibleTerritoriesToAttack;
+            resolve();
         });
     }
 
-    deployTroops(response, callback) {
+    deployTroops(callback) {
         const createPromise = (territoryName, index) => {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -181,15 +182,15 @@ export default class AiHandler {
         while (troopsToDeploy > 0) {
             console.log('territoryIndex', territoryIndex);
 
-            const lastOption = territoryIndex >= response.length;
+            const lastOption = territoryIndex >= this.possibleTerritoriesToAttack.length;
 
-            territoryIndex = !lastOption ? territoryIndex : (response.length - 1);
+            territoryIndex = !lastOption ? territoryIndex : (this.possibleTerritoriesToAttack.length - 1);
 
             if (lastOption && chancePercentage(50)) {
                 territoryIndex = 0; // Chance to reset index of deploy territories to start
             }
 
-            const currentTerritoryToAttack = response[territoryIndex].territory;
+            const currentTerritoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
             const playerControlledAdjacentTerritories = currentTerritoryToAttack.adjacentTerritories.map(x => getTerritoryByName(this.gameEngine.map, x))
                                                       .filter(x => x.owner === this.gameEngine.turn.player.name);
             playerControlledAdjacentTerritories.sort((a, b) => b.numberOfTroops - a.numberOfTroops);
@@ -202,7 +203,7 @@ export default class AiHandler {
 
                 if (!territoriesToDeploy.includes(selectedAdjacentTerritory)) {
                     selectedAdjacentTerritory.troopsToDeploy = 0;
-                    selectedAdjacentTerritory.territoryToAttack = response[territoryIndex].territory;
+                    selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
                     territoriesToDeploy.push(selectedAdjacentTerritory);
                 }
 
@@ -215,7 +216,7 @@ export default class AiHandler {
             } else {
                 if (!territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name)) {
                     selectedAdjacentTerritory.troopsToDeploy = 1;
-                    selectedAdjacentTerritory.territoryToAttack = response[territoryIndex].territory;
+                    selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
                     territoriesToDeploy.push(selectedAdjacentTerritory);
                 } else {
                     territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy++;
@@ -364,11 +365,10 @@ export default class AiHandler {
 
         return Promise.all(promises).then(() => {
             return this.contemplateAlternativesForAttack()
-                    .then((response) => {
+                    .then(() => {
                         // Determine if AI player should keep attacking
-
                         this.territoriesToDeploy = [];
-                        response.forEach(t => {
+                        this.possibleTerritoriesToAttack.forEach(t => {
                             let terr = t.territory.adjacentTerritories.find(y => {
                                 const t = getTerritoryByName(this.gameEngine.map, y);
                                 return t.owner === this.gameEngine.turn.player.name && t.numberOfTroops > 3;

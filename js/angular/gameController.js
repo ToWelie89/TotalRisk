@@ -1,4 +1,14 @@
-import {GAME_PHASES, TURN_PHASES, MAIN_MUSIC, AI_MUSIC, MAX_CARDS_ON_HAND, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, MUSIC_VOLUME_DURING_TUTORIAL, ATTACK_MUSIC} from './../gameConstants';
+import {
+    GAME_PHASES,
+    TURN_PHASES,
+    MAIN_MUSIC,
+    AI_MUSIC,
+    MAX_CARDS_ON_HAND,
+    MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING,
+    MUSIC_VOLUME_DURING_TUTORIAL,
+    ATTACK_MUSIC,
+    PAUSE_MODES
+} from './../gameConstants';
 import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
@@ -18,6 +28,7 @@ export default class GameController {
         this.vm.getCurrentPlayerColor = this.getCurrentPlayerColor;
         this.vm.testAttackPhase = this.testAttackPhase;
         this.vm.testPresentationModal = this.testPresentationModal;
+        this.vm.pause = this.pause;
 
         this.vm.turn = {};
 
@@ -52,6 +63,9 @@ export default class GameController {
                 this.startTutorial();
             }
         });
+
+        this.vm.pauseModes = PAUSE_MODES;
+        this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
 
         console.log('Initialization of gameController');
     }
@@ -116,16 +130,26 @@ export default class GameController {
                     this.$scope.$apply();
                 });
             };
-            this.aiHandler.turnInCards()
+
+            Promise.resolve()
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.turnInCards())
+            .then(() => this.pauser())
             .then(() => this.aiHandler.contemplateAlternativesForAttack())
-            .then((response) => this.aiHandler.deployTroops(response, () => {
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.deployTroops(() => {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();
             }))
+            .then(() => this.pauser())
             .then(() => this.nextTurnAI())
+            .then(() => this.pauser())
             .then(() => this.aiHandler.attackTerritories())
+            .then(() => this.pauser())
             .then(() => this.nextTurnAI())
+            .then(() => this.pauser())
             .then(() => this.aiHandler.movementPhase())
+            .then(() => this.pauser())
             .then(() => {
                 this.nextTurn();
             })
@@ -137,6 +161,33 @@ export default class GameController {
                 }
             })
         }
+    }
+
+    pause() {
+        this.vm.gamePaused = (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) ? PAUSE_MODES.PAUSING : PAUSE_MODES.NOT_PAUSED;
+
+        if (this.vm.gamePaused === PAUSE_MODES.PAUSING) {
+            this.vm.pausingDots = '';
+            this.dotAnimationInterval = setInterval(() => {
+                if (this.vm.pausingDots === '...') {
+                    this.vm.pausingDots = '.';
+                } else {
+                    this.vm.pausingDots += '.';
+                }
+                this.$scope.$apply();
+            }, 500);
+        }
+    }
+
+    pauser() {
+        if (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) {
+            this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
+            return;
+        }
+        clearInterval(this.dotAnimationInterval);
+        this.vm.gamePaused = PAUSE_MODES.PAUSED;
+        this.$scope.$apply();
+        return delay(500).then(() => this.pauser());
     }
 
     checkIfPlayerMustTurnInCards() {
