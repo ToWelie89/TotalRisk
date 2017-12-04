@@ -61,6 +61,8 @@ export default class GameController {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
                 this.startTutorial();
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
+                this.handleVictory();
             }
         });
 
@@ -121,6 +123,25 @@ export default class GameController {
                 this.handleAi();
             }
         });
+    }
+
+    handleVictory() {
+        this.vm.playerWhoWon = this.gameEngine.players.get(this.gameEngine.playerWhoWon);
+
+        var flagW = 200;
+        var flagElementW = 2;
+        var len = flagW/flagElementW;
+        var delay = 10;
+        var flag = document.getElementById('victoryFlag');
+        for(var i = 0; i < len; i++){
+            var fe = document.createElement('div');
+            fe.className = 'flag-element';
+            fe.style.backgroundPosition = -i*flagElementW+'px 0';
+            fe.style.webkitAnimationDelay = i*delay+'ms';
+            fe.style.animationDelay = i * delay + 'ms';
+            flag.appendChild(fe);
+        }
+        $('.flag-element').css('background-image', `url(${this.vm.playerWhoWon.avatar.flag})`);
     }
 
     handleAi() {
@@ -239,7 +260,20 @@ export default class GameController {
         this.vm.turn = this.gameEngine.nextTurn();
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
-        this.$uibModal.open({
+        this.mapService.updateMap(this.gameEngine.filter);
+        if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
+            this.checkIfPlayerMustTurnInCards();
+        }
+        console.log('New turn: ', this.vm.turn);
+        console.log('Current carddeck: ', this.gameEngine.cardDeck);
+
+        this.gameEngine.setMusic(this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
+
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
+            this.handleAi();
+        }
+
+        /*this.$uibModal.open({
             templateUrl: 'turnPresentationModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
@@ -265,7 +299,7 @@ export default class GameController {
             if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
                 this.handleAi();
             }
-        });
+        });*/
     }
 
     nextTurnAI () {

@@ -13,10 +13,11 @@ const PAUSE_MODES = {
 }
 
 const GAME_PHASES = {
-    PLAYER_SETUP: 0,
-    GAME: 1,
-    TUTORIAL: 2,
-    END_SCREEN: 3
+    MAIN_MENU: 0,
+    PLAYER_SETUP: 1,
+    GAME: 2,
+    TUTORIAL: 3,
+    END_SCREEN: 4
 };
 
 const CONSTANTS = {
@@ -75,6 +76,8 @@ const AI_MUSIC = './audio/bgmusic2.mp3';
 
 const ATTACK_MUSIC = './audio/bgmusic_attack.mp3';
 
+const VICTORY_MUSIC = './audio/victory.mp3';
+
 const MUSIC_VOLUME_DURING_TUTORIAL = 0.1;
 
 const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 0.3;
@@ -88,6 +91,7 @@ export {
     MAIN_MUSIC,
     AI_MUSIC,
     ATTACK_MUSIC,
+    VICTORY_MUSIC,
     MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING,
     MAX_CARDS_ON_HAND,
     MUSIC_VOLUME_DURING_TUTORIAL,

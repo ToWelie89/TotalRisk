@@ -1,0 +1,63 @@
+@-webkit-keyframes wave{
+	0% {	-webkit-transform:	translate3d(0,5%,0);}
+	100% {	-webkit-transform:	translate3d(0,-5%,0);}
+}
+@keyframes wave{
+	0% {	transform:	translate3d(0,5%,0);}
+	100% {	transform:	translate3d(0,-5%,0);}
+}
+
+body.endScreen {
+	background: #273a44;
+}
+
+.mainWrapper.endScreen {
+	background: #273a44;
+}
+
+.mainContent.endScreen {
+	background: #273a44;
+}
+
+#victoryScreen {
+	position: relative;
+    z-index: 5;
+	#victoryPortrait {
+	    border-radius: 15px;
+	    box-shadow: -1px 1px 5px rgb(0, 0, 0);
+	    position: relative;
+	    z-index: 5;
+	}
+
+	.flag {
+		width: 200px;
+		height: 125px;
+		margin: 0 auto;
+		margin-top: -160px;
+		left: 200px;
+		position: relative;
+	}
+	.flag-element {
+		width: 2px;
+		height: 100%;
+		display: inline-block;
+		position: relative;
+		background-size: 200px 100%;
+		-webkit-animation:	wave 0.6s ease-in-out infinite alternate;
+		animation:			wave 0.6s ease-in-out infinite alternate;
+	}
+	@-webkit-keyframes wave{
+		0% {	-webkit-transform:	translate3d(0,5%,0);}
+		100% {	-webkit-transform:	translate3d(0,-5%,0);}
+	}
+	@keyframes wave{
+		0% {	transform:	translate3d(0,5%,0);}
+		100% {	transform:	translate3d(0,-5%,0);}
+	}
+}
+
+.gameScreenDuringVictory {
+	opacity: 0.08;
+	position: absolute;
+	width: 1450px;
+}

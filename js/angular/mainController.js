@@ -11,6 +11,7 @@ export default class MainController {
         this.vm.playSound = true;
         this.vm.startGame = this.startGame;
         this.vm.startTutorial = this.startTutorial;
+        this.vm.goBackToMenu = this.goBackToMenu;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
@@ -42,6 +43,12 @@ export default class MainController {
         this.$rootScope.players = players;
         this.$rootScope.chosenGoal = chosenGoal;
         this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
+    }
+
+    goBackToMenu() {
+        this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
+        $(".flag-element").remove();
+        this.gameEngine.setMusic();
     }
 
     startTutorial() {

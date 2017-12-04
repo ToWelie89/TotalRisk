@@ -11,9 +11,9 @@ export default class AiHandler {
         this.soundService = soundService;
         this.mapService = mapService;
 
-        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 500;
-        this.DELAY_BETWEEN_EACH_BATTLE = 500;
-        this.DELAY_BEFORE_MOVE = 500;
+        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 10;
+        this.DELAY_BETWEEN_EACH_BATTLE = 10;
+        this.DELAY_BEFORE_MOVE = 10;
     }
 
     turnInCards() {

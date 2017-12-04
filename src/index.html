@@ -8,6 +8,7 @@
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
     <script src='js/libs/dice.js'></script>
+    <script src='js/libs/flagwave.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
@@ -33,7 +34,7 @@
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
 </head>
 
-<body ng-app="risk" data-ng-controller="mainController as main">
+<body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
     <header>
         <span id="sizeIndicator"></span>
         <div class="wrapper">
@@ -44,8 +45,8 @@
         </div>
         <div class="smoke"></div>
     </header>
-    <div class="wrapper mainWrapper">
-        <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
+    <div class="wrapper mainWrapper" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
+        <div class="container mainContent" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" id="gameSetupBox">
                 <div class="row">
                     <div class="col-xs-12 textCenter marginTop--double">
@@ -77,7 +78,7 @@
                     </div>
                     <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
                         <div class="dropdown" data-toggle="tooltip"
-                             data-placement="top" title="Select if the player should be AI or human controlled">
+                             data-placement="left" title="Select if the player should be AI or human controlled">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
                                 <span data-ng-show="player.type === 0">
                                     Human
@@ -160,8 +161,8 @@
                 </div>
             </div>
         </div>
-        <div class="container mainContent" data-ng-controller="gameController as game">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.TUTORIAL">
+        <div class="container mainContent" data-ng-controller="gameController as game" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}">
                 <div class="row">
                     <div class="col-xs-4 textCenter" style="padding-left:0px;">
                         <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ game.turn.player.avatar.picture }});"></div>
@@ -245,6 +246,20 @@
                 <div class="row">
                     <div id="currentTerritoryInfo">
                     </div>
+                </div>
+            </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen">
+                <div class="textCenter">
+                    <h1>VICTORY</h1>
+                    <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
+                        {{ game.playerWhoWon.name }}
+                    </h3>
+                    <img id="victoryPortrait" class="marginTop--double" src="{{ game.playerWhoWon.avatar.picture }}" alt="">
+                    <!-- <div id="victoryFlag" class="marginTop--double"></div> -->
+                    <div id="victoryFlag" class='flag'></div>
+                    <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
+                        <strong>Back to Menu</strong>
+                    </button>
                 </div>
             </div>
         </div>

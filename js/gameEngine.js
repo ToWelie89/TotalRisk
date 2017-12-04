@@ -5,15 +5,16 @@
 import WorldMap from './map/worldMap';
 import { getTerritoryByName, getTerritoriesByOwner } from './map/mapHelpers';
 import { playerIterator, PLAYER_TYPES } from './player/playerConstants';
-import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './gameConstants';
+import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } from './gameConstants';
 import { shuffle } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
 
 export default class GameEngine {
 
-    constructor(gameAnnouncerService) {
+    constructor(gameAnnouncerService, $rootScope) {
         this.gameAnnouncerService = gameAnnouncerService;
+        this.$rootScope = $rootScope;
         this.filter = 'byOwner';
         // Initialize world map
         this.map = new WorldMap();
@@ -31,12 +32,13 @@ export default class GameEngine {
     }
 
     toggleSound(playSound) {
+
         this.playSound = playSound;
         if (this.playSound) {
             if (this.bgmusic) {
                 this.bgMusic.play();
             } else {
-                this.setMusic((this.isTutorialMode || (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN)) ? MAIN_MUSIC : AI_MUSIC);
+                this.setMusic((this.isTutorialMode || (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) || this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP) ? MAIN_MUSIC : AI_MUSIC);
             }
         } else {
             this.gameAnnouncerService.mute();
@@ -147,6 +149,17 @@ export default class GameEngine {
 
             if (currentPercentageForPlayer >= goalPercentage) {
                 console.log(`Player ${this.turn.player.name} won!`);
+                this.setMusic(VICTORY_MUSIC);
+                this.playerWhoWon = this.turn.player.name;
+                this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+                setTimeout(() => {
+                    const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
+                    this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
+                        this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    }, () => {
+                        this.setMusicVolume(0.8);
+                    });
+                }, 1000);
                 return {
                     playerWon: true,
                     playerPercentage: currentPercentageForPlayer
