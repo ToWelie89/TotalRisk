@@ -334,7 +334,8 @@ export default class GameController {
     }
 
     getCurrentPlayerColor() {
-        return this.gameEngine.players ? this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor : '';
+        return this.gameEngine.players && this.gameEngine.players.get(this.vm.turn.player.name) ?
+                        this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor : '';
     }
 
     testAttackPhase(players) {
