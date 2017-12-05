@@ -10,6 +10,24 @@
 body.endScreen {
 	background: #273a44;
 }
+#map.endScreen {
+	pointer-events:none;
+}
+
+.flag {
+	width: 200px;
+	height: 125px;
+	margin: 0 auto;
+}
+.flag-element {
+	width: 2px;
+	height: 100%;
+	display: inline-block;
+	position: relative;
+	background-size: 200px 100%;
+	-webkit-animation:	wave 0.6s ease-in-out infinite alternate;
+	animation:			wave 0.6s ease-in-out infinite alternate;
+}
 
 #victoryScreen {
 	position: relative;
@@ -22,22 +40,11 @@ body.endScreen {
 	}
 
 	.flag {
-		width: 200px;
-		height: 125px;
-		margin: 0 auto;
 		margin-top: -160px;
 		left: 200px;
 		position: relative;
 	}
-	.flag-element {
-		width: 2px;
-		height: 100%;
-		display: inline-block;
-		position: relative;
-		background-size: 200px 100%;
-		-webkit-animation:	wave 0.6s ease-in-out infinite alternate;
-		animation:			wave 0.6s ease-in-out infinite alternate;
-	}
+
 	@-webkit-keyframes wave{
 		0% {	-webkit-transform:	translate3d(0,5%,0);}
 		100% {	-webkit-transform:	translate3d(0,-5%,0);}

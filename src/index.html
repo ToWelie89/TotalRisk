@@ -37,7 +37,7 @@
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
     <div class="wrapper mainWrapper">
         <div class="container mainContent">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" id="mainMenuBox" class="textCenter">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox">
                 <div style="margin-bottom: 60px;">
                     <h1 class="pulsate paddingTop--double banner">
                         Risk
@@ -59,128 +59,203 @@
                     <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
                         <strong>Load Game</strong>
                     </button>
-                    <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.SETTINGS)">
                         <strong>Settings</strong>
                     </button>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" id="gameSetupBox">
-                <div class="row">
-                    <div class="col-xs-12 textCenter marginTop--double">
-                        <div style="position: absolute; left: 0px;">
-                            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
-                                <strong>Back to main menu</strong>
-                            </button>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings">
+                <div style="margin-bottom: 60px;">
+                    <h1 class="pulsate paddingTop--double banner">
+                        Risk
+                    </h1>
+                    <div class="createdBy">
+                        v{{main.version}} | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                    </div>
+                </div>
+                <div id="settingsBox" style="margin-top: 70px;
+                            width: 600px;
+                            margin: 0 auto;
+                            padding-top: 30px;
+                            padding-bottom: 40px;
+                            background: #3b3b3bc9;
+                            border-radius: 30px;">
 
-                            <button type="button" class="button" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-green': main.playSound, 'button-red': !main.playSound}" data-toggle="tooltip" data-placement="bottom" title="Mute/unmute">
+                    <div class="row">
+                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                            <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div>
+                                AI Speed
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                            <rzslider rz-slider-model="settings.aiSpeed" rz-slider-options="settings.movementSliderOptions"></rzslider>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div>
+                                Play sound
+                            </div>
+                        </div>
+                        <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                            <div>
+                                <label class="switch" data-ng-click="settings.toggleSound()">
+                                    <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.playSound">
+                                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div>
+                                Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                                 data-placement="bottom" title="If turned on each turn will be presented by a announcer." style="color: #f0f048;"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                            <div>
+                                <label class="switch" data-ng-click="settings.toggleAnnouncer()">
+                                    <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.showAnnouncer">
+                                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
+                <div class="row mainMenuBox textCenter">
+                    <h1 class="pulsate paddingTop--double banner">
+                        Risk
+                    </h1>
+                    <div class="createdBy">
+                        v{{main.version}} | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                    </div>
+                </div>
+                <div id="gameSetupBox">
+                    <div class="row">
+                        <div class="col-xs-12 textCenter marginTop--double">
+                            <div style="position: absolute; left: 0px;">
+                                <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                                    <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
+                                </button>
+                            </div>
+                            <div class="buttonGroup" style="height: 40px;">
+                                <button type="button" class="button button-green button-unclickable">
+                                    <strong>Map control percentage for victory</strong>
+                                </button>
+                                <button type="button" class="button button-green" data-ng-repeat="goal in setup.victoryGoals"
+                                data-ng-class="{'button--selected': goal === setup.chosenGoal}" data-ng-click="setup.setGoal(goal)" data-ng-show="setup.players.length >= goal.requiredAmountOfPlayers">
+                                    <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
+                        <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
+                            <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
+                            role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)" data-toggle="tooltip"
+                                 data-placement="top" title="Select color of player">
+                            </div>
+                        </div>
+                        <div class="col-xs-4" style="text-align: left; margin-top: 22px;">
+                            <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
+                        </div>
+                        <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
+                            <div class="dropdown" data-toggle="tooltip"
+                                 data-placement="left" title="Select if the player should be AI or human controlled">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
+                                    <span data-ng-show="player.type === 0">
+                                        Human
+                                    </span>
+                                    <span data-ng-show="player.type === 1">
+                                        AI - Normal
+                                    </span>
+                                    <span data-ng-show="player.type === 2">
+                                        AI - Expert
+                                    </span>
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'HUMAN')">Human</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_NORMAL')">AI - Normal</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_EXPERT')">AI - Expert</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-3" style="text-align: left;">
+                            <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
+                            role="button" tabIndex="0" popover-placement="left" popover-trigger="'focus'" popover-title="Select an avatar" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)" data-toggle="tooltip"
+                                 data-placement="bottom" title="Select an avatar for the player">
+                            </div>
+                            <div class="avatarSelectorFlag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="player.avatar.flag"></waving-flag>
+                            </div>
+                        </div>
+                        <div class="col-xs-1" style="text-align: left; margin-top: 22px;">
+                            <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers" data-toggle="tooltip"
+                                 data-placement="bottom" title="Remove player">
                                 <i class="fa fa-times"></i>
-                                <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
-                                <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
-                            </button>
-                        </div>
-                        <div class="buttonGroup" style="height: 40px;">
-                            <button type="button" class="button button-green button-unclickable">
-                                <strong>Map control percentage for victory</strong>
-                            </button>
-                            <button type="button" class="button button-green" data-ng-repeat="goal in setup.victoryGoals"
-                            data-ng-class="{'button--selected': goal === setup.chosenGoal}" data-ng-click="setup.setGoal(goal)" data-ng-show="setup.players.length >= goal.requiredAmountOfPlayers">
-                                <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
-                    <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
-                        <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
-                        role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)" data-toggle="tooltip"
-                             data-placement="top" title="Select color of player">
+                    <div class="row marginTop--double">
+                        <div class="col-xs-12 textCenter gameSetupError" data-ng-show="setup.hasDuplicates()">
+                            You are not allowed to have duplicate names.
                         </div>
                     </div>
-                    <div class="col-xs-4" style="text-align: left; margin-top: 22px;">
-                        <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
-                    </div>
-                    <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
-                        <div class="dropdown" data-toggle="tooltip"
-                             data-placement="left" title="Select if the player should be AI or human controlled">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
-                                <span data-ng-show="player.type === 0">
-                                    Human
-                                </span>
-                                <span data-ng-show="player.type === 1">
-                                    AI - Normal
-                                </span>
-                                <span data-ng-show="player.type === 2">
-                                    AI - Expert
-                                </span>
-                            <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'HUMAN')">Human</a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_NORMAL')">AI - Normal</a>
-                                </li>
-                                <li>
-                                    <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_EXPERT')">AI - Expert</a>
-                                </li>
-                            </ul>
+                    <div class="row marginTop">
+                        <div class="col-xs-12 textCenter gameSetupError" data-ng-show="setup.emptyNamesExists()">
+                            Empty player names are not allowed.
                         </div>
                     </div>
-                    <div class="col-xs-1" style="text-align: left;">
-                        <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
-                        role="button" tabIndex="0" popover-placement="left" popover-trigger="'focus'" popover-title="Select an avatar" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)" data-toggle="tooltip"
-                             data-placement="bottom" title="Select an avatar for the player">
+                    <div class="row marginTop">
+                        <div class="col-xs-12 textCenter gameSetupWarning" data-ng-show="setup.onlyAIsExists()">
+                            Only AI players exists. Are you sure no human player wants to play?
                         </div>
                     </div>
-                    <div class="col-xs-3" style="text-align: left; margin-top: 22px;">
-                        <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers" data-toggle="tooltip"
-                             data-placement="bottom" title="Remove player">
-                            <i class="fa fa-times"></i>
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                        </button>
+                    <div class="row marginTop">
+                        <div class="col-xs-12 textCenter">
+                            <div class="buttonGroup">
+                                <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
+                                     data-placement="bottom" title="Add player">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="button button-green" data-ng-click="main.startTutorial()" data-toggle="tooltip"
+                                     data-placement="bottom" title="Run tutorial">
+                                    <strong>Tutorial</strong>
+                                </button>
+                                <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)">
+                                    <strong>Start</strong>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row marginTop--double">
-                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.hasDuplicates()">
-                        You are not allowed to have duplicate names
-                    </div>
-                </div>
-                <div class="row marginTop">
-                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.emptyNamesExists()">
-                        Empty player names are not allowed
-                    </div>
-                </div>
-                <div class="row marginTop">
-                    <div class="col-xs-12 textCenter" style="color: #ec8282;" data-ng-show="setup.onlyAIsExists()">
-                        Only AI players exists. You must have at least one human player
-                    </div>
-                </div>
-                <div class="row marginTop">
-                    <div class="col-xs-12 textCenter">
-                        <div class="buttonGroup">
-                            <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
-                                 data-placement="bottom" title="Add player">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <!-- TESTING STUFF -->
+                    <div class="row marginTop--double" data-ng-hide="true">
+                        <div class="col-xs-12 textCenter">
+                            <button type="button" class="button button-blue" data-ng-click="game.testAttackPhase(setup.players)">
+                                <strong>Test battle modal</strong>
                             </button>
-                            <button type="button" class="button button-green" data-ng-click="main.startTutorial()" data-toggle="tooltip"
-                                 data-placement="bottom" title="Run tutorial">
-                                <strong>Tutorial</strong>
-                            </button>
-                            <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)">
-                                <strong>Start</strong>
+                            <button type="button" class="button button-blue" data-ng-click="game.testPresentationModal()">
+                                <strong>Test presentation modal</strong>
                             </button>
                         </div>
-                    </div>
-                </div>
-                <!-- TESTING STUFF -->
-                <div class="row marginTop--double" data-ng-hide="true">
-                    <div class="col-xs-12 textCenter">
-                        <button type="button" class="button button-blue" data-ng-click="game.testAttackPhase(setup.players)">
-                            <strong>Test battle modal</strong>
-                        </button>
-                        <button type="button" class="button button-blue" data-ng-click="game.testPresentationModal()">
-                            <strong>Test presentation modal</strong>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -225,11 +300,6 @@
                             <span data-ng-show="game.gamePaused === game.pauseModes.PAUSING">{{ game.pausingDots }}</span>
                             <span class="glyphicon glyphicon-play" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.PAUSED"></span>
                         </button>
-                        <button type="button" class="button button-blue" data-ng-click="main.toggleMusicVolume()" data-ng-class="{'button-blue': main.playSound, 'button-red': !main.playSound}">
-                            <i class="fa fa-times"></i>
-                            <span class="glyphicon glyphicon-volume-off" aria-hidden="true" data-ng-show="!main.playSound"></span>
-                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true" data-ng-show="main.playSound"></span>
-                        </button>
                     </div>
                     <div class="col-xs-3 paddingTop--double " id="turnInfo">
                         <div class="row">
@@ -252,11 +322,8 @@
                                 class="button button-green"
                                 data-ng-click="game.nextTurn()"
                                 data-ng-disabled="game.checkIfNextIsDisabled()"
-                                data-toggle="tooltip"
-                                data-placement="bottom"
                                 data-ng-show="!game.aiTurn"
-                                id="nextButton"
-                                title="Go to next phase of the turn when you are done">
+                                id="nextButton">
                                     <i class="fa fa-times"></i>
                                     <span class="glyphicon glyphicon-arrow-right"></span>
                                 </button>
@@ -265,7 +332,7 @@
                     </div>
                 </div>
                 <div class="row">
-                   <div id="map" style="background: #5397d1;
+                   <div id="map" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}" style="background: #5397d1;
                                         border-radius: 30px;
                                         margin-top: 20px;
                                         box-shadow: 3px 3px 8px #202020;">

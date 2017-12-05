@@ -9,6 +9,7 @@ import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOI
 import { shuffle } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
+import {settings} from './settings/defaultSettings';
 
 export default class GameEngine {
 
@@ -18,7 +19,7 @@ export default class GameEngine {
         this.filter = 'byOwner';
         // Initialize world map
         this.map = new WorldMap();
-        this.playSound = true;
+        this.playSound = settings.playSound;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
         this.setMusic();
@@ -37,7 +38,11 @@ export default class GameEngine {
             if (this.bgmusic) {
                 this.bgMusic.play();
             } else {
-                this.setMusic((this.isTutorialMode || (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) || this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP) ? MAIN_MUSIC : AI_MUSIC);
+                this.setMusic((this.isTutorialMode ||
+                              (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) ||
+                               this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP ||
+                               this.$rootScope.currentGamePhase === GAME_PHASES.MAIN_MENU ||
+                               this.$rootScope.currentGamePhase === GAME_PHASES.SETTINGS) ? MAIN_MUSIC : AI_MUSIC);
             }
         } else {
             this.gameAnnouncerService.mute();
@@ -158,11 +163,13 @@ export default class GameEngine {
                 this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
                 setTimeout(() => {
                     const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
-                    this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
-                        this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
-                    }, () => {
-                        this.setMusicVolume(0.8);
-                    });
+                    if (this.playSound) {
+                        this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
+                            this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                        }, () => {
+                            this.setMusicVolume(0.8);
+                        });
+                    }
                 }, 1000);
                 return {
                     playerWon: true,
@@ -178,11 +185,13 @@ export default class GameEngine {
     }
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
-        this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game by ${playerWhoDefeatedHim}`, () => {
-            this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
-        }, () => {
-            this.setMusicVolume(0.8);
-        });
+        if (this.playSound) {
+            this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game by ${playerWhoDefeatedHim}`, () => {
+                this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+            }, () => {
+                this.setMusicVolume(0.8);
+            });
+        }
 
         const cards = this.players.get(defeatedPlayer).cards;
         this.players.get(playerWhoDefeatedHim).cards = this.players.get(playerWhoDefeatedHim).cards.concat(cards);

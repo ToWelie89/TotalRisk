@@ -2,13 +2,14 @@ import {GAME_PHASES} from './../gameConstants';
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine) {
+    constructor($scope, $rootScope, gameEngine, soundService) {
         this.vm = this;
         this.$rootScope = $rootScope;
-
+        this.$scope = $scope;
+        this.gameEngine = gameEngine;
+        this.soundService = soundService;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
-        this.vm.playSound = true;
         this.vm.startGame = this.startGame;
         this.vm.startTutorial = this.startTutorial;
         this.vm.goBackToMenu = this.goBackToMenu;
@@ -20,10 +21,13 @@ export default class MainController {
         this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
         this.$rootScope.$watch('currentGamePhase', () => {
             this.vm.currentGamePhase = this.$rootScope.currentGamePhase;
+            // Ugly fix for the setting slider bug
+            if (this.vm.currentGamePhase === GAME_PHASES.SETTINGS) {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                }, 50);
+            }
         });
-
-        this.$scope = $scope;
-        this.gameEngine = gameEngine;
 
         fetch('./package.json')
         .then((resp) => resp.json())
@@ -38,11 +42,7 @@ export default class MainController {
     setGamePhase(phase) {
         this.vm.currentGamePhase = phase;
         this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
-    }
-
-    toggleMusicVolume() {
-        this.vm.playSound = !this.vm.playSound;
-        this.gameEngine.toggleSound(this.vm.playSound);
+        this.soundService.bleep2.play();
     }
 
     startGame(players, chosenGoal) {

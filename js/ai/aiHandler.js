@@ -6,14 +6,17 @@ import BattleHandler from './../battleHandler';
 import { PLAYER_TYPES } from './../player/playerConstants';
 
 export default class AiHandler {
-    constructor(gameEngine, soundService, mapService) {
+    constructor(gameEngine, soundService, mapService, settings) {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.mapService = mapService;
+        this.settings = settings;
+    }
 
-        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 30;
-        this.DELAY_BETWEEN_EACH_BATTLE = 30;
-        this.DELAY_BEFORE_MOVE = 30;
+    update() {
+        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = this.settings.aiSpeedValues[this.settings.aiSpeed];
+        this.DELAY_BETWEEN_EACH_BATTLE = this.settings.aiSpeedValues[this.settings.aiSpeed];
+        this.DELAY_BEFORE_MOVE = this.settings.aiSpeedValues[this.settings.aiSpeed];
     }
 
     turnInCards() {

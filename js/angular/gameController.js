@@ -16,7 +16,7 @@ import {delay} from './../helpers';
 
 export default class GameController {
 
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler) {
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -41,6 +41,7 @@ export default class GameController {
         this.mapService = mapService;
         this.tutorialService = tutorialService;
         this.aiHandler = aiHandler;
+        this.settings = settings;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
@@ -103,26 +104,34 @@ export default class GameController {
 
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
-        this.$uibModal.open({
-            templateUrl: 'turnPresentationModal.html',
-            backdrop: 'static',
-            windowClass: 'riskModal',
-            controller: 'turnPresentationController',
-            controllerAs: 'turnPresentation',
-            resolve: {
-                data: () => {
-                    return {
-                        type: 'startGame'
-                    };
-                }
-            }
-        }).result.then(closeResponse => {
+        const callback = () => {
             if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.checkIfPlayerMustTurnInCards();
             } else {
                 this.handleAi();
             }
-        });
+        };
+
+        if (this.settings.showAnnouncer) {
+            this.$uibModal.open({
+                templateUrl: 'turnPresentationModal.html',
+                backdrop: 'static',
+                windowClass: 'riskModal',
+                controller: 'turnPresentationController',
+                controllerAs: 'turnPresentation',
+                resolve: {
+                    data: () => {
+                        return {
+                            type: 'startGame'
+                        };
+                    }
+                }
+            }).result.then(closeResponse => {
+                callback();
+            });
+        } else {
+            callback();
+        }
     }
 
     handleVictory() {
@@ -145,45 +154,45 @@ export default class GameController {
     }
 
     handleAi() {
-        if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.aiHandler.updateCallback = () => {
-                this.$timeout(() => {
-                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-                    this.$scope.$apply();
-                });
-            };
+        this.aiHandler.update();
 
-            Promise.resolve()
-            .then(() => this.pauser())
-            .then(() => this.aiHandler.turnInCards())
-            .then(() => this.pauser())
-            .then(() => this.aiHandler.contemplateAlternativesForAttack())
-            .then(() => this.pauser())
-            .then(() => this.aiHandler.deployTroops(() => {
+        this.aiHandler.updateCallback = () => {
+            this.$timeout(() => {
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.$scope.$apply();
-            }))
-            .then(() => this.pauser())
-            .then(() => this.nextTurnAI())
-            .then(() => this.pauser())
-            .then(() => this.aiHandler.attackTerritories())
-            .then(() => this.pauser())
-            .then(() => this.nextTurnAI())
-            .then(() => this.pauser())
-            .then(() => this.aiHandler.movementPhase())
-            .then(() => this.pauser())
-            .then(() => {
-                this.nextTurn();
-                this.$scope.$apply();
-            })
-            .catch((reason) => {
-                if (reason === 'playerWon') {
-                    console.log('GAME OVER!');
-                } else {
-                    console.log('AI error', reason);
-                }
-            })
-        }
+            });
+        };
+
+        Promise.resolve()
+        .then(() => this.pauser())
+        .then(() => this.aiHandler.turnInCards())
+        .then(() => this.pauser())
+        .then(() => this.aiHandler.contemplateAlternativesForAttack())
+        .then(() => this.pauser())
+        .then(() => this.aiHandler.deployTroops(() => {
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            this.$scope.$apply();
+        }))
+        .then(() => this.pauser())
+        .then(() => this.nextTurnAI())
+        .then(() => this.pauser())
+        .then(() => this.aiHandler.attackTerritories())
+        .then(() => this.pauser())
+        .then(() => this.nextTurnAI())
+        .then(() => this.pauser())
+        .then(() => this.aiHandler.movementPhase())
+        .then(() => this.pauser())
+        .then(() => {
+            this.nextTurn();
+            this.$scope.$apply();
+        })
+        .catch((reason) => {
+            if (reason === 'playerWon') {
+                console.log('GAME OVER!');
+            } else {
+                console.log('AI error', reason);
+            }
+        })
     }
 
     pause() {
@@ -259,36 +268,7 @@ export default class GameController {
     }
 
     nextTurn() {
-        this.vm.turn = this.gameEngine.nextTurn();
-        this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
-
-        this.mapService.updateMap(this.gameEngine.filter);
-        if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
-            this.checkIfPlayerMustTurnInCards();
-        }
-        console.log('New turn: ', this.vm.turn);
-        console.log('Current carddeck: ', this.gameEngine.cardDeck);
-
-        this.gameEngine.setMusic(this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
-
-        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
-            this.handleAi();
-        }
-
-        /*this.$uibModal.open({
-            templateUrl: 'turnPresentationModal.html',
-            backdrop: 'static',
-            windowClass: 'riskModal',
-            controller: 'turnPresentationController',
-            controllerAs: 'turnPresentation',
-            resolve: {
-                data: () => {
-                    return {
-                        type: 'newTurn'
-                    };
-                }
-            }
-        }).result.then(closeResponse => {
+        const callback = () => {
             this.mapService.updateMap(this.gameEngine.filter);
             if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.checkIfPlayerMustTurnInCards();
@@ -301,16 +281,61 @@ export default class GameController {
             if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
                 this.handleAi();
             }
-        });*/
+        };
+
+        this.vm.turn = this.gameEngine.nextTurn();
+        this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
+
+        if (this.settings.showAnnouncer) {
+            this.$uibModal.open({
+                templateUrl: 'turnPresentationModal.html',
+                backdrop: 'static',
+                windowClass: 'riskModal',
+                controller: 'turnPresentationController',
+                controllerAs: 'turnPresentation',
+                resolve: {
+                    data: () => {
+                        return {
+                            type: 'newTurn'
+                        };
+                    }
+                }
+            }).result.then(closeResponse => {
+                callback();
+            });
+        } else {
+            callback();
+        }
     }
 
     nextTurnAI () {
-        return new Promise((resolve, reject) => {
-            this.vm.turn = this.gameEngine.nextTurn();
-            this.mapService.updateMap(this.gameEngine.filter);
-            this.$scope.$apply();
-            resolve();
-        });
+        this.vm.turn = this.gameEngine.nextTurn();
+        if (this.settings.showAnnouncer) {
+            return new Promise((resolve, reject) => {
+                return this.$uibModal.open({
+                    templateUrl: 'turnPresentationModal.html',
+                    backdrop: 'static',
+                    windowClass: 'riskModal',
+                    controller: 'turnPresentationController',
+                    controllerAs: 'turnPresentation',
+                    resolve: {
+                        data: () => {
+                            return {
+                                type: 'newTurn'
+                            };
+                        }
+                    }
+                }).result.then(closeResponse => {
+                    this.mapService.updateMap(this.gameEngine.filter);
+                    resolve();
+                });
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                this.mapService.updateMap(this.gameEngine.filter);
+                resolve();
+            });
+        }
     }
 
     filterByOwner() {

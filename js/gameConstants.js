@@ -14,10 +14,11 @@ const PAUSE_MODES = {
 
 const GAME_PHASES = {
     MAIN_MENU: 0,
-    PLAYER_SETUP: 1,
-    GAME: 2,
-    TUTORIAL: 3,
-    END_SCREEN: 4
+    SETTINGS: 1,
+    PLAYER_SETUP: 2,
+    GAME: 3,
+    TUTORIAL: 4,
+    END_SCREEN: 5
 };
 
 const CONSTANTS = {

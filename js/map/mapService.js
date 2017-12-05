@@ -149,6 +149,6 @@ export default class MapService {
     mouseoverCountry(evt) {
         const country = evt.target;
         const territory = getTerritoryByName(this.gameEngine.map, country.getAttribute('id'));
-        document.getElementById('currentTerritoryInfo').innerHTML = `${territory.name} | Owner: ${territory.owner} | Troops: ${territory.numberOfTroops}`;
+        document.getElementById('currentTerritoryInfo').innerHTML = `${territory.name}<br>Owner: ${territory.owner}<br>Troops: ${territory.numberOfTroops}`;
     }
 }
