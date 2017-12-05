@@ -12,9 +12,10 @@ export default class MainController {
         this.vm.startGame = this.startGame;
         this.vm.startTutorial = this.startTutorial;
         this.vm.goBackToMenu = this.goBackToMenu;
+        this.vm.setGamePhase = this.setGamePhase;
 
         this.vm.gamePhases = GAME_PHASES;
-        this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
+        this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
 
         this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
         this.$rootScope.$watch('currentGamePhase', () => {
@@ -32,6 +33,11 @@ export default class MainController {
         });
 
         console.log('Initialization of mainController');
+    }
+
+    setGamePhase(phase) {
+        this.vm.currentGamePhase = phase;
+        this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
     }
 
     toggleMusicVolume() {

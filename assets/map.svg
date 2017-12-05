@@ -11,6 +11,10 @@
         <mask id="mask-stripe">
             <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-stripe)" />
         </mask>
+           <pattern id="img1" patternUnits="userSpaceOnUse" width="250" height="125">
+               <image xlink:href="./assets/flags/france.png" x="0" y="0" width="100%" height="100%"
+        preserveAspectRatio="xMinYMin" />
+           </pattern>
     </defs>
     <path id="Move mouse over a country" class="sea" d="M 1.628 695.842 C 1.628 463.662 1.628 231.482 1.628 -0.698 C 342.628 -0.698 683.628 -0.698 1024.628 -0.698 C 1024.628 231.482 1024.628 463.662 1024.628 695.842 C 683.628 695.842 342.628 695.842 1.628 695.842 Z" style="fill: transparent;" bx:origin="0.5 0.5"/>
     <g id="map" style="visibility: visible; fill: none; stroke-width: 1.5;" transform="matrix(1, 0, 0, 1, 1.627975, -0.697704)">

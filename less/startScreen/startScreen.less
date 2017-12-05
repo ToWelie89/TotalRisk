@@ -1,0 +1,56 @@
+#mainMenuBox {
+    h1 {
+        font-size: 140px; -webkit-text-stroke-color: #09090970; -webkit-text-stroke-width: 1px;
+    }
+
+    .banner {
+        position: relative;
+        margin: 0 auto !important;
+        display: block;
+        margin-top: 100px !important;
+        width: 540px;
+        height: 170px;
+        border: 1px solid #431b0b;
+        text-align: center;
+        background: #7f2c0c;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.15) inset, 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .banner::before,
+    .banner::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        left: -101px;
+        top: 19px;
+        display: block;
+        width: 100px;
+        height: 0px;
+        border: 90px solid #7f2c0c;
+        border-right: 20px solid #612209;
+        border-bottom-color: #7f2c0c;
+        border-left-color: transparent;
+        transform: rotate(-5deg);
+    }
+
+    .banner::after {
+        left: auto;
+        right: -90px;
+        border-left: 20px solid #602209;
+        border-right: 80px solid transparent;
+        transform: rotate(5deg);
+    }
+
+    .createdBy {
+        font-size: 12px;
+        color: black;
+        width: 600px;
+        margin: 0 auto;
+        -webkit-text-stroke-color: #00000069;
+        -webkit-text-stroke-width: 1px;
+        margin-top: -50px;
+        a {
+            color: #ae3e3e;
+        }
+    }
+}

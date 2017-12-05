@@ -18,7 +18,6 @@ export default class GameEngine {
         this.filter = 'byOwner';
         // Initialize world map
         this.map = new WorldMap();
-        this.cardDeck = initiatieCardDeck();
         this.playSound = true;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
@@ -72,6 +71,11 @@ export default class GameEngine {
         players.forEach(player => {
             this.players.set(player.name, player);
         });
+
+        this.players.forEach(x => {
+            x.cards = [];
+        });
+        this.cardDeck = initiatieCardDeck();
 
         this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
         this.turn = this.iterator.getCurrent();

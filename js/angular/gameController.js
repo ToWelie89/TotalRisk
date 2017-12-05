@@ -148,6 +148,7 @@ export default class GameController {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             this.aiHandler.updateCallback = () => {
                 this.$timeout(() => {
+                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                     this.$scope.$apply();
                 });
             };
@@ -173,6 +174,7 @@ export default class GameController {
             .then(() => this.pauser())
             .then(() => {
                 this.nextTurn();
+                this.$scope.$apply();
             })
             .catch((reason) => {
                 if (reason === 'playerWon') {

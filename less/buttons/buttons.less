@@ -58,15 +58,15 @@ strong {
     vertical-align: top;
 
     &[disabled] {
-        background-image: linear-gradient(to bottom,#e3e3e3,#757575);
-        border: 1px solid #515151;
-        cursor: not-allowed;
-        box-shadow: inset 0 1px 0 #e4e4e4,inset 0 -1px 0 #c1c1c1,inset 0 0 0 1px #9f9f9f,0 2px 4px rgba(0,0,0,.2);
+        background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
+        border: 1px solid #515151 !important;
+        cursor: not-allowed !important;
+        box-shadow: inset 0 1px 0 #e4e4e4,inset 0 -1px 0 #c1c1c1,inset 0 0 0 1px #9f9f9f,0 2px 4px rgba(0,0,0,.2) !important;
 
         &:hover {
-            background: #898989;
-            border-color: #5c5c5c;
-            box-shadow: inset 0 1px 0 #e4e4e4,inset 0 -1px 0 #c1c1c1,inset 0 0 0 1px #9f9f9f,0 2px 4px rgba(0,0,0,.2);
+            background: #898989 !important;
+            border-color: #5c5c5c !important;
+            box-shadow: inset 0 1px 0 #e4e4e4,inset 0 -1px 0 #c1c1c1,inset 0 0 0 1px #9f9f9f,0 2px 4px rgba(0,0,0,.2) !important;
         }
     }
 
@@ -104,6 +104,45 @@ strong {
             background-color: #f2f2f2;
             background-image: linear-gradient(to bottom, #f2f2f2, #f2f2f2);
             box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #d9d9d9, inset 0 0 0 1px #f2f2f2, 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &.main-menu-button {
+        display: block;
+        margin: 0 auto;
+        width: 400px;
+        height: 65px;
+        margin-top: 10px;
+        border-radius: 20px;
+        font-size: 22px;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 5px #000000 !important;
+        transition: all 350ms ease-out;
+
+        &:hover, &:focus {
+            font-size: 26px;
+            outline: none;
+        }
+
+        &[disabled] {
+            text-shadow: none !important;
+            transition: none;
+            &:hover {
+                font-size: 22px;
+            }
+            strong {
+                background-color: #3b3b3b;
+                color: transparent;
+                text-shadow: 2px 2px 3px rgba(255,255,255,0.5);
+                -webkit-background-clip: text;
+                -moz-background-clip: text;
+                background-clip: text;
+            }
+            &:hover {
+                background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
+                border: 1px solid #515151 !important;
+                box-shadow: inset 0 1px 0 #e4e4e4,inset 0 -1px 0 #c1c1c1,inset 0 0 0 1px #9f9f9f,0 2px 4px rgba(0,0,0,.2) !important;
+            }
         }
     }
 
@@ -274,5 +313,4 @@ strong {
             text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
         }
     }
-
 }

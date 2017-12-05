@@ -11,6 +11,8 @@ body {
     margin: 0;
     background: @gameBoardBackground;
     padding-right: 0px !important;
+    background-image: url(https://archive-media-1.nyafuu.org/wg/image/1463/68/1463681216614.jpg);
+    background-position: center top;
 }
 
 a {
@@ -43,36 +45,10 @@ span.rz-bubble.rz-limit.rz-floor {
     display: none;
 }
 
-header {
-    background-color: #4e4e4e;
-    padding: 14px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35),0 1px 30px rgba(0, 0, 0, 0.33);
-    position: relative;
-    .createdBy {
-        font-size: 12px;
-        color: black;
-        margin-top: -10px;
-        a {
-            color: white;
-        }
-    }
-
-    .wrapper {
-        position: relative;
-        z-index: 2;
-    }
-
-    .smoke {
-        width: 100%;
-        height: 100%;
-        background: url(./../assets/img/smoke.png) no-repeat;
-        -webkit-animation: 45s fog infinite;
-        background-size: 4000px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
+#map {
+    background: #5397d1;
+    border-radius: 30px;
+    margin-top: 20px;
 }
 
 #mainTurnAvatar {
@@ -131,7 +107,6 @@ header {
 .mainWrapper {
     width: 100%;
     max-width: 100%;
-    background: @gameBoardBackground;
 }
 
 .container {
@@ -140,7 +115,6 @@ header {
 
 .mainContent {
     padding: 25px;
-    background: @gameBoardBackground;
     width: 1500px !important;
     padding-top: 5px;
 }

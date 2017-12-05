@@ -11,9 +11,9 @@ export default class AiHandler {
         this.soundService = soundService;
         this.mapService = mapService;
 
-        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 10;
-        this.DELAY_BETWEEN_EACH_BATTLE = 10;
-        this.DELAY_BEFORE_MOVE = 10;
+        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 30;
+        this.DELAY_BETWEEN_EACH_BATTLE = 30;
+        this.DELAY_BEFORE_MOVE = 30;
     }
 
     turnInCards() {
@@ -39,6 +39,7 @@ export default class AiHandler {
                 this.gameEngine.troopsToDeploy += bestCombo.value;
 
                 this.updateCallback();
+
                 setTimeout(() => {
                     resolve();
                     $('#mainTroopIndicator').removeClass('animated infinite bounce');
@@ -163,6 +164,8 @@ export default class AiHandler {
     }
 
     deployTroops(callback) {
+        callback();
+
         const createPromise = (territoryName, index) => {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
