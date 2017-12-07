@@ -31,7 +31,7 @@ export default class GameSetupController {
         console.log('Initialize game setup controller');
         this.vm.players = Array.from(
             new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
-                new Player(Object.keys(avatars).map(key => key)[i],
+                new Player(Object.keys(avatars)[i],
                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
                            Object.keys(avatars).map(key => avatars[key])[i],
                            PLAYER_TYPES.HUMAN)
