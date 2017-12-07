@@ -39,7 +39,14 @@ export default class MovementModalController {
         .then(() => delay(1500))
         .then(() => this.tutorialService.movementModalExplanation2())
         .then(() => {
-            this.moveTroops();
+            // Move troops
+            this.vm.moveFrom.numberOfTroops -= this.vm.moveNumberOfTroops;
+            this.vm.moveTo.numberOfTroops = this.vm.moveNumberOfTroops + this.vm.moveTo.numberOfTroops;
+
+            this.$uibModalInstance.close({
+                from: this.vm.moveFrom,
+                to: this.vm.moveTo
+            });
         })
     }
 
