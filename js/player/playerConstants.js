@@ -205,32 +205,33 @@ const playerIterator = (playerMap, turnPhases) => {
                     done: false,
                     newPlayer
                 };
-            }
-            currentTurnPhaseIndex = 0;
-            const turn = turnPhases[currentTurnPhaseIndex];
-            const player = playerMap[currentPlayerIndex];
-            newPlayer = true;
-
-            if ((currentPlayerIndex + 1) < (playerMap.length)) {
-                currentPlayerIndex++;
             } else {
-                currentPlayerIndex = 0;
-            }
-
-            while (playerMap[currentPlayerIndex][1].dead) {
                 if ((currentPlayerIndex + 1) < (playerMap.length)) {
                     currentPlayerIndex++;
                 } else {
                     currentPlayerIndex = 0;
                 }
-            }
 
-            return {
-                player: player[1],
-                turnPhase: turn,
-                done: false,
-                newPlayer
-            };
+                currentTurnPhaseIndex = 0;
+                const turn = turnPhases[currentTurnPhaseIndex];
+                const player = playerMap[currentPlayerIndex];
+                newPlayer = true;
+
+                while (playerMap[currentPlayerIndex][1].dead) {
+                    if ((currentPlayerIndex + 1) < (playerMap.length)) {
+                        currentPlayerIndex++;
+                    } else {
+                        currentPlayerIndex = 0;
+                    }
+                }
+
+                return {
+                    player: player[1],
+                    turnPhase: turn,
+                    done: false,
+                    newPlayer
+                };
+            }
         },
         getCurrent: () => {
             return {

@@ -79,6 +79,7 @@ export default class GameEngine {
 
         this.players.forEach(x => {
             x.cards = [];
+            x.dead = false;
         });
         this.cardDeck = initiatieCardDeck();
 
