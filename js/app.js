@@ -25,6 +25,8 @@ const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 
 /* MAIN GAME ENGINE */
 app.service('gameEngine', GameEngine);
+/* LOAD SETTINGS */
+app.service('settings', Settings);
 /* CONTROLLERS */
 app.controller('mainController', MainController);
 app.controller('gameController', GameController);
@@ -42,6 +44,5 @@ app.service('mapService', MapService);
 app.service('gameAnnouncerService', GameAnnouncer);
 app.service('tutorialService', TutorialService);
 app.service('aiHandler', AiHandler);
-app.service('settings', Settings);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());

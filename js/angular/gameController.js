@@ -29,6 +29,7 @@ export default class GameController {
         this.vm.testAttackPhase = this.testAttackPhase;
         this.vm.testPresentationModal = this.testPresentationModal;
         this.vm.pause = this.pause;
+        this.vm.openSettings = this.openSettings;
 
         this.vm.turn = {};
 
@@ -71,11 +72,6 @@ export default class GameController {
         this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
 
         console.log('Initialization of gameController');
-    }
-
-    toggleMusicVolume() {
-        this.vm.playSound = !this.vm.playSound;
-        this.gameEngine.toggleSound(this.vm.playSound);
     }
 
     startGame(players, winningCondition) {
@@ -195,6 +191,10 @@ export default class GameController {
         })
     }
 
+    openSettings() {
+
+    }
+
     pause() {
         this.vm.gamePaused = (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) ? PAUSE_MODES.PAUSING : PAUSE_MODES.NOT_PAUSED;
 
@@ -268,6 +268,10 @@ export default class GameController {
     }
 
     nextTurn() {
+        if (this.checkIfNextIsDisabled()) {
+            return;
+        }
+
         const callback = () => {
             this.mapService.updateMap(this.gameEngine.filter);
             if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {

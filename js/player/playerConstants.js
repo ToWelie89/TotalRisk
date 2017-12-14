@@ -192,9 +192,11 @@ const playerIterator = (playerMap, turnPhases) => {
     let currentPlayerIndex = 0;
     let currentTurnPhaseIndex = 0;
     let newPlayer = true;
+    let turnNumber = 1;
 
     return {
         next: () => {
+            // New turn phase
             if ((currentTurnPhaseIndex + 1) < turnPhases.length) {
                 const turn = turnPhases[currentTurnPhaseIndex++];
                 const player = playerMap[currentPlayerIndex];
@@ -203,13 +205,17 @@ const playerIterator = (playerMap, turnPhases) => {
                     player: player[1],
                     turnPhase: turn,
                     done: false,
-                    newPlayer
+                    newPlayer,
+                    turnNumber
                 };
             } else {
+                // New player turn
                 if ((currentPlayerIndex + 1) < (playerMap.length)) {
                     currentPlayerIndex++;
                 } else {
                     currentPlayerIndex = 0;
+                    // All players have played this turn, increment the turn number
+                    turnNumber++;
                 }
 
                 currentTurnPhaseIndex = 0;
@@ -217,6 +223,7 @@ const playerIterator = (playerMap, turnPhases) => {
                 const player = playerMap[currentPlayerIndex];
                 newPlayer = true;
 
+                // Skip dead players
                 while (playerMap[currentPlayerIndex][1].dead) {
                     if ((currentPlayerIndex + 1) < (playerMap.length)) {
                         currentPlayerIndex++;
@@ -229,7 +236,8 @@ const playerIterator = (playerMap, turnPhases) => {
                     player: player[1],
                     turnPhase: turn,
                     done: false,
-                    newPlayer
+                    newPlayer,
+                    turnNumber
                 };
             }
         },
@@ -238,7 +246,8 @@ const playerIterator = (playerMap, turnPhases) => {
                 player: playerMap[currentPlayerIndex][1],
                 turnPhase: turnPhases[currentTurnPhaseIndex],
                 done: false,
-                newPlayer
+                newPlayer,
+                turnNumber
             };
         },
         handleDefeatedPlayer: (defeatedPlayer) => {

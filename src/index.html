@@ -87,6 +87,12 @@
                         </button>
                     </div>
 
+                    <div class="row paddingLeft--double paddingRight--double">
+                        <strong style="color: white;">
+                            The settings that you configure here will be automatically saved to your browsers local storage so that you don't have to reset them everytime.
+                        </strong>
+                    </div>
+
                     <div class="row">
                         <div class="col-xs-4">
                             <div>
@@ -286,47 +292,52 @@
                             </div>
                         </div>
                     </div>
-                    <div id="filters" class="paddingTop--double  paddingBottom--double col-xs-5 textCenter buttonGroup" style="padding-right:0px;">
-                        <button type="button" class="button button-blue" id="showByOwner" data-ng-click="game.filterByOwner()">
-                            <i class="fa fa-times"></i>
-                            <strong>Color by owner</strong>
-                        </button>
-                        <button type="button" class="button button-blue" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
-                            <i class="fa fa-times"></i>
-                            <strong>Color by region</strong>
-                        </button>
-                        <button type="button" class="button button-purple" data-ng-click="game.pause()" style="width: 46px; height: 34px;" data-ng-show="game.aiTurn">
-                            <span class="glyphicon glyphicon-pause" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.NOT_PAUSED"></span>
-                            <span data-ng-show="game.gamePaused === game.pauseModes.PAUSING">{{ game.pausingDots }}</span>
-                            <span class="glyphicon glyphicon-play" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.PAUSED"></span>
-                        </button>
+                    <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
+                        <div class="buttonGroup">
+                            <button type="button" class="button button-blue" id="showByOwner" data-ng-click="game.filterByOwner()">
+                                <i class="fa fa-times"></i>
+                                <strong>Color by owner</strong>
+                            </button>
+                            <button type="button" class="button button-blue" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
+                                <i class="fa fa-times"></i>
+                                <strong>Color by region</strong>
+                            </button>
+                            <button type="button" class="button button-purple" data-ng-click="game.pause()" style="width: 46px; height: 34px;" data-ng-show="game.aiTurn">
+                                <span class="glyphicon glyphicon-pause" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.NOT_PAUSED"></span>
+                                <span data-ng-show="game.gamePaused === game.pauseModes.PAUSING">{{ game.pausingDots }}</span>
+                                <span class="glyphicon glyphicon-play" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.PAUSED"></span>
+                            </button>
+                            <button type="button" class="button button-green" data-ng-click="game.openSettings()" style="width: 46px; height: 34px;">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </button>
+                        </div>
+                        <h4>Turn number <strong data-ng-bind="game.turn.turnNumber"></strong></h4>
                     </div>
                     <div class="col-xs-3 paddingTop--double " id="turnInfo">
                         <div class="row">
                             <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
-                                <div data-ng-show="game.turn.turnPhase == 0" class="troop_{{ game.turn.player.color.name }}">
-                                    <div class="floatLeft">Deployment phase <span data-ng-bind="game.troopsToDeploy"></span></div>
-                                    <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
+                                <div>
+                                    <div data-ng-show="game.turn.turnPhase == 0" class="troop_{{ game.turn.player.color.name }}">
+                                        <div class="floatLeft">Deployment phase <span data-ng-bind="game.troopsToDeploy"></span></div>
+                                        <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
+                                    </div>
+                                    <span data-ng-show="game.turn.turnPhase == 1">
+                                        Attack phase
+                                    </span>
+                                    <span data-ng-show="game.turn.turnPhase == 2">
+                                        Movement phase
+                                    </span>
                                 </div>
-                                <span data-ng-show="game.turn.turnPhase == 1">
-                                    Attack phase
-                                </span>
-                                <span data-ng-show="game.turn.turnPhase == 2">
-                                    Movement phase
-                                </span>
                             </div>
                             <div class="col-xs-3" style="line-height: 30px;">
-                                <button
-                                type="button"
-                                id="nextButton"
-                                class="button button-green"
-                                data-ng-click="game.nextTurn()"
-                                data-ng-disabled="game.checkIfNextIsDisabled()"
-                                data-ng-show="!game.aiTurn"
-                                id="nextButton">
-                                    <i class="fa fa-times"></i>
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                </button>
+                                <span id="nextButton"
+                                      data-ng-click="game.nextTurn()"
+                                      data-ng-show="!game.aiTurn"
+                                      data-ng-class="{'nextButton--disabled': game.checkIfNextIsDisabled()}">
+                                          <span>
+                                              Next
+                                          </span>
+                                      </span>
                             </div>
                         </div>
                     </div>

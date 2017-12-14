@@ -3,6 +3,9 @@ console.log = () => {
 }
 
 require('babel-polyfill');
+
+jasmine.clock().install();
+
 require('./../app');
 require('./../angular/attackModalController.test');
 require('./../angular/cardTurnInModalController.test');

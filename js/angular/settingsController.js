@@ -14,9 +14,11 @@ export default class SettingsController {
                 this.vm.settings.aiSpeed = this.vm.aiSpeed;
                 this.aiHandler.update();
                 this.soundService.changeColor.play();
+
+                this.vm.settings.saveSettings();
             }
         };
-        this.vm.aiSpeed = this.settings.aiSpeed;
+        this.vm.aiSpeed = this.vm.settings.aiSpeed;
 
         // PUBLIC FUNCTIONS
         this.vm.toggleSound = this.toggleSound;
@@ -24,7 +26,7 @@ export default class SettingsController {
     }
 
     toggleSound() {
-        if (this.settings.playSound) {
+        if (this.vm.settings.playSound) {
             this.soundService.changeColor.play();
             this.vm.settings.toggleSound();
         } else {
@@ -36,6 +38,8 @@ export default class SettingsController {
     toggleAnnouncer() {
         this.vm.settings.showAnnouncer = !this.vm.settings.showAnnouncer;
         this.soundService.changeColor.play();
+
+        this.vm.settings.saveSettings();
     }
 
 }

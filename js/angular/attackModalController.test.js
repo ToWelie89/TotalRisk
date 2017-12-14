@@ -154,8 +154,6 @@ describe('attackModalController', () => {
     });
 
     it('fight where defender wins', () => {
-        jasmine.clock().install();
-
         // Arrange
         attackModalController.attacker.numberOfTroops = 2;
         attackModalController.defender.numberOfTroops = 3;

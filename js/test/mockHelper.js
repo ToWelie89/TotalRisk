@@ -42,6 +42,13 @@ const createScope = () => {
     return mock;
 };
 
+const createRootScope = () => {
+    const mock = jasmine.createSpyObj('$rootScope', [
+        '$watch'
+    ]);
+    return mock;
+};
+
 const createGameEngine = () => {
     const mock = jasmine.createSpyObj('gameEngine', [
         'toggleSound',
@@ -57,6 +64,20 @@ const createMapService = () => {
     return mock;
 };
 
+const createSettings = () => {
+    const mock = {
+        showAnnouncer: true
+    }
+    return mock;
+};
+
+const createAiHandler = () => {
+    const mock = jasmine.createSpyObj('aiHandler', [
+        'update'
+    ]);
+    return mock;
+};
+
 export {
     createSoundService,
     createUibModalInstance,
@@ -64,5 +85,8 @@ export {
     createGameEngine,
     createMapService,
     createUibModal,
-    createTutorialService
+    createTutorialService,
+    createRootScope,
+    createSettings,
+    createAiHandler
 };
