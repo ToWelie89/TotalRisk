@@ -8,7 +8,6 @@
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
     <script src='js/libs/dice.js'></script>
-    <script src='js/libs/flagwave.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
@@ -74,12 +73,12 @@
                     </div>
                 </div>
                 <div id="settingsBox" style="margin-top: 70px;
-                            width: 600px;
-                            margin: 0 auto;
-                            padding-top: 30px;
-                            padding-bottom: 40px;
-                            background: #3b3b3bc9;
-                            border-radius: 30px;">
+                                             width: 600px;
+                                             margin: 0 auto;
+                                             padding-top: 30px;
+                                             padding-bottom: 40px;
+                                             background: #3b3b3bc9;
+                                             border-radius: 30px;">
 
                     <div class="row">
                         <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
@@ -253,7 +252,7 @@
                         </div>
                     </div>
                     <!-- TESTING STUFF -->
-                    <div class="row marginTop--double" data-ng-hide="true">
+                    <div class="row marginTop--double" data-ng-hide="false">
                         <div class="col-xs-12 textCenter">
                             <button type="button" class="button button-blue" data-ng-click="game.testAttackPhase(setup.players)">
                                 <strong>Test battle modal</strong>
@@ -261,13 +260,16 @@
                             <button type="button" class="button button-blue" data-ng-click="game.testPresentationModal()">
                                 <strong>Test presentation modal</strong>
                             </button>
+                            <button type="button" class="button button-blue" data-ng-click="main.aiTester()">
+                                <strong>AI tester</strong>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="container mainContent" data-ng-controller="gameController as game"">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}">
                 <div class="row" style="background: #434040b0;
                                         border-radius: 30px;
                                         border-bottom-left-radius: 60px; border-top-left-radius: 60px;">

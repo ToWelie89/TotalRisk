@@ -1,4 +1,4 @@
-import {PLAYER_TYPES} from './playerConstants';
+import {PLAYER_TYPES, AI_VALUES} from './playerConstants';
 
 export default class Player {
     constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN) {
@@ -7,5 +7,7 @@ export default class Player {
         this.avatar = avatar;
         this.cards = [];
         this.type = type;
+
+        this.aiValues = AI_VALUES;
     }
 }

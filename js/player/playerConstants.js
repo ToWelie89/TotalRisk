@@ -4,6 +4,27 @@ const PLAYER_TYPES = {
     AI_EXPERT: 2
 };
 
+const AI_VALUES = {
+    closeToCaptureRegionPercentage: 60, // 50 - 80
+    opportunityToEliminatePlayer: 4,
+    belongsToBigThreat: 2,
+    mostTroopsInThisRegion: 5,
+    closeToCaptureRegion: 7,
+    canBeAttackedToBreakUpRegion: 3,
+    lastTerritoryLeftInRegion: 5,
+    bonusTroopsForRegionMultiplier: 0.5, // 0.1 - 1.5
+    bigThreatMultiplier: 1.5, // 1.1 - 2.0
+    extraPointsForBreakUpRegionForBigThreat: 6,
+    movementTerritoryIsFrontlineForControlledRegion: 6,
+    movementTerritoryHasBorderWithEnemy: 3,
+    movmentTotalBorderingTroopsMultiplier: 0.5, // 0.2 - 1.5
+    movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: 1.5, // 1.0 - 3.0
+    movementPlayerThreatPointsLessThanTotalBordering: 2,
+    movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier: 0.3,
+    movementTerritoryWithSafeBordersAmountOfTroops: 5,
+    movementTerritoryWithSafeBordersExtraTroops: 4
+};
+
 const PLAYER_COLORS = {
     PURPLE: {
         name: 'Purple',
@@ -259,4 +280,4 @@ const playerIterator = (playerMap, turnPhases) => {
     };
 };
 
-export {PLAYER_COLORS, playerIterator, avatars, PLAYER_TYPES};
+export {PLAYER_COLORS, playerIterator, avatars, PLAYER_TYPES, AI_VALUES};

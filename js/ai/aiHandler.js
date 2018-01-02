@@ -14,9 +14,15 @@ export default class AiHandler {
     }
 
     update() {
-        this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = this.settings.aiSpeedValues[this.settings.aiSpeed];
-        this.DELAY_BETWEEN_EACH_BATTLE = this.settings.aiSpeedValues[this.settings.aiSpeed];
-        this.DELAY_BEFORE_MOVE = this.settings.aiSpeedValues[this.settings.aiSpeed];
+        if (this.gameEngine.aiTesting) {
+            this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 1;
+            this.DELAY_BETWEEN_EACH_BATTLE = 1;
+            this.DELAY_BEFORE_MOVE = 1;
+        } else {
+            this.DELAY_BETWEEN_EACH_TROOP_DEPLOY = this.settings.aiSpeedValues[this.settings.aiSpeed];
+            this.DELAY_BETWEEN_EACH_BATTLE = this.settings.aiSpeedValues[this.settings.aiSpeed];
+            this.DELAY_BEFORE_MOVE = this.settings.aiSpeedValues[this.settings.aiSpeed];
+        }
     }
 
     turnInCards() {
@@ -35,18 +41,25 @@ export default class AiHandler {
                 });
 
                 this.gameEngine.turn.player.cards = this.gameEngine.turn.player.cards.filter(card => !card.isSelected);
-
                 console.log(`Cards turned in for ${bestCombo.value} new troops`);
-                $('#mainTroopIndicator').addClass('animated infinite bounce');
-                this.soundService.cardTurnIn.play();
-                this.gameEngine.troopsToDeploy += bestCombo.value;
 
-                this.updateCallback();
-
-                setTimeout(() => {
+                if (this.gameEngine.aiTesting) {
+                    this.soundService.cardTurnIn.play();
+                    this.gameEngine.troopsToDeploy += bestCombo.value;
+                    this.updateCallback();
                     resolve();
-                    $('#mainTroopIndicator').removeClass('animated infinite bounce');
-                }, 1000);
+                } else {
+                    $('#mainTroopIndicator').addClass('animated infinite bounce');
+                    this.soundService.cardTurnIn.play();
+                    this.gameEngine.troopsToDeploy += bestCombo.value;
+
+                    this.updateCallback();
+
+                    setTimeout(() => {
+                        resolve();
+                        $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                    }, 1000);
+                }
             } else {
                 resolve();
             }
@@ -83,7 +96,7 @@ export default class AiHandler {
                 // AM I CLOSE TO CAPTURING A REGION?
                 const totalTerritoriesInRegion = territoriesInRegionAsArray(region);
                 const totalTerritoriesInRegionOwnedByPlayer = totalTerritoriesInRegion.filter(x => x.owner === this.gameEngine.turn.player.name);
-                territory.closeToCaptureRegion = ((totalTerritoriesInRegionOwnedByPlayer.length / totalTerritoriesInRegion.length * 100) >= 60);
+                territory.closeToCaptureRegion = ((totalTerritoriesInRegionOwnedByPlayer.length / totalTerritoriesInRegion.length * 100) >= this.gameEngine.turn.player.aiValues.closeToCaptureRegionPercentage);
 
                 // IS THIS THE ONLY TERRITORY I NEED TO CAPTURE THE ENTIRE REGION?
                 const territoriesInRegionNotOwnedByPlayer = territoriesInRegionAsArray(region).filter(x => x.owner !== this.gameEngine.turn.player.name);
@@ -108,31 +121,31 @@ export default class AiHandler {
                 const region = regionsAsArray.find(region => territoriesInRegionAsArray(region).find(x => x.name === territory.territory.name));
 
                 territory.valuePoints = 0;
-                territory.valuePoints += territory.opportunityToEliminatePlayer ? 4 : 0;
-                territory.valuePoints += territory.belongsToBigThreat ? 2 : 0;
-                territory.valuePoints += territory.mostTroopsInThisRegion ? 5 : 0;
-                territory.valuePoints += territory.closeToCaptureRegion ? 7 : 0;
-                territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? 3 : 0;
-                territory.valuePoints += territory.lastTerritoryLeftInRegion ? 5: 0
+                territory.valuePoints += territory.opportunityToEliminatePlayer ? this.gameEngine.turn.player.aiValues.opportunityToEliminatePlayer : 0;
+                territory.valuePoints += territory.belongsToBigThreat ? this.gameEngine.turn.player.aiValues.belongsToBigThreat : 0;
+                territory.valuePoints += territory.mostTroopsInThisRegion ? this.gameEngine.turn.player.aiValues.mostTroopsInThisRegion : 0;
+                territory.valuePoints += territory.closeToCaptureRegion ? this.gameEngine.turn.player.aiValues.closeToCaptureRegion : 0;
+                territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? this.gameEngine.turn.player.aiValues.canBeAttackedToBreakUpRegion : 0;
+                territory.valuePoints += territory.lastTerritoryLeftInRegion ? this.gameEngine.turn.player.aiValues.lastTerritoryLeftInRegion : 0
 
                 if (territory.mostTroopsInThisRegion || territory.closeToCaptureRegion) {
-                    territory.valuePoints += Math.floor(region.bonusTroops / 2);
+                    territory.valuePoints += Math.floor(region.bonusTroops * this.gameEngine.turn.player.aiValues.bonusTroopsForRegionMultiplier);
                 }
 
                 const ownerThreatPoints = standings.find(x => x.name === territory.territory.owner).threatPoints;
                 const playerThreatPoints = standings.find(x => x.name === this.gameEngine.turn.player.name).threatPoints;
 
-                if (ownerThreatPoints >= (playerThreatPoints * 1.5)) {
-                    territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? 6 : 0;
+                if (ownerThreatPoints >= (playerThreatPoints * this.gameEngine.turn.player.aiValues.bigThreatMultiplier)) {
+                    territory.valuePoints += territory.canBeAttackedToBreakUpRegion ? this.gameEngine.turn.player.aiValues.extraPointsForBreakUpRegionForBigThreat : 0;
                 }
 
-                if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
+                /*if (this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
                     if (chancePercentage(50)) {
                         territory.valuePoints += Math.floor((Math.random() * 3) + 1);
                     } else {
                         territory.valuePoints -= Math.floor((Math.random() * 3) + 1);
                     }
-                }
+                }*/
             });
 
             if (this.gameEngine.troopsToDeploy === 0) {
@@ -490,26 +503,26 @@ export default class AiHandler {
             // DETERMINE IMPORTANCE SCORES BASED ON PREVIOUS DATA
             applicableMovements.forEach(x => {
                 x.importance = 0;
-                x.importance += x.territoryIsFrontlineForControlledRegion ? 5 : 0;
-                x.importance += x.territoryHasBorderWithEnemy ? 3 : 0;
-                x.importance += Math.floor(x.totalBorderingTroops / 2);
+                x.importance += x.territoryIsFrontlineForControlledRegion ? this.gameEngine.turn.player.aiValues.movementTerritoryIsFrontlineForControlledRegion : 0;
+                x.importance += x.territoryHasBorderWithEnemy ? this.gameEngine.turn.player.aiValues.movementTerritoryHasBorderWithEnemy : 0;
+                x.importance += Math.floor(x.totalBorderingTroops * this.gameEngine.turn.player.aiValues.movmentTotalBorderingTroopsMultiplier);
                 x.importance += x.from.numberOfTroops;
 
                 if (x.territoryIsFrontlineForControlledRegion) {
-                    x.importance += Math.floor(x.controlledRegion.bonusTroops * 1.5);
+                    x.importance += Math.floor(x.controlledRegion.bonusTroops * this.gameEngine.turn.player.aiValues.movementTerritoryIsFrontlineRegionBonusTroopsMultiplier);
                 }
 
                 if (x.territoryHasBorderWithEnemy) {
                     const playerThreatPoints = standings.find(x => x.name === this.gameEngine.turn.player.name).threatPoints;
-                    x.importance += playerThreatPoints <= x.totalBorderingThreat ? 2 : 0;
+                    x.importance += playerThreatPoints <= x.totalBorderingThreat ? this.gameEngine.turn.player.aiValues.movementPlayerThreatPointsLessThanTotalBordering : 0;
 
                     if (playerThreatPoints <= x.totalBorderingThreat) {
-                        x.importance += Math.floor(x.totalBorderingTroops / 3);
+                        x.importance += Math.floor(x.totalBorderingTroops * this.gameEngine.turn.player.aiValues.movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier);
                     }
                 }
 
-                if (!x.territoryHasBorderWithEnemy && x.from.numberOfTroops >= 5) {
-                    x.importance += 4;
+                if (!x.territoryHasBorderWithEnemy && x.from.numberOfTroops >= this.gameEngine.turn.player.aiValues.movementTerritoryWithSafeBordersAmountOfTroops) {
+                    x.importance += this.gameEngine.turn.player.aiValues.movementTerritoryWithSafeBordersExtraTroops;
                 }
             });
 
@@ -518,10 +531,10 @@ export default class AiHandler {
 
             let movementIndex = 0;
 
-            if(this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
+            /*if(this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {
                 const rnd = Math.floor((Math.random() * 4) + 1);
                 movementIndex = applicableMovements[rnd] ? rnd : (applicableMovements.length - 1);
-            }
+            }*/
 
             const movement = applicableMovements[movementIndex];
 

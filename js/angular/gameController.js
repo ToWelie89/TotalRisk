@@ -61,6 +61,8 @@ export default class GameController {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
+                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
                 this.startTutorial();
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
@@ -74,8 +76,8 @@ export default class GameController {
         console.log('Initialization of gameController');
     }
 
-    startGame(players, winningCondition) {
-        this.gameEngine.startGame(players, winningCondition);
+    startGame(players, winningCondition, aiTesting = false) {
+        this.gameEngine.startGame(players, winningCondition, aiTesting);
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         document.querySelectorAll('.country').forEach(country => {

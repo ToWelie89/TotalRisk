@@ -17,8 +17,9 @@ const GAME_PHASES = {
     SETTINGS: 1,
     PLAYER_SETUP: 2,
     GAME: 3,
-    TUTORIAL: 4,
-    END_SCREEN: 5
+    AI_TESTING: 4,
+    TUTORIAL: 5,
+    END_SCREEN: 6
 };
 
 const CONSTANTS = {

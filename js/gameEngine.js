@@ -68,7 +68,7 @@ export default class GameEngine {
         }
     }
 
-    startGame(players, winningCondition) {
+    startGame(players, winningCondition, aiTesting = false) {
         console.log('Game started!');
 
         // Initialize player list
@@ -95,6 +95,8 @@ export default class GameEngine {
 
         console.log('Current turn: ', this.turn);
         this.handleTurnPhase();
+
+        this.aiTesting = aiTesting;
 
         this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
     }
@@ -158,24 +160,28 @@ export default class GameEngine {
             const currentPercentageForPlayer = (territoriesOwned / territoriesTotal * 100);
 
             if (currentPercentageForPlayer >= goalPercentage) {
-                console.log(`Player ${this.turn.player.name} won!`);
-                this.setMusic(VICTORY_MUSIC);
-                this.playerWhoWon = this.turn.player.name;
-                this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
-                setTimeout(() => {
-                    const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
-                    if (this.playSound) {
-                        this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
-                            this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
-                        }, () => {
-                            this.setMusicVolume(0.8);
-                        });
-                    }
-                }, 1000);
-                return {
-                    playerWon: true,
-                    playerPercentage: currentPercentageForPlayer
-                };
+                if (this.aiTesting) {
+                    // Set new ai values and restart the game and log values somewhere
+                } else {
+                    console.log(`Player ${this.turn.player.name} won!`);
+                    this.setMusic(VICTORY_MUSIC);
+                    this.playerWhoWon = this.turn.player.name;
+                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+                    setTimeout(() => {
+                        const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
+                        if (this.playSound) {
+                            this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
+                                this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                            }, () => {
+                                this.setMusicVolume(0.8);
+                            });
+                        }
+                    }, 1000);
+                    return {
+                        playerWon: true,
+                        playerPercentage: currentPercentageForPlayer
+                    };
+                }
             } else {
                 return {
                     playerWon: false,

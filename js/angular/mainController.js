@@ -1,4 +1,6 @@
-import {GAME_PHASES} from './../gameConstants';
+import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
+import Player from './../player/player';
+import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 
 export default class MainController {
 
@@ -14,6 +16,7 @@ export default class MainController {
         this.vm.startTutorial = this.startTutorial;
         this.vm.goBackToMenu = this.goBackToMenu;
         this.vm.setGamePhase = this.setGamePhase;
+        this.vm.aiTester = this.aiTester;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -37,6 +40,20 @@ export default class MainController {
         });
 
         console.log('Initialization of mainController');
+    }
+
+    aiTester() {
+        const players = Array.from(
+            new Array(2), (x, i) =>
+                new Player(Object.keys(avatars).map(key => key)[i],
+                           Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                           Object.keys(avatars).map(key => avatars[key])[i],
+                           PLAYER_TYPES.AI_EXPERT)
+        );
+
+        this.$rootScope.players = players;
+        this.$rootScope.chosenGoal = VICTORY_GOALS[3];
+        this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
     }
 
     setGamePhase(phase) {
