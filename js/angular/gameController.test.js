@@ -70,7 +70,7 @@ describe('gameController', () => {
         // Act
         gameController.startGame(players, VICTORY_GOALS[0]);
         // Assert
-        expect(mockGameEngine.startGame).toHaveBeenCalledWith(players, VICTORY_GOALS[0]);
+        expect(mockGameEngine.startGame).toHaveBeenCalledWith(players, VICTORY_GOALS[0], false);
         expect(mockMapService.updateMap).toHaveBeenCalled();
         expect(gameController.aiTurn).toEqual(false);
         expect(gameController.troopsToDeploy).toEqual(16);
@@ -95,7 +95,7 @@ describe('gameController', () => {
         // Act
         gameController.startGame(players, VICTORY_GOALS[0]);
         // Assert
-        expect(mockGameEngine.startGame).toHaveBeenCalledWith(players, VICTORY_GOALS[0]);
+        expect(mockGameEngine.startGame).toHaveBeenCalledWith(players, VICTORY_GOALS[0], false);
         expect(mockMapService.updateMap).toHaveBeenCalled();
         expect(gameController.aiTurn).toEqual(false);
         expect(gameController.troopsToDeploy).toEqual(16);
