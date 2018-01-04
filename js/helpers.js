@@ -45,4 +45,11 @@ const chancePercentage = (x) => {
     return x <= perc;
 }
 
-export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage};
+const randomIntFromInterval = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
+
+const randomDoubleFromInterval = (min, max) => {
+    const double = Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
+    return Math.round(double * 10) / 10;
+};
+
+export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval};

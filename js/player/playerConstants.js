@@ -5,24 +5,44 @@ const PLAYER_TYPES = {
 };
 
 const AI_VALUES = {
-    closeToCaptureRegionPercentage: 60, // 50 - 80
-    opportunityToEliminatePlayer: 4,
+    /*
     belongsToBigThreat: 2,
-    mostTroopsInThisRegion: 5,
-    closeToCaptureRegion: 7,
-    canBeAttackedToBreakUpRegion: 3,
-    lastTerritoryLeftInRegion: 5,
-    bonusTroopsForRegionMultiplier: 0.5, // 0.1 - 1.5
     bigThreatMultiplier: 1.5, // 1.1 - 2.0
+    bonusTroopsForRegionMultiplier: 0.5, // 0.1 - 1.5
+    canBeAttackedToBreakUpRegion: 3,
+    closeToCaptureRegion: 7,
+    closeToCaptureRegionPercentage: 60, // 55 - 80
     extraPointsForBreakUpRegionForBigThreat: 6,
-    movementTerritoryIsFrontlineForControlledRegion: 6,
-    movementTerritoryHasBorderWithEnemy: 3,
-    movmentTotalBorderingTroopsMultiplier: 0.5, // 0.2 - 1.5
-    movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: 1.5, // 1.0 - 3.0
+    lastTerritoryLeftInRegion: 5,
+    mostTroopsInThisRegion: 5,
     movementPlayerThreatPointsLessThanTotalBordering: 2,
     movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier: 0.3,
+    movementTerritoryHasBorderWithEnemy: 3,
+    movementTerritoryIsFrontlineForControlledRegion: 6,
+    movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: 1.5, // 1.0 - 3.0
     movementTerritoryWithSafeBordersAmountOfTroops: 5,
-    movementTerritoryWithSafeBordersExtraTroops: 4
+    movementTerritoryWithSafeBordersExtraTroops: 4,
+    movmentTotalBorderingTroopsMultiplier: 0.5, // 0.2 - 1.5
+    opportunityToEliminatePlayer: 4
+    */
+    belongsToBigThreat: 10,
+    bigThreatMultiplier: 1.4,
+    bonusTroopsForRegionMultiplier: 0.1,
+    canBeAttackedToBreakUpRegion: 5,
+    closeToCaptureRegion: 6,
+    closeToCaptureRegionPercentage: 69,
+    extraPointsForBreakUpRegionForBigThreat: 3,
+    lastTerritoryLeftInRegion: 10,
+    mostTroopsInThisRegion: 4,
+    movementPlayerThreatPointsLessThanTotalBordering: 5,
+    movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier: 0.4,
+    movementTerritoryHasBorderWithEnemy: 1,
+    movementTerritoryIsFrontlineForControlledRegion: 3,
+    movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: 2.8,
+    movementTerritoryWithSafeBordersAmountOfTroops: 8,
+    movementTerritoryWithSafeBordersExtraTroops: 9,
+    movmentTotalBorderingTroopsMultiplier: 0.6,
+    opportunityToEliminatePlayer: 3
 };
 
 const PLAYER_COLORS = {

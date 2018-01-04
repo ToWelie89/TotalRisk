@@ -66,6 +66,9 @@ export default class GameController {
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
                 this.startTutorial();
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
+                if (this.gameEngine.aiTesting) {
+                    this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
+                }
                 this.handleVictory();
             }
         });

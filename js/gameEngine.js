@@ -6,7 +6,7 @@ import WorldMap from './map/worldMap';
 import { getTerritoryByName, getTerritoriesByOwner } from './map/mapHelpers';
 import { playerIterator, PLAYER_TYPES } from './player/playerConstants';
 import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } from './gameConstants';
-import { shuffle } from './helpers';
+import { shuffle, randomIntFromInterval, randomDoubleFromInterval } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
 import DeploymentHandler from './deploymentHandler';
 import {settings} from './settings/defaultSettings';
@@ -32,7 +32,6 @@ export default class GameEngine {
     }
 
     toggleSound(playSound) {
-
         this.playSound = playSound;
         if (this.playSound) {
             if (this.bgmusic) {
@@ -162,6 +161,46 @@ export default class GameEngine {
             if (currentPercentageForPlayer >= goalPercentage) {
                 if (this.aiTesting) {
                     // Set new ai values and restart the game and log values somewhere
+                    const playerWhoWon = this.turn.player.name;
+                    const playerWhoLost = Array.from(this.players.entries()).find(x => x[0] !== playerWhoWon)[0];
+
+                    let winner = this.players.get(playerWhoWon);
+                    let loser = this.players.get(playerWhoLost);
+
+                    loser.aiValues = {
+                        closeToCaptureRegionPercentage: randomIntFromInterval(55, 80),
+                        opportunityToEliminatePlayer: randomIntFromInterval(1, 10),
+                        belongsToBigThreat: randomIntFromInterval(1, 10),
+                        mostTroopsInThisRegion: randomIntFromInterval(1, 10),
+                        closeToCaptureRegion: randomIntFromInterval(1, 10),
+                        canBeAttackedToBreakUpRegion: randomIntFromInterval(1, 10),
+                        lastTerritoryLeftInRegion: randomIntFromInterval(1, 10),
+                        bonusTroopsForRegionMultiplier: randomDoubleFromInterval(0.1, 1.5),
+                        bigThreatMultiplier: randomDoubleFromInterval(1.1, 2.0),
+                        extraPointsForBreakUpRegionForBigThreat: randomIntFromInterval(1, 10),
+                        movementTerritoryIsFrontlineForControlledRegion: randomIntFromInterval(1, 10),
+                        movementTerritoryHasBorderWithEnemy: randomIntFromInterval(1, 10),
+                        movmentTotalBorderingTroopsMultiplier: randomDoubleFromInterval(0.2, 1.5),
+                        movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: randomDoubleFromInterval(1.0, 3.0),
+                        movementPlayerThreatPointsLessThanTotalBordering: randomIntFromInterval(1, 10),
+                        movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier: randomDoubleFromInterval(0.2, 0.8),
+                        movementTerritoryWithSafeBordersAmountOfTroops: randomIntFromInterval(1, 10),
+                        movementTerritoryWithSafeBordersExtraTroops: randomIntFromInterval(1, 10)
+                    };
+
+                    window.aiTestingResults.games.push({
+                        winner: Object.assign({}, winner),
+                        loser: Object.assign({}, loser),
+                        numberOfTurns: this.turn.turnNumber
+                    });
+
+                    this.$rootScope.players = [winner, loser];
+                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+
+                    return {
+                        playerWon: true,
+                        playerPercentage: currentPercentageForPlayer
+                    };
                 } else {
                     console.log(`Player ${this.turn.player.name} won!`);
                     this.setMusic(VICTORY_MUSIC);

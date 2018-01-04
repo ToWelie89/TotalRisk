@@ -1,4 +1,5 @@
 import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
+import {randomIntFromInterval, randomDoubleFromInterval} from './../helpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 
@@ -43,6 +44,10 @@ export default class MainController {
     }
 
     aiTester() {
+        window.aiTestingResults = {
+            games: []
+        };
+
         const players = Array.from(
             new Array(2), (x, i) =>
                 new Player(Object.keys(avatars).map(key => key)[i],
@@ -50,6 +55,27 @@ export default class MainController {
                            Object.keys(avatars).map(key => avatars[key])[i],
                            PLAYER_TYPES.AI_EXPERT)
         );
+
+        players[1].aiValues = {
+            closeToCaptureRegionPercentage: randomIntFromInterval(55, 80),
+            opportunityToEliminatePlayer: randomIntFromInterval(1, 10),
+            belongsToBigThreat: randomIntFromInterval(1, 10),
+            mostTroopsInThisRegion: randomIntFromInterval(1, 10),
+            closeToCaptureRegion: randomIntFromInterval(1, 10),
+            canBeAttackedToBreakUpRegion: randomIntFromInterval(1, 10),
+            lastTerritoryLeftInRegion: randomIntFromInterval(1, 10),
+            bonusTroopsForRegionMultiplier: randomDoubleFromInterval(0.1, 1.5),
+            bigThreatMultiplier: randomDoubleFromInterval(1.1, 2.0),
+            extraPointsForBreakUpRegionForBigThreat: randomIntFromInterval(1, 10),
+            movementTerritoryIsFrontlineForControlledRegion: randomIntFromInterval(1, 10),
+            movementTerritoryHasBorderWithEnemy: randomIntFromInterval(1, 10),
+            movmentTotalBorderingTroopsMultiplier: randomDoubleFromInterval(0.2, 1.5),
+            movementTerritoryIsFrontlineRegionBonusTroopsMultiplier: randomDoubleFromInterval(1.0, 3.0),
+            movementPlayerThreatPointsLessThanTotalBordering: randomIntFromInterval(1, 10),
+            movementPlayerThreatPointsLessThanTotalBorderingTroopMultiplier: randomDoubleFromInterval(0.2, 0.8),
+            movementTerritoryWithSafeBordersAmountOfTroops: randomIntFromInterval(1, 10),
+            movementTerritoryWithSafeBordersExtraTroops: randomIntFromInterval(1, 10)
+        };
 
         this.$rootScope.players = players;
         this.$rootScope.chosenGoal = VICTORY_GOALS[3];

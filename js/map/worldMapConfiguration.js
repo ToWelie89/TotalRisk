@@ -372,7 +372,6 @@ export const worldMap = {
             name: "New Guinea",
             adjacentTerritories: [
                 "Eastern Australia",
-                "Western Australia",
                 "Indonesia"
             ]
         }, {
