@@ -9,5 +9,15 @@ export default class Player {
         this.type = type;
 
         this.aiValues = AI_VALUES;
+
+        this.statistics = {
+            battlesWon: 0,
+            battlesLost: 0,
+            troopsKilled: 0,
+            troopsLost: 0,
+            totalReinforcements: 0,
+            cardCombinationsUsed: 0,
+            retreats: 0
+        };
     }
 }

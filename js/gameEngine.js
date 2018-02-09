@@ -98,6 +98,8 @@ export default class GameEngine {
         this.aiTesting = aiTesting;
 
         this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
+
+        this.startGameTimestamp = Date.now();
     }
 
     nextTurn() {
@@ -202,6 +204,8 @@ export default class GameEngine {
                         playerPercentage: currentPercentageForPlayer
                     };
                 } else {
+                    this.endGameTimestamp = Date.now();
+
                     console.log(`Player ${this.turn.player.name} won!`);
                     this.setMusic(VICTORY_MUSIC);
                     this.playerWhoWon = this.turn.player.name;
