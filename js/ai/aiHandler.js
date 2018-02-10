@@ -60,6 +60,9 @@ export default class AiHandler {
                         $('#mainTroopIndicator').removeClass('animated infinite bounce');
                     }, 1000);
                 }
+
+                // Update stats
+                this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
             } else {
                 resolve();
             }
@@ -181,6 +184,9 @@ export default class AiHandler {
 
     deployTroops(callback) {
         callback();
+
+        // Update stats
+        this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.totalReinforcements += this.gameEngine.troopsToDeploy;
 
         const createPromise = (territoryName, index) => {
             return new Promise((resolve, reject) => {
@@ -354,6 +360,10 @@ export default class AiHandler {
                                 }
                             }
 
+                            // Update stats
+                            this.gameEngine.players.get(attacker.owner).statistics.battlesWon += 1;
+                            this.gameEngine.players.get(defender.owner).statistics.battlesLost += 1;
+
                             const resp = this.gameEngine.checkIfPlayerWonTheGame();
                             if (resp.playerWon) {
                                 reject('playerWon');
@@ -364,6 +374,10 @@ export default class AiHandler {
 
                             $(`#svgMap .country[id="${attacker.name}"]`).removeClass('blink_me');
                             $(`#svgMap .country[id="${defender.name}"]`).removeClass('blink_me');
+
+                            // Update stats
+                            this.gameEngine.players.get(attacker.owner).statistics.battlesLost += 1;
+                            this.gameEngine.players.get(defender.owner).statistics.battlesWon += 1;
                         } else {
                             defender.numberOfTroops = battle.defendingTroops;
                             attacker.numberOfTroops = battle.attackingTroops + 1;
@@ -371,6 +385,12 @@ export default class AiHandler {
 
                         this.mapService.updateMap(this.gameEngine.filter);
                         this.soundService.diceRoll.play();
+
+                        // Update stats
+                        this.gameEngine.players.get(attacker.owner).statistics.troopsKilled += battle.response.defenderCasualties;
+                        this.gameEngine.players.get(attacker.owner).statistics.troopsLost += battle.response.attackerCasualties;
+                        this.gameEngine.players.get(defender.owner).statistics.troopsKilled += battle.response.attackerCasualties;
+                        this.gameEngine.players.get(attacker.owner).statistics.troopsLost += battle.response.defenderCasualties;
 
                         resolve();
                     }, (this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex + 1)));

@@ -45,6 +45,9 @@ export default class AttackModalController {
         this.vm.defender.color = attackData.defender.color;
         this.vm.defender.avatar = attackData.defender.avatar;
 
+        this.vm.attackerTotalCasualites = 0;
+        this.vm.defenderTotalCasualites = 0;
+
         this.getCountrySvgDelay = 500;
         this.moveTroopsDelay = 2500;
         this.closeModalDelay = 2500;
@@ -140,6 +143,9 @@ export default class AttackModalController {
             context.soundService.screamSound.play();
         }
 
+        context.vm.attackerTotalCasualites += context.battleHandlerResponse.attackerCasualties;
+        context.vm.defenderTotalCasualites += context.battleHandlerResponse.defenderCasualties;
+
         context.vm.attacker = context.battleHandlerResponse.attacker;
         context.vm.defender = context.battleHandlerResponse.defender;
         context.vm.attackerCasualties = context.battleHandlerResponse.attackerCasualties;
@@ -201,12 +207,15 @@ export default class AttackModalController {
         }
     }
 
-    closeModal(battleWasWon) {
+    closeModal(battleWasWon, retreat = false) {
         this.$uibModalInstance.close({
             attackFrom: this.vm.attacker,
             attackTo: this.vm.defender,
             battleWasWon,
-            previousOwner: this.vm.previousOwner
+            previousOwner: this.vm.previousOwner,
+            retreat,
+            attackerTotalCasualites: this.vm.attackerTotalCasualites,
+            defenderTotalCasualites: this.vm.defenderTotalCasualites
         });
     }
 
@@ -220,7 +229,7 @@ export default class AttackModalController {
 
     retreat() {
         this.vm.attacker.numberOfTroops++;
-        this.closeModal(false);
+        this.closeModal(false, true);
     }
 
     getAsArray(numberOfTroops) {

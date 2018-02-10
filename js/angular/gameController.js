@@ -268,6 +268,9 @@ export default class GameController {
                 setTimeout(() => {
                     $('#mainTroopIndicator').removeClass('animated infinite bounce');
                 }, 1000);
+
+                // Update stats
+                this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
             }
         });
     }
@@ -443,6 +446,26 @@ export default class GameController {
                     this.soundService.cardSelect.play();
                 }
             }
+        }
+
+        // Update statistics
+        if (closeResponse.battleWasWon) {
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.battlesWon += 1;
+            this.gameEngine.players.get(closeResponse.previousOwner).statistics.battlesLost += 1;
+
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
+            this.gameEngine.players.get(closeResponse.previousOwner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+        } else if (closeResponse.retreat) {
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.retreats += 1;
+
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
+            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+        } else {
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.battlesLost += 1;
+            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.battlesWon += 1;
+
+            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
+            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
         }
 
         this.mapService.updateMap(this.vm.filter);
