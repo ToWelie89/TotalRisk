@@ -568,8 +568,8 @@ export default class GameController {
      */
 
     startTutorial() {
-        if (!this.vm.playSound) {
-            this.toggleMusicVolume()
+        if (!this.settings.playSound) {
+            this.settings.toggleSound();
         }
 
         const players = Array.from(
