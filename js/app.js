@@ -12,6 +12,7 @@ import ColorPopoverController from './angular/colorPopoverController';
 import AvatarPopoverController from './angular/avatarPopoverController';
 import TurnPresentationController from './angular/turnPresentationController';
 import SettingsController from './angular/settingsController';
+import EndScreenTableController from './angular/endScreenTableController';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
@@ -38,6 +39,7 @@ app.controller('colorPopoverController', ColorPopoverController);
 app.controller('avatarPopoverController', AvatarPopoverController);
 app.controller('turnPresentationController', TurnPresentationController);
 app.controller('settingsController', SettingsController);
+app.controller('endScreenTableController', EndScreenTableController);
 /* SERVICES */
 app.service('soundService', SoundService);
 app.service('mapService', MapService);

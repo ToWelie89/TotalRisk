@@ -131,7 +131,7 @@ const avatars = {
         picture: '/assets/img/scipio.png',
         selectSound: '',
         flag: './assets/flags/rome.png',
-        biography: ''
+        biography: 'Scipio Africanus was a highly successful roman general most known for his victories against the Carthaginians during the Second Punic War. His greatest achievement was at the battle of Zama where Scipio finally defeated Hannibal, the great enemy of Rome, in a decisive victory. He would later become a consul of the Roman Republic.'
     },
     'Miltiades': {
         picture: './assets/img/miltiades.png',
@@ -149,7 +149,7 @@ const avatars = {
         picture: './assets/img/henryv.png',
         selectSound: '',
         flag: './assets/flags/oldEngland.png',
-        biography: ''
+        biography: 'Henry V was the king of England between 1413 - 1422, the second English monarch of the House of Lancaster. He embarked on a war with France in the ongoing Hundred Years War where he famously defeted the french, despite having a severe numerical disadvantage, at the battle of Agincourt. The battle has been romantized and the subject of songs and plays, most notably by William Shakespeare.'
     },
     'Charles XII': {
         picture: './assets/img/karlxii.png',
@@ -160,22 +160,26 @@ const avatars = {
     'Saladin': {
         picture: './assets/img/saladin.png',
         selectSound: '',
-        flag: './assets/flags/ayyubid.png'
+        flag: './assets/flags/ayyubid.png',
+        biography: 'Saladin who was of kurdish origin was the founder of the Ayyubid dynasty and the first sultan of Egypt and Syria. Under his command the Ayyubid army defeated the Crusaders at the decisive battle of Hattin, which became a turning point for conflicts between muslim and christan armies in the region during that time. He reconquered Jerusalem which had been captured by Crusader knights about a century before.'
     },
     'William the Conqueror': {
         picture: './assets/img/william.png',
         selectSound: '',
-        flag: './assets/flags/normandy.png'
+        flag: './assets/flags/normandy.png',
+        biography: 'William the Conquerer, who has viking ancestry, was a duke of Normandy who would later invade England become the first Norman king of England. In a contest for the English throne he would find himself against the English earl Harold Godwinson. The deisive victory was acheived at the famous battle of Hastings where Harold was killed.'
     },
     'Gustavus Adolphus': {
         picture: './assets/img/gustavusadolphus.png',
         selectSound: '',
-        flag: './assets/flags/sweden.png'
+        flag: './assets/flags/sweden.png',
+        biography: 'Gustavus Adolphus is the only Swedish monarch to be styled as \'the great\'. He is also often referred to the as the \'father of modern warfare\' because of his reforms to the swedish military. He changed the swedish army from relying on conscription and mercenaries into a highly trained professional standing national army. He also innovated the strategies used, like employing smaller and more mobile artillery pieces that could be redirected during a battle, and combining pikemen with musketeers in a single formation. His most famous victory was at the battle of Breitenfeld, as a part of the 30 year war, where he decisively defeated the Catholic league.'
     },
     'Duke of Wellington': {
         picture: './assets/img/dukeofwellington.png',
         selectSound: '',
-        flag: './assets/flags/britain.png'
+        flag: './assets/flags/britain.png',
+        biography: ''
     },
     'Hernán Cortés': {
         picture: './assets/img/hernancortes.png',
@@ -186,7 +190,8 @@ const avatars = {
     'Shaka Zulu': {
         picture: './assets/img/shakazulu.png',
         selectSound: '',
-        flag: './assets/flags/zulu.png'
+        flag: './assets/flags/zulu.png',
+        biography: 'Shaka was one of the most influential monarchs of the Zulu kingdom, located in modern day South Africa. The Zulus went from being a minor tribe among many, perhaps just around 1500 people, to becoming a vast empire that was inhabited by several hundreds of thousands. One of the main reasons for this expansion was the military and tactical reforms that Shaka implemented which allowed him to conquer his rival tribes.'
     },
     'Erich Ludendorff': {
         picture: './assets/img/ludendorff.png',

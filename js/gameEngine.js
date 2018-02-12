@@ -246,6 +246,7 @@ export default class GameEngine {
         const cards = this.players.get(defeatedPlayer).cards;
         this.players.get(playerWhoDefeatedHim).cards = this.players.get(playerWhoDefeatedHim).cards.concat(cards);
         this.players.get(defeatedPlayer).dead = true;
+        this.players.get(defeatedPlayer).deadTurn = this.turn.turnNumber;
         this.iterator.handleDefeatedPlayer(this.players.get(defeatedPlayer).name);
         return cards;
     }

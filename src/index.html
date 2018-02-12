@@ -365,6 +365,49 @@
                     </h3>
                     <img id="victoryPortrait" class="marginTop--double" src="{{ game.playerWhoWon.avatar.picture }}" alt="">
                     <div id="victoryFlag" class='flag'></div>
+                    <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
+                        <table id="endScreenTable">
+                            <thead>
+                                <tr>
+                                    <th>Place</th>
+                                    <th>Name</th>
+                                    <th></th>
+                                    <th style="text-align: right;">Battles Won</th>
+                                    <th style="text-align: right;">Battles Lost</th>
+                                    <th style="text-align: right;">Retreats</th>
+                                    <th style="text-align: right;">Card combos used</th>
+                                    <th style="text-align: right;">Total reinforcements</th>
+                                    <th style="text-align: right;">Troops killed</th>
+                                    <th style="text-align: right;">Troops lost</th>
+                                    <th style="text-align: right;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="player in endScreenTable.players">
+                                    <td data-ng-bind="player.rank" style="text-align: center;"></td>
+                                    <td data-ng-bind="player.name"></td>
+                                    <td>
+                                        <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
+                                    </td>
+                                    <td data-ng-bind="player.statistics.battlesWon" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.battlesLost" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.retreats" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.cardCombinationsUsed" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.totalReinforcements" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.troopsKilled" style="text-align: right;"></td>
+                                    <td data-ng-bind="player.statistics.troopsLost" style="text-align: right;"></td>
+                                    <td style="text-align: right;">
+                                        <span data-ng-show="player.dead">
+                                            Dead (Turn {{ player.deadTurn }})
+                                        </span>
+                                        <span data-ng-show="!player.dead">
+                                            Alive
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
                         <strong>Back to Menu</strong>
                     </button>
