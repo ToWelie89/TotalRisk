@@ -81,7 +81,10 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attackTo: territory1,
             battleWasWon: true,
-            previousOwner: undefined
+            previousOwner: undefined,
+            retreat: false,
+            attackerTotalCasualites: 0,
+            defenderTotalCasualites: 0
         });
     });
 
@@ -101,7 +104,10 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attackTo: territory1,
             battleWasWon: true,
-            previousOwner: 'Pelle'
+            previousOwner: 'Pelle',
+            retreat: false,
+            attackerTotalCasualites: 0,
+            defenderTotalCasualites: 0
         });
     });
 
@@ -121,7 +127,10 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attackTo: territory1,
             battleWasWon: true,
-            previousOwner: 'Pelle'
+            previousOwner: 'Pelle',
+            retreat: false,
+            attackerTotalCasualites: 0,
+            defenderTotalCasualites: 0
         });
     });
 
@@ -185,7 +194,10 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attackTo: territory1,
             battleWasWon: false,
-            previousOwner: undefined
+            previousOwner: undefined,
+            retreat: false,
+            attackerTotalCasualites: 2,
+            defenderTotalCasualites: 0
         });
     });
 
@@ -221,7 +233,10 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attackTo: territory1,
             battleWasWon: false,
-            previousOwner: undefined
+            previousOwner: undefined,
+            retreat: true,
+            attackerTotalCasualites: 0,
+            defenderTotalCasualites: 0
         });
     });
 
