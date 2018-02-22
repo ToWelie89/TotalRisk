@@ -449,24 +449,23 @@ export default class GameController {
         }
 
         // Update statistics
+        const attacker = closeResponse.attackFrom.owner;
+        const defender = battlesWon ? closeResponse.previousOwner : closeResponse.attackTo.owner;
+
         if (closeResponse.battleWasWon) {
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.battlesWon += 1;
-            this.gameEngine.players.get(closeResponse.previousOwner).statistics.battlesLost += 1;
-
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
-            this.gameEngine.players.get(closeResponse.previousOwner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+            this.gameEngine.players.get(attacker).statistics.battlesWon += 1;
+            this.gameEngine.players.get(defender).statistics.battlesLost += 1;
         } else if (closeResponse.retreat) {
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.retreats += 1;
-
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
-            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+            this.gameEngine.players.get(attacker).statistics.retreats += 1;
         } else {
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.battlesLost += 1;
-            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.battlesWon += 1;
-
-            this.gameEngine.players.get(closeResponse.attackFrom.owner).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
-            this.gameEngine.players.get(closeResponse.attackTo.owner).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+            this.gameEngine.players.get(attacker).statistics.battlesLost += 1;
+            this.gameEngine.players.get(defender).statistics.battlesWon += 1;
         }
+
+        this.gameEngine.players.get(attacker).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+        this.gameEngine.players.get(attacker).statistics.troopsLost += closeResponse.attackerTotalCasualites;
+        this.gameEngine.players.get(defender).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
+        this.gameEngine.players.get(defender).statistics.troopsLost += closeResponse.defenderTotalCasualites;
 
         this.mapService.updateMap(this.vm.filter);
     }
