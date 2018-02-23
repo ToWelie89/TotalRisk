@@ -197,7 +197,21 @@ export default class GameController {
     }
 
     openSettings() {
+        if (this.aiTurn && this.vm.gamePaused !== PAUSE_MODES.PAUSED) {
+            this.pause();
+        }
 
+        this.$uibModal.open({
+            templateUrl: 'settingsModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'settingsModalController',
+            controllerAs: 'settingsModal'
+        }).result.then(closeResponse => {
+            if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
+                this.pause();
+            }
+        });
     }
 
     pause() {
@@ -218,7 +232,6 @@ export default class GameController {
 
     pauser() {
         if (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) {
-            this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             return;
         }
         clearInterval(this.dotAnimationInterval);
@@ -248,13 +261,13 @@ export default class GameController {
             windowClass: 'riskModal',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn',
-                resolve: {
-                    data: () => {
-                        return {
-                            type: 'normal'
-                        }
+            resolve: {
+                data: () => {
+                    return {
+                        type: 'normal'
                     }
                 }
+            }
         }).result.then(closeResponse => {
             if (closeResponse && closeResponse.newTroops) {
                 console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);

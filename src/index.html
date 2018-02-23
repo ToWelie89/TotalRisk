@@ -345,10 +345,11 @@
                     </div>
                 </div>
                 <div class="row">
-                   <div id="map" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}" style="background: #5397d1;
-                                        border-radius: 30px;
-                                        margin-top: 20px;
-                                        box-shadow: 3px 3px 8px #202020;">
+                   <div id="map" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
+                     style="background: #5397d1;
+                            border-radius: 30px;
+                            margin-top: 20px;
+                            box-shadow: 3px 3px 8px #202020;">
                        @@mapSvg
                    </div>
                 </div>
@@ -372,31 +373,31 @@
                                     <th>Place</th>
                                     <th>Name</th>
                                     <th></th>
-                                    <th style="text-align: right;">Battles Won</th>
-                                    <th style="text-align: right;">Battles Lost</th>
-                                    <th style="text-align: right;">Retreats</th>
-                                    <th style="text-align: right;">Card combos used</th>
-                                    <th style="text-align: right;">Total reinforcements</th>
-                                    <th style="text-align: right;">Troops killed</th>
-                                    <th style="text-align: right;">Troops lost</th>
-                                    <th style="text-align: right;">Status</th>
+                                    <th class="textRight">Battles Won</th>
+                                    <th class="textRight">Battles Lost</th>
+                                    <th class="textRight">Retreats</th>
+                                    <th class="textRight">Card combos used</th>
+                                    <th class="textRight">Total reinforcements</th>
+                                    <th class="textRight">Troops killed</th>
+                                    <th class="textRight">Troops lost</th>
+                                    <th class="textRight">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr data-ng-repeat="player in endScreenTable.players">
-                                    <td data-ng-bind="player.rank" style="text-align: center;"></td>
+                                    <td data-ng-bind="player.rank" class="textCenter"></td>
                                     <td data-ng-bind="player.name"></td>
                                     <td>
                                         <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
                                     </td>
-                                    <td data-ng-bind="player.statistics.battlesWon" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.battlesLost" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.retreats" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.cardCombinationsUsed" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.totalReinforcements" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.troopsKilled" style="text-align: right;"></td>
-                                    <td data-ng-bind="player.statistics.troopsLost" style="text-align: right;"></td>
-                                    <td style="text-align: right;">
+                                    <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
+                                    <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
+                                    <td>
                                         <span data-ng-show="player.dead">
                                             Dead (Turn {{ player.deadTurn }})
                                         </span>

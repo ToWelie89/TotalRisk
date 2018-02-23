@@ -1,0 +1,69 @@
+<div data-ng-init="settingsModal.init()">
+    <div id="settingsModal" class="riskModal" role="dialog" data-backdrop="static">
+        <div class="textCenter mainMenuBox" data-ng-controller="settingsController as settings">
+            <div id="settingsBox" style="width: 100%;
+                                         padding-top: 30px;
+                                         padding-bottom: 40px;
+                                         background: #3b3b3bc9;">
+                <div class="row paddingLeft--double paddingRight--double">
+                    <strong style="color: white;">
+                        The settings that you configure here will be automatically saved to your browsers local storage so that you don't have to reset them everytime.
+                    </strong>
+                </div>
+
+                <div class="row" style="margin-top: 40px;">
+                    <div class="col-xs-4">
+                        <div>
+                            AI Speed
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <rzslider rz-slider-model="settings.aiSpeed" rz-slider-options="settings.movementSliderOptions"></rzslider>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div>
+                            Play sound
+                        </div>
+                    </div>
+                    <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                        <div>
+                            <label class="switch" data-ng-click="settings.toggleSound()">
+                                <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.playSound">
+                                <span class="switch-label" data-on="On" data-off="Off"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div>
+                            Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                             data-placement="bottom" title="If turned on each turn will be presented by a announcer." style="color: #f0f048;"></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                        <div>
+                            <label class="switch" data-ng-click="settings.toggleAnnouncer()">
+                                <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.showAnnouncer">
+                                <span class="switch-label" data-on="On" data-off="Off"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-xs-12">
+                        <button type="button" class="button button-blue" data-ng-click="settingsModal.cancel()" id="moveButton">
+                            <i class="fa fa-times"></i>
+                            <strong>Close</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
