@@ -44,6 +44,16 @@ Open http://127.0.0.1:8080 in your browser.
 grunt test
 ```
 
+## Building Electron app
+
+- First you must have these two packages installed globally:
+
+```
+npm install electron -g
+npm install electron-packager -g
+npm install electron-installer-windows -g
+```
+
 ## Default Grunt build job explained
 
 + **clean:build**: Deletes all previous compiled build files

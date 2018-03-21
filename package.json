@@ -2,9 +2,11 @@
   "name": "ECMA6Risk",
   "version": "1.2.9",
   "description": "A web application game of the classic board game Risk",
-  "main": "js/main.js",
+  "main": "main.js",
   "scripts": {
-    "start": "http-server"
+    "start": "http-server",
+    "build-electron": "electron-packager . ECMA6Risk --platform win32 --arch x64 --out dist/ --overwrite --icon icon.ico",
+    "build-installer": "electron-installer-windows --src dist/ECMA6Risk-win32-x64/ --dest dist/installers/ --config config.json"
   },
   "keywords": [
     "angular",
@@ -25,6 +27,7 @@
     "url": "https://github.com/ToWelie89/ECMA6Risk/issues",
     "email": "sonesson8909@hotmail.com"
   },
+  "homepage": "https://github.com/ToWelie89/ECMA6Risk.git",
   "repository": {
     "type": "git",
     "url": "https://github.com/ToWelie89/ECMA6Risk.git"
@@ -56,6 +59,9 @@
     "jquery": "^2.2.4"
   },
   "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-installer-windows": "^1.0.2",
+    "electron-package": "^0.1.0",
     "grunt-cli": "^1.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
