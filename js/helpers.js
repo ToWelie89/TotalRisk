@@ -52,4 +52,6 @@ const randomDoubleFromInterval = (min, max) => {
     return Math.round(double * 10) / 10;
 };
 
-export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval};
+const runningElectron = () => !!(window && window.process && window.process.type);
+
+export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval, runningElectron};

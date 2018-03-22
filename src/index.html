@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="assets/img/icon.ico">
     <title>Risk</title>
 
+    <!-- Fix for electron -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
     <script src='js/libs/responsivevoice.js'></script>
@@ -23,6 +24,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js'></script>
 
+    <!-- Fix for electron -->
     <script>if (window.module) module = window.module;</script>
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -47,7 +49,8 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        v{{main.version}} | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                        @@gameVersion
+                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
                 <div style="margin-top: 70px;
@@ -55,7 +58,7 @@
                             margin: 0 auto;
                             padding-top: 30px;
                             padding-bottom: 40px;
-                            background: #3b3b3bc9;
+                            background: rgba(59, 59, 59, 0.788235294117647);
                             border-radius: 30px;">
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.PLAYER_SETUP)">
                         <strong>New Game</strong>
@@ -74,7 +77,8 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        v{{main.version}} | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                        @@gameVersion
+                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
                 <div id="settingsBox" style="margin-top: 70px;
@@ -82,7 +86,7 @@
                                              margin: 0 auto;
                                              padding-top: 30px;
                                              padding-bottom: 40px;
-                                             background: #3b3b3bc9;
+                                             background: rgba(59, 59, 59, 0.788235294117647);
                                              border-radius: 30px;">
 
                     <div class="row">
@@ -148,7 +152,8 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        v{{main.version}} | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                        @@gameVersion
+                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
                 <div id="gameSetupBox">
@@ -275,7 +280,7 @@
         </div>
         <div class="container mainContent" data-ng-controller="gameController as game"">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}">
-                <div class="row" style="background: #434040b0;
+                <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
                                         border-radius: 30px;
                                         border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
                     <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">

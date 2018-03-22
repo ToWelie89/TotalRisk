@@ -23,6 +23,14 @@ Technologies used:
 npm install
 ```
 
+However if you want to run on a production environment you can instead run
+
+```
+npm install --prod
+```
+
+This will not install dependencies only needed for dev, such as karma and electron
+
 - Build assets
 
 ```
@@ -46,13 +54,19 @@ grunt test
 
 ## Building Electron app
 
-- First you must have these two packages installed globally:
+- First run:
 
 ```
-npm install electron -g
-npm install electron-packager -g
-npm install electron-installer-windows -g
+npm run build-electron
 ```
+
+Then run:
+
+```
+npm run build-installer
+```
+
+This will create an exe-installer (using Electron) in the dist/installers folder.
 
 ## Default Grunt build job explained
 
@@ -67,20 +81,28 @@ npm install electron-installer-windows -g
 ```
 ├───assets
 │   ├───cursors
+│   ├───flags
 │   ├───fonts
 │   ├───img
 │   └───troopIcons
 ├───audio
 ├───build
 ├───cssLibs
+├───electron
+│   ├───assets
+│   ├───dist
 ├───js
+│   ├───ai
 │   ├───angular
 │   ├───card
+│   ├───directives
 │   ├───libs
 │   ├───map
 │   ├───player
+│   ├───settings
 │   ├───sound
 │   ├───test
+│   ├───tutorial
 │   └───voice
 ├───less
 │   ├───animations
@@ -90,11 +112,16 @@ npm install electron-installer-windows -g
 │   ├───cursors
 │   ├───default
 │   ├───dice
+│   ├───endScreenTable
 │   ├───fonts
 │   ├───modal
+│   ├───settings
 │   ├───setup
+│   ├───startScreen
 │   ├───svg
+│   ├───switch
 │   ├───troops
 │   └───variables
+│   └───victory
 └───src
 ```

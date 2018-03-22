@@ -33,13 +33,6 @@ export default class MainController {
             }
         });
 
-        fetch('./package.json')
-        .then((resp) => resp.json())
-        .then((data) => {
-            this.vm.version = data.version;
-            $scope.$apply();
-        });
-
         console.log('Initialization of mainController');
     }
 
