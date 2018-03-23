@@ -4,6 +4,7 @@ import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwne
 import { delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } from './../helpers';
 import BattleHandler from './../battleHandler';
 import { PLAYER_TYPES } from './../player/playerConstants';
+import { displayDamageNumbers, displayReinforcementNumbers } from './../animations/animations';
 
 export default class AiHandler {
     constructor(gameEngine, soundService, mapService, settings) {
@@ -194,6 +195,7 @@ export default class AiHandler {
                     this.gameEngine.addTroopToTerritory(territoryName);
                     this.mapService.updateMap(this.gameEngine.filter);
                     this.soundService.addTroopSound.play();
+                    displayReinforcementNumbers(territoryName);
                     callback();
                     resolve();
                 }, (this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (index + 1)));
@@ -313,7 +315,9 @@ export default class AiHandler {
                 currentInvasion.battles.push({
                     response,
                     attackingTroops: currentAttackingTroops - response.attackerCasualties,
-                    defendingTroops: currentDefendingTroops - response.defenderCasualties
+                    attackerCasualties: response.attackerCasualties,
+                    defendingTroops: currentDefendingTroops - response.defenderCasualties,
+                    defenderCasualties: response.defenderCasualties
                 });
             }
 
@@ -335,6 +339,13 @@ export default class AiHandler {
                     setTimeout(() => {
                         const attacker = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackFrom);
                         const defender = getTerritoryByName(this.gameEngine.map, currentInvasion.startingPosition.attackTo);
+
+                        if (battle.attackerCasualties > 0) {
+                            displayDamageNumbers(attacker.name, battle.attackerCasualties);
+                        }
+                        if (battle.defenderCasualties > 0) {
+                            displayDamageNumbers(defender.name, battle.defenderCasualties);
+                        }
 
                         if (battle.defendingTroops === 0) {
                             const defeatedPlayer = defender.owner;

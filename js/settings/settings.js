@@ -1,15 +1,15 @@
 import {settings} from './defaultSettings';
 import {runningElectron} from './../helpers';
 
-const Store = require('./electronStoreTwo.js');
-const ElectronSettings = require('./electronDefaultSettings.js');
-
 export default class Settings {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
         let savedSettings;
 
         if (runningElectron()) {
+            const Store = require('./electronStoreTwo.js');
+            const ElectronSettings = require('./electronDefaultSettings.js');
+
             this.store = new Store({
                 configName: 'user-preferences',
                 defaults: ElectronSettings

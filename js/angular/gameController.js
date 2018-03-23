@@ -13,6 +13,7 @@ import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 import {delay} from './../helpers';
+import {displayReinforcementNumbers} from './../animations/animations';
 
 export default class GameController {
 
@@ -497,6 +498,7 @@ export default class GameController {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 this.soundService.addTroopSound.play();
+                displayReinforcementNumbers(clickedTerritory.name);
             }
             this.gameEngine.addTroopToTerritory(country);
             this.mapService.updateMap(this.gameEngine.filter);
