@@ -2,6 +2,7 @@ import {settings} from './defaultSettings';
 import {runningElectron} from './../helpers';
 
 const Store = require('./electronStoreTwo.js');
+const ElectronSettings = require('./electronDefaultSettings.js');
 
 export default class Settings {
     constructor(gameEngine) {
@@ -10,8 +11,8 @@ export default class Settings {
 
         if (runningElectron()) {
             this.store = new Store({
-              configName: 'user-preferences',
-              defaults: settings
+                configName: 'user-preferences',
+                defaults: ElectronSettings
             });
 
             savedSettings = this.store.get('riskSettings');

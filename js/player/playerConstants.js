@@ -128,7 +128,7 @@ const avatars = {
         biography: 'During the later days of the Roman empire nomadic peoples, referred to as barbarians by the romans, terrorized and attacked everywhere along the vast borders of the empire. None of these barbarian leaders were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
     },
     'Scipio Africanus': {
-        picture: '/assets/img/scipio.png',
+        picture: './assets/img/scipio.png',
         selectSound: '',
         flag: './assets/flags/rome.png',
         biography: 'Scipio Africanus was a highly successful roman general most known for his victories against the Carthaginians during the Second Punic War. His greatest achievement was at the battle of Zama where Scipio finally defeated Hannibal, the great enemy of Rome, in a decisive victory. He would later become a consul of the Roman Republic.'

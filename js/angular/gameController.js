@@ -463,7 +463,7 @@ export default class GameController {
 
         // Update statistics
         const attacker = closeResponse.attackFrom.owner;
-        const defender = battlesWon ? closeResponse.previousOwner : closeResponse.attackTo.owner;
+        const defender = closeResponse.battleWasWon ? closeResponse.previousOwner : closeResponse.attackTo.owner;
 
         if (closeResponse.battleWasWon) {
             this.gameEngine.players.get(attacker).statistics.battlesWon += 1;

@@ -9,6 +9,8 @@ const url = require('url')
 
 const Store = require('./../js/settings/electronStore.js');
 
+const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
+
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
@@ -84,14 +86,11 @@ function createWindow () {
 
   const store = new Store({
     configName: 'user-preferences',
-    defaults: {
-      windowBounds: {
-        width: 1280, height: 980
-      }
-    }
+    defaults: ElectronSettings
   });
 
   let { width, height } = store.get('windowBounds');
+  let fullScreen = store.get('fullScreen');
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -100,9 +99,9 @@ function createWindow () {
     minWidth: 1280,
     minHeight: 980,
     title: 'TotalRisk',
-    fullscreen: false,
+    fullscreen: fullScreen,
     webPreferences: {
-      zoomFactor: 0.8
+      zoomFactor: 1.1
     },
     icon: 'electron/assets/icon.ico'
   })

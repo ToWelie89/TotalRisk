@@ -54,17 +54,21 @@ grunt test
 
 ## Building Electron app
 
-- First run:
+You must first install the following three packages globally:
 
 ```
-npm run build-electron
+npm install -g electron
+npm install -g electron-packager
+npm install -g electron-installer-windows
 ```
 
 Then run:
 
 ```
-npm run build-installer
+npm run build-all
 ```
+
+This is to build both x86 and x64 Windows installers in the electron/dist/installers folder.
 
 This will create an exe-installer (using Electron) in the dist/installers folder.
 
