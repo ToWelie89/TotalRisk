@@ -13,6 +13,7 @@ Technologies used:
 - **Angular 1.x** (MVW framework)
 - **less** (CSS preprocessor)
 - **Bootstrap** (HTML & CSS framework)
+- **Electron** (Used for creating exe-installer dists of the game so that it can be intalled and ran as a desktop application)
 
 ## How to run locally
 
@@ -44,6 +45,12 @@ npm run start
 ```
 Open http://127.0.0.1:8080 in your browser.
 
+If you have electron installed globally you can also run the app as a desktop application by executing
+
+```
+electron .
+```
+
 ## How to test locally
 
 - Run
@@ -71,6 +78,16 @@ npm run build-all
 This is to build both x86 and x64 Windows installers in the electron/dist/installers folder.
 
 This will create an exe-installer (using Electron) in the dist/installers folder.
+
+However if you only want to build for a specific architecture you can run
+
+```
+npm run build-32-bit
+```
+or
+```
+npm run build-64-bit
+```
 
 ## Default Grunt build job explained
 
