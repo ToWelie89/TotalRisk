@@ -54,6 +54,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" data-ng-show="settings.runningElectron">
+                    <div class="col-xs-4">
+                        <div>
+                            Full Screen
+                        </div>
+                    </div>
+                    <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                        <div>
+                            <label class="switch" data-ng-click="settings.toggleFullScreen()">
+                                <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.fullScreen">
+                                <span class="switch-label" data-on="On" data-off="Off"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row" style="margin-top: 30px;">
                     <div class="col-xs-12">

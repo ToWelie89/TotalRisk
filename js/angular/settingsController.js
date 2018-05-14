@@ -1,3 +1,5 @@
+import {runningElectron} from './../helpers';
+
 export default class SettingsController {
 
     constructor($scope, $timeout, settings, aiHandler, soundService) {
@@ -5,6 +7,8 @@ export default class SettingsController {
         this.vm.settings = settings;
         this.aiHandler = aiHandler;
         this.soundService = soundService;
+
+        this.vm.runningElectron = runningElectron();
 
         // PUBLIC FIELDS
         this.vm.movementSliderOptions = {
@@ -23,6 +27,7 @@ export default class SettingsController {
         // PUBLIC FUNCTIONS
         this.vm.toggleSound = this.toggleSound;
         this.vm.toggleAnnouncer = this.toggleAnnouncer;
+        this.vm.toggleFullScreen = this.toggleFullScreen;
     }
 
     toggleSound() {
@@ -32,6 +37,18 @@ export default class SettingsController {
         } else {
             this.vm.settings.toggleSound();
             this.soundService.changeColor.play();
+        }
+    }
+
+    toggleFullScreen() {
+        this.vm.settings.fullScreen = !this.vm.settings.fullScreen;
+        this.vm.settings.saveSettings();
+
+        if (this.vm.settings.fullScreen) {
+            //var electron = window.require('electron');
+            //const { app } = require('electron').remote;
+            //var window = app.getCurrentWindow();
+            //window.setFullScreen(true);
         }
     }
 

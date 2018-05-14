@@ -2,6 +2,7 @@ const settings = {
 	playSound: true,
 	aiSpeed: 'Fast',
 	showAnnouncer: true,
+	fullScreen: false,
 	aiSpeedValues: {
 	    'Slow': 1000,
 	    'Medium': 600,

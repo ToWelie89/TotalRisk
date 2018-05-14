@@ -4,9 +4,10 @@ import {runningElectron} from './../helpers';
 export default class Settings {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
+        this.runningElectron = runningElectron();
         let savedSettings;
 
-        if (runningElectron()) {
+        if (this.runningElectron) {
             const Store = require('./electronStoreTwo.js');
             const ElectronSettings = require('./electronDefaultSettings.js');
 
@@ -16,17 +17,19 @@ export default class Settings {
             });
 
             savedSettings = this.store.get('riskSettings');
-            console.log(savedSettings);
+            console.log('Saved settings from JSON file: ', savedSettings);
         } else {
             savedSettings = localStorage.getItem('riskSettings');
             if (savedSettings) {
                 savedSettings = JSON.parse(savedSettings);
+                console.log('Saved settings from local storage: ', savedSettings);
             }
         }
 
         this.playSound     = savedSettings ? savedSettings.playSound     : settings.playSound;
         this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
+        this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
         this.aiSpeedValues = settings.aiSpeedValues;
 
         this.gameEngine.toggleSound(this.playSound);
@@ -40,18 +43,17 @@ export default class Settings {
     }
 
     saveSettings() {
-        if (runningElectron()) {
-            this.store.set('riskSettings', {
-                playSound:     this.playSound,
-                aiSpeed:       this.aiSpeed,
-                showAnnouncer: this.showAnnouncer
-            });
+        const settingsToSave = {
+            playSound:     this.playSound,
+            aiSpeed:       this.aiSpeed,
+            showAnnouncer: this.showAnnouncer,
+            fullScreen:    this.fullScreen
+        };
+
+        if (this.runningElectron) {
+            this.store.set('riskSettings', settingsToSave);
         } else {
-            localStorage.setItem('riskSettings', JSON.stringify({
-                playSound:     this.playSound,
-                aiSpeed:       this.aiSpeed,
-                showAnnouncer: this.showAnnouncer
-            }));
+            localStorage.setItem('riskSettings', JSON.stringify(settingsToSave));
         }
     }
 }

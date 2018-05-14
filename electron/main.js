@@ -90,7 +90,7 @@ function createWindow () {
   });
 
   let { width, height } = store.get('windowBounds');
-  let fullScreen = store.get('fullScreen');
+  let riskSettings = store.get('riskSettings');
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -99,15 +99,15 @@ function createWindow () {
     minWidth: 1280,
     minHeight: 980,
     title: 'TotalRisk',
-    fullscreen: fullScreen,
+    fullscreen: riskSettings.fullScreen,
     webPreferences: {
-      zoomFactor: 1.1
+      zoomFactor: 0.6
     },
     icon: 'electron/assets/icon.ico'
   })
 
   mainWindow.setMenu(null);
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

@@ -3,12 +3,12 @@ const ElectronSettings = {
         playSound: true,
         aiSpeed: 'Fast',
         showAnnouncer: true,
+        fullScreen: false
     },
     windowBounds: {
         width: 1280,
         height: 980
-    },
-    fullScreen: false
+    }
 };
 
 module.exports = ElectronSettings;
