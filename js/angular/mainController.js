@@ -1,5 +1,5 @@
 import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
-import {randomIntFromInterval, randomDoubleFromInterval} from './../helpers';
+import {randomIntFromInterval, randomDoubleFromInterval, runningElectron} from './../helpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 
@@ -32,6 +32,35 @@ export default class MainController {
                 }, 50);
             }
         });
+
+        this.vm.runningElectron = runningElectron();
+
+        if (this.vm.runningElectron) {
+            var shell = electron.shell;
+            //open links externally by default
+            $(document).on('click', 'a[href^="http"]', function(event) {
+                event.preventDefault();
+                shell.openExternal(this.href);
+            });
+
+            this.vm.appVersion = electron.remote.app.getVersion();
+
+            fetch('https://raw.githubusercontent.com/ToWelie89/ECMA6Risk/master/package.json')
+            .then((resp) => resp.json())
+            .then((data) => {
+                const currentVersion = data.version;
+                if (currentVersion !== this.vm.appVersion) {
+                    console.log('There is another version out!');
+                }
+            });
+        } else {
+            fetch('./package.json')
+            .then((resp) => resp.json())
+            .then((data) => {
+                this.vm.appVersion = data.version;
+                $scope.$apply();
+            });
+        }
 
         console.log('Initialization of mainController');
     }

@@ -1,3 +1,5 @@
+// These are the default settings used in the standalone electron version
+
 const ElectronSettings = {
     riskSettings: {
         playSound: true,

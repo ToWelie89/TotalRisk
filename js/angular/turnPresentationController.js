@@ -14,20 +14,25 @@ export default class TurnPresentationController {
         this.vm.messages = this.data.messages ? this.data.messages : [];
         this.vm.tutorial = this.data.type === 'tutorial';
 
-        this.boundListener = evt => this.spaceEventListener(evt);
-        document.addEventListener('keypress', this.boundListener);
+        this.boundListener = evt => this.keyupEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
 
         this.$sce = $sce;
 
         this.init();
     }
 
-    spaceEventListener(e) {
-        if ((e.keyCode === 0 || e.keyCode === 32) && this.data) {
-            e.preventDefault()
+    keyupEventListener(e) {
+        if (e.keyCode === 27) { // Escape
             this.$uibModalInstance.close();
             this.close({presenterWasCancelled: true});
-            document.removeEventListener('keypress', this.boundListener);
+            document.removeEventListener('keyup', this.boundListener);
+            this.gameAnnouncerService.mute();
+        } else if ((e.keyCode === 0 || e.keyCode === 32) && this.data) { // Space
+            e.preventDefault();
+            this.$uibModalInstance.close();
+            this.close({presenterWasCancelled: true});
+            document.removeEventListener('keyup', this.boundListener);
             this.gameAnnouncerService.mute();
             if (!this.vm.tutorial) {
                 this.gameEngine.setMusicVolume(0.8);

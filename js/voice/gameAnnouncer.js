@@ -40,7 +40,7 @@ export default class GameAnnouncer {
             onend: onendCallback
         };
 
-        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`) : '', this.announcerType, {
+        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`) : ' ', this.announcerType, {
             pitch: this.pitch,
             onstart: onstartCallback,
             onend: () => {

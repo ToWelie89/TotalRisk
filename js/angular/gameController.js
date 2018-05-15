@@ -30,7 +30,7 @@ export default class GameController {
         this.vm.testAttackPhase = this.testAttackPhase;
         this.vm.testPresentationModal = this.testPresentationModal;
         this.vm.pause = this.pause;
-        this.vm.openSettings = this.openSettings;
+        this.vm.openMenu = this.openMenu;
 
         this.vm.turn = {};
 
@@ -74,6 +74,13 @@ export default class GameController {
             }
         });
 
+        this.boundListener = evt => this.escapeEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
+
+        this.startMenuIsOpen = false;
+        this.escapeWasPressed = false;
+        this.turnPresenterIsOpen = false;
+
         this.vm.pauseModes = PAUSE_MODES;
         this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
 
@@ -115,12 +122,14 @@ export default class GameController {
         };
 
         if (this.settings.showAnnouncer) {
+            this.turnPresenterIsOpen = true;
             this.$uibModal.open({
                 templateUrl: 'turnPresentationModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
+                keyboard: false,
                 resolve: {
                     data: () => {
                         return {
@@ -130,6 +139,10 @@ export default class GameController {
                 }
             }).result.then(closeResponse => {
                 callback();
+                this.turnPresenterIsOpen = false;
+                if (this.escapeWasPressed) {
+                    this.openPauseModal();
+                }
             });
         } else {
             callback();
@@ -197,21 +210,41 @@ export default class GameController {
         })
     }
 
-    openSettings() {
+    openMenu() {
+        this.openPauseModal();
+    }
+
+    escapeEventListener(e) {
+        if (e.keyCode === 27) {
+            this.escapeWasPressed = true;
+        }
+
+        if (this.turnPresenterIsOpen) return;
+
+        if (e.keyCode === 27 && !this.startMenuIsOpen) {
+            this.openPauseModal();
+        }
+    }
+
+    openPauseModal() {
+        this.startMenuIsOpen = true;
         if (this.aiTurn && this.vm.gamePaused !== PAUSE_MODES.PAUSED) {
-            this.pause();
+            this.vm.gamePaused = PAUSE_MODES.PAUSED;
         }
 
         this.$uibModal.open({
-            templateUrl: 'settingsModal.html',
+            templateUrl: 'pauseMenuModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
-            controller: 'settingsModalController',
-            controllerAs: 'settingsModal'
+            controller: 'pauseMenuModalController',
+            controllerAs: 'pauseMenu',
+            keyboard: false
         }).result.then(closeResponse => {
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
-                this.pause();
+                this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             }
+            this.startMenuIsOpen = false;
+            this.escapeWasPressed = false;
         });
     }
 
@@ -313,12 +346,14 @@ export default class GameController {
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
         if (this.settings.showAnnouncer) {
+            this.turnPresenterIsOpen = true;
             this.$uibModal.open({
                 templateUrl: 'turnPresentationModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
+                keyboard: false,
                 resolve: {
                     data: () => {
                         return {
@@ -328,6 +363,10 @@ export default class GameController {
                 }
             }).result.then(closeResponse => {
                 callback();
+                this.turnPresenterIsOpen = false;
+                if (this.escapeWasPressed) {
+                    this.openPauseModal();
+                }
             });
         } else {
             callback();
@@ -338,12 +377,14 @@ export default class GameController {
         this.vm.turn = this.gameEngine.nextTurn();
         if (this.settings.showAnnouncer) {
             return new Promise((resolve, reject) => {
+                this.turnPresenterIsOpen = true;
                 return this.$uibModal.open({
                     templateUrl: 'turnPresentationModal.html',
                     backdrop: 'static',
                     windowClass: 'riskModal',
                     controller: 'turnPresentationController',
                     controllerAs: 'turnPresentation',
+                    keyboard: false,
                     resolve: {
                         data: () => {
                             return {
@@ -353,6 +394,10 @@ export default class GameController {
                     }
                 }).result.then(closeResponse => {
                     this.mapService.updateMap(this.gameEngine.filter);
+                    this.turnPresenterIsOpen = false;
+                    if (this.escapeWasPressed) {
+                        this.openPauseModal();
+                    }
                     resolve();
                 });
             });
@@ -417,6 +462,7 @@ export default class GameController {
             windowClass: 'riskModal',
             controller: 'attackModalController',
             controllerAs: 'attack',
+            keyboard: false,
             resolve: {
                 attackData: () => {
                     return {
@@ -546,6 +592,7 @@ export default class GameController {
             windowClass: 'riskModal',
             controller: 'movementModalController',
             controllerAs: 'movement',
+            keyboard: false,
             resolve: {
                 data: () => {
                     return {

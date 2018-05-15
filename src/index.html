@@ -52,7 +52,7 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        @@gameVersion
+                        {{ main.appVersion }}
                         | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        @@gameVersion
+                        {{ main.appVersion }}
                         | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        @@gameVersion
+                        {{ main.appVersion }}
                         | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
@@ -338,8 +338,8 @@
                                 <span data-ng-show="game.gamePaused === game.pauseModes.PAUSING">{{ game.pausingDots }}</span>
                                 <span class="glyphicon glyphicon-play" aria-hidden="true" data-ng-show="game.gamePaused === game.pauseModes.PAUSED"></span>
                             </button>
-                            <button type="button" class="button button-green" data-ng-click="game.openSettings()" style="width: 46px; height: 34px;">
-                                <span class="glyphicon glyphicon-cog"></span>
+                            <button type="button" class="button button-green" data-ng-click="game.openMenu()" style="height: 34px;">
+                                MENU
                             </button>
                         </div>
                         <h4>Turn number <strong data-ng-bind="game.turn.turnNumber"></strong></h4>

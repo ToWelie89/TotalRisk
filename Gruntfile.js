@@ -92,9 +92,6 @@ module.exports = function(grunt) {
                     }, {
                         match: 'troopSvg',
                         replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
-                    }, {
-                        match: 'gameVersion',
-                        replacement: '<%= pkg.version %>'
                     }]
                 },
                 files: [{
