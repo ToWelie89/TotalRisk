@@ -44,12 +44,8 @@ export default class SettingsController {
         this.vm.settings.fullScreen = !this.vm.settings.fullScreen;
         this.vm.settings.saveSettings();
 
-        if (this.vm.settings.fullScreen) {
-            //var electron = window.require('electron');
-            //const { app } = require('electron').remote;
-            //var window = app.getCurrentWindow();
-            //window.setFullScreen(true);
-        }
+        const window = electron.remote.getCurrentWindow();
+        window.setFullScreen(this.vm.settings.fullScreen);
     }
 
     toggleAnnouncer() {
