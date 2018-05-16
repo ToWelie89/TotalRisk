@@ -41,6 +41,7 @@
     <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
@@ -194,7 +195,81 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
+
+                    <div class="row textCenter">
+                        <div class="setupBoxAvatarsContainer">
+                            <div data-ng-repeat="player in setup.players track by $index" class="setupBoxAvatarsContainer__item">
+                                <div
+                                    class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                    style="background-image: url({{player.avatar.picture}});
+                                           border-color: {{player.color.mainColor}};">
+                                    <div class="setupBoxAvatarsContainer__item__portrait__inner" style="border-color: {{player.color.mainColor}};">
+                                        <h2>CHANGE</h2>
+                                    </div>
+                                </div>
+                                <div
+                                    class="box-shadow setupBoxAvatarsContainer__item__name"
+                                >
+                                    <div style="background: {{player.color.mainColor}};" class="box-shadow" data-color="{{player.color.mainColor}}">
+                                        <span style="border-color: {{setup.lightenDarkenColor(player.color.mainColor, -30)}}; border-left-color: transparent;"></span>
+                                        <span>{{ player.name }}{{ (player.type !== 0) ? " (AI)" : "" }}</span>
+                                        <span style="border-color: {{setup.lightenDarkenColor(player.color.mainColor, -30)}}; border-right-color: transparent;"></span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="setupBoxAvatarsContainer__item__color box-shadow"
+                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
+                                    role="button"
+                                    tabIndex="0"
+                                    popover-placement="left"
+                                    popover-title="Select a color"
+                                    popover-trigger="'focus'"
+                                    uib-popover-template="'src/popoverColorTemplate.html'"
+                                    data-ng-controller="colorPopoverController as colorPopover"
+                                    data-ng-init="colorPopover.init(player)"
+                                >
+                                    <i class="fas fa-paint-brush"></i>
+                                </div>
+                                <div
+                                    class="setupBoxAvatarsContainer__item__type box-shadow"
+                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
+                                    role="button"
+                                    tabIndex="0"
+                                    popover-placement="left"
+                                    popover-title="Select player type"
+                                    popover-trigger="'focus'"
+                                    uib-popover-template="'src/popoverPlayerTypeTemplate.html'"
+                                    data-ng-controller="playerTypePopoverController as playerTypePopover"
+                                    data-ng-init="playerTypePopover.init(player)"
+                                >
+                                    <i class="fas fa-user" data-ng-show="player.type === 0"></i>
+                                    <i class="fas fa-desktop" data-ng-show="player.type !== 0"></i>
+                                </div>
+                                <div
+                                    data-ng-class="{'setupBoxAvatarsContainer__item__delete--disabled': setup.players.length == setup.minPlayers}"
+                                    class="setupBoxAvatarsContainer__item__delete box-shadow"
+                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
+                                    data-ng-click="setup.removePlayer(player)"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__flag" data-ng-show="player">
+                                    <waving-flag flag-width="90" flag-height="50" flag-url="player.avatar.flag"></waving-flag>
+                                </div>
+                            </div>
+                            <div data-ng-repeat="i in setup.getEmptyPlayerSlots() track by $index" class="setupBoxAvatarsContainer__item">
+                                <div
+                                    class="box-shadow setupBoxAvatarsContainer__item__portrait empty"
+                                    data-ng-click="setup.addPlayer()"
+                                >
+                                    <div>
+                                        <span class="glyphicon glyphicon-plus">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-ng-show="false" class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
                         <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
                             <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
                             role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)" data-toggle="tooltip"

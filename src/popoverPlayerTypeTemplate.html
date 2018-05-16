@@ -1,0 +1,8 @@
+<div class="popoverPlayerTypeBox"
+    data-ng-repeat="type in playerTypePopover.types"
+    data-ng-class="{'popoverBodyColorBox--chosen': player.type == type}"
+    data-ng-click="setup.choosePlayerType(playerTypePopover.player, type)"
+    role="button">
+        <i data-ng-show="playerTypePopover.player.type === type" class="fas fa-check"></i>
+        <span data-ng-bind="playerTypePopover.getTypeName(type)"></span>
+</div>

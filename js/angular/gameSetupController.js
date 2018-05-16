@@ -25,6 +25,8 @@ export default class GameSetupController {
         this.vm.choosePlayerType = this.choosePlayerType;
         this.vm.onlyAIsExists = this.onlyAIsExists;
         this.vm.setGoal = this.setGoal;
+        this.vm.lightenDarkenColor = this.lightenDarkenColor;
+        this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
     }
 
     init() {
@@ -46,6 +48,38 @@ export default class GameSetupController {
         this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];
 
         console.log('Players: ', this.vm.players);
+    }
+
+    lightenDarkenColor(colorCode, amount) {
+        if (!colorCode) {
+            return '';
+        }
+
+        var usePound = false;
+        if (colorCode[0] === '#') {
+            colorCode = colorCode.slice(1);
+            usePound = true;
+        }
+        var num = parseInt(colorCode, 16);
+        var r = (num >> 16) + amount;
+        if (r > 255) {
+            r = 255;
+        } else if (r < 0) {
+            r = 0;
+        }
+        var b = ((num >> 8) & 0x00FF) + amount;
+        if (b > 255) {
+            b = 255;
+        } else if (b < 0) {
+            b = 0;
+        }
+        var g = (num & 0x0000FF) + amount;
+        if (g > 255) {
+            g = 255;
+        } else if (g < 0) {
+            g = 0;
+        }
+        return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
     }
 
     setGoal(goal) {
@@ -136,7 +170,7 @@ export default class GameSetupController {
     }
 
     choosePlayerType(player, type) {
-        player.type = PLAYER_TYPES[type];
+        player.type = type;
         this.soundService.changeColor.play();
     }
 

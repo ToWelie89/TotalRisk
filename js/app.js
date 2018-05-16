@@ -14,6 +14,7 @@ import TurnPresentationController from './angular/turnPresentationController';
 import SettingsController from './angular/settingsController';
 import PauseMenuModalController from './angular/pauseMenuModalController';
 import EndScreenTableController from './angular/endScreenTableController';
+import PlayerTypePopoverController from './angular/playerTypePopoverController';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
@@ -42,6 +43,7 @@ app.controller('turnPresentationController', TurnPresentationController);
 app.controller('settingsController', SettingsController);
 app.controller('endScreenTableController', EndScreenTableController);
 app.controller('pauseMenuModalController', PauseMenuModalController);
+app.controller('playerTypePopoverController', PlayerTypePopoverController);
 /* SERVICES */
 app.service('soundService', SoundService);
 app.service('mapService', MapService);

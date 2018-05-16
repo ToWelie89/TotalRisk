@@ -52,12 +52,6 @@ const PLAYER_COLORS = {
         borderColor: '#8442c6',
         highlightColor: '#b68ae1'
     },
-    BLACK: {
-        name: 'Black',
-        mainColor: '#564848',
-        borderColor: '#362d2d',
-        highlightColor: '#525252'
-    },
     RED: {
         name: 'Red',
         mainColor: '#dd4444',
@@ -75,6 +69,12 @@ const PLAYER_COLORS = {
         mainColor: '#4770ea',
         borderColor: '#234abe',
         highlightColor: '#7272fa'
+    },
+    BLACK: {
+        name: 'Black',
+        mainColor: '#564848',
+        borderColor: '#362d2d',
+        highlightColor: '#525252'
     },
     PINK: {
         name: 'Pink',
