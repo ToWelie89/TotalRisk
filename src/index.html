@@ -198,27 +198,29 @@
 
                     <div class="row textCenter">
                         <div class="setupBoxAvatarsContainer">
-                            <div data-ng-repeat="player in setup.players track by $index" class="setupBoxAvatarsContainer__item">
+                            <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                                 <div
+                                    data-ng-if="setup.players[i]"
                                     class="box-shadow setupBoxAvatarsContainer__item__portrait"
-                                    style="background-image: url({{player.avatar.picture}});
-                                           border-color: {{player.color.mainColor}};">
-                                    <div class="setupBoxAvatarsContainer__item__portrait__inner" style="border-color: {{player.color.mainColor}};">
+                                    style="background-image: url({{setup.players[i].avatar.picture}});
+                                           border-color: {{setup.players[i].color.mainColor}};">
+                                    <div class="setupBoxAvatarsContainer__item__portrait__inner"
+                                         data-ng-click="setup.openSelectionScreen(setup.players[i])"
+                                         style="border-color: {{setup.players[i].color.mainColor}};">
                                         <h2>CHANGE</h2>
                                     </div>
                                 </div>
-                                <div
-                                    class="box-shadow setupBoxAvatarsContainer__item__name"
-                                >
-                                    <div style="background: {{player.color.mainColor}};" class="box-shadow" data-color="{{player.color.mainColor}}">
-                                        <span style="border-color: {{setup.lightenDarkenColor(player.color.mainColor, -30)}}; border-left-color: transparent;"></span>
-                                        <span>{{ player.name }}{{ (player.type !== 0) ? " (AI)" : "" }}</span>
-                                        <span style="border-color: {{setup.lightenDarkenColor(player.color.mainColor, -30)}}; border-right-color: transparent;"></span>
+                                <div data-ng-if="setup.players[i]" class="box-shadow setupBoxAvatarsContainer__item__name">
+                                    <div style="background: {{setup.players[i].color.mainColor}};" class="box-shadow" data-color="{{setup.players[i].color.mainColor}}">
+                                        <span style="border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}}; border-left-color: transparent;"></span>
+                                        <span>{{ setup.players[i].name }}{{ (setup.players[i].type !== 0) ? " (AI)" : "" }}</span>
+                                        <span style="border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}}; border-right-color: transparent;"></span>
                                     </div>
                                 </div>
                                 <div
+                                    data-ng-if="setup.players[i]"
                                     class="setupBoxAvatarsContainer__item__color box-shadow"
-                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
+                                    style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
                                     role="button"
                                     tabIndex="0"
                                     popover-placement="left"
@@ -226,101 +228,49 @@
                                     popover-trigger="'focus'"
                                     uib-popover-template="'src/popoverColorTemplate.html'"
                                     data-ng-controller="colorPopoverController as colorPopover"
-                                    data-ng-init="colorPopover.init(player)"
+                                    data-ng-init="colorPopover.init(setup.players[i])"
                                 >
                                     <i class="fas fa-paint-brush"></i>
                                 </div>
                                 <div
+                                    data-ng-if="setup.players[i]"
                                     class="setupBoxAvatarsContainer__item__type box-shadow"
-                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
+                                    style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
                                     role="button"
                                     tabIndex="0"
                                     popover-placement="left"
-                                    popover-title="Select player type"
+                                    popover-title="Select setup.players[i] type"
                                     popover-trigger="'focus'"
                                     uib-popover-template="'src/popoverPlayerTypeTemplate.html'"
                                     data-ng-controller="playerTypePopoverController as playerTypePopover"
-                                    data-ng-init="playerTypePopover.init(player)"
+                                    data-ng-init="playerTypePopover.init(setup.players[i])"
                                 >
-                                    <i class="fas fa-user" data-ng-show="player.type === 0"></i>
-                                    <i class="fas fa-desktop" data-ng-show="player.type !== 0"></i>
+                                    <i class="fas fa-user" data-ng-show="setup.players[i].type === 0"></i>
+                                    <i class="fas fa-desktop" data-ng-show="setup.players[i].type !== 0"></i>
                                 </div>
                                 <div
+                                    data-ng-if="setup.players[i]"
                                     data-ng-class="{'setupBoxAvatarsContainer__item__delete--disabled': setup.players.length == setup.minPlayers}"
                                     class="setupBoxAvatarsContainer__item__delete box-shadow"
-                                    style="background-color: {{player.color.mainColor}}; border-color: {{setup.lightenDarkenColor(player.color.mainColor, -50)}}"
-                                    data-ng-click="setup.removePlayer(player)"
+                                    style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
+                                    data-ng-click="setup.removePlayer(setup.players[i])"
                                 >
                                     <i class="fas fa-trash-alt"></i>
                                 </div>
-                                <div class="setupBoxAvatarsContainer__item__flag" data-ng-show="player">
-                                    <waving-flag flag-width="90" flag-height="50" flag-url="player.avatar.flag"></waving-flag>
+                                <div class="setupBoxAvatarsContainer__item__flag" data-ng-if="setup.players[i]">
+                                    <waving-flag flag-width="90" flag-height="50" flag-url="setup.players[i].avatar.flag"></waving-flag>
                                 </div>
-                            </div>
-                            <div data-ng-repeat="i in setup.getEmptyPlayerSlots() track by $index" class="setupBoxAvatarsContainer__item">
+
                                 <div
                                     class="box-shadow setupBoxAvatarsContainer__item__portrait empty"
-                                    data-ng-click="setup.addPlayer()"
+                                    data-ng-click="setup.openSelectionScreen(null)"
+                                    data-ng-if="!setup.players[i]"
                                 >
                                     <div>
                                         <span class="glyphicon glyphicon-plus">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div data-ng-show="false" class="row marginTop marginBottom form-group" data-ng-repeat="player in setup.players track by $index">
-                        <div class="col-xs-2 text-shadow" style="text-align: right; margin-top: 22px;">
-                            <div class="colorSelectorBox box-shadow" style="background-color: {{player.color.mainColor}};"
-                            role="button" tabIndex="0" popover-placement="left" popover-title="Select a color" popover-trigger="'focus'" uib-popover-template="'src/popoverColorTemplate.html'" data-ng-controller="colorPopoverController as colorPopover" data-ng-init="colorPopover.init(player)" data-toggle="tooltip"
-                                 data-placement="top" title="Select color of player">
-                            </div>
-                        </div>
-                        <div class="col-xs-4" style="text-align: left; margin-top: 22px;">
-                            <input placeholder="Choose a name" type="text" data-ng-model="player.name" class="form-control box-shadow" style="width: 100%;" />
-                        </div>
-                        <div class="col-xs-2" style="text-align: left; margin-top: 22px;">
-                            <div class="dropdown" data-toggle="tooltip"
-                                 data-placement="left" title="Select if the player should be AI or human controlled">
-                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width: 100%;">
-                                    <span data-ng-show="player.type === 0">
-                                        Human
-                                    </span>
-                                    <span data-ng-show="player.type === 1">
-                                        AI - Normal
-                                    </span>
-                                    <span data-ng-show="player.type === 2">
-                                        AI - Expert
-                                    </span>
-                                <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'HUMAN')">Human</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_NORMAL')">AI - Normal</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" data-ng-click="setup.choosePlayerType(player, 'AI_EXPERT')">AI - Expert</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-xs-3" style="text-align: left;">
-                            <div class="avatarSelectorBox box-shadow" style="background-image: url({{player.avatar.picture}});"
-                            role="button" tabIndex="0" popover-placement="left" popover-trigger="'focus'" popover-title="Select an avatar" uib-popover-template="'src/popoverAvatarTemplate.html'" data-ng-controller="avatarPopoverController as avatarPopover" data-ng-init="avatarPopover.init(player)" data-toggle="tooltip"
-                                 data-placement="bottom" title="Select an avatar for the player">
-                            </div>
-                            <div class="avatarSelectorFlag">
-                                <waving-flag flag-width="90" flag-height="50" flag-url="player.avatar.flag"></waving-flag>
-                            </div>
-                        </div>
-                        <div class="col-xs-1" style="text-align: left; margin-top: 22px;">
-                            <button type="button" class="button button-red" data-ng-click="setup.removePlayer(player)" data-ng-disabled="setup.players.length == setup.minPlayers" data-toggle="tooltip"
-                                 data-placement="bottom" title="Remove player">
-                                <i class="fa fa-times"></i>
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
                         </div>
                     </div>
                     <div class="row marginTop--double">

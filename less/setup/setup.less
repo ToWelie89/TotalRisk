@@ -6,7 +6,7 @@
 
     .setupBoxAvatarsContainer {
         margin: 0 auto;
-        width: 910px;
+        width: 900px;
         &__item {
             display: inline-block;
             width: 300px;
@@ -158,37 +158,6 @@
         }
     }
 
-    .colorSelectorBox,
-    .avatarSelectorBox {
-        border-radius: 3px;
-        border: 3px solid black;
-        transition: all 0.5s;
-        &:hover {
-            border: 3px solid white;
-        }
-    }
-    .colorSelectorBox {
-        float: right;
-        height: 33px;
-        width: 33px;
-    }
-    .avatarSelectorBox {
-        float: left;
-        background-size: cover;
-        background-position: center center;
-        border-radius: 50%;
-        height: 80px;
-        width: 80px;
-        &:focus {
-            outline: none;
-        }
-    }
-
-    .avatarSelectorFlag {
-        margin-top: 15px;
-        margin-left: -60px;
-    }
-
     .popoverBody {
         display: none;
     }
@@ -201,54 +170,6 @@
     .gameSetupWarning {
         color: #eeeb6a;
         text-shadow: 1px 1px 3px black;
-    }
-}
-
-.popover[uib-title="Select an avatar"] {
-    min-width: 600px;
-
-    .avatarSelection {
-        padding: 8px;
-    }
-
-    .avatarInfoBox {
-        min-width: 250px;
-        min-height: 240px;
-        max-height: 240px;
-        background: gainsboro;
-        border-radius: 10px;
-        padding: 10px;
-
-        .portrait {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            right: 20px;
-            top: 185px;
-            background-size: cover;
-            background-position: center center;
-            box-shadow: -1px 1px 5px rgb(0, 0, 0);
-        }
-
-        .flag {
-            width: 70px;
-            height: 40px;
-            position: absolute;
-            right: 33px;
-            top: 290px;
-            background-size: cover;
-            background-position: center center;
-            box-shadow: -1px 1px 5px rgb(0, 0, 0);
-        }
-
-        h4 {
-            margin-top: 0px;
-        }
-
-        p {
-            width: 80%;
-        }
     }
 }
 

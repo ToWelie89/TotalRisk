@@ -1,6 +1,6 @@
 import {PLAYER_TYPES} from './../player/playerConstants';
 
-export default class ColorPopoverController {
+export default class PlayerTypePopoverController {
     constructor($scope) {
         this.vm = this;
         this.vm.init = this.init;
