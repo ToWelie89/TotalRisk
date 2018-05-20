@@ -4,9 +4,10 @@ import {CONSTANTS, VICTORY_GOALS} from './../gameConstants';
 
 export default class GameSetupController {
 
-    constructor($scope, soundService) {
+    constructor($scope, soundService, $uibModal) {
         this.vm = this;
         this.soundService = soundService;
+        this.$uibModal = $uibModal;
 
         // PUBLIC FIELDS
         this.vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
@@ -26,6 +27,7 @@ export default class GameSetupController {
         this.vm.onlyAIsExists = this.onlyAIsExists;
         this.vm.setGoal = this.setGoal;
         this.vm.lightenDarkenColor = this.lightenDarkenColor;
+        this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
     }
 
@@ -116,6 +118,23 @@ export default class GameSetupController {
         }
 
         this.soundService.changeColor.play();
+    }
+
+    openSelectionScreen(currentSelectedPlayer) {
+        this.$uibModal.open({
+            templateUrl: 'characterSelectionModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal characterSelect',
+            controller: 'characterSelectionController',
+            controllerAs: 'characterSelection',
+            keyboard: false,
+            resolve: {
+                currentSelectedPlayer: () => currentSelectedPlayer,
+                selectedPlayers: () => this.vm.players
+            }
+        }).result.then(closeResponse => {
+            // update selection
+        });
     }
 
     addPlayer() {

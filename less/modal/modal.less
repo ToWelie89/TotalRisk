@@ -75,4 +75,86 @@
             }
         }
     }
+
+    &.characterSelect {
+        .modal-dialog {
+            width: 100%;
+
+            .modal-content {
+                background: #746c97;
+
+                .modal-body {
+                    padding-top: 0;
+                    padding-bottom: 0;
+
+                    .modal-body {
+                        padding-top: 0;
+                        padding-bottom: 0;
+                    }
+                }
+
+                .row {
+                    background: #5a527d;
+                }
+            }
+
+            #characterSelectionModal {
+
+                #selectedCharacterPortrait {
+                    box-shadow: 3px 3px 10px black;
+                }
+
+                .selectableAvatars {
+                    width: 800px;
+                    margin: 0 auto;
+                    padding-top: 30px;
+                    padding-bottom: 30px;
+                    &__item {
+                        display: inline-block;
+                        padding: 5px;
+
+                        img {
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 5%;
+                            border-top-left-radius: 40%;
+                            border-bottom-right-radius: 40%;
+                            border: 3px solid white;
+                            border-bottom: 3px solid #949494;
+                            border-right: 3px solid #949494;
+                            cursor: pointer;
+                            box-shadow: 1px 1px 3px black;
+                            transition: all 0.2s;
+
+                            &:hover {
+                                border: 3px solid #ff6d6d;
+                            }
+
+                            &:active {
+                                transform: translate(0px, 3px);
+                                -webkit-transform: translate(0px, 3px);
+                                border: 3px solid;
+                            }
+                        }
+
+                        &--selected {
+                            border: 3px solid #be2bd5 !important;
+                            cursor: default !important;
+
+                            &:active {
+                                transform: translate(0px, 0px) !important;
+                                -webkit-transform: translate(0px, 0px) !important;
+                                border: 3px solid white;
+                            }
+                        }
+
+                        &--notAvailable {
+                            -webkit-filter: grayscale(100%);
+                            filter: grayscale(100%);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

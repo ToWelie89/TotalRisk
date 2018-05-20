@@ -1,0 +1,26 @@
+<div>
+    <div id="characterSelectionModal" class="riskModal" role="dialog" data-backdrop="static">
+        <!-- Modal content-->
+        <div class="modal-body textCenter">
+            <div class="row" style="width: 800px; margin: 0 auto;">
+                <h2>
+                    Character Selection
+                </h2>
+            </div>
+            <div class="row" style="width: 800px; height: 300px; margin: 0 auto; padding: 10px;">
+                <div style="float: left; width: 60%;">
+                    <h3 data-ng-bind="characterSelection.currentSelectedPlayer.name"></h3>
+                    <p style="text-align: left; font-size: 13px; padding-left: 20px; color: black;" data-ng-bind="characterSelection.currentSelectedPlayer.avatar.biography"></p>
+                </div>
+                <div style="float: left; width: 40%; margin-top: 45px;">
+                    <img id="selectedCharacterPortrait" src="{{ characterSelection.currentSelectedPlayer.avatar.picture }}" style="width: 200px; height: 200px;" />
+                </div>
+            </div>
+            <div class="row selectableAvatars">
+                <div data-ng-repeat="avatar in characterSelection.avatars" class="selectableAvatars__item">
+                    <img src="{{ avatar.picture }}" data-ng-class="{'selectableAvatars__item--selected': avatar === characterSelection.currentSelectedPlayer.avatar}" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
