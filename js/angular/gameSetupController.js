@@ -121,6 +121,9 @@ export default class GameSetupController {
     }
 
     openSelectionScreen(currentSelectedPlayer) {
+        const newPlayer = currentSelectedPlayer === null;
+        const oldName = currentSelectedPlayer ? currentSelectedPlayer.name : '';
+
         this.$uibModal.open({
             templateUrl: 'characterSelectionModal.html',
             backdrop: 'static',
@@ -133,7 +136,19 @@ export default class GameSetupController {
                 selectedPlayers: () => this.vm.players
             }
         }).result.then(closeResponse => {
-            // update selection
+            $('.mainWrapper').css('filter', 'none');
+            $('.mainWrapper').css('-webkit-filter', 'none');
+
+            if (newPlayer) {
+                this.vm.players.push(new Player(closeResponse.name,
+                                                this.getUnusedColor(),
+                                                closeResponse.avatar,
+                                                PLAYER_TYPES.HUMAN));
+            } else {
+                const player = this.vm.players.find((currentPlayer) => currentPlayer.name === oldName);
+                player.name = closeResponse.name;
+                player.avatar = closeResponse.avatar;
+            }
         });
     }
 

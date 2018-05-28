@@ -81,7 +81,7 @@
             width: 100%;
 
             .modal-content {
-                background: #746c97;
+                background: #144850;
 
                 .modal-body {
                     padding-top: 0;
@@ -94,14 +94,26 @@
                 }
 
                 .row {
-                    background: #5a527d;
+                    background: #388b98;
                 }
             }
 
             #characterSelectionModal {
 
+                color: #d2d2d2;
+                text-shadow: 1px 1px 10px black;
+
                 #selectedCharacterPortrait {
                     box-shadow: 3px 3px 10px black;
+                }
+
+                .characterBio {
+                    text-align: left;
+                    font-size: 13px;
+                    padding: 20px;
+                    border-radius: 10px;
+                    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.33) 1%, transparent 100%);
+                    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.33) 1%, transparent 100%);
                 }
 
                 .selectableAvatars {
@@ -146,6 +158,14 @@
                                 -webkit-transform: translate(0px, 0px) !important;
                                 border: 3px solid white;
                             }
+                        }
+
+                        &--taken {
+                            cursor: not-allowed !important;
+                            -webkit-filter: grayscale(100%);
+                            filter: grayscale(100%);
+                            border-color: grey !important;
+                            opacity: 0.6;
                         }
 
                         &--notAvailable {

@@ -53,8 +53,8 @@
                         Risk
                     </h1>
                     <div class="createdBy">
-                        {{ main.appVersion }}
-                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                        <span>{{ main.appVersion }}
+                        | Created by</span> <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
                     </div>
                 </div>
                 <div style="margin-top: 70px;
@@ -351,11 +351,9 @@
                     <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
                         <div class="buttonGroup">
                             <button type="button" class="button button-blue" id="showByOwner" data-ng-click="game.filterByOwner()">
-                                <i class="fa fa-times"></i>
                                 <strong>Color by owner</strong>
                             </button>
                             <button type="button" class="button button-blue" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
-                                <i class="fa fa-times"></i>
                                 <strong>Color by region</strong>
                             </button>
                             <button type="button" class="button button-purple" data-ng-click="game.pause()" style="width: 46px; height: 34px;" data-ng-show="game.aiTurn">
