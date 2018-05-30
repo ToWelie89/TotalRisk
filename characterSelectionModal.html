@@ -8,18 +8,17 @@
                 </h2>
             </div>
             <div class="row" style="width: 800px; height: 300px; margin: 0 auto; padding: 10px;">
-                <div style="float: left; width: 60%;">
+                <div style="float: left; width: 50%;">
                     <h3 data-ng-bind="characterSelection.currentSelectedPlayer.name"></h3>
                     <p class="characterBio" data-ng-bind="characterSelection.currentSelectedPlayer.avatar.biography" data-ng-show="characterSelection.currentSelectedPlayer"></p>
                 </div>
-                <div style="float: left; width: 40%;">
+                <div style="float: left; width: 50%;">
                     <div class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
                         <waving-flag flag-width="90" flag-height="50" flag-url="characterSelection.currentSelectedPlayer.avatar.flag"></waving-flag>
                     </div>
                     <img data-ng-show="characterSelection.currentSelectedPlayer && !characterSelection.currentSelectedPlayer.avatar.svg" id="selectedCharacterPortrait" src="{{ characterSelection.currentSelectedPlayer.avatar.picture }}" style="width: 200px; height: 200px;" />
 
-                    <object data="{{ characterSelection.currentSelectedPlayer.avatar.svg }}" type="image/svg+xml" data-ng-show="characterSelection.currentSelectedPlayer && characterSelection.currentSelectedPlayer.avatar.svg" style="width: 300px;">
-                    </object>
+                    <div id="selectedCharacterSvg" data-ng-show="characterSelection.currentSelectedPlayer && characterSelection.currentSelectedPlayer.avatar.svg"></div>
                 </div>
             </div>
             <div class="row textCenter" style="width: 800px; margin: 0 auto;">

@@ -21,6 +21,12 @@ export default class CharacterSelectionController {
 
         $('.mainWrapper').css('filter', 'blur(5px)');
         $('.mainWrapper').css('-webkit-filter', 'blur(5px)');
+
+        setTimeout(() => {
+            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.svg) {
+                $('#selectedCharacterSvg').load(this.vm.currentSelectedPlayer.avatar.svg);
+            }
+        }, 50);
     }
 
     selectAvatar(avatar) {
@@ -36,6 +42,10 @@ export default class CharacterSelectionController {
         } else {
             this.vm.currentSelectedPlayer.name = Object.entries(avatars).find(x => x[1] === avatar)[0];
             this.vm.currentSelectedPlayer.avatar = avatar;
+        }
+
+        if (this.vm.currentSelectedPlayer.avatar.svg) {
+            $('#selectedCharacterSvg').load(this.vm.currentSelectedPlayer.avatar.svg);
         }
     }
 
