@@ -100,10 +100,16 @@ function createWindow () {
     minHeight: 980,
     title: 'TotalRisk',
     fullscreen: riskSettings.fullScreen,
-    webPreferences: {
+    /*webPreferences: {
       zoomFactor: 0.5
-    },
+    },*/
+    show: false,
     icon: 'electron/assets/icon.ico'
+  })
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.webContents.setZoomFactor(0.9)
+    mainWindow.show()
   })
 
   mainWindow.setMenu(null);
