@@ -95,6 +95,7 @@ const avatars = {
         picture: './assets/img/caesar.png',
         selectSound: '',
         flag: './assets/flags/rome.png',
+        svg: './assets/avatarSvg/caesar.svg',
         biography: 'Gaius Julius Caesar was a roman politician and general. He successfully conquered germanic tribes in Gaul where one of his most famous battle was the battle of Alesia where his 60 000 strong roman force defeated a gallic horde of around 200 000 men. Caesar then won a roman civil war against his biggest rival Pompey and became a roman dictator and one of the most powerful leaders of his age.'
     },
     'Napoleon Bonaparte': {

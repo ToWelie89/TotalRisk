@@ -23,10 +23,14 @@
     70% { transform: translate(0px, 0px); }
 }
 
-svg[character="napoleon"] {
-    width: 400px;
-    height: 500px;
+#selectedCharacterSvg {
+    svg {
+        width: 400px;
+        height: 500px;
+    }
+}
 
+svg[character="napoleon"] {
     // mouth
     #path298 {
         animation: napoleon_mouth 3s linear infinite;
