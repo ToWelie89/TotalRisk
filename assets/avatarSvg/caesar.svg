@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 182.007 330.889" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="0 0 182.007 330.889" xmlns="http://www.w3.org/2000/svg" character="caesar" xmlns:bx="https://boxy-svg.com">
   <defs>
     <pattern id="pattern-0" x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 100 100">
       <rect x="0" y="0" width="50" height="100" style="fill: black;"/>
@@ -103,15 +103,15 @@
   <ellipse style="fill: url(#gradient-11);" cx="74.839" cy="49.028" rx="11.287" ry="3.668"/>
   <ellipse style="fill: url(#gradient-13);" cx="101.926" cy="48.733" rx="11.287" ry="3.668"/>
   <g transform="matrix(1, 0, 0, 1, -148.010864, -96.350372)">
-    <circle style="" cx="343.102" cy="148.354" r="6.598" transform="matrix(0.444056, 0, 0, 0.473315, 70.855858, 75.046837)"/>
-    <circle style="fill: rgb(255, 255, 255);" cx="223.831" cy="143.716" r="1.078"/>
+    <circle id="leftEyeOuter" style="" cx="343.102" cy="148.354" r="6.598" transform="matrix(0.444056, 0, 0, 0.473315, 70.855858, 75.046837)"/>
+    <circle id="leftEyeInner" style="fill: rgb(255, 255, 255);" cx="223.831" cy="143.716" r="1.078"/>
   </g>
   <g transform="matrix(1, 0, 0, 1, -147.636841, -96.412712)">
-    <circle style="" cx="343.102" cy="148.354" r="6.598" transform="matrix(0.444056, 0, 0, 0.473315, 97.565155, 74.801147)"/>
-    <circle style="fill: rgb(255, 255, 255);" cx="250.508" cy="143.716" r="1.078"/>
+    <circle id="rightEyeOuter" style="" cx="343.102" cy="148.354" r="6.598" transform="matrix(0.444056, 0, 0, 0.473315, 97.565155, 74.801147)"/>
+    <circle id="rightEyeInner" style="fill: rgb(255, 255, 255);" cx="250.508" cy="143.716" r="1.078"/>
   </g>
   <path d="M 90.613 55.238 C 90.613 54.77 98.881 65.904 96.592 68.193 C 94.611 70.174 90.065 69.688 87.125 69.688" style="fill: none; stroke-linecap: round; stroke: rgb(0, 0, 0);"/>
-  <path d="M 80.149 80.65 C 81.508 80.65 81.455 79.052 82.64 78.657 C 85.067 77.848 96.094 76.746 96.094 80.152" style="stroke: rgb(0, 0, 0); fill: none;"/>
+  <path d="M 80.149 80.65 C 81.508 80.65 81.455 79.052 82.64 78.657 C 85.067 77.848 96.094 76.746 96.094 80.152" id="mouth" style="stroke: rgb(0, 0, 0); fill: none;"/>
   <ellipse style="fill: rgb(252, 214, 224);" cx="191.571" cy="151.704" rx="3.239" ry="7.88" transform="matrix(0.970296, -0.241922, 0.241922, 0.970296, -173.218475, -45.253288)" bx:origin="1.344 0.598"/>
   <ellipse style="fill: rgb(252, 214, 224);" cx="191.571" cy="151.704" rx="3.239" ry="7.88" transform="matrix(0.956305, 0.292372, -0.292372, 0.956305, -17.238085, -147.108322)" bx:origin="1.344 0.598"/>
   <g transform="matrix(1, 0, 0, 1, -148.073196, -96.288033)">

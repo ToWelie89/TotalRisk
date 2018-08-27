@@ -47,6 +47,8 @@ export default class CharacterSelectionController {
         if (this.vm.currentSelectedPlayer.avatar.svg) {
             $('#selectedCharacterSvg').load(this.vm.currentSelectedPlayer.avatar.svg);
         }
+
+        $('#characterSelectionFlag .flag-element').css('background-image', `url("${this.vm.currentSelectedPlayer.avatar.flag}")`)
     }
 
     selectAvatarAndClose(avatar) {

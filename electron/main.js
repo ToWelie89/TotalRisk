@@ -108,7 +108,7 @@ function createWindow () {
   })
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.setZoomFactor(0.9)
+    mainWindow.webContents.setZoomFactor(1.15)
     mainWindow.show()
   })
 

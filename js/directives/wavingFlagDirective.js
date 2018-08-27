@@ -9,18 +9,21 @@ export default class WavingFlagDirective {
 
     link(scope, elem, attr) {
 
+        var updateManually = attr.updateManually;
         var flagW = attr.flagWidth;
         var flagElementW = 2;
         var len = flagW/flagElementW;
-        var delay = 10;
+        var delay = 6;
         var flag = elem[0].children[0];
         flag.style.width = attr.flagWidth + 'px';
         flag.style.height = attr.flagHeight + 'px';
 
         scope.$watch(scope.flagUrl, (newVal, oldVal) => {
-            if (newVal !== oldVal) {
-                flag.innerHTML = '';
-                init();
+            if (newVal !== oldVal && !updateManually) {
+                setTimeout(() => {
+                    flag.innerHTML = '';
+                    init();
+                }, 50);
             }
         });
 
@@ -37,6 +40,9 @@ export default class WavingFlagDirective {
             }
         }
 
-        init();
+        setTimeout(() => {
+            flag.innerHTML = '';
+            init();
+        }, 50);
     }
 }
