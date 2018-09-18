@@ -115,6 +115,7 @@ const avatars = {
         picture: './assets/img/alexander.png',
         selectSound: '',
         flag: './assets/flags/macedon.png',
+        svg: './assets/avatarSvg/alexander.svg',
         biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
     },
     'Genghis Khan': {
