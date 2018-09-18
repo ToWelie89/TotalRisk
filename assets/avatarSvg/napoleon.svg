@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="17.221 17.221 675.424 1027.846" height="1500" width="1500" version="1.1" id="svg2" character="napoleon" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="17.221 17.221 465.66 719.026" height="1500" width="1500" version="1.1" id="svg2" character="napoleon" xmlns="http://www.w3.org/2000/svg">
   <defs id="defs6">
     <clipPath id="clipPath16" clipPathUnits="userSpaceOnUse">
       <path id="path18" d="m 0,1200 1200,0 L 1200,0 0,0 0,1200 Z"/>
@@ -38,7 +38,7 @@
       <stop offset="1" style="stop-color: rgb(73, 73, 73);"/>
     </linearGradient>
   </defs>
-  <g transform="matrix(1.25, 0, 0, -1.25, -302.226959, 1258.960083)" id="g10">
+  <g transform="matrix(0.85456, 0, 0, -0.85456, -198.418488, 868.423035)" id="g10" style="">
     <g id="g12">
       <g clip-path="url(#clipPath16)" id="g14">
         <g transform="translate(430.7489,422.159)" id="g20">
