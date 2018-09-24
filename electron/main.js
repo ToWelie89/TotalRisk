@@ -96,8 +96,10 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width,
     height,
-    minWidth: 1280,
-    minHeight: 980,
+    //minWidth: 1280,
+    //minHeight: 980,
+    minWidth: 600,
+    minHeight: 400,
     title: 'TotalRisk',
     fullscreen: riskSettings.fullScreen,
     /*webPreferences: {
@@ -108,12 +110,12 @@ function createWindow () {
   })
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.setZoomFactor(1)
+    mainWindow.webContents.setZoomFactor(0.6)
     mainWindow.show()
   })
 
   mainWindow.setMenu(null);
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

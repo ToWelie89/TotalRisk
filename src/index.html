@@ -70,6 +70,9 @@
                     <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
                         <strong>Load Game</strong>
                     </button>
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.CHARACTER_CREATOR)">
+                        <strong>Character Editor</strong>
+                    </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.SETTINGS)">
                         <strong>Settings</strong>
                     </button>
@@ -161,6 +164,74 @@
                                     <span class="switch-label" data-on="On" data-off="Off"></span>
                                     <span class="switch-handle"></span>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator">
+                <div style="margin-bottom: 60px;">
+                    <h1 class="pulsate paddingTop--double banner">
+                        Risk
+                    </h1>
+                    <div class="createdBy">
+                        {{ main.appVersion }}
+                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                    </div>
+                </div>
+                <div style="margin-top: 70px;
+                            width: 100%;
+                            margin: 0 auto;
+                            padding-top: 30px;
+                            padding-bottom: 40px;
+                            background: rgba(59, 59, 59, 0.788235294117647);
+                            border-radius: 30px;">
+                    <div class="row">
+                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                            <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h3>Character Editor</h3>
+                            <div style="border: 1px solid black; border-radius: 5px; height: 50px; width: 100%;">
+                                <h4>Here characters should be listed</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            @@customCharacterSvg
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="row">
+                                <div class="col-xs-12" style="display: table-cell; width: 100%;">
+                                    <input type="text" placeholder="Name" />
+                                </div>
+                            </div>
+                            <div data-ng-repeat="bodypart in characterCreator.currentSelection" style="display: table-row;">
+                                <div style="display: table-cell;">
+                                    <button type="button" class="button button-green" data-ng-click="characterCreator.previousPart(bodypart.type)">
+                                        <span class="glyphicon glyphicon-circle-arrow-left"></span>
+                                    </button>
+                                </div>
+                                <div style="display: table-cell; color: white; width: 100%;">
+                                    {{ bodypart.displayName }} ({{ bodypart.selection }} / {{ bodypart.maxChoices }})
+                                </div>
+                                <div style="display: table-cell;">
+                                    <button type="button" class="button button-green" data-ng-click="characterCreator.nextPart(bodypart.type)">
+                                        <span class="glyphicon glyphicon-circle-arrow-right"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button type="button" class="button button-blue" data-ng-click="characterCreator.randomize()">
+                                    Randomize
+                                </button>
+                                <button type="button" class="button button-green">
+                                    Save character
+                                </button>
                             </div>
                         </div>
                     </div>

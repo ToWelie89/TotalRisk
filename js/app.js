@@ -15,6 +15,7 @@ import PauseMenuModalController from './angular/pauseMenuModalController';
 import EndScreenTableController from './angular/endScreenTableController';
 import PlayerTypePopoverController from './angular/playerTypePopoverController';
 import CharacterSelectionController from './angular/characterSelectionController.js';
+import CharacterCreatorController from './angular/characterCreatorController.js';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
@@ -44,6 +45,7 @@ app.controller('endScreenTableController', EndScreenTableController);
 app.controller('pauseMenuModalController', PauseMenuModalController);
 app.controller('playerTypePopoverController', PlayerTypePopoverController);
 app.controller('characterSelectionController', CharacterSelectionController);
+app.controller('characterCreatorController', CharacterCreatorController);
 /* SERVICES */
 app.service('soundService', SoundService);
 app.service('mapService', MapService);
