@@ -72,6 +72,7 @@ export default class CharacterCreatorController {
             part.selection = part.maxChoices;
         }
         $(`svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+        this.adjustSvgOffset();
     }
 
     nextPart(type) {
@@ -82,6 +83,7 @@ export default class CharacterCreatorController {
             part.selection = 1;
         }
         $(`svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+        this.adjustSvgOffset();
     }
 
     randomize() {
@@ -90,6 +92,7 @@ export default class CharacterCreatorController {
             $(`svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
             $(`svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
         });
+        this.adjustSvgOffset();
     }
 
     saveCharacter() {
@@ -147,9 +150,12 @@ export default class CharacterCreatorController {
         });
 
         this.vm.showEditor = true;
+
+        this.adjustSvgOffset();
     }
 
     createNewCharacter() {
+        this.vm.showEditor = true;
         this.vm.currentSelection.forEach(part => {
             part.selection = 1;
             part.maxChoices = $(`svg g[category=${part.type}] > g`).length;
@@ -158,7 +164,7 @@ export default class CharacterCreatorController {
         });
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
-        this.vm.showEditor = true;
+        this.adjustSvgOffset();
     }
 
     deleteCharacter() {
@@ -166,5 +172,19 @@ export default class CharacterCreatorController {
         this.vm.characters = this.vm.settings.characters;
         this.vm.settings.saveSettings();
         this.createNewCharacter();
+    }
+
+    adjustSvgOffset() {
+        /*$('#editorSvgContainer').css('margin-top', '0px');
+
+        const mainDiv = document.querySelector('#characterEditor #mainDiv').getBoundingClientRect();
+        const mainDivTopOffset = mainDiv.top;
+
+        const currentHatIndex = this.vm.currentSelection.find(x => x.type === 'hat').selection;
+        const hatElementTopOffset = document.querySelector(`svg g[category="hat"] > g:nth-child(${currentHatIndex})`).getBoundingClientRect().top;
+
+        const offset = Math.round(mainDivTopOffset - hatElementTopOffset);
+
+        $('#editorSvgContainer').css('margin-top', `${offset}px`);*/
     }
 }

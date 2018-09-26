@@ -95,6 +95,9 @@ module.exports = function(grunt) {
                     }, {
                         match: 'customCharacterSvg',
                         replacement: '<%= grunt.file.read("assets/avatarSvg/custom.svg") %>'
+                    }, {
+                        match: 'logo',
+                        replacement: '<%= grunt.file.read("assets/logo.svg") %>'
                     }]
                 },
                 files: [{

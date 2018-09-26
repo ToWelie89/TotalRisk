@@ -46,17 +46,19 @@
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
     <div class="wrapper mainWrapper">
+        <div class="textCenter mainMenuBox" data-ng-hide="main.currentGamePhase === main.gamePhases.GAME || main.currentGamePhase === main.gamePhases.AI_TESTING || main.currentGamePhase === main.gamePhases.TUTORIAL || main.currentGamePhase === main.gamePhases.END_SCREEN">
+            <div>
+                <div class="logoContainer">
+                    @@logo
+                </div>
+                <div class="createdBy">
+                    <span>{{ main.appVersion }}
+                    | Created by</span> <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
+                </div>
+            </div>
+        </div>
         <div class="container mainContent">
             <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox">
-                <div style="margin-bottom: 60px;">
-                    <h1 class="pulsate paddingTop--double banner">
-                        Risk
-                    </h1>
-                    <div class="createdBy">
-                        <span>{{ main.appVersion }}
-                        | Created by</span> <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
-                    </div>
-                </div>
                 <div style="margin-top: 70px;
                             width: 600px;
                             margin: 0 auto;
@@ -79,36 +81,25 @@
                 </div>
             </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings">
-                <div style="margin-bottom: 60px;">
-                    <h1 class="pulsate paddingTop--double banner">
-                        Risk
-                    </h1>
-                    <div class="createdBy">
-                        {{ main.appVersion }}
-                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
-                    </div>
+                <div class="backButtonContainer">
+                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </button>
                 </div>
                 <div id="settingsBox" style="margin-top: 70px;
-                                             width: 600px;
+                                             width: 100%;
                                              margin: 0 auto;
                                              padding-top: 30px;
                                              padding-bottom: 40px;
                                              background: rgba(59, 59, 59, 0.788235294117647);
                                              border-radius: 30px;">
-
-                    <div class="row">
-                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
-                            <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
-                        </button>
-                    </div>
-
                     <div class="row paddingLeft--double paddingRight--double">
                         <strong style="color: white;">
                             The settings that you configure here will be automatically saved to your browsers local storage so that you don't have to reset them everytime.
                         </strong>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="width: 600px; margin: 0 auto;">
                         <div class="col-xs-4">
                             <div>
                                 AI Speed
@@ -118,7 +109,7 @@
                             <rzslider rz-slider-model="settings.aiSpeed" rz-slider-options="settings.movementSliderOptions"></rzslider>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="width: 600px; margin: 0 auto;">
                         <div class="col-xs-4">
                             <div>
                                 Play sound
@@ -134,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="width: 600px; margin: 0 auto;">
                         <div class="col-xs-4">
                             <div>
                                 Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -151,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" data-ng-show="settings.runningElectron">
+                    <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
                         <div class="col-xs-4">
                             <div>
                                 Full Screen
@@ -169,46 +160,34 @@
                     </div>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator">
-                <div style="margin-bottom: 60px;">
-                    <h1 class="pulsate paddingTop--double banner">
-                        Risk
-                    </h1>
-                    <div class="createdBy">
-                        {{ main.appVersion }}
-                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
-                    </div>
-                </div>
-                <div style="margin-top: 70px;
-                            width: 100%;
-                            margin: 0 auto;
-                            padding-top: 30px;
-                            padding-bottom: 40px;
-                            background: rgba(59, 59, 59, 0.788235294117647);
-                            border-radius: 30px;">
-                    <div class="row">
-                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
-                            <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor">
+                <div id="mainDiv">
+                    <div class="backButtonContainer">
+                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                            <span class="glyphicon glyphicon-arrow-left"></span>
                         </button>
                     </div>
-
                     <div class="row">
                         <div class="col-xs-12">
-                            <h3>Character Editor</h3>
-                            <div style="border: 1px solid black; border-radius: 5px; height: 50px; width: 100%;" data-ng-show="characterCreator.characters.length > 0">
-                                <div data-ng-repeat="character in characterCreator.characters" style="height: 40px; background-color: magenta; display: inline-block; margin-left: 10px;" data-ng-click="characterCreator.selectCharacter(character)">
-                                    <strong data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId === character.id"></strong>
-                                    <span data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId !== character.id"></span>
+                            <div class="existingCharactersContainer" data-ng-show="characterCreator.characters.length > 0">
+                                <div class="existingCharactersContainer__item" data-ng-class="{'existingCharactersContainer__item-selected': characterCreator.selectedCharacterId === character.id}" data-ng-repeat="character in characterCreator.characters" data-ng-click="characterCreator.selectCharacter(character)">
+                                    <div class="existingCharactersContainer__item__inner">
+                                        <span>
+                                            <strong data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId === character.id"></strong>
+                                            <span data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId !== character.id"></span>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div style="height: 40px; background-color: magenta; display: inline-block; margin-left: 10px;"
-                                     data-ng-click="characterCreator.createNewCharacter()">
-                                    Create new!
+                                <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()">
+                                    <div class="existingCharactersContainer__item__inner">
+                                        <span class="glyphicon glyphicon-plus">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row" data-ng-show="characterCreator.showEditor">
-                        <div class="col-xs-8">
+                        <div class="col-xs-8" id="editorSvgContainer">
                             @@customCharacterSvg
                         </div>
                         <div class="col-xs-4">
@@ -220,7 +199,7 @@
                             <div data-ng-repeat="bodypart in characterCreator.currentSelection" style="display: table-row;">
                                 <div style="display: table-cell;">
                                     <button type="button" class="button button-green" data-ng-click="characterCreator.previousPart(bodypart.type)">
-                                        <span class="glyphicon glyphicon-circle-arrow-left"></span>
+                                        <span class="glyphicon glyphicon-arrow-left"></span>
                                     </button>
                                 </div>
                                 <div style="display: table-cell; color: white; width: 100%;">
@@ -228,7 +207,7 @@
                                 </div>
                                 <div style="display: table-cell;">
                                     <button type="button" class="button button-green" data-ng-click="characterCreator.nextPart(bodypart.type)">
-                                        <span class="glyphicon glyphicon-circle-arrow-right"></span>
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
                                     </button>
                                 </div>
                             </div>
@@ -249,12 +228,12 @@
                     <div class="row" data-ng-show="!characterCreator.showEditor">
                         <div class="col-xs-12">
                             <div data-ng-show="characterCreator.characters.length === 0">
-                                <div>
-                                    <strong>
+                                <div class="paddingTop--double paddingBottom--double">
+                                    <strong style="color: white;">
                                         You have not created any characters yet
                                     </strong>
                                 </div>
-                                <button type="button" class="button button-green" data-ng-click="characterCreator.createNewCharacter()">
+                                <button type="button" class="button button-purple large" data-ng-click="characterCreator.createNewCharacter()">
                                     Create new character
                                 </button>
                             </div>
@@ -263,23 +242,15 @@
                 </div>
             </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
-                <div class="row mainMenuBox textCenter">
-                    <h1 class="pulsate paddingTop--double banner">
-                        Risk
-                    </h1>
-                    <div class="createdBy">
-                        {{ main.appVersion }}
-                        | Created by <a href="http://www.martinsonesson.se" target="_blank">Martin Sonesson</a> | <a href="https://github.com/ToWelie89/ECMA6Risk" target="_blank">Source code</a>
-                    </div>
+                <div class="backButtonContainer">
+                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </button>
                 </div>
+                <div class="row mainMenuBox textCenter">
                 <div id="gameSetupBox">
                     <div class="row">
                         <div class="col-xs-12 textCenter marginTop--double">
-                            <div style="position: absolute; left: 0px;">
-                                <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
-                                    <strong><span class="glyphicon glyphicon-circle-arrow-left"></span> Back to main menu</strong>
-                                </button>
-                            </div>
                             <div class="buttonGroup" style="height: 40px;">
                                 <button type="button" class="button button-green button-unclickable">
                                     <strong>Map control percentage for victory</strong>

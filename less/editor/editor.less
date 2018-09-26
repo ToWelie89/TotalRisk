@@ -1,0 +1,54 @@
+#characterEditor {
+	#mainDiv {
+		margin-top: 70px;
+        width: 100%;
+        margin: 0 auto;
+        padding-bottom: 40px;
+        background: rgba(59, 59, 59, 0.788235294117647);
+        border-radius: 30px;
+
+        .existingCharactersContainer {
+        	border: 2px solid black;
+    	    border-radius: 8px;
+    	    height: 50px;
+    	    width: 700px;
+    	    margin: 0 auto;
+    	    margin-top: 15px;
+    	    background: rgba(255, 255, 255, 0.2);
+
+    	    &__item {
+    	    	height: 40px;
+	    	    background-color: #caa1ca;
+	    	    display: inline-block;
+	    	    margin-left: 10px;
+	    	    border-radius: 5px;
+	    	    width: 80px;
+	    	    text-align: center;
+	    	    margin-top: 2px;
+	    	    cursor: pointer;
+
+	    	    &-selected {
+	    	    	box-shadow: 0 0 15px #1590f1;
+	    	    }
+
+	    	    &:hover {
+	    	    	background-color: #e7d1e7;
+	    	    }
+
+	    	    * {
+	    	    	cursor: pointer;
+	    	    }
+
+    	    	&__inner {
+    	    		display: table;
+	    		    height: 100%;
+	    		    margin: 0 auto;
+    	    		span {
+    	    			display: table-cell;
+	    			    vertical-align: middle;
+    	    		}
+    	    	}
+    	    }
+        }
+	}
+}
