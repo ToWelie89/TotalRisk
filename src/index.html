@@ -195,19 +195,26 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <h3>Character Editor</h3>
-                            <div style="border: 1px solid black; border-radius: 5px; height: 50px; width: 100%;">
-                                <h4>Here characters should be listed</h4>
+                            <div style="border: 1px solid black; border-radius: 5px; height: 50px; width: 100%;" data-ng-show="characterCreator.characters.length > 0">
+                                <div data-ng-repeat="character in characterCreator.characters" style="height: 40px; background-color: magenta; display: inline-block; margin-left: 10px;" data-ng-click="characterCreator.selectCharacter(character)">
+                                    <strong data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId === character.id"></strong>
+                                    <span data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId !== character.id"></span>
+                                </div>
+                                <div style="height: 40px; background-color: magenta; display: inline-block; margin-left: 10px;"
+                                     data-ng-click="characterCreator.createNewCharacter()">
+                                    Create new!
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" data-ng-show="characterCreator.showEditor">
                         <div class="col-xs-8">
                             @@customCharacterSvg
                         </div>
                         <div class="col-xs-4">
                             <div class="row">
                                 <div class="col-xs-12" style="display: table-cell; width: 100%;">
-                                    <input type="text" placeholder="Name" />
+                                    <input type="text" placeholder="Name" data-ng-model="characterCreator.name" maxlength="20" />
                                 </div>
                             </div>
                             <div data-ng-repeat="bodypart in characterCreator.currentSelection" style="display: table-row;">
@@ -229,8 +236,26 @@
                                 <button type="button" class="button button-blue" data-ng-click="characterCreator.randomize()">
                                     Randomize
                                 </button>
-                                <button type="button" class="button button-green">
-                                    Save character
+                                <button type="button" class="button button-red" data-ng-click="characterCreator.deleteCharacter()" data-ng-show="characterCreator.selectedCharacterId">
+                                    Delete
+                                </button>
+                                <button type="button" class="button button-green" data-ng-click="characterCreator.saveCharacter()" data-ng-disabled="characterCreator.name.length === 0">
+                                    <span data-ng-show="!characterCreator.selectedCharacterId">Save</span>
+                                    <span data-ng-show="characterCreator.selectedCharacterId">Update</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" data-ng-show="!characterCreator.showEditor">
+                        <div class="col-xs-12">
+                            <div data-ng-show="characterCreator.characters.length === 0">
+                                <div>
+                                    <strong>
+                                        You have not created any characters yet
+                                    </strong>
+                                </div>
+                                <button type="button" class="button button-green" data-ng-click="characterCreator.createNewCharacter()">
+                                    Create new character
                                 </button>
                             </div>
                         </div>

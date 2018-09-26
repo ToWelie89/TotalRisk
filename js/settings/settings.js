@@ -30,6 +30,7 @@ export default class Settings {
         this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
+        this.characters    = savedSettings ? savedSettings.characters    : settings.characters;
         this.aiSpeedValues = settings.aiSpeedValues;
 
         this.gameEngine.toggleSound(this.playSound);
@@ -47,7 +48,8 @@ export default class Settings {
             playSound:     this.playSound,
             aiSpeed:       this.aiSpeed,
             showAnnouncer: this.showAnnouncer,
-            fullScreen:    this.fullScreen
+            fullScreen:    this.fullScreen,
+            characters:    this.characters
         };
 
         if (this.runningElectron) {

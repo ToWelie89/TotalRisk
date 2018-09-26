@@ -10,7 +10,8 @@ const settings = {
 	    'Medium': 600,
 	    'Fast': 200,
 	    'Superspeed': 40
-	}
+	},
+	characters: []
 };
 
 export {settings};

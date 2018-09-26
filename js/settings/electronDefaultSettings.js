@@ -5,7 +5,8 @@ const ElectronSettings = {
         playSound: true,
         aiSpeed: 'Fast',
         showAnnouncer: true,
-        fullScreen: false
+        fullScreen: false,
+        characters: []
     },
     windowBounds: {
         width: 1280,

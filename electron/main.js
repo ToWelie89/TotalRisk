@@ -81,6 +81,7 @@ function handleSquirrelEvent() {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+const globalShortcut = electron.globalShortcut
 
 function createWindow () {
 
@@ -112,6 +113,11 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.setZoomFactor(0.6)
     mainWindow.show()
+  })
+
+  globalShortcut.register('f5', function() {
+    console.log('f5 is pressed')
+    mainWindow.reload()
   })
 
   mainWindow.setMenu(null);
