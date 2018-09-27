@@ -1,0 +1,34 @@
+@keyframes alexander_mouth {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, -4px); }
+    80% { transform: translate(0px, 0px); }
+}
+@keyframes alexander_right_eye {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(-5px, 0px); }
+    60% { transform: translate(0px, 0px); }
+    75% { transform: translate(4px, 0px); }
+    85% { transform: translate(0px, 0px); }
+}
+@keyframes alexander_left_eye {
+    40% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
+    50% { transform: matrix(1, 0, 0, 1, 15.966425, 0.153811) }
+    60% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
+    75% { transform: matrix(1, 0, 0, 1, 20.966425, 0.153811) }
+    85% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
+}
+
+svg[character="alexander"] {
+    // mouth
+    #mouth {
+        animation: alexander_mouth 3s linear infinite;
+    }
+    // left eye
+    #leftEye {
+        animation: alexander_right_eye 3s linear infinite;
+    }
+    // right eye
+    #rightEye {
+        animation: alexander_left_eye 3s linear infinite;
+    }
+}

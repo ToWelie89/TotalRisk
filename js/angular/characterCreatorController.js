@@ -2,11 +2,13 @@ import {GAME_PHASES} from './../gameConstants';
 
 export default class CharacterCreatorController {
 
-    constructor($scope, $rootScope, settings) {
+    constructor($scope, $rootScope, settings, soundService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.vm.settings = settings;
+        this.soundService = soundService;
+
         this.vm.characters = settings.characters;
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
@@ -40,14 +42,38 @@ export default class CharacterCreatorController {
             type: 'torso',
             displayName: 'Torso',
             selection: 1
+        },{
+            type: 'legs',
+            displayName: 'Legs',
+            selection: 1
+        },{
+            type: 'skinTone',
+            displayName: 'Skintone',
+            selection: 1
         }];
+
+        this.skinTones = [
+            '#facdd0',
+            '#fee2e3',
+            '#ecafb3',
+            '#d79b78',
+            '#a6775b',
+            '#7d5137'
+        ];
 
         $(document).ready(() => {
             this.vm.currentSelection.forEach(part => {
-                part.maxChoices = $(`svg g[category=${part.type}] > g`).length;
-                $(`svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                if (part.type === 'skinTone') {
+                    part.maxChoices = this.skinTones.length;
+                    this.applySkinTone();
+                } else {
+                    part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                    $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                    $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                }
             });
+
+            this.loadSavedCharacterPortraits();
         });
 
         this.$rootScope.$watch('currentGamePhase', () => {
@@ -64,38 +90,99 @@ export default class CharacterCreatorController {
         this.vm.createNewCharacter = this.createNewCharacter;
     }
 
+    loadSavedCharacterPortraits() {
+        document.querySelectorAll('.existingCharactersContainer__item__inner').forEach(characterBox => {
+            const id = characterBox.getAttribute('character');
+
+            if (characterBox.querySelector('svg')) {
+                characterBox.querySelector('svg').setAttribute('viewBox', '120 20 400 400');
+
+                const character = this.vm.characters.find(x => x.id === id);
+
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g`).css('visibility', 'hidden');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g`).css('visibility', 'hidden');
+
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g:nth-child(${character.hat})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g:nth-child(${character.head})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g:nth-child(${character.eyebrows})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g:nth-child(${character.eyes})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g:nth-child(${character.nose})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g:nth-child(${character.mouth})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g:nth-child(${character.torso})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g:nth-child(${character.legs})`).css('visibility', 'visible');
+
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', this.skinTones[character.skinTone - 1]);
+            }
+        });
+    }
+
+    applySkinTone() {
+        $('#editorSvgContainer svg .skinTone').css('fill', this.skinTones[this.vm.currentSelection.find(x => x.type === 'skinTone').selection - 1]);
+    }
+
     previousPart(type) {
-        $(`svg g[category="${type}"] > g`).css('visibility', 'hidden');
+        this.soundService.tick.play();
+
         const part = this.vm.currentSelection.find(x => x.type === type);
         part.selection--;
         if (part.selection === 0) {
             part.selection = part.maxChoices;
         }
-        $(`svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+
+        if (type === 'skinTone') {
+            this.applySkinTone();
+        } else {
+            $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
+            $(`#editorSvgContainer svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+        }
+
         this.adjustSvgOffset();
     }
 
     nextPart(type) {
-        $(`svg g[category="${type}"] > g`).css('visibility', 'hidden');
+        this.soundService.tick.play();
+
         const part = this.vm.currentSelection.find(x => x.type === type);
         part.selection++;
         if (part.selection > part.maxChoices) {
             part.selection = 1;
         }
-        $(`svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+
+        if (type === 'skinTone') {
+            this.applySkinTone();
+        } else {
+            $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
+            $(`#editorSvgContainer svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+        }
+
         this.adjustSvgOffset();
     }
 
     randomize() {
+        this.soundService.tick.play();
+
         this.vm.currentSelection.forEach(part => {
             part.selection = Math.floor(Math.random() * part.maxChoices) + 1 ;
-            $(`svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-            $(`svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+
+            if (part.type === 'skinTone') {
+                this.applySkinTone();
+            } else {
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            }
         });
         this.adjustSvgOffset();
     }
 
     saveCharacter() {
+        this.soundService.tick.play();
+
         if (!this.vm.selectedCharacterId) {
             // Create new character
             const id = this.generateId();
@@ -108,7 +195,9 @@ export default class CharacterCreatorController {
                 eyes: this.vm.currentSelection.find(x => x.type === 'eyes').selection,
                 nose: this.vm.currentSelection.find(x => x.type === 'nose').selection,
                 mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selection,
-                torso: this.vm.currentSelection.find(x => x.type === 'torso').selection
+                torso: this.vm.currentSelection.find(x => x.type === 'torso').selection,
+                legs: this.vm.currentSelection.find(x => x.type === 'legs').selection,
+                skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selection
             });
             this.vm.selectedCharacterId = id;
         } else {
@@ -122,10 +211,16 @@ export default class CharacterCreatorController {
             character.nose = this.vm.currentSelection.find(x => x.type === 'nose').selection;
             character.mouth = this.vm.currentSelection.find(x => x.type === 'mouth').selection;
             character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selection;
+            character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selection;
+            character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selection;
         }
 
         this.vm.settings.saveSettings();
         this.vm.characters = this.vm.settings.characters;
+
+        setTimeout(() => {
+            this.loadSavedCharacterPortraits();
+        }, 50);
     }
 
     generateId() {
@@ -133,6 +228,8 @@ export default class CharacterCreatorController {
     }
 
     selectCharacter(character) {
+        this.soundService.tick.play();
+
         this.vm.selectedCharacterId = character.id;
         this.vm.name = character.name;
         this.vm.currentSelection.find(x => x.type === 'hat').selection = character.hat;
@@ -142,11 +239,18 @@ export default class CharacterCreatorController {
         this.vm.currentSelection.find(x => x.type === 'nose').selection = character.nose;
         this.vm.currentSelection.find(x => x.type === 'mouth').selection = character.mouth;
         this.vm.currentSelection.find(x => x.type === 'torso').selection = character.torso;
+        this.vm.currentSelection.find(x => x.type === 'legs').selection = character.legs;
+        this.vm.currentSelection.find(x => x.type === 'skinTone').selection = character.skinTone;
 
         this.vm.currentSelection.forEach(part => {
-            part.maxChoices = $(`svg g[category=${part.type}] > g`).length;
-            $(`svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-            $(`svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            if (part.type !== 'skinTone') {
+                part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            } else {
+                part.maxChoices = this.skinTones.length;
+                this.applySkinTone();
+            }
         });
 
         this.vm.showEditor = true;
@@ -155,12 +259,19 @@ export default class CharacterCreatorController {
     }
 
     createNewCharacter() {
+        this.soundService.tick.play();
+
         this.vm.showEditor = true;
         this.vm.currentSelection.forEach(part => {
             part.selection = 1;
-            part.maxChoices = $(`svg g[category=${part.type}] > g`).length;
-            $(`svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-            $(`svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            if (part.type !== 'skinTone') {
+                part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            } else {
+                part.maxChoices = this.skinTones.length;
+                this.applySkinTone();
+            }
         });
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
@@ -168,10 +279,16 @@ export default class CharacterCreatorController {
     }
 
     deleteCharacter() {
+        this.soundService.tick.play();
+
         this.vm.settings.characters = this.vm.settings.characters.filter(x => x.id !== this.vm.selectedCharacterId);
         this.vm.characters = this.vm.settings.characters;
         this.vm.settings.saveSettings();
         this.createNewCharacter();
+
+        setTimeout(() => {
+            this.loadSavedCharacterPortraits();
+        }, 50);
     }
 
     adjustSvgOffset() {

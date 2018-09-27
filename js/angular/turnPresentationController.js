@@ -1,12 +1,13 @@
-import {TURN_PHASES} from './../gameConstants';
+import {TURN_PHASES, GAME_PHASES} from './../gameConstants';
 import { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './../gameConstants';
 
 export default class TurnPresentationController {
 
-    constructor($scope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, data) {
+    constructor($scope, $rootScope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, data) {
         this.vm = this;
 
         this.$uibModalInstance = $uibModalInstance;
+        this.$rootScope = $rootScope;
         this.gameAnnouncerService = gameAnnouncerService;
         this.gameEngine = gameEngine;
         this.data = data;
@@ -23,7 +24,12 @@ export default class TurnPresentationController {
     }
 
     keyupEventListener(e) {
+
         if (e.keyCode === 27) { // Escape
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
+                return;
+            }
+
             this.$uibModalInstance.close();
             this.close({presenterWasCancelled: true});
             document.removeEventListener('keyup', this.boundListener);

@@ -6,33 +6,67 @@
         padding-bottom: 40px;
         background: rgba(59, 59, 59, 0.788235294117647);
         border-radius: 30px;
+        height: 1076px;
+
+        #editorControls {
+        	input {
+		    	width: 100%;
+			    border-radius: 5px;
+			    outline: none;
+			    padding: 5px;
+			    padding-left: 15px;
+			    padding-right: 15px;
+			    margin-top: 35px;
+			    margin-bottom: 30px;
+        	}
+
+        	.arrowButton {
+        		width: 35px;
+        		height: 35px;
+        		text-align: center;
+        		margin: 0 auto;
+        		padding: 0;
+        		border-radius: 50%;
+
+        		p {
+        			margin: auto 0;
+        		}
+        	}
+        }
+
+        #editorSvgContainer {
+        	svg {
+        		height: 900px;
+        	}
+        }
 
         .existingCharactersContainer {
         	border: 2px solid black;
     	    border-radius: 8px;
-    	    height: 50px;
     	    width: 700px;
     	    margin: 0 auto;
     	    margin-top: 15px;
     	    background: rgba(255, 255, 255, 0.2);
 
     	    &__item {
-    	    	height: 40px;
-	    	    background-color: #caa1ca;
+    	    	height: 100px;
+	    	    background-color: #535353;
 	    	    display: inline-block;
 	    	    margin-left: 10px;
 	    	    border-radius: 5px;
-	    	    width: 80px;
+	    	    width: 100px;
 	    	    text-align: center;
-	    	    margin-top: 2px;
+	    	    margin-top: 5px;
 	    	    cursor: pointer;
 
+	    	    transition: background-color 0.3s;
+
 	    	    &-selected {
-	    	    	box-shadow: 0 0 15px #1590f1;
+    	    	    box-shadow: 0 0 35px #ffffff;
 	    	    }
 
 	    	    &:hover {
-	    	    	background-color: #e7d1e7;
+	    	    	background-color: #8d8d8d;
 	    	    }
 
 	    	    * {
@@ -43,6 +77,11 @@
     	    		display: table;
 	    		    height: 100%;
 	    		    margin: 0 auto;
+
+	    		    svg {
+	    		    	width: 100%;
+	    		    }
+
     	    		span {
     	    			display: table-cell;
 	    			    vertical-align: middle;

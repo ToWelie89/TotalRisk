@@ -72,6 +72,9 @@
                     <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
                         <strong>Load Game</strong>
                     </button>
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.startTutorial()">
+                        <strong>Tutorial</strong>
+                    </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.CHARACTER_CREATOR)">
                         <strong>Character Editor</strong>
                     </button>
@@ -170,12 +173,9 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="existingCharactersContainer" data-ng-show="characterCreator.characters.length > 0">
-                                <div class="existingCharactersContainer__item" data-ng-class="{'existingCharactersContainer__item-selected': characterCreator.selectedCharacterId === character.id}" data-ng-repeat="character in characterCreator.characters" data-ng-click="characterCreator.selectCharacter(character)">
-                                    <div class="existingCharactersContainer__item__inner">
-                                        <span>
-                                            <strong data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId === character.id"></strong>
-                                            <span data-ng-bind="character.name" data-ng-show="characterCreator.selectedCharacterId !== character.id"></span>
-                                        </span>
+                                <div class="existingCharactersContainer__item" data-ng-class="{'existingCharactersContainer__item-selected': characterCreator.selectedCharacterId === character.id}" data-ng-repeat="character in characterCreator.characters track by $index" data-ng-click="characterCreator.selectCharacter(character)">
+                                    <div class="existingCharactersContainer__item__inner" character="{{ character.id }}">
+                                        @@customCharacterSvg
                                     </div>
                                 </div>
                                 <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()">
@@ -190,28 +190,30 @@
                         <div class="col-xs-8" id="editorSvgContainer">
                             @@customCharacterSvg
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-4" id="editorControls">
                             <div class="row">
                                 <div class="col-xs-12" style="display: table-cell; width: 100%;">
                                     <input type="text" placeholder="Name" data-ng-model="characterCreator.name" maxlength="20" />
                                 </div>
                             </div>
                             <div data-ng-repeat="bodypart in characterCreator.currentSelection" style="display: table-row;">
-                                <div style="display: table-cell;">
-                                    <button type="button" class="button button-green" data-ng-click="characterCreator.previousPart(bodypart.type)">
-                                        <span class="glyphicon glyphicon-arrow-left"></span>
+                                <div style="display: table-cell; padding-top: 3px;">
+                                    <button type="button" class="button button-blue arrowButton" data-ng-click="characterCreator.previousPart(bodypart.type)">
+                                        <p>
+                                            <span class="glyphicon glyphicon-arrow-left"></span>
+                                        </p>
                                     </button>
                                 </div>
                                 <div style="display: table-cell; color: white; width: 100%;">
                                     {{ bodypart.displayName }} ({{ bodypart.selection }} / {{ bodypart.maxChoices }})
                                 </div>
                                 <div style="display: table-cell;">
-                                    <button type="button" class="button button-green" data-ng-click="characterCreator.nextPart(bodypart.type)">
+                                    <button type="button" class="button button-blue arrowButton" data-ng-click="characterCreator.nextPart(bodypart.type)">
                                         <span class="glyphicon glyphicon-arrow-right"></span>
                                     </button>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row marginTop">
                                 <button type="button" class="button button-blue" data-ng-click="characterCreator.randomize()">
                                     Randomize
                                 </button>
@@ -358,15 +360,11 @@
                     <div class="row marginTop">
                         <div class="col-xs-12 textCenter">
                             <div class="buttonGroup">
-                                <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
+                                <!-- <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
                                      data-placement="bottom" title="Add player">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                </button>
-                                <button type="button" class="button button-green" data-ng-click="main.startTutorial()" data-toggle="tooltip"
-                                     data-placement="bottom" title="Run tutorial">
-                                    <strong>Tutorial</strong>
-                                </button>
-                                <button type="button" class="button button-green" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)">
+                                </button> -->
+                                <button type="button" class="button button-green large" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)">
                                     <strong>Start</strong>
                                 </button>
                             </div>

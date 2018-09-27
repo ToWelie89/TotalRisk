@@ -17,7 +17,7 @@ import {displayReinforcementNumbers} from './../animations/animations';
 
 export default class GameController {
 
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings) {
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -44,6 +44,7 @@ export default class GameController {
         this.tutorialService = tutorialService;
         this.aiHandler = aiHandler;
         this.settings = settings;
+        this.gameAnnouncerService = gameAnnouncerService;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
@@ -215,14 +216,26 @@ export default class GameController {
     }
 
     escapeEventListener(e) {
-        if (e.keyCode === 27) {
-            this.escapeWasPressed = true;
-        }
+        if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
+            if (e.keyCode === 27) {
+                this.gameEngine.setMusicVolume(0.8);
+                this.gameEngine.isTutorialMode = false;
+                this.vm.isTutorialMode = false;
+                this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
+                this.gameEngine.setMusic();
+                this.gameAnnouncerService.mute();
+                this.$scope.$apply();
+            }
+        } else if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
+            if (e.keyCode === 27) {
+                this.escapeWasPressed = true;
+            }
 
-        if (this.turnPresenterIsOpen) return;
+            if (this.turnPresenterIsOpen) return;
 
-        if (e.keyCode === 27 && !this.startMenuIsOpen) {
-            this.openPauseModal();
+            if (e.keyCode === 27 && !this.startMenuIsOpen) {
+                this.openPauseModal();
+            }
         }
     }
 
@@ -410,12 +423,20 @@ export default class GameController {
     }
 
     filterByOwner() {
+        if (this.vm.isTutorialMode) {
+            return;
+        }
+
         this.vm.filter = 'byOwner';
         this.gameEngine.filter = 'byOwner';
         this.mapService.updateMap(this.gameEngine.filter);
     }
 
     filterByRegion() {
+        if (this.vm.isTutorialMode) {
+            return;
+        }
+
         this.vm.filter = 'byRegion';
         this.gameEngine.filter = 'byRegion';
         this.mapService.updateMap(this.gameEngine.filter);
@@ -694,9 +715,13 @@ export default class GameController {
             this.gameEngine.setMusicVolume(0.8);
             this.gameEngine.isTutorialMode = false;
             this.vm.isTutorialMode = false;
-            this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
+            this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
             this.$scope.$apply();
-        });
+        })
+        .catch(err => {
+            console.log(err);
+            this.gameAnnouncerService.mute();
+        })
     }
 
     deployTroopsToTerritoryForTutorial() {

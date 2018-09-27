@@ -51,6 +51,8 @@ export default class MainController {
                 const currentVersion = data.version;
                 if (currentVersion !== this.vm.appVersion) {
                     console.log('There is another version out!');
+                } else {
+                    console.log('There current version is the newest.');
                 }
             });
         } else {

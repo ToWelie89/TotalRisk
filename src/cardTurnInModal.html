@@ -53,15 +53,12 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <button type="button" class="button button-blue" data-ng-click="cardTurnIn.cancel()" data-ng-disabled="cardTurnIn.playerMustTurnIn && cardTurnIn.phaseIsDeployment()">
-                                    <i class="fa fa-times"></i>
                                     <strong>Cancel</strong>
                                 </button>
                                 <button type="button" class="button button-blue" data-ng-click="cardTurnIn.autoSelect()" data-ng-disabled="cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment()">
-                                    <i class="fa fa-times"></i>
                                     <strong>Autoselect best combination</strong>
                                 </button>
                                 <button type="button" class="button button-blue" data-ng-click="cardTurnIn.turnIn()" data-ng-disabled="!cardTurnIn.currentCardCombination || cardTurnIn.cards.length === 0 || !cardTurnIn.phaseIsDeployment()">
-                                    <i class="fa fa-times"></i>
                                     <strong>Turn in</strong>
                                 </button>
                             </div>

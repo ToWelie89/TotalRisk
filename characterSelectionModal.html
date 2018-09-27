@@ -21,9 +21,16 @@
                     <div id="selectedCharacterSvg" data-ng-show="characterSelection.currentSelectedPlayer && characterSelection.currentSelectedPlayer.avatar.svg" style="position: relative; z-index: 2;">
                     </div>
                 </div>
+                <h4 style="position: relative;
+                            z-index: 2;
+                            bottom: 100px;
+                            color: #c19898;
+                            font-size: 54px;
+                            font-weight: bold;
+                            text-shadow: 0 0 10px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
             </div>
             <div class="row textCenter" style="width: 800px; margin: 0 auto;">
-                <button type="button" class="button button-green" data-ng-click="characterSelection.ok()" data-ng-disabled="!characterSelection.currentSelectedPlayer">
+                <button type="button" class="button button-green large"  data-ng-click="characterSelection.ok()" data-ng-disabled="!characterSelection.currentSelectedPlayer">
                     Select
                 </button>
             </div>
