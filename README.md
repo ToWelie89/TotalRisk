@@ -15,7 +15,7 @@ Technologies used:
 - **Bootstrap** (HTML & CSS framework)
 - **Electron** (Used for creating exe-installer dists of the game so that it can be intalled and ran as a desktop application)
 
-## How to run locally
+## Getting started
 
 - Clone the repo
 - Get dependencies by running
@@ -30,25 +30,35 @@ However if you want to run on a production environment you can instead run
 npm install --prod
 ```
 
-This will not install dependencies only needed for dev, such as karma and electron
+This will not install dependencies only needed for development, such as Karma and Electron, which will save time and space.
 
-- Build assets
+- Build project
 
 ```
 grunt
 ```
 
+## How to run locally (Web version)
+
 - Start server
 
 ```
-npm run start
+npm start
 ```
 Open http://127.0.0.1:8080 in your browser.
 
-If you have electron installed globally you can also run the app as a desktop application by executing
+## How to run locally (Electron version)
+
+- Run
 
 ```
-electron .
+npm run electron
+```
+
+There is a also a development mode which allows you to use Chrome webtools in-game for debugging and refreshing the app by pressing F5. To run in dev mode run:
+
+```
+npm run electron:dev
 ```
 
 ## How to test locally
@@ -59,12 +69,13 @@ electron .
 grunt test
 ```
 
+This will run a bunch of Karma unit tests.
+
 ## Building Electron app
 
 You must first install the following three packages globally:
 
 ```
-npm install -g electron
 npm install -g electron-packager
 npm install -g electron-installer-windows
 ```
@@ -88,6 +99,16 @@ or
 ```
 npm run build-64-bit
 ```
+
+## Troubleshooting
+
+If you have problems with running the app using Electron you might need to install Electron globally.
+
+```
+npm install -g electron
+```
+
+For other issues please leave a bug report [here](https://github.com/ToWelie89/ECMA6Risk/issues) or contact me directly via mail: sonesson8909@hotmail.com
 
 ## Default Grunt build job explained
 

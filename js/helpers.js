@@ -54,4 +54,6 @@ const randomDoubleFromInterval = (min, max) => {
 
 const runningElectron = () => !!(window && window.process && window.process.type);
 
-export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval, runningElectron};
+const electronDevVersion = () => runningElectron() && window.process.env.NODE_ENV === 'dev';
+
+export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion};
