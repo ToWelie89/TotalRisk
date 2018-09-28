@@ -49,7 +49,7 @@ export default class MainController {
 
             this.vm.appVersion = electron.remote.app.getVersion();
 
-            fetch('https://raw.githubusercontent.com/ToWelie89/ECMA6Risk/master/package.json')
+            fetch('https://raw.githubusercontent.com/ToWelie89/TotalRisk/master/package.json')
             .then((resp) => resp.json())
             .then((data) => {
                 const currentVersion = data.version;
