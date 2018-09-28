@@ -108,7 +108,7 @@ If you have problems with running the app using Electron you might need to insta
 npm install -g electron
 ```
 
-For other issues please leave a bug report [here](https://github.com/ToWelie89/ECMA6Risk/issues) or contact me directly via mail: sonesson8909@hotmail.com
+For other issues please leave a bug report [here](https://github.com/ToWelie89/TotalRisk/issues) or contact me directly via mail: sonesson8909@hotmail.com
 
 ## Default Grunt build job explained
 
