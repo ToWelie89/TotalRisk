@@ -1,4 +1,4 @@
-ECMA6Risk
+TotalRisk
 ==========
 
 ## Introduction
