@@ -1,5 +1,5 @@
 import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
-import {randomIntFromInterval, randomDoubleFromInterval, runningElectron} from './../helpers';
+import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './../helpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 
@@ -36,6 +36,10 @@ export default class MainController {
         this.vm.runningElectron = runningElectron();
 
         if (this.vm.runningElectron) {
+            if (electronDevVersion()) {
+                $('head title').html('TotalRisk DEV VERSION');
+            }
+
             var shell = electron.shell;
             //open links externally by default
             $(document).on('click', 'a[href^="http"]', function(event) {
@@ -45,7 +49,7 @@ export default class MainController {
 
             this.vm.appVersion = electron.remote.app.getVersion();
 
-            fetch('https://raw.githubusercontent.com/ToWelie89/ECMA6Risk/master/package.json')
+            fetch('https://raw.githubusercontent.com/ToWelie89/TotalRisk/master/package.json')
             .then((resp) => resp.json())
             .then((data) => {
                 const currentVersion = data.version;

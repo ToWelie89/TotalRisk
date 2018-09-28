@@ -84,6 +84,7 @@ let mainWindow
 const globalShortcut = electron.globalShortcut
 
 function createWindow () {
+  const isDev = process.env.NODE_ENV === 'dev';
 
   const store = new Store({
     configName: 'user-preferences',
@@ -93,35 +94,42 @@ function createWindow () {
   let { width, height } = store.get('windowBounds');
   let riskSettings = store.get('riskSettings');
 
+  const screen = electron.screen
+  const mainScreen = screen.getPrimaryDisplay();
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width,
-    height,
-    minWidth: 1280,
-    minHeight: 980,
-    //minWidth: 600,
-    //minHeight: 400,
-    title: 'TotalRisk',
+    width: 100,
+    height: 100,
+    //minWidth: 1280,
+    //minHeight: 980,
+    title: isDev ? 'TotalRisk DEVELOPMENT VERSION' : 'TotalRisk',
     fullscreen: riskSettings.fullScreen,
-    /*webPreferences: {
-      zoomFactor: 0.5
-    },*/
     show: false,
     icon: 'electron/assets/icon.ico'
   })
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.setZoomFactor(0.9)
+    if (mainScreen.bounds.width <= 1920) {
+      mainWindow.webContents.setZoomFactor(0.8)
+    } else if (mainScreen.bounds.width > 1920 && mainScreen.bounds.width <= 2560) {
+      mainWindow.webContents.setZoomFactor(0.9)
+    } else {
+      mainWindow.webContents.setZoomFactor(1.1)
+    }
+
     mainWindow.show()
   })
 
-  globalShortcut.register('f5', function() {
-    console.log('f5 is pressed')
-    mainWindow.reload()
-  })
+  if (isDev) {
+    globalShortcut.register('f5', function() {
+      console.log('F5 was pressed, refreshing window.')
+      mainWindow.reload()
+    })
+    mainWindow.webContents.openDevTools()
+  }
 
   mainWindow.setMenu(null);
-  // mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

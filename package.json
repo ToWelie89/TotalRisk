@@ -1,16 +1,18 @@
 {
   "name": "TotalRisk",
   "productName": "TotalRisk",
-  "version": "1.2.27",
+  "version": "1.2.29",
   "description": "A web application game of the classic board game Risk",
   "main": "electron/main.js",
   "scripts": {
     "start": "http-server",
+    "electron": "electron .",
+    "electron:dev": "cross-env NODE_ENV=dev electron .",
     "build-all": "npm run build-32-bit && npm run build-64-bit",
     "build-32-bit": "npm run elec-package-win-32 && npm run elec-installer-win-32",
     "build-64-bit": "npm run elec-package-win-64 && npm run elec-installer-win-64",
-    "elec-package-win-32": "electron-packager . TotalRisk --platform win32 --arch ia32 --out electron/dist/ --overwrite --icon electron/assets/icon.ico --electron-version=2.0.0",
-    "elec-package-win-64": "electron-packager . TotalRisk --platform win32 --arch x64 --out electron/dist/ --overwrite --icon electron/assets/icon.ico --electron-version=2.0.0",
+    "elec-package-win-32": "electron-packager . TotalRisk --platform win32 --arch ia32 --out electron/dist/ --overwrite --icon electron/assets/icon.ico --electron-version=3.0.2",
+    "elec-package-win-64": "electron-packager . TotalRisk --platform win32 --arch x64 --out electron/dist/ --overwrite --icon electron/assets/icon.ico --electron-version=3.0.2",
     "elec-installer-win-32": "electron-installer-windows --src electron/dist/TotalRisk-win32-ia32/ --dest electron/dist/installers/windows32/ --config electron/config-windows.json",
     "elec-installer-win-64": "electron-installer-windows --src electron/dist/TotalRisk-win32-x64/ --dest electron/dist/installers/windows64/ --config electron/config-windows.json"
   },
@@ -31,13 +33,13 @@
   "author": "Martin Sonesson <sonesson8909@hotmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ToWelie89/ECMA6Risk/issues",
+    "url": "https://github.com/ToWelie89/TotalRisk/issues",
     "email": "sonesson8909@hotmail.com"
   },
-  "homepage": "https://github.com/ToWelie89/ECMA6Risk.git",
+  "homepage": "https://github.com/ToWelie89/TotalRisk.git",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ToWelie89/ECMA6Risk.git"
+    "url": "https://github.com/ToWelie89/TotalRisk.git"
   },
   "dependencies": {
     "angular": "^1.5.7",
@@ -66,6 +68,9 @@
     "jquery": "^2.2.4"
   },
   "devDependencies": {
+    "cross-env": "^5.2.0",
+    "electron": "^3.0.2",
+    "electron-cli": "^0.2.8",
     "electron-installer-windows": "^1.0.2",
     "electron-package": "^0.1.0",
     "grunt-cli": "^1.2.0",
