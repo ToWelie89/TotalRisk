@@ -1,8 +1,9 @@
 import {delay} from './../helpers';
+import {GAME_PHASES} from './../gameConstants';
 
 export default class MovementModalController {
 
-    constructor($scope, $uibModalInstance, tutorialService, data) {
+    constructor($scope, $rootScope, $uibModalInstance, tutorialService, data) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -12,6 +13,10 @@ export default class MovementModalController {
         // PUBLIC FUNCTIONS
         this.vm.moveTroops = this.moveTroops;
         this.vm.cancel = this.cancel;
+
+        // Close the modal on escape if in tutorial mode
+        this.boundListener = evt => this.keyupEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
 
         console.log('Movement: ', data.moveTo, data.moveFrom);
         this.vm.moveTo = data.moveTo;
@@ -26,10 +31,20 @@ export default class MovementModalController {
 
         this.$uibModalInstance = $uibModalInstance;
         this.tutorialService = tutorialService;
+        this.$rootScope = $rootScope;
 
         if (data.tutorial) {
             this.tutorial = true;
             this.runTutorial();
+        }
+    }
+
+    keyupEventListener(e) {
+        if (e.keyCode === 27) { // Escape
+            if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME) {
+                this.$uibModalInstance.close();
+                document.removeEventListener('keyup', this.boundListener);
+            }
         }
     }
 

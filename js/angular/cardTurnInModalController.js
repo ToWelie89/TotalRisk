@@ -1,11 +1,11 @@
-import {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
+import {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS, GAME_PHASES} from './../gameConstants';
 import {CARD_TYPE} from './../card/cardConstants';
 import {arraysEqual} from './../helpers';
 import {delay} from './../helpers';
 import {getBestPossibleCombination} from './../card/cardHelpers';
 
 export default class CardTurnInModalController {
-    constructor($scope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {
+    constructor($scope, $rootScope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -27,6 +27,11 @@ export default class CardTurnInModalController {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.tutorialService = tutorialService;
+        this.$rootScope = $rootScope;
+
+        // Close the modal on escape if in tutorial mode
+        this.boundListener = evt => this.keyupEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
 
         this.vm.phaseIsDeployment = () => this.gameEngine.turn.turnPhase === 0;
 
@@ -40,6 +45,15 @@ export default class CardTurnInModalController {
         if (data.type === 'tutorial') {
             this.tutorial = true;
             this.runTutorial();
+        }
+    }
+
+    keyupEventListener(e) {
+        if (e.keyCode === 27) { // Escape
+            if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME) {
+                this.$uibModalInstance.close();
+                document.removeEventListener('keyup', this.boundListener);
+            }
         }
     }
 

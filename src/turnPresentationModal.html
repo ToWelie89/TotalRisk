@@ -38,9 +38,11 @@
 
                     <h4 class="marginTop paddingLeft paddingRight paddingBottom" data-ng-repeat="message in turnPresentation.messages" data-ng-show="turnPresentation.tutorial" data-ng-bind-html="message.markup ? message.markup : message.message">
                     </h4>
-
                     <h4 class="marginTop--double textCenter">
-                        Press <strong>SPACE</strong> to skip
+                        Press <strong>SPACE</strong> to skip forward
+                    </h4>
+                    <h4 class="marginTop paddingLeft paddingRight paddingBottom textCenter" data-ng-show="turnPresentation.tutorial">
+                        Press <strong>ESCAPE</strong> to cancel tutorial.
                     </h4>
                 </div>
             </div>

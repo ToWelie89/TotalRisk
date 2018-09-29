@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes leftSword {
+        0% { transform: rotate(0deg) translate(0px, 0px); }
+        50% { transform: rotate(60deg) translate(10px, -130px); }
+        100% { transform: rotate(0deg) translate(0px, 0px); }
+    }
+    @keyframes rightSword {
+        0% { transform: rotate(0deg) translate(270px,0); }
+        50% { transform: rotate(-55deg) translate(260px,-130px); }
+        100% { transform: rotate(0deg) translate(270px,0); }
+    }
+    #leftSword {
+      animation: leftSword 0.6s linear infinite;
+      transform-origin: 20% 50%;
+    }
+    #rightSword {
+      animation: rightSword 0.6s linear infinite;
+      transform-origin: 80% 50%;
+    }
+  </style>
+  <g id="leftSword">
+    <ellipse style="fill: rgb(56, 23, 2);" cx="110.532" cy="399.563" rx="14.468" ry="46.297"/>
+    <polygon style="fill: rgb(232, 232, 232);" points="96.11 368.121 79.914 121.01 112.77 20.136 143.311 128.77 125.263 368.121"/>
+    <ellipse style="fill: rgb(235, 235, 235);" cx="110.895" cy="441.83" rx="17.675" ry="6.431"/>
+    <rect x="73.302" y="364.84" width="75.232" height="20.062" style="fill: rgb(144, 58, 0);"/>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 267.876404, -3.775244)" id="rightSword">
+    <ellipse style="fill: rgb(56, 23, 2);" cx="111.111" cy="400.42" rx="14.468" ry="46.297"/>
+    <ellipse style="fill: rgb(201, 127, 63);" cx="111.474" cy="442.687" rx="17.675" ry="6.431"/>
+    <polygon style="fill: rgb(207, 207, 207);" points="96.11 368.121 79.914 121.01 112.77 20.136 143.311 128.77 125.263 368.121"/>
+    <rect x="73.881" y="365.697" width="75.232" height="20.062" style="fill: rgb(201, 127, 63);"/>
+  </g>
+</svg>

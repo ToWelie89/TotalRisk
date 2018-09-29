@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes arm {
+        0% { transform: rotate(0deg) translate(0px,-18px); }
+        25% { transform: rotate(-23deg) translate(0px,-18px); }
+        75% { transform: rotate(20deg) translate(0px,-9px); }
+        100% { transform: rotate(0deg) translate(0px,-18px); }
+    }
+    #arm {
+      animation: arm 0.6s linear infinite;
+      transform-origin: 40% 40%;
+    }
+  </style>
+  <rect x="29.122" y="49.707" width="424.933" height="258.674" style="stroke: rgb(0, 0, 0); stroke-width: 18px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(227, 227, 227);"/>
+  <g id="arm" transform="matrix(1, 0, 0, 1, -5.015432, -18.518518)">
+    <polygon style="" points="195.303 177.699 250.049 220.37 311.651 229.886 308.647 256.931 247.545 249.418 197.462 222.374"/>
+    <polygon style="fill: rgb(107, 51, 28);" points="313.154 232.39 354.722 73.627 327.678 234.894"/>
+    <ellipse style="fill: rgb(255, 194, 194);" cx="318.663" cy="245.662" rx="17.028" ry="18.781"/>
+  </g>
+  <g>
+    <polygon style="" points="110.477 147.97 80.141 169.637 64.933 288.583 88.368 313.787 102.076 346.95 114.015 478.719 146.736 478.719 145.409 140.895" transform=""/>
+    <polygon style="" points="189.406 471.202 162.473 449.535 143.862 330.589 167.297 305.385 181.005 272.222 192.944 140.453 225.665 140.453 224.338 478.277" transform="matrix(-1 0 0 -1 369.527 618.73)"/>
+    <polygon style="fill: rgb(255, 255, 255);" points="118.175 149.704 109.449 200.473 146.733 242.119 182.43 200.869 165.771 149.307"/>
+    <polygon style="" points="133.247 156.446 132.541 168.88 154.579 168.742 153.012 157.377" transform=""/>
+    <polygon style="" points="139.593 165.569 133.247 248.068 160.615 247.672 147.923 164.379"/>
+  </g>
+  <circle style="fill: rgb(255, 194, 194);" cx="143.421" cy="106.627" r="53.542"/>
+</svg>

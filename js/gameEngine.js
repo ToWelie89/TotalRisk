@@ -22,7 +22,9 @@ export default class GameEngine {
         this.playSound = settings.playSound;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
-        this.setMusic();
+        $(document).ready(() => {
+            this.setMusic();
+        });
     }
 
     setMusicVolume(volume) {
@@ -45,7 +47,8 @@ export default class GameEngine {
             }
         } else {
             this.gameAnnouncerService.mute();
-            this.bgMusic.pause();
+            if (this.bgMusic)
+                this.bgMusic.pause();
         }
     }
 

@@ -68,6 +68,11 @@ export default class TutorialService {
             }],
             () => {
                 $('#playerName').addClass('animated infinite bounce');
+                /*zoom.to({
+                    x: 350,
+                    y: 200,
+                    scale: 3
+                });*/
             },
             () => {},
             1000
@@ -76,6 +81,7 @@ export default class TutorialService {
 
     deploymentIndicatorExplanation() {
         $('#playerName').removeClass('animated infinite bounce');
+        //zoom.out();
 
         return this.openTutorialPresenter(
             [{

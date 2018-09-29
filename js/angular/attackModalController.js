@@ -1,8 +1,9 @@
 import BattleHandler from './../battleHandler';
 import {delay} from './../helpers';
+import {GAME_PHASES} from './../gameConstants';
 
 export default class AttackModalController {
-    constructor($scope, $uibModalInstance, soundService, tutorialService, attackData) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -28,6 +29,7 @@ export default class AttackModalController {
         this.vm.getAsArray = this.getAsArray;
 
         this.$scope = $scope;
+        this.$rootScope = $rootScope;
         this.$uibModalInstance = $uibModalInstance;
         this.soundService = soundService;
         this.attackData = attackData;
@@ -44,6 +46,10 @@ export default class AttackModalController {
         this.vm.defender = attackData.territoryAttacked;
         this.vm.defender.color = attackData.defender.color;
         this.vm.defender.avatar = attackData.defender.avatar;
+
+        // Close the modal on escape if in tutorial mode
+        this.boundListener = evt => this.keyupEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
 
         this.vm.attackerTotalCasualites = 0;
         this.vm.defenderTotalCasualites = 0;
@@ -87,6 +93,15 @@ export default class AttackModalController {
             });
 
         }, this.getCountrySvgDelay);
+    }
+
+    keyupEventListener(e) {
+        if (e.keyCode === 27) { // Escape
+            if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME) {
+                this.$uibModalInstance.close();
+                document.removeEventListener('keyup', this.boundListener);
+            }
+        }
     }
 
     runTutorial() {

@@ -11,6 +11,8 @@ const Store = require('./../js/settings/electronStore.js');
 
 const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
 
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
@@ -96,13 +98,43 @@ function createWindow () {
 
   const screen = electron.screen
   const mainScreen = screen.getPrimaryDisplay();
+  let screenConfig;
+
+  if (mainScreen.bounds.width <= 1920) {
+    console.log('Screen witdh equal or smaller than 1920')
+    screenConfig = {
+      zoomFactor: 0.85,
+      minWidth: 1340,
+      minHeight: 1000
+    }
+  } else if (mainScreen.bounds.width > 1920 && mainScreen.bounds.width <= 2560) {
+    console.log('Screen witdh larger than 1920 and equal or smaller than 2560')
+    screenConfig = {
+      zoomFactor: 0.9,
+      minWidth: 1480,
+      minHeight: 1290
+    }
+  } else if (mainScreen.bounds.width > 2560) {
+    console.log('Screen witdh larger than 2560')
+    screenConfig = {
+      zoomFactor: 1.1,
+      minWidth: 1480,
+      minHeight: 1340
+    }
+  } else {
+    screenConfig = {
+      zoomFactor: 1,
+      minWidth: 1280,
+      minHeight: 760
+    }
+  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 100,
-    height: 100,
-    //minWidth: 1280,
-    //minHeight: 980,
+    width: width,
+    height: height,
+    minWidth: screenConfig.minWidth,
+    minHeight: screenConfig.minHeight,
     title: isDev ? 'TotalRisk DEVELOPMENT VERSION' : 'TotalRisk',
     fullscreen: riskSettings.fullScreen,
     show: false,
@@ -110,14 +142,7 @@ function createWindow () {
   })
 
   mainWindow.once('ready-to-show', () => {
-    if (mainScreen.bounds.width <= 1920) {
-      mainWindow.webContents.setZoomFactor(0.8)
-    } else if (mainScreen.bounds.width > 1920 && mainScreen.bounds.width <= 2560) {
-      mainWindow.webContents.setZoomFactor(0.9)
-    } else {
-      mainWindow.webContents.setZoomFactor(1.1)
-    }
-
+    mainWindow.webContents.setZoomFactor(screenConfig.zoomFactor)
     mainWindow.show()
   })
 

@@ -212,17 +212,20 @@ export default class GameController {
     }
 
     openMenu() {
+        if (this.gameEngine.isTutorialMode) {
+            return;
+        }
         this.openPauseModal();
     }
 
     escapeEventListener(e) {
         if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
             if (e.keyCode === 27) {
-                this.gameEngine.setMusicVolume(0.8);
                 this.gameEngine.isTutorialMode = false;
                 this.vm.isTutorialMode = false;
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
                 this.gameEngine.setMusic();
+                this.gameEngine.setMusicVolume(0.8);
                 this.gameAnnouncerService.mute();
                 this.$scope.$apply();
             }
@@ -650,7 +653,9 @@ export default class GameController {
      */
 
     startTutorial() {
+        let soundWasMutedBeforeTutorial = false;
         if (!this.settings.playSound) {
+            soundWasMutedBeforeTutorial = true;
             this.settings.toggleSound();
         }
 
@@ -712,6 +717,12 @@ export default class GameController {
         .then(() => this.tutorialService.endOfTurnExplanation())
         .then(() => delay(1500))
         .then(() => {
+            if (!soundWasMutedBeforeTutorial) {
+                this.gameEngine.setMusic();
+            } else {
+                this.settings.toggleSound();
+            }
+
             this.gameEngine.setMusicVolume(0.8);
             this.gameEngine.isTutorialMode = false;
             this.vm.isTutorialMode = false;
@@ -721,6 +732,12 @@ export default class GameController {
         .catch(err => {
             console.log(err);
             this.gameAnnouncerService.mute();
+            if (!soundWasMutedBeforeTutorial) {
+                this.gameEngine.setMusic();
+            } else {
+                this.settings.toggleSound();
+            }
+            this.gameEngine.setMusicVolume(0.8);
         })
     }
 

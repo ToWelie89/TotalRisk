@@ -26,6 +26,8 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js'></script>
+    <!-- <script src='js/libs/zoom.js'></script>
+    <script src='js/libs/zoomooz.js'></script> -->
 
     <!-- Fix for electron -->
     <script>if (window.module) module = window.module;</script>
@@ -67,18 +69,30 @@
                             background: rgba(59, 59, 59, 0.788235294117647);
                             border-radius: 30px;">
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.PLAYER_SETUP)">
+                        <div class="main-menu-button-icon" id="newGameIcon">
+                            @@newGameIcon
+                        </div>
                         <strong>New Game</strong>
                     </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
                         <strong>Load Game</strong>
                     </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.startTutorial()">
+                        <div class="main-menu-button-icon" id="tutorialIcon">
+                            @@tutorialIcon
+                        </div>
                         <strong>Tutorial</strong>
                     </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.CHARACTER_CREATOR)">
+                        <div class="main-menu-button-icon" id="characterEditorIcon">
+                            @@characterEditorIcon
+                        </div>
                         <strong>Character Editor</strong>
                     </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.SETTINGS)">
+                        <div class="main-menu-button-icon" id="settingsIcon">
+                            @@settingsIcon
+                        </div>
                         <strong>Settings</strong>
                     </button>
                 </div>
@@ -269,7 +283,7 @@
                         <div class="setupBoxAvatarsContainer">
                             <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                                 <div
-                                    data-ng-if="setup.players[i]"
+                                    data-ng-if="setup.players[i] && setup.players[i].avatar"
                                     class="box-shadow setupBoxAvatarsContainer__item__portrait"
                                     style="background-image: url({{setup.players[i].avatar.picture}});
                                            border-color: {{setup.players[i].color.mainColor}};">
@@ -481,7 +495,7 @@
                     <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
                         {{ game.playerWhoWon.name }}
                     </h3>
-                    <img id="victoryPortrait" class="marginTop--double" src="{{ game.playerWhoWon.avatar.picture }}" alt="">
+                    <img id="victoryPortrait" class="marginTop--double" src="{{ game.playerWhoWon.avatar.picture }}" alt="" data-ng-if="game.playerWhoWon">
                     <div id="victoryFlag" class='flag'></div>
                     <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
                         <table id="endScreenTable">

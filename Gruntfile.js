@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html', 'assets/map.svg', '*.html'],
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html', 'assets/**/*.svg', '*.html'],
                 tasks: ['default'],
                 options: {
                     spawn: false
@@ -98,6 +98,18 @@ module.exports = function(grunt) {
                     }, {
                         match: 'logo',
                         replacement: '<%= grunt.file.read("assets/logo.svg") %>'
+                    }, {
+                        match: 'settingsIcon',
+                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/settings.svg") %>'
+                    }, {
+                        match: 'newGameIcon',
+                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/newGame.svg") %>'
+                    }, {
+                        match: 'tutorialIcon',
+                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/tutorial.svg") %>'
+                    }, {
+                        match: 'characterEditorIcon',
+                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/editor.svg") %>'
                     }]
                 },
                 files: [{
