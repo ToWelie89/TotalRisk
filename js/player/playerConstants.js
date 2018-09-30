@@ -1,7 +1,6 @@
 const PLAYER_TYPES = {
     HUMAN: 0,
-    AI_NORMAL: 1,
-    AI_EXPERT: 2
+    AI: 1
 };
 
 const AI_VALUES = {
@@ -258,6 +257,7 @@ const playerIterator = (playerMap, turnPhases) => {
                     turnNumber
                 };
             } else {
+                let turnNumberWasIncremented = false;
                 // New player turn
                 if ((currentPlayerIndex + 1) < (playerMap.length)) {
                     currentPlayerIndex++;
@@ -265,6 +265,7 @@ const playerIterator = (playerMap, turnPhases) => {
                     currentPlayerIndex = 0;
                     // All players have played this turn, increment the turn number
                     turnNumber++;
+                    turnNumberWasIncremented = true;
                 }
 
                 currentTurnPhaseIndex = 0;
@@ -278,6 +279,9 @@ const playerIterator = (playerMap, turnPhases) => {
                         currentPlayerIndex++;
                     } else {
                         currentPlayerIndex = 0;
+                        if (!turnNumberWasIncremented) {
+                            turnNumber++;
+                        }
                     }
                 }
 

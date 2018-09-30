@@ -173,6 +173,7 @@ export default class AttackModalController {
             context.vm.fightIsOver = true;
             if (context.vm.defender.numberOfTroops === 0) {
                 // the invasion succeded
+                context.$scope.$apply();
                 context.soundService.cheer.play();
                 $('#attackerTroops .troopIcon svg').addClass('animated infinite bounce');
 

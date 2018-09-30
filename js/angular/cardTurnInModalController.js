@@ -101,6 +101,7 @@ export default class CardTurnInModalController {
             return;
         }
 
+        this.soundService.tick.play();
         const newHand = this.vm.cards.filter(card => !card.isSelected);
         this.gameEngine.turn.player.cards = newHand;
 
@@ -113,6 +114,7 @@ export default class CardTurnInModalController {
         if (this.tutorial) {
             return;
         }
+        this.soundService.tick.play();
         this.$uibModalInstance.close();
     }
 
@@ -121,6 +123,7 @@ export default class CardTurnInModalController {
             return;
         }
 
+        this.soundService.tick.play();
         const bestCombination = getBestPossibleCombination(this.vm.cards);
 
         if (bestCombination) {

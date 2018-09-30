@@ -2,9 +2,10 @@ import { GAME_PHASES } from './../gameConstants';
 
 export default class PauseMenuModalController {
 
-    constructor($scope, $rootScope, $uibModalInstance) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService) {
         this.vm = this;
         this.$rootScope = $rootScope;
+        this.soundService = soundService;
 
         this.$uibModalInstance = $uibModalInstance;
 
@@ -22,10 +23,12 @@ export default class PauseMenuModalController {
     }
 
     continue() {
+        this.soundService.tick.play();
         this.$uibModalInstance.close();
     }
 
     settings() {
+        this.soundService.tick.play();
         this.vm.currentState = this.vm.states.SETTINGS;
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
@@ -33,10 +36,12 @@ export default class PauseMenuModalController {
     }
 
     backToMenu() {
+        this.soundService.tick.play();
         this.vm.currentState = this.vm.states.MAIN_MENU;
     }
 
     exitToMenu() {
+        this.soundService.tick.play();
         this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
         this.$uibModalInstance.close();
     }

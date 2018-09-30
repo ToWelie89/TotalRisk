@@ -16,10 +16,8 @@ export default class PlayerTypePopoverController {
     	switch(type) {
     		case PLAYER_TYPES.HUMAN:
     			return 'Human';
-			case PLAYER_TYPES.AI_NORMAL:
-				return 'AI Normal';
-			case PLAYER_TYPES.AI_EXPERT:
-				return 'AI Expert';
+			case PLAYER_TYPES.AI:
+				return 'AI';
     	}
     }
 }

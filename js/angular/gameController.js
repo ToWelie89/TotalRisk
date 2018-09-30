@@ -31,6 +31,7 @@ export default class GameController {
         this.vm.testPresentationModal = this.testPresentationModal;
         this.vm.pause = this.pause;
         this.vm.openMenu = this.openMenu;
+        this.vm.toArray = this.toArray;
 
         this.vm.turn = {};
 
@@ -85,13 +86,6 @@ export default class GameController {
         this.vm.pauseModes = PAUSE_MODES;
         this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
 
-        console.log('Initialization of gameController');
-    }
-
-    startGame(players, winningCondition, aiTesting = false) {
-        this.gameEngine.startGame(players, winningCondition, aiTesting);
-        this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-
         document.querySelectorAll('.country').forEach(country => {
             country.addEventListener('click', (e) => {
                 this.clickCountry(e);
@@ -107,6 +101,13 @@ export default class GameController {
                 this.clickCountry(e);
             });
         });
+
+        console.log('Initialization of gameController');
+    }
+
+    startGame(players, winningCondition, aiTesting = false) {
+        this.gameEngine.startGame(players, winningCondition, aiTesting);
+        this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         this.vm.turn = this.gameEngine.turn;
         this.vm.filter = this.gameEngine.filter;
@@ -148,6 +149,10 @@ export default class GameController {
         } else {
             callback();
         }
+    }
+
+    toArray(num) {
+        return new Array(num);
     }
 
     handleVictory() {
@@ -215,6 +220,7 @@ export default class GameController {
         if (this.gameEngine.isTutorialMode) {
             return;
         }
+        this.soundService.tick.play();
         this.openPauseModal();
     }
 
@@ -305,6 +311,8 @@ export default class GameController {
             return;
         }
 
+        this.soundService.tick.play();
+
         this.$uibModal.open({
             templateUrl: 'cardTurnInModal.html',
             backdrop: 'static',
@@ -358,6 +366,7 @@ export default class GameController {
             }
         };
 
+        this.soundService.tick.play();
         this.vm.turn = this.gameEngine.nextTurn();
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
@@ -429,7 +438,7 @@ export default class GameController {
         if (this.vm.isTutorialMode) {
             return;
         }
-
+        this.soundService.tick.play();
         this.vm.filter = 'byOwner';
         this.gameEngine.filter = 'byOwner';
         this.mapService.updateMap(this.gameEngine.filter);
@@ -439,7 +448,7 @@ export default class GameController {
         if (this.vm.isTutorialMode) {
             return;
         }
-
+        this.soundService.tick.play();
         this.vm.filter = 'byRegion';
         this.gameEngine.filter = 'byRegion';
         this.mapService.updateMap(this.gameEngine.filter);
@@ -569,6 +578,8 @@ export default class GameController {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
+            } else {
+                this.soundService.denied.play();
             }
             this.gameEngine.addTroopToTerritory(country);
             this.mapService.updateMap(this.gameEngine.filter);

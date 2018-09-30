@@ -226,7 +226,7 @@ export default class GameSetupController {
 
     onlyAIsExists() {
         const types = this.vm.players.map(x => x.type);
-        return types.every(type => type === PLAYER_TYPES.AI_NORMAL || type === PLAYER_TYPES.AI_EXPERT);
+        return types.every(type => type === PLAYER_TYPES.AI);
     }
 
     emptyNamesExists() {

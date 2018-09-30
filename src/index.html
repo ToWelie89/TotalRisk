@@ -322,7 +322,7 @@
                                     role="button"
                                     tabIndex="0"
                                     popover-placement="left"
-                                    popover-title="Select setup.players[i] type"
+                                    popover-title="Select a type (human or AI)"
                                     popover-trigger="'focus'"
                                     uib-popover-template="'src/popoverPlayerTypeTemplate.html'"
                                     data-ng-controller="playerTypePopoverController as playerTypePopover"
@@ -429,10 +429,10 @@
                     </div>
                     <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
                         <div class="buttonGroup">
-                            <button type="button" class="button button-blue" id="showByOwner" data-ng-click="game.filterByOwner()">
+                            <button type="button" class="button button-blue" data-ng-class="{'filter-selected': game.filter === 'byOwner'}" id="showByOwner" data-ng-click="game.filterByOwner()">
                                 <strong>Color by owner</strong>
                             </button>
-                            <button type="button" class="button button-blue" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
+                            <button type="button" class="button button-blue" data-ng-class="{'filter-selected': game.filter === 'byRegion'}" id="showByRegion" data-ng-click="game.filterByRegion()" data-ng-class="{'active': game.filter == 'byRegion'}">
                                 <strong>Color by region</strong>
                             </button>
                             <button type="button" class="button button-purple" data-ng-click="game.pause()" style="width: 46px; height: 34px;" data-ng-show="game.aiTurn">
@@ -451,8 +451,17 @@
                             <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                                 <div>
                                     <div data-ng-show="game.turn.turnPhase == 0" class="troop_{{ game.turn.player.color.name }}">
-                                        <div class="floatLeft">Deployment phase <span data-ng-bind="game.troopsToDeploy"></span></div>
-                                        <div class="floatLeft" id="mainTroopIndicator">@@troopSvg</div>
+                                        <div>Deployment phase</div>
+                                        <div data-ng-if="game.troopsToDeploy <= 9">
+                                            <div id="mainTroopIndicator" class="floatLeft" data-ng-repeat="i in game.toArray(game.troopsToDeploy) track by $index">@@troopSvg</div>
+                                        </div>
+                                        <div data-ng-if="game.troopsToDeploy > 9">
+                                            <div class="floatLeft">@@troopSvg</div>
+                                            <span class="floatLeft paddingLeft">x{{ game.troopsToDeploy }}</span>
+                                        </div>
+                                        <div data-ng-if="game.troopsToDeploy === 0">
+                                            <strong>No more reinforcements!</strong>
+                                        </div>
                                     </div>
                                     <span data-ng-show="game.turn.turnPhase == 1">
                                         Attack phase
