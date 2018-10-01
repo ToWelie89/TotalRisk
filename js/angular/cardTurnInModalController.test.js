@@ -2,7 +2,7 @@ import CardTurnInModalController from './cardTurnInModalController';
 import GameEngine from './../gameEngine';
 import Card from './../card/card';
 import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
-import {createUibModalInstance, createSoundService, createTutorialService} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createTutorialService, createRootScope} from './../test/mockHelper';
 import {POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
 
 describe('cardTurnInModalController', () => {
@@ -12,6 +12,7 @@ describe('cardTurnInModalController', () => {
     let mockSoundService;
     let mockGameEngine;
     let mockTutorialService;
+    let mockRootScope;
 
     const generateCards = (types) => {
         cardTurnInModalController.cards = [];
@@ -28,6 +29,7 @@ describe('cardTurnInModalController', () => {
         mockUibModalInstance = createUibModalInstance();
         mockSoundService = createSoundService();
         mockTutorialService = createTutorialService();
+        mockRootScope = createRootScope();
 
         let mockData = {
             type: 'normal'
@@ -42,7 +44,7 @@ describe('cardTurnInModalController', () => {
             }
         };
 
-        cardTurnInModalController = new CardTurnInModalController({}, mockUibModalInstance, mockGameEngine, mockSoundService, mockTutorialService, mockData);
+        cardTurnInModalController = new CardTurnInModalController({}, mockRootScope, mockUibModalInstance, mockGameEngine, mockSoundService, mockTutorialService, mockData);
     });
 
     it('On construction scope variables should be set correctly', () => {

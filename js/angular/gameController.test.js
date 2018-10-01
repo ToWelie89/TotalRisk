@@ -26,6 +26,8 @@ describe('gameController', () => {
     let mockAiHandler;
 
     beforeEach(() => {
+        document.querySelectorAll = () => [];
+
         mockGameEngine = createGameEngine();
         mockSoundService = createSoundService();
         mockUibModal = createUibModal();
@@ -54,10 +56,10 @@ describe('gameController', () => {
             new Player('Julius Caesar', 'red', 'lol'),
             new Player('Hannibal', 'blue', 'kek')
         ];
-        document.querySelectorAll = () => [];
         mockGameEngine.turn = {
             player: {
-                type: PLAYER_TYPES.HUMAN
+                type: PLAYER_TYPES.HUMAN,
+                cards: []
             },
             turnPhase: TURN_PHASES.DEPLOYMENT
         }

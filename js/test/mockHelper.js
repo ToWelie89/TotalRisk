@@ -29,6 +29,8 @@ const createSoundService = () => {
         diceRoll: jasmine.createSpyObj('diceRoll', ['play']),
         bleep2: jasmine.createSpyObj('bleep2', ['play']),
         remove: jasmine.createSpyObj('remove', ['play']),
+        denied: jasmine.createSpyObj('denied', ['play']),
+        tick: jasmine.createSpyObj('tick', ['play'])
 
     };
     return mock;

@@ -1,5 +1,5 @@
 import AttackModalController from './attackModalController';
-import {createUibModalInstance, createSoundService, createScope, createTutorialService} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createScope, createRootScope, createTutorialService} from './../test/mockHelper';
 import Territory from './../map/territory';
 import { worldMap } from './../map/worldMapConfiguration';
 import Player from './../player/player';
@@ -14,6 +14,7 @@ describe('attackModalController', () => {
     let player2;
 
     let mockScope;
+    let mockRootScope;
     let mockSoundService;
     let mockUibModalInstance;
     let mockTutorialService;
@@ -38,9 +39,10 @@ describe('attackModalController', () => {
         mockSoundService = createSoundService();
         mockUibModalInstance = createUibModalInstance();
         mockScope = createScope();
+        mockRootScope = createRootScope();
         mockTutorialService = createTutorialService();
 
-        attackModalController = new AttackModalController(mockScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData);
+        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData);
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;

@@ -93,7 +93,7 @@ function createWindow () {
     defaults: ElectronSettings
   });
 
-  let { width, height } = store.get('windowBounds');
+  let windowBounds = store.get('windowBounds');
   let riskSettings = store.get('riskSettings');
 
   const screen = electron.screen
@@ -128,6 +128,9 @@ function createWindow () {
       minHeight: 760
     }
   }
+
+  let width ? windowBounds.width : screenConfig.minWidth;
+  let height ? windowBounds.height : screenConfig.minHeight;
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

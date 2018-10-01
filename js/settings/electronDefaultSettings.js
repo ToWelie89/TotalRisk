@@ -7,10 +7,6 @@ const ElectronSettings = {
         showAnnouncer: true,
         fullScreen: false,
         characters: []
-    },
-    windowBounds: {
-        width: 1280,
-        height: 980
     }
 };
 
