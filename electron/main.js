@@ -129,8 +129,8 @@ function createWindow () {
     }
   }
 
-  let width ? windowBounds.width : screenConfig.minWidth;
-  let height ? windowBounds.height : screenConfig.minHeight;
+  let width = windowBounds ? windowBounds.width : screenConfig.minWidth;
+  let height = windowBounds ? windowBounds.height : screenConfig.minHeight;
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
