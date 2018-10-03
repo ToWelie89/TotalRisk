@@ -3,11 +3,12 @@
   "productName": "TotalRisk",
   "version": "1.2.31",
   "description": "A web application game of the classic board game Risk",
-  "main": "electron/main.js",
+  "main": "main.js",
   "scripts": {
     "start": "http-server",
     "electron": "electron .",
     "electron:dev": "cross-env NODE_ENV=dev electron .",
+    "build": "build",
     "build-all": "npm run build-32-bit && npm run build-64-bit",
     "build-32-bit": "npm run elec-package-win-32 && npm run elec-installer-win-32",
     "build-64-bit": "npm run elec-package-win-64 && npm run elec-installer-win-64",
@@ -30,6 +31,16 @@
     "risk",
     "game"
   ],
+  "build": {
+    "appId": "com.github.ToWelie89.TotalRisk",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ToWelie89",
+        "repo": "TotalRisk"
+      }
+    ]
+  },
   "author": "Martin Sonesson <sonesson8909@hotmail.com>",
   "license": "MIT",
   "bugs": {
@@ -65,14 +76,15 @@
     "grunt-notify": "^0.4.5",
     "grunt-replace": "^1.0.1",
     "http-server": "^0.9.0",
+    "electron-updater": "^3.1.2",
+    "electron-log": "^2.2.17",
     "jquery": "^2.2.4"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
     "electron": "^3.0.2",
-    "electron-cli": "^0.2.8",
-    "electron-installer-windows": "^1.0.2",
-    "electron-package": "^0.1.0",
+    "electron-builder": "^20.28.4",
+    "electron-rebuild": "^1.8.2",
     "grunt-cli": "^1.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",

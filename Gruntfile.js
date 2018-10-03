@@ -8,8 +8,8 @@ module.exports = function(grunt) {
             },
             build: {
                 files: [{
-                    src: 'build/app.bundle.js',
-                    dest: 'build/app.bundle.min.js'
+                    src: 'assetsDist/app.bundle.js',
+                    dest: 'assetsDist/app.bundle.min.js'
                 }]
             }
         },
@@ -21,13 +21,13 @@ module.exports = function(grunt) {
             all: {
                 files: [{
                     src: 'less/init.less',
-                    dest: 'build/default.css'
+                    dest: 'assetsDist/default.css'
                 }]
             }
         },
         clean: {
-            build: ['build/app.bundle.js', 'build/default.css'],
-            test: ['build/testApp.bundle.js']
+            build: ['assetsDist/app.bundle.js', 'assetsDist/default.css'],
+            test: ['assetsDist/testApp.bundle.js']
         },
         watch: {
             scripts: {
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         browserify: {
             build: {
                 files: {
-                    'build/app.bundle.js': 'js/app.js'
+                    'assetsDist/app.bundle.js': 'js/app.js'
                 },
                 options: {
                     transform: [['babelify', { presets: "es2015" }]],
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             },
             test: {
                 files: {
-                    'build/testApp.bundle.js': 'js/test/test.js'
+                    'assetsDist/testApp.bundle.js': 'js/test/test.js'
                 },
                 options: {
                     transform: [['babelify', { presets: "es2015" }]],

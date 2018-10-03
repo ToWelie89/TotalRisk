@@ -1,7 +1,7 @@
 /node_modules
-/build
+/assetsDist
 /index.html
 /attackModal.html
 /turnPresentationModal.html
 /cardTurnInModal.html
-/electron/dist
+/dist
