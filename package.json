@@ -4,6 +4,7 @@
   "version": "1.2.31",
   "description": "A web application game of the classic board game Risk",
   "main": "main.js",
+  "license": "Unlicense",
   "scripts": {
     "start": "http-server",
     "electron": "electron .",
@@ -84,7 +85,6 @@
     "cross-env": "^5.2.0",
     "electron": "^3.0.2",
     "electron-builder": "^20.28.4",
-    "electron-rebuild": "^1.8.2",
     "grunt-cli": "^1.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="assets/img/icon.ico">
+    <link rel="shortcut icon" href="icon.ico">
     <title>TotalRisk</title>
 
     <!-- Fix for electron -->
@@ -10,12 +10,6 @@
     <script>
         const electron = require('electron');
         const {ipcRenderer} = require('electron');
-        ipcRenderer.on('message', function(event, text) {
-          var container = document.getElementById('body');
-          var message = document.createElement('h3');
-          message.innerHTML = text;
-          container.appendChild(message);
-        })
     </script>
 
     <script src='js/libs/responsivevoice.js'></script>
@@ -31,8 +25,8 @@
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js'></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js'></script> -->
     <!-- <script src='js/libs/zoom.js'></script>
     <script src='js/libs/zoomooz.js'></script> -->
 
@@ -47,10 +41,9 @@
     <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
     <link href="assetsDist/default.css" rel="stylesheet" type="text/css">
 
-    <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <!-- <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" href="cssLibs/fontAwesome.css" type="text/css">
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
@@ -511,7 +504,7 @@
                     <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
                         {{ game.playerWhoWon.name }}
                     </h3>
-                    <img id="victoryPortrait" class="marginTop--double" src="{{ game.playerWhoWon.avatar.picture }}" alt="" data-ng-if="game.playerWhoWon">
+                    <img id="victoryPortrait" class="marginTop--double" src="" alt="" data-ng-if="game.playerWhoWon">
                     <div id="victoryFlag" class='flag'></div>
                     <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
                         <table id="endScreenTable">

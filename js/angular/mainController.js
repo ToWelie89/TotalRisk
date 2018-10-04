@@ -5,12 +5,14 @@ import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants'
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine, soundService) {
+    constructor($scope, $rootScope, gameEngine, soundService, autoUpdater) {
+        console.log('kek', autoUpdater)
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
+        this.autoUpdater = autoUpdater;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
         this.vm.startGame = this.startGame;
@@ -32,6 +34,11 @@ export default class MainController {
                 }, 50);
             }
         });
+
+        this.$rootScope.$watch('autoUpdater', () => {
+            console.log('ngt hände!!!', autoUpdater)
+        });
+
 
         this.vm.runningElectron = runningElectron();
 

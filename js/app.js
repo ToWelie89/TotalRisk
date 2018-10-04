@@ -2,6 +2,9 @@
 * IMPORTS
 */
 
+import AutoUpdatingService from './autoUpdating/AutoUpdater';
+const autoUpdater = new AutoUpdatingService();
+
 import MainController from './angular/mainController';
 import GameController from './angular/gameController';
 import GameSetupController from './angular/gameSetupController';
@@ -54,3 +57,5 @@ app.service('tutorialService', TutorialService);
 app.service('aiHandler', AiHandler);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
+/* CONSTANTS */
+app.constant('autoUpdater', autoUpdater);

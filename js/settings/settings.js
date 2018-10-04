@@ -31,7 +31,12 @@ export default class Settings {
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
         this.characters    = savedSettings ? savedSettings.characters    : settings.characters;
-        this.aiSpeedValues = settings.aiSpeedValues;
+        this.aiSpeedValues = {
+            'Slow': 1000,
+            'Medium': 600,
+            'Fast': 200,
+            'Superspeed': 40
+        };
 
         this.gameEngine.toggleSound(this.playSound);
     }
