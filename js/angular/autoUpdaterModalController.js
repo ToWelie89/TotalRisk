@@ -16,7 +16,7 @@ export default class AutoUpdaterModalController {
             console.log(this.vm.autoUpdatingState)
             $scope.$apply();
 
-            if (this.vm.autoUpdatingState.state === MESSAGE_TYPES.UPDATE_DOWNLOADED) {
+            if (this.vm.autoUpdatingState.state === MESSAGE_TYPES.UPDATE_DOWNLOADED || this.vm.autoUpdatingState.state === MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE) {
                 setTimeout(() => {
                     this.$uibModalInstance.close();
                 }, 2000);

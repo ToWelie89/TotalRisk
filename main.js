@@ -109,6 +109,14 @@ const createDefaultWindow = () => {
     win.webContents.setZoomFactor(screenConfig.zoomFactor)
     win.show()
     autoUpdater.checkForUpdatesAndNotify();
+
+    if (isDev) {
+      sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      setTimeout(() => {
+        sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
+      }, 1500)
+    }
+
     //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
 
     // Test GUI for download patch flow
