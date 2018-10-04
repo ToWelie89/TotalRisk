@@ -2,17 +2,17 @@ import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
 import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './../helpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
+import {MESSAGE_TYPES} from './../autoUpdating/updaterConstants';
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine, soundService, autoUpdater) {
-        console.log('kek', autoUpdater)
+    constructor($scope, $rootScope, gameEngine, soundService, $uibModal) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$uibModal = $uibModal;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
-        this.autoUpdater = autoUpdater;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
         this.vm.startGame = this.startGame;
@@ -35,14 +35,10 @@ export default class MainController {
             }
         });
 
-        this.$rootScope.$watch('autoUpdater', () => {
-            console.log('ngt hände!!!', autoUpdater)
-        });
-
-
         this.vm.runningElectron = runningElectron();
 
         if (this.vm.runningElectron) {
+            this.openUpdaterModal();
             if (electronDevVersion()) {
                 $('head title').html('TotalRisk DEV VERSION');
             }
@@ -65,6 +61,19 @@ export default class MainController {
         }
 
         console.log('Initialization of mainController');
+    }
+
+    openUpdaterModal() {
+        this.$uibModal.open({
+            templateUrl: 'autoUpdaterModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'autoUpdaterModalController',
+            controllerAs: 'updater',
+            keyboard: false
+        }).result.then(closeResponse => {
+            // do shit
+        });
     }
 
     aiTester() {

@@ -1,5 +1,4 @@
-// This is free and unencumbered software released into the public domain.
-// See LICENSE for details
+const { MESSAGE_TYPES } = require('./js/autoUpdating/updaterConstants');
 
 const electron = require('electron');
 const {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} = require('electron');
@@ -23,9 +22,9 @@ const proxyExists = proxySettings && proxySettings.host && proxySettings.usernam
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'debug';
 
-const sendStatusToWindow = (text, type = 'message') => {
-  log.info(text);
-  win.webContents.send(type, text);
+const sendStatusToWindow = (state, type = 'message', data = {}) => {
+  log.info(state, data);
+  win.webContents.send(type, { state, data });
 }
 
 log.info('App starting...');
@@ -110,7 +109,29 @@ const createDefaultWindow = () => {
     win.webContents.setZoomFactor(screenConfig.zoomFactor)
     win.show()
     autoUpdater.checkForUpdatesAndNotify();
-    sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
+    //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
+
+    // Test GUI for download patch flow
+    /*
+    sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+    setTimeout(() => {
+      sendStatusToWindow(MESSAGE_TYPES.NEW_UPDATE_AVAILABLE);
+      setTimeout(() => {
+        sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', { bytesPerSecond: 100000, percent: 3, transferred: '3 Mb', total: '100 Mb' });
+        setTimeout(() => {
+          sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', { bytesPerSecond: 120000, percent: 20, transferred: '20 Mb', total: '100 Mb' });
+          setTimeout(() => {
+            sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', { bytesPerSecond: 103000, percent: 85, transferred: '85 Mb', total: '100 Mb' });
+            setTimeout(() => {
+              sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', { bytesPerSecond: 99000, percent: 99, transferred: '99 Mb', total: '100 Mb' });
+              setTimeout(() => {
+                sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADED);
+              }, 1500)
+            }, 1500)
+          }, 1500)
+        }, 1500)
+      }, 1500)
+    }, 1500)*/
   })
 
   if (isDev) {
@@ -132,15 +153,15 @@ const createDefaultWindow = () => {
 // Auto updater events
 
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+  sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES);
 });
 
 autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
+  sendStatusToWindow(MESSAGE_TYPES.NEW_UPDATE_AVAILABLE);
 });
 
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
+  sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
 });
 
 autoUpdater.on('error', (err) => {
@@ -152,15 +173,14 @@ autoUpdater.on('download-progress', (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  sendStatusToWindow(log_message);
+  sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', progressObj);
 });
 
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
+  sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADED);
 });
 
 // Create app
-
 app.on('ready', () => {
   createDefaultWindow();
 });

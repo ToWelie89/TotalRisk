@@ -1,0 +1,50 @@
+<div data-ng-init="updater.init()">
+    <div id="updaterModal" class="riskModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.CHECKING_FOR_UPDATES">
+                            <img src="assets/img/sparta.gif" alt="" />
+                            <h3>Checking for updates ....</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NEW_UPDATE_AVAILABLE">
+                            <img src="assets/img/sparta.gif" alt="" />
+                            <h3>New update found!</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE">
+                            <h3>No new update found</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.UPDATE_DOWNLOADING">
+                            <img src="assets/img/sparta.gif" alt="" />
+                            <h3>Downloading update</h3>
+                            <div style="width: 100%; height: 30px;">
+                                <div style="width: {{ updater.autoUpdatingState.data.percent }}%; height: 100%; background-color: green; float:left;"></div>
+                                <div style="width: {{ 100 - updater.autoUpdatingState.data.percent }}%; height: 100%; background-color: black; float:left;"></div>
+                            </div>
+                            <div>
+                                Current speed: {{ updater.formatSpeed(updater.autoUpdatingState.data.bytesPerSecond) }}
+                            </div>
+                            <div>
+                                Downloaded {{ updater.autoUpdatingState.data.transferred }} / {{ updater.autoUpdatingState.data.total }}
+                            </div>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.UPDATE_DOWNLOADED">
+                            <h3>Update downloaded. Closing application to install.</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.ERROR_TYPES.CONNECTION_TIMED_OUT">
+                            <h3>There was a problem with connecting to the internet. Make sure you have a working internet connection to be able to patch the game to the latest version. If you are behind a proxy make sure to configure proxy settings.</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.ERROR_TYPES.UNKNOWN">
+                            <h3>An error occured while trying to patch the game.</h3>
+                        </div>
+                        <div data-ng-show="updater.autoUpdatingState.state === updater.ERROR_TYPES.NO_RELEASES_COULD_BE_FETCHED">
+                            <h3>No available releases could be fetched from server.</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

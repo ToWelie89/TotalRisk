@@ -19,6 +19,7 @@ import EndScreenTableController from './angular/endScreenTableController';
 import PlayerTypePopoverController from './angular/playerTypePopoverController';
 import CharacterSelectionController from './angular/characterSelectionController.js';
 import CharacterCreatorController from './angular/characterCreatorController.js';
+import AutoUpdaterModalController from './angular/autoUpdaterModalController.js';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
@@ -46,6 +47,7 @@ app.controller('turnPresentationController', TurnPresentationController);
 app.controller('settingsController', SettingsController);
 app.controller('endScreenTableController', EndScreenTableController);
 app.controller('pauseMenuModalController', PauseMenuModalController);
+app.controller('autoUpdaterModalController', AutoUpdaterModalController);
 app.controller('playerTypePopoverController', PlayerTypePopoverController);
 app.controller('characterSelectionController', CharacterSelectionController);
 app.controller('characterCreatorController', CharacterCreatorController);
@@ -57,5 +59,3 @@ app.service('tutorialService', TutorialService);
 app.service('aiHandler', AiHandler);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
-/* CONSTANTS */
-app.constant('autoUpdater', autoUpdater);
