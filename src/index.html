@@ -8,8 +8,12 @@
     <!-- Fix for electron -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script>
-        const electron = require('electron');
-        const {ipcRenderer} = require('electron');
+        let electron;
+        let ipcRenderer;
+        if (!!(window && window.process && window.process.type)) {
+            electron = require('electron');
+            ipcRenderer = require('electron').ipcRenderer;
+        }
     </script>
 
     <script src='js/libs/responsivevoice.js'></script>
@@ -21,6 +25,7 @@
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
+    <script src="node_modules\izitoast\dist\js\iziToast.min.js"></script>
     <script src="assetsDist/app.bundle.js"></script>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -35,8 +40,10 @@
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link href="node_modules\izitoast\dist\css\iziToast.min.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" type="text/css" href="node_modules/angularjs-slider/dist/rzslider.css">
+
     <link href="cssLibs/animate.css" rel="stylesheet" type="text/css">
     <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
     <link href="assetsDist/default.css" rel="stylesheet" type="text/css">
@@ -97,7 +104,7 @@
                     </button>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings" ng-cloak>
                 <div class="backButtonContainer">
                     <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
                         <span class="glyphicon glyphicon-arrow-left"></span>
@@ -177,7 +184,7 @@
                     </div>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor" ng-cloak>
                 <div id="mainDiv">
                     <div class="backButtonContainer">
                         <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
@@ -257,7 +264,7 @@
                     </div>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" ng-cloak>
                 <div class="backButtonContainer">
                     <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
                         <span class="glyphicon glyphicon-arrow-left"></span>
@@ -402,7 +409,7 @@
             </div>
         </div>
         <div class="container mainContent" data-ng-controller="gameController as game"">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.TUTORIAL || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}" ng-cloak>
                 <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
                                         border-radius: 30px;
                                         border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
@@ -498,7 +505,7 @@
                     </div>
                 </div>
             </div>
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen" ng-cloak>
                 <div class="textCenter">
                     <h1>VICTORY</h1>
                     <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">

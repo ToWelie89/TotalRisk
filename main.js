@@ -114,7 +114,7 @@ const createDefaultWindow = () => {
       sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
       setTimeout(() => {
         sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
-      }, 1500)
+      }, 500)
     }
 
     //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
@@ -147,10 +147,9 @@ const createDefaultWindow = () => {
       console.log('F5 was pressed, refreshing window.')
       win.reload();
     })
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
 
-  win.webContents.openDevTools();
   win.setMenu(null);
 
   win.webContents.session.setProxy({ proxyRules: proxyExists ? proxySettings.host : '' }, () => {

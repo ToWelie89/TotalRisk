@@ -6,13 +6,14 @@ import {MESSAGE_TYPES} from './../autoUpdating/updaterConstants';
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine, soundService, $uibModal) {
+    constructor($scope, $rootScope, gameEngine, soundService, $uibModal, toastService) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$uibModal = $uibModal;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
+        this.toastService = toastService;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
         this.vm.startGame = this.startGame;
@@ -71,10 +72,11 @@ export default class MainController {
             controller: 'autoUpdaterModalController',
             controllerAs: 'updater',
             keyboard: false
-        }).result.then(closeResponse => {
+        }).result.then((closeResponse = {}) => {
             if (closeResponse) {
                 // error returned, show growl
             }
+            this.toastService.successToat('', 'The game is up to date');
         });
     }
 

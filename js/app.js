@@ -23,6 +23,7 @@ import AutoUpdaterModalController from './angular/autoUpdaterModalController.js'
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import MapService from './map/mapService';
+import ToastService from './angular/toastService';
 import Settings from './settings/settings';
 import AiHandler from './ai/aiHandler';
 import GameEngine from './gameEngine';
@@ -57,5 +58,6 @@ app.service('mapService', MapService);
 app.service('gameAnnouncerService', GameAnnouncer);
 app.service('tutorialService', TutorialService);
 app.service('aiHandler', AiHandler);
+app.service('toastService', ToastService);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
