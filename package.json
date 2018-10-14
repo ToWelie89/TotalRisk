@@ -10,6 +10,7 @@
     "electron": "electron .",
     "electron:dev": "cross-env NODE_ENV=dev electron .",
     "build": "build",
+    "publish": "build -p always",
     "build-all": "npm run build-32-bit && npm run build-64-bit",
     "build-32-bit": "npm run elec-package-win-32 && npm run elec-installer-win-32",
     "build-64-bit": "npm run elec-package-win-64 && npm run elec-installer-win-64",
