@@ -67,12 +67,14 @@ export default class MainController {
         this.$uibModal.open({
             templateUrl: 'autoUpdaterModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal autoUpdaterModal',
             controller: 'autoUpdaterModalController',
             controllerAs: 'updater',
             keyboard: false
         }).result.then(closeResponse => {
-            // do shit
+            if (closeResponse) {
+                // error returned, show growl
+            }
         });
     }
 

@@ -120,8 +120,8 @@ const createDefaultWindow = () => {
     //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
 
     // Test GUI for download patch flow
-    /*
-    sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+
+    /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
     setTimeout(() => {
       sendStatusToWindow(MESSAGE_TYPES.NEW_UPDATE_AVAILABLE);
       setTimeout(() => {

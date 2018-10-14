@@ -7,7 +7,9 @@ export default class AutoUpdater {
             aListener: function(val) {},
             set currentState(val) {
                 this.currentStateInternal = val;
-                this.currentStateListener(val);
+                if (this.currentStateListener) {
+                    this.currentStateListener(val);
+                }
             },
             get currentState() {
                return this.currentStateInternal;
@@ -31,6 +33,7 @@ export default class AutoUpdater {
             } else if (state === MESSAGE_TYPES.UPDATE_DOWNLOADED) {
                 console.log('Downloaded new update');
             }
+            console.log('New state', state);
             window.state.currentState = { state, data };
         });
 

@@ -2,8 +2,8 @@
 * IMPORTS
 */
 
-import AutoUpdatingService from './autoUpdating/AutoUpdater';
-const autoUpdater = new AutoUpdatingService();
+import AutoUpdater from './autoUpdating/AutoUpdater';
+const autoUpdater = new AutoUpdater();
 
 import MainController from './angular/mainController';
 import GameController from './angular/gameController';

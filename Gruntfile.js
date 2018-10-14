@@ -128,6 +128,12 @@ module.exports = function(grunt) {
                     }, {
                         match: 'troopSvg',
                         replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
+                    }, {
+                        match: 'loadingSvg',
+                        replacement: '<%= grunt.file.read("assets/loading.svg") %>'
+                    }, {
+                        match: 'patchLoadingSvg',
+                        replacement: '<%= grunt.file.read("assets/patchLoading.svg") %>'
                     }]
                 },
                 files: [{
@@ -139,6 +145,9 @@ module.exports = function(grunt) {
                 }, {
                     src: ['src/cardTurnInModal.html'],
                     dest: 'cardTurnInModal.html'
+                }, {
+                    src: ['src/autoUpdaterModal.html'],
+                    dest: 'autoUpdaterModal.html'
                 }]
             }
         },

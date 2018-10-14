@@ -1,3 +1,72 @@
+.autoUpdaterModal {
+    > .modal-dialog {
+        width: 900px;
+
+        .modal-content {
+            border-radius: 30px;
+        }
+    }
+
+    #updaterModal {
+        .modal-dialog {
+            width: 900px;
+            height: 580px;
+
+            .modal-content {
+                border-radius: 30px;
+                background: #908484;
+                min-height: 580px;
+
+                #loading {
+                    svg {
+                        width: 700px;
+                        height: 580px;
+                        padding-left: 32px;
+                    }
+                }
+
+                #updating {
+                    #loadingIndicator {
+                        #loadingPercentage {
+                            position: absolute;
+                            width: 100%;
+                            z-index: 1000;
+                            margin-top: 270px;
+                            font-weight: 900;
+                            text-shadow: 0 0 20px black;
+                        }
+
+                        #patchLoadingColor {
+                            position: absolute;
+                            width: 100%;
+                            padding-right: 25px;
+                            svg {
+                                height: 500px;
+                            }
+                        }
+
+                        #patchLoadingGray {
+                            height: 500px;
+                            position: absolute;
+                            overflow: hidden;
+                            width: 100%;
+                            padding-right: 25px;
+                            svg {
+                                height: 500px;
+                                filter: url(#grayscale);
+                            }
+                        }
+                    }
+
+                    #loadingText {
+                        padding-top: 500px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .riskModal {
     .modal-content {
         border-radius: 0px;
