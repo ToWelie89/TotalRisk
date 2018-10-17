@@ -190,17 +190,19 @@ describe('attackModalController', () => {
         expect(attackModalController.fightIsOver).toEqual(true);
         expect(attackModalController.attacker.numberOfTroops).toEqual(0);
 
-        jasmine.clock().tick(10); // Insert small delay to account for setTimeout (even though the delay is set to 0ms)
+        //jasmine.clock().tick(10); // Insert small delay to account for setTimeout (even though the delay is set to 0ms)
 
-        expect(mockUibModalInstance.close).toHaveBeenCalledWith({
-            attackFrom: territory2,
-            attackTo: territory1,
-            battleWasWon: false,
-            previousOwner: undefined,
-            retreat: false,
-            attackerTotalCasualites: 2,
-            defenderTotalCasualites: 0
-        });
+        setTimeout(() => {
+            expect(mockUibModalInstance.close).toHaveBeenCalledWith({
+                attackFrom: territory2,
+                attackTo: territory1,
+                battleWasWon: false,
+                previousOwner: undefined,
+                retreat: false,
+                attackerTotalCasualites: 2,
+                defenderTotalCasualites: 0
+            });
+        }, 100);
     });
 
     it('fight where neither player wins just yet', () => {

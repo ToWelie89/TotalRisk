@@ -1,83 +1,96 @@
 const createUibModalInstance = () => {
-    const mock = jasmine.createSpyObj('$uibModalInstance', [
-        'close'
-    ]);
-    return mock;
+    return {
+        close: jest.fn()
+    }
 };
 
 const createUibModal = () => {
-    const mock = jasmine.createSpyObj('$uibModal', [
-        'open'
-    ]);
-    return mock;
+    return {
+        open: jest.fn()
+    }
 };
 
 const createTutorialService = () => {
-    const mock = jasmine.createSpyObj('tutorialService', ['lol']);
-    return mock;
+    return {}
 };
 
 const createSoundService = () => {
-    const mock = {
-        bleep: jasmine.createSpyObj('bleep', ['play']),
-        cheer: jasmine.createSpyObj('cheer', ['play']),
-        screamSound: jasmine.createSpyObj('screamSound', ['play']),
-        addTroopSound: jasmine.createSpyObj('addTroopSound', ['play']),
-        cardTurnIn: jasmine.createSpyObj('cardTurnIn', ['play']),
-        cardSelect: jasmine.createSpyObj('cardSelect', ['play']),
-        changeColor: jasmine.createSpyObj('changeColor', ['play']),
-        diceRoll: jasmine.createSpyObj('diceRoll', ['play']),
-        bleep2: jasmine.createSpyObj('bleep2', ['play']),
-        remove: jasmine.createSpyObj('remove', ['play']),
-        denied: jasmine.createSpyObj('denied', ['play']),
-        tick: jasmine.createSpyObj('tick', ['play'])
-
-    };
-    return mock;
+    return {
+        bleep: {
+            play: jest.fn()
+        },
+        cheer: {
+            play: jest.fn()
+        },
+        screamSound: {
+            play: jest.fn()
+        },
+        addTroopSound: {
+            play: jest.fn()
+        },
+        cardTurnIn: {
+            play: jest.fn()
+        },
+        cardSelect: {
+            play: jest.fn()
+        },
+        changeColor: {
+            play: jest.fn()
+        },
+        diceRoll: {
+            play: jest.fn()
+        },
+        bleep2: {
+            play: jest.fn()
+        },
+        remove: {
+            play: jest.fn()
+        },
+        denied: {
+            play: jest.fn()
+        },
+        tick: {
+            play: jest.fn()
+        }
+    }
 };
 
 const createScope = () => {
-    const mock = jasmine.createSpyObj('$scope', [
-        '$apply',
-        '$watch'
-    ]);
-    return mock;
+    return {
+        $apply: jest.fn(),
+        $watch: jest.fn()
+    }
 };
 
 const createRootScope = () => {
-    const mock = jasmine.createSpyObj('$rootScope', [
-        '$watch'
-    ]);
-    return mock;
+    return {
+        $watch: jest.fn()
+    }
 };
 
 const createGameEngine = () => {
-    const mock = jasmine.createSpyObj('gameEngine', [
-        'toggleSound',
-        'startGame'
-    ]);
-    return mock;
+    return {
+        toggleSound: jest.fn(),
+        startGame: jest.fn()
+    }
 };
 
 const createMapService = () => {
-    const mock = jasmine.createSpyObj('mapService', [
-        'updateMap'
-    ]);
-    return mock;
+    return {
+        updateMap: jest.fn()
+    }
 };
 
 const createSettings = () => {
-    const mock = {
-        showAnnouncer: true
+    return {
+        showAnnouncer: jest.fn()
     }
-    return mock;
 };
 
 const createAiHandler = () => {
-    const mock = jasmine.createSpyObj('aiHandler', [
-        'update'
-    ]);
-    return mock;
+    return {
+        update: jest.fn()
+    }
 };
 
 export {

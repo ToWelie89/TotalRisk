@@ -26,20 +26,12 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            build: ['assetsDist/app.bundle.js', 'assetsDist/default.css'],
-            test: ['assetsDist/testApp.bundle.js']
+            build: ['assetsDist/app.bundle.js', 'assetsDist/default.css']
         },
         watch: {
             scripts: {
                 files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'src/**/*.html', 'assets/**/*.svg', '*.html'],
                 tasks: ['default'],
-                options: {
-                    spawn: false
-                }
-            },
-            tests: {
-                files: ['js/test/**/*.js'],
-                tasks: ['test'],
                 options: {
                     spawn: false
                 }
@@ -56,17 +48,6 @@ module.exports = function(grunt) {
                         debug: true
                     }
                 }
-            },
-            test: {
-                files: {
-                    'assetsDist/testApp.bundle.js': 'js/test/test.js'
-                },
-                options: {
-                    transform: [['babelify', { presets: "es2015" }]],
-                    browserifyOptions: {
-                        debug: true
-                    }
-                }
             }
         },
         notify: {
@@ -74,12 +55,6 @@ module.exports = function(grunt) {
                 options: {
                     title: 'Grunt watch', // optional
                     message: 'Build complete' // required
-                }
-            },
-            test: {
-                options: {
-                    title: 'Grunt watch', // optional
-                    message: 'Test complete' // required
                 }
             }
         },
@@ -151,11 +126,6 @@ module.exports = function(grunt) {
                 }]
             }
         },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js'
-            }
-        },
         bump: {
             options: {
                 files: ['package.json'],
@@ -183,7 +153,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-replace');
-    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-bump');
 
@@ -196,13 +165,5 @@ module.exports = function(grunt) {
         'replace:inlineModalSvgs',
         'replace:inlineSvg',
         'notify:build'
-    ]);
-
-    // Default task for building
-    grunt.registerTask('test', [
-        'clean:test', // Clean previous build files
-        'browserify:test', // Use browserify to transpile ES6 source code with babel
-        'karma',
-        'notify:test'
     ]);
 };

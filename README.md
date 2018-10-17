@@ -9,7 +9,7 @@ Technologies used:
 
 - **Babel** (For transpiling ES2015)
 - **Grunt** (Build tool used for building and running tests)
-- **Karma** (For unit tests)
+- **Jest** (For unit tests)
 - **Angular 1.x** (MVW framework)
 - **less** (CSS preprocessor)
 - **Bootstrap** (HTML & CSS framework)
@@ -24,7 +24,7 @@ Technologies used:
 npm install
 ```
 
-However if you want to run on a production environment you can instead run
+However if you want to run on a production web environment you can instead run
 
 ```
 npm install --prod
@@ -66,39 +66,42 @@ npm run electron:dev
 - Run
 
 ```
-grunt test
+npm test
 ```
 
-This will run a bunch of Karma unit tests.
+This will run a bunch of Jest unit tests.
 
 ## Building Electron app
 
-You must first install the following three packages globally:
+Simply run
 
 ```
-npm install -g electron-packager
-npm install -g electron-installer-windows
+npm run build
 ```
 
-Then run:
+The built executable can then be found in the dist-folder.
+
+## Publishing new release
+
+This requires that you have an authorized Github-token as an environment variable on your machine. Simply run:
 
 ```
-npm run build-all
+npm run publish
 ```
 
-This is to build both x86 and x64 Windows installers in the electron/dist/installers folder.
+The newly published release should then be found [here](https://github.com/ToWelie89/TotalRisk/releases/). Click on "Edit" for your new release and then choose "Publish release".
 
-This will create an exe-installer (using Electron) in the dist/installers folder.
+## Bumping version
 
-However if you only want to build for a specific architecture you can run
+To automatically bump the version and creating a tag in Git the Grunt-plugin "Grunt-bump" is used. Use it after creating a new commit. Here's an example:
 
 ```
-npm run build-32-bit
+git add --all
+git commit -m "some new changes"
+grunt bump:[major/minor/patch]
 ```
-or
-```
-npm run build-64-bit
-```
+
+This will automatically push your commit to the repo, bump the version in package.json and creating a tag.
 
 ## Troubleshooting
 
