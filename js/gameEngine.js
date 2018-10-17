@@ -36,15 +36,11 @@ export default class GameEngine {
     toggleSound(playSound) {
         this.playSound = playSound;
         if (this.playSound) {
-            if (this.bgmusic) {
-                this.bgMusic.play();
-            } else {
-                this.setMusic((this.isTutorialMode ||
-                              (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) ||
-                               this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP ||
-                               this.$rootScope.currentGamePhase === GAME_PHASES.MAIN_MENU ||
-                               this.$rootScope.currentGamePhase === GAME_PHASES.SETTINGS) ? MAIN_MUSIC : AI_MUSIC);
-            }
+            this.setMusic((this.isTutorialMode ||
+                          (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) ||
+                           this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP ||
+                           this.$rootScope.currentGamePhase === GAME_PHASES.MAIN_MENU ||
+                           this.$rootScope.currentGamePhase === GAME_PHASES.SETTINGS) ? MAIN_MUSIC : AI_MUSIC);
         } else {
             this.gameAnnouncerService.mute();
             if (this.bgMusic)

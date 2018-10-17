@@ -10,6 +10,10 @@ const createUibModal = () => {
     }
 };
 
+const createGameAnnouncerService = () => {
+    return {}
+};
+
 const createTutorialService = () => {
     return {}
 };
@@ -103,5 +107,6 @@ export {
     createTutorialService,
     createRootScope,
     createSettings,
-    createAiHandler
+    createAiHandler,
+    createGameAnnouncerService
 };
