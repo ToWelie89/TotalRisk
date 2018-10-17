@@ -1,7 +1,5 @@
 ![Logo](https://raw.githubusercontent.com/ToWelie89/TotalRisk/master/assets/logo.png)
 
-==========
-
 ## Introduction
 
 This is a web application of the classic board game Risk that is run straight in your browser. This is currently a work in progress. This game is built using modern web technologies and frameworks.
