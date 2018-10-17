@@ -158,7 +158,6 @@ const createDefaultWindow = () => {
 }
 
 // Auto updater events
-
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES);
 });
@@ -195,3 +194,20 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+/*ipcMain.on('updateView', function (event, arg) {
+  log.info('Update view', arg)
+})
+*/
+var io = require('socket.io').listen(8123);
+console.log('listening on *:' + 8123);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.on('updateView', function(msg1) {
+    console.log(msg1);
+    socket.emit('chat_message', "Reply from server");
+  });
+});
+

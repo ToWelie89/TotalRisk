@@ -76,7 +76,7 @@ export default class MainController {
             if (closeResponse) {
                 // error returned, show growl
             }
-            this.toastService.successToat('', 'The game is up to date');
+            this.toastService.successToast('', 'The game is up to date');
         });
     }
 

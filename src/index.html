@@ -7,12 +7,31 @@
 
     <!-- Fix for electron -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js'></script> -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="js/libs/socket.io.js"></script>
     <script>
         let electron;
         let ipcRenderer;
         if (!!(window && window.process && window.process.type)) {
             electron = require('electron');
             ipcRenderer = require('electron').ipcRenderer;
+
+            const io = require('socket.io-client');
+            const socket = io.connect('http://localhost:8123');
+
+            const name = 'Player'+Math.random();
+
+            setInterval(function(){
+                socket.emit('updateView', {
+                    name,
+                    position: {
+                        x: Math.random(),
+                        y: Math.random()
+                    }
+                });
+            }, 2000);
         }
     </script>
 

@@ -3,13 +3,13 @@ export default class ToastService {
 
 	}
 
-	successToat(title, message) {
+	successToast(title, message, duration = 6000) {
 		iziToast.success({
 			class: 'myToast',
 		    title,
 		    message,
 			position: 'topRight',
-			timeout: 6000,
+			timeout: duration,
 			titleSize: 20,
 			messageSize: 20,
 			image: "assets/toastIcons/success.svg",
@@ -18,13 +18,13 @@ export default class ToastService {
 		});
 	}
 
-	errorToat(title, message) {
+	errorToast(title, message, duration = 6000) {
 		iziToast.error({
 			class: 'myToast',
 		    title,
 		    message,
 			position: 'topRight',
-			timeout: 6000,
+			timeout: duration,
 			titleSize: 20,
 			messageSize: 20,
 			image: "assets/toastIcons/error.svg",

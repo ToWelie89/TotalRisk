@@ -84,6 +84,7 @@
     "grunt-cli": "^1.2.0",
     "jasmine-core": "^2.4.1",
     "jest": "^23.6.0",
-    "regenerator-runtime": "^0.12.1"
+    "regenerator-runtime": "^0.12.1",
+    "socket.io": "^2.1.1"
   }
 }
