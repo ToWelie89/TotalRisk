@@ -82,7 +82,9 @@ The built executable can then be found in the dist-folder.
 
 ## Publishing new release
 
-This requires that you have an authorized Github-token as an environment variable on your machine. Simply run:
+This requires that you have an authorized Github-token as an environment variable on your machine, which at the moment only I do :wink:
+
+Simply run:
 
 ```
 npm run publish
