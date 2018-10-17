@@ -1,4 +1,5 @@
-TotalRisk
+![Logo](https://raw.githubusercontent.com/ToWelie89/TotalRisk/master/assets/logo.png)
+
 ==========
 
 ## Introduction
