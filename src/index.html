@@ -14,24 +14,11 @@
     <script>
         let electron;
         let ipcRenderer;
-        if (!!(window && window.process && window.process.type)) {
+        let io;
+        if (!!(window && window.process && window.process.type)) { // If running Electron
             electron = require('electron');
             ipcRenderer = require('electron').ipcRenderer;
-
-            const io = require('socket.io-client');
-            const socket = io.connect('http://localhost:8123');
-
-            const name = 'Player'+Math.random();
-
-            setInterval(function(){
-                socket.emit('updateView', {
-                    name,
-                    position: {
-                        x: Math.random(),
-                        y: Math.random()
-                    }
-                });
-            }, 2000);
+            io = require('socket.io-client');
         }
     </script>
 
@@ -73,6 +60,8 @@
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
+    <!-- <button data-ng-click="main.connectToSocket()" data-ng-disabled="main.connected">Connect</button>
+    <button data-ng-click="main.sendMessage('Hello')">Hello!</button> -->
     <div class="wrapper mainWrapper">
         <div class="textCenter mainMenuBox" data-ng-hide="main.currentGamePhase === main.gamePhases.GAME || main.currentGamePhase === main.gamePhases.AI_TESTING || main.currentGamePhase === main.gamePhases.TUTORIAL || main.currentGamePhase === main.gamePhases.END_SCREEN">
             <div>
@@ -98,7 +87,13 @@
                         <div class="main-menu-button-icon" id="newGameIcon">
                             @@newGameIcon
                         </div>
-                        <strong>New Game</strong>
+                        <strong>Local Game</strong>
+                    </button>
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.PLAYER_SETUP_MULTIPLAYER)">
+                        <div class="main-menu-button-icon" id="newGameIcon">
+                            @@newGameIcon
+                        </div>
+                        <strong>Online Game</strong>
                     </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
                         <strong>Load Game</strong>

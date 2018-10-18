@@ -32,4 +32,13 @@ describe('GameEngine', () => {
         gameEngine.toggleSound(true);
         expect(gameEngine.setMusic).toHaveBeenCalled();
     });
+
+    it('toggleSound - toggles sound to off, mute announcer and pause music', () => {
+        gameEngine.bgMusic = {
+            pause: jest.fn()
+        };
+        gameEngine.toggleSound(false);
+        expect(mockGameAnnouncerService.mute).toHaveBeenCalled();
+        expect(gameEngine.bgMusic.pause).toHaveBeenCalled();
+    });
 });

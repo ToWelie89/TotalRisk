@@ -11,7 +11,9 @@ const createUibModal = () => {
 };
 
 const createGameAnnouncerService = () => {
-    return {}
+    return {
+        mute: jest.fn()
+    }
 };
 
 const createTutorialService = () => {

@@ -6,7 +6,7 @@ import {MESSAGE_TYPES} from './../autoUpdating/updaterConstants';
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine, soundService, $uibModal, toastService) {
+    constructor($scope, $rootScope, gameEngine, soundService, $uibModal, toastService, socketService) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -37,6 +37,15 @@ export default class MainController {
         });
 
         this.vm.runningElectron = runningElectron();
+
+        this.vm.connected = false;
+        this.vm.connectToSocket = () => {
+            socketService.createSocket('http://localhost', 8123);
+            this.vm.connected = true;
+        }
+        this.vm.sendMessage = msg => {
+            socketService.sendMessage(msg);
+        }
 
         if (this.vm.runningElectron) {
             this.openUpdaterModal();

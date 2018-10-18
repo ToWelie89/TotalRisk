@@ -84,8 +84,10 @@ const createDefaultWindow = () => {
   win = new BrowserWindow({
     width: width,
     height: height,
-    minWidth: screenConfig.minWidth,
-    minHeight: screenConfig.minHeight,
+    /*minWidth: screenConfig.minWidth,
+    minHeight: screenConfig.minHeight,*/
+    minWidth: 50,
+    minHeight: 50,
     title: isDev ? 'TotalRisk DEVELOPMENT VERSION' : 'TotalRisk',
     fullscreen: riskSettings.fullScreen,
     show: false,
@@ -202,12 +204,32 @@ app.on('window-all-closed', () => {
 var io = require('socket.io').listen(8123);
 console.log('listening on *:' + 8123);
 
+let socketList = [];
+const names = ['Pelle', 'Kalle'];
+let messages = [];
+let name;
+
 io.on('connection', function(socket){
   console.log('a user connected');
+
+  name = names[socketList.length]
+
+  socket.userName = name;
+  socketList = [...socketList, socket];
+
+  socket.on('sendMessage', (msg) => {
+    messages = [...messages, {
+      name,
+      msg
+    }];
+
+    socketList.forEach(currentSocket => {
+      currentSocket.emit('messagesUpdated', messages);
+    });
+  });
 
   socket.on('updateView', function(msg1) {
     console.log(msg1);
     socket.emit('chat_message', "Reply from server");
   });
 });
-
