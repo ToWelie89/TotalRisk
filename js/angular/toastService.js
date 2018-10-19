@@ -1,35 +1,34 @@
 export default class ToastService {
 	constructor() {
-
+		this.defaultToastSettings = {
+			class: 'myToast',
+			position: 'topRight',
+			titleSize: 20,
+			messageSize: 20,
+			imageWidth: 100,
+			icon: ''
+		};
 	}
 
 	successToast(title, message, duration = 6000) {
-		iziToast.success({
-			class: 'myToast',
-		    title,
-		    message,
-			position: 'topRight',
-			timeout: duration,
-			titleSize: 20,
-			messageSize: 20,
-			image: "assets/toastIcons/success.svg",
-			imageWidth: 150,
-			icon: ''
-		});
+		iziToast.success(
+			Object.assign(this.defaultToastSettings, {
+				title,
+				message,
+				timeout: duration,
+				image: "assets/toastIcons/success.svg"
+			})
+		);
 	}
 
 	errorToast(title, message, duration = 6000) {
-		iziToast.error({
-			class: 'myToast',
-		    title,
-		    message,
-			position: 'topRight',
-			timeout: duration,
-			titleSize: 20,
-			messageSize: 20,
-			image: "assets/toastIcons/error.svg",
-			imageWidth: 150,
-			icon: ''
-		});
+		iziToast.error(
+			Object.assign(this.defaultToastSettings, {
+				title,
+				message,
+				timeout: duration,
+				image: "assets/toastIcons/error.svg"
+			})
+		);
 	}
 }

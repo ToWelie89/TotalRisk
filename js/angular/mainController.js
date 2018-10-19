@@ -2,7 +2,7 @@ import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
 import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './../helpers';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
-import {MESSAGE_TYPES} from './../autoUpdating/updaterConstants';
+import {MESSAGE_TYPES, ERROR_TYPES} from './../autoUpdating/updaterConstants';
 
 export default class MainController {
 
@@ -37,6 +37,7 @@ export default class MainController {
         });
 
         this.vm.runningElectron = runningElectron();
+        window.goToSettings = this.goToSettings;
 
         this.vm.connected = false;
         this.vm.connectToSocket = () => {
@@ -73,6 +74,10 @@ export default class MainController {
         console.log('Initialization of mainController');
     }
 
+    goToSettings() {
+        this.setGamePhase(this.gamePhases.SETTINGS);
+    }
+
     openUpdaterModal() {
         this.$uibModal.open({
             templateUrl: 'autoUpdaterModal.html',
@@ -82,10 +87,25 @@ export default class MainController {
             controllerAs: 'updater',
             keyboard: false
         }).result.then((closeResponse = {}) => {
-            if (closeResponse) {
-                // error returned, show growl
+            if (!closeResponse.error) {
+                this.toastService.successToast('Success!', 'The game is up to date');
+            } else if (closeResponse.error && closeResponse.state === ERROR_TYPES.CONNECTION_TIMED_OUT) {
+                this.toastService.errorToast(
+                    'Connection problems',
+                    'Could not connect to the internet to check for updates. Make sure you are connected to the internet. If you are behind a proxy you can setup proxy settings under <strong onclick="goToSettings()">Settings</strong>',
+                    1000000
+                );
+            } else if (closeResponse.error && closeResponse.state === ERROR_TYPES.UNKNOWN) {
+                this.toastService.errorToast(
+                    'Unknown error',
+                    'An unknown error occured'
+                );
+            } else if (closeResponse.error && closeResponse.state === ERROR_TYPES.NO_RELEASES_COULD_BE_FETCHED) {
+                this.toastService.errorToast(
+                    '',
+                    'No releases could be fetched from the server'
+                );
             }
-            this.toastService.successToast('', 'The game is up to date');
         });
     }
 

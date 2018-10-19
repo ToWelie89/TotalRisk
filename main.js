@@ -1,4 +1,4 @@
-const { MESSAGE_TYPES } = require('./js/autoUpdating/updaterConstants');
+const { MESSAGE_TYPES, ERROR_TYPES } = require('./js/autoUpdating/updaterConstants');
 
 const electron = require('electron');
 const {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} = require('electron');
@@ -113,10 +113,15 @@ const createDefaultWindow = () => {
     autoUpdater.checkForUpdatesAndNotify();
 
     if (isDev) {
-      sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
       setTimeout(() => {
         sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
-      }, 500)
+      }, 500)*/
+
+      sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      setTimeout(() => {
+        sendStatusToWindow(ERROR_TYPES.CONNECTION_TIMED_OUT);
+      }, 1000)
     }
 
     //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
@@ -149,8 +154,10 @@ const createDefaultWindow = () => {
       console.log('F5 was pressed, refreshing window.')
       win.reload();
     })
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
   }
+
+  win.webContents.openDevTools();
 
   win.setMenu(null);
 

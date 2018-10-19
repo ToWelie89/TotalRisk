@@ -1,4 +1,4 @@
-import { MESSAGE_TYPES, ERROR_TYPES } from './../autoUpdating/updaterConstants';
+import { MESSAGE_TYPES, ERROR_TYPES, stateIsError } from './../autoUpdating/updaterConstants';
 
 export default class AutoUpdaterModalController {
 
@@ -42,16 +42,18 @@ export default class AutoUpdaterModalController {
 
             if (this.vm.autoUpdatingState.state === MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE) {
                 setTimeout(() => {
-                    this.$uibModalInstance.close();
+                    this.$uibModalInstance.close({
+                        state: this.vm.autoUpdatingState.state,
+                        error: false
+                    });
                 }, 500);
             }
 
-            if (this.vm.autoUpdatingState.state === ERROR_TYPES.CONNECTION_TIMED_OUT ||
-                this.vm.autoUpdatingState.state === ERROR_TYPES.UNKNOWN ||
-                this.vm.autoUpdatingState.state === ERROR_TYPES.NO_RELEASES_COULD_BE_FETCHED) {
+            if (stateIsError(this.vm.autoUpdatingState.state)) {
                 setTimeout(() => {
                     this.$uibModalInstance.close({
-                        state: this.vm.autoUpdatingState
+                        state: this.vm.autoUpdatingState.state,
+                        error: true
                     });
                 }, 0);
             }

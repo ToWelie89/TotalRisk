@@ -12,4 +12,8 @@ const ERROR_TYPES = {
 	NO_RELEASES_COULD_BE_FETCHED: 'NO_RELEASES_COULD_BE_FETCHED'
 };
 
-module.exports = { MESSAGE_TYPES, ERROR_TYPES };
+const stateIsError = state => {
+    return ERROR_TYPES[state] !== undefined
+}
+
+module.exports = { MESSAGE_TYPES, ERROR_TYPES, stateIsError };

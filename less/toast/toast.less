@@ -1,7 +1,32 @@
 .myToast {
-	height: 150px;
+	height: auto;
+    min-height: 100px;
+    min-width: 400px;
+    max-width: 500px;
 	.iziToast-body {
-		padding-top: 20px;
+		padding-top: 5px;
 	    padding-bottom: 20px;
+
+        .iziToast-title {
+            padding-bottom: 5px;
+        }
+
+        .iziToast-message {
+            line-height: 20px;
+            float: left;
+            clear: both;
+        }
 	}
+
+    .iziToast-cover {
+        background-position-y: top;
+    }
+
+    .iziToast-close {
+        top: 10px;
+        right: 10px;
+        height: 20px;
+        width: 20px;
+        background-size: 100% 100%;
+    }
 }
