@@ -8,7 +8,7 @@ import { playerIterator, PLAYER_TYPES } from './player/playerConstants';
 import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } from './gameConstants';
 import { shuffle, randomIntFromInterval, randomDoubleFromInterval } from './helpers';
 import { initiatieCardDeck } from './card/cardHandler';
-import DeploymentHandler from './deploymentHandler';
+import DeploymentHandler from './deployment/deploymentHandler';
 import {settings} from './settings/defaultSettings';
 
 export default class GameEngine {

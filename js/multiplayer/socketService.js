@@ -1,42 +1,28 @@
 export default class SocketService {
     constructor() {
-        this.connectedToIo = false;
     }
 
     createSocket(url, port) {
-        if (!url || !port || this.connectedToIo) {
+        if (!url || !port) {
             return;
         }
+
         this.socket = io.connect(`${url}:${port}`);
-        this.connectedToIo = true;
 
-        this.socket.on('messagesUpdated', (messages) => {
-          //console.log(`${name}: ${msg}`);
-          console.log(messages);
+        this.socket.on('connected', () => {
+            if (url === 'http://127.0.0.1') {
+                console.log('You are now hosting!');
+            } else {
+                console.log('You are connected to host ' + url);
+            }
         });
-
-        /*setInterval(function(){
-            socket.emit('updateView', {
-                name,
-                position: {
-                    x: Math.random(),
-                    y: Math.random()
-                }
-            });
-        }, 2000);*/
     }
 
-    sendMessage(msg) {
-        this.socket.emit('sendMessage', msg);
-    }
-
-    getMyIp() {
-        /*return fetch('https://api.ipify.org/?format=json')
-          .then(function(response) {
-            return response.json();
-          })
-          .then(function(myJson) {
-            return myJson.ip;
-          });*/
+    sendMessage(sender, message, timestamp, roomId) {
+        this.socket.emit('sendMessage', roomId, {
+            sender,
+            message,
+            timestamp
+        });
     }
 }

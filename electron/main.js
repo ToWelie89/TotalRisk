@@ -1,4 +1,4 @@
-const { MESSAGE_TYPES, ERROR_TYPES } = require('./js/autoUpdating/updaterConstants');
+const { MESSAGE_TYPES, ERROR_TYPES } = require('./../js/autoUpdating/updaterConstants');
 
 const electron = require('electron');
 const {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} = require('electron');
@@ -7,8 +7,8 @@ const {autoUpdater} = require("electron-updater");
 const path = require('path');
 const url = require('url');
 
-const Store = require('./js/settings/electronStore.js');
-const ElectronSettings = require('./js/settings/electronDefaultSettings.js');
+const Store = require('./../js/settings/electronStore.js');
+const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
 
 let win;
 const store = new Store({
@@ -113,15 +113,20 @@ const createDefaultWindow = () => {
     autoUpdater.checkForUpdatesAndNotify();
 
     if (isDev) {
-      /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
-      setTimeout(() => {
-        sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
-      }, 500)*/
-
       sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
       setTimeout(() => {
+        sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
+      }, 500)
+
+      /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      setTimeout(() => {
         sendStatusToWindow(ERROR_TYPES.CONNECTION_TIMED_OUT);
-      }, 1000)
+      }, 1000)*/
+
+      /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      setTimeout(() => {
+        sendStatusToWindow(ERROR_TYPES.UNKNOWN);
+      }, 1000)*/
     }
 
     //sendStatusToWindow('ERR_CONNECTION_TIMED_OUT', 'error');
@@ -153,6 +158,11 @@ const createDefaultWindow = () => {
     globalShortcut.register('f5', () => {
       console.log('F5 was pressed, refreshing window.')
       win.reload();
+
+      sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
+      setTimeout(() => {
+        sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
+      }, 1500)
     })
     //win.webContents.openDevTools();
   }
@@ -162,7 +172,7 @@ const createDefaultWindow = () => {
   win.setMenu(null);
 
   win.webContents.session.setProxy({ proxyRules: proxyExists ? proxySettings.host : '' }, () => {
-    win.loadURL(`file://${__dirname}/index.html`);
+    win.loadURL(`file://${__dirname}/../index.html`);
   });
 }
 
@@ -204,39 +214,4 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
-/*ipcMain.on('updateView', function (event, arg) {
-  log.info('Update view', arg)
-})
-*/
-var io = require('socket.io').listen(8123);
-console.log('listening on *:' + 8123);
-
-let socketList = [];
-const names = ['Pelle', 'Kalle'];
-let messages = [];
-let name;
-
-io.on('connection', function(socket){
-  console.log('a user connected');
-
-  name = names[socketList.length]
-
-  socket.userName = name;
-  socketList = [...socketList, socket];
-
-  socket.on('sendMessage', (msg) => {
-    messages = [...messages, {
-      name,
-      msg
-    }];
-
-    socketList.forEach(currentSocket => {
-      currentSocket.emit('messagesUpdated', messages);
-    });
-  });
-
-  socket.on('updateView', function(msg1) {
-    console.log(msg1);
-    socket.emit('chat_message', "Reply from server");
-  });
-});
+require('./socket');

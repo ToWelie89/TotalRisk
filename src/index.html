@@ -21,7 +21,6 @@
             io = require('socket.io-client');
         }
     </script>
-
     <script src='js/libs/responsivevoice.js'></script>
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
@@ -60,8 +59,68 @@
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
-    <!-- <button data-ng-click="main.connectToSocket()" data-ng-disabled="main.connected">Connect</button>
-    <button data-ng-click="main.sendMessage('Hello')">Hello!</button> -->
+    <div id="authenticationBox" data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU || main.currentGamePhase == main.gamePhases.SETTINGS || main.currentGamePhase == main.gamePhases.PLAYER_SETUP || main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR || main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER || main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="authenticationController as auth" ng-cloak>
+        <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE">
+            <p>
+                Logged in as {{ auth.user.displayName ? auth.user.displayName : auth.user.email }}
+            </p>
+            <button type="button" class="button button-red marginLeft" data-ng-click="auth.logout()">
+                Logout
+            </button>
+        </div>
+        <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" id="editProfile">
+            <p class="fakeLink" data-ng-click="auth.goToState(auth.states.EDIT_PROFILE)" data-ng-show="auth.currentState === auth.states.LOGGED_IN">
+                Edit profile
+            </p>
+            <div data-ng-show="auth.currentState === auth.states.EDIT_PROFILE">
+                <p class="paddingBottom paddingTop--double">Display name</p>
+                <input type="text" data-ng-model="auth.newDisplayNameData" class="marginRight" placeholder="Display name" maxlength="20" />
+                <button type="button" class="button button-red marginTop" data-ng-click="auth.cancelUpdate()">
+                    Cancel
+                </button>
+                <button type="button" class="button button-green marginTop" data-ng-click="auth.updateProfile()">
+                    Update profile
+                </button>
+            </div>
+        </div>
+        <div data-ng-show="auth.currentState === auth.states.NOT_LOGGED_IN">
+            <p>
+                You are not logged in
+            </p>
+            <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.LOGIN)">
+                Login
+            </button>
+            <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.SIGNUP)">
+                Signup
+            </button>
+        </div>
+        <div data-ng-show="auth.currentState === auth.states.LOGIN">
+            <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+            <input type="text" data-ng-model="auth.loginData.email" class="marginRight" placeholder="Email" />
+            <input type="password" data-ng-model="auth.loginData.password" class="marginRight" placeholder="Password" />
+            <button type="button" class="button button-green" data-ng-click="auth.login()">
+                Login
+            </button>
+        </div>
+        <div data-ng-show="auth.currentState === auth.states.SIGNUP">
+            <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+            <input type="text" data-ng-model="auth.signupData.email" class="marginRight" placeholder="Email" />
+            <input type="password" data-ng-model="auth.signupData.password" class="marginRight" placeholder="Password" />
+            <button type="button" class="button button-green" data-ng-click="auth.signup()">
+                Signup
+            </button>
+        </div>
+    </div>
+
+    <!-- <button data-ng-click="main.startHosting()" data-ng-disabled="main.connected">Start hosting</button>
+    <button data-ng-click="main.connectToHost()" data-ng-disabled="main.connected">Connect to host</button>
+    <button data-ng-click="main.sendMessage('Hello')">Hello!</button>
+    <p>my ip is: {{main.myIp}}</p> -->
+
     <div class="wrapper mainWrapper">
         <div class="textCenter mainMenuBox" data-ng-hide="main.currentGamePhase === main.gamePhases.GAME || main.currentGamePhase === main.gamePhases.AI_TESTING || main.currentGamePhase === main.gamePhases.TUTORIAL || main.currentGamePhase === main.gamePhases.END_SCREEN">
             <div>
@@ -89,7 +148,7 @@
                         </div>
                         <strong>Local Game</strong>
                     </button>
-                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.PLAYER_SETUP_MULTIPLAYER)">
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.MULTIPLAYER_LOBBIES)">
                         <div class="main-menu-button-icon" id="newGameIcon">
                             @@newGameIcon
                         </div>
@@ -120,7 +179,7 @@
             </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings" ng-cloak>
                 <div class="backButtonContainer">
-                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                     </button>
                 </div>
@@ -132,7 +191,7 @@
                                              background: rgba(59, 59, 59, 0.788235294117647);
                                              border-radius: 30px;">
                     <div class="row paddingLeft--double paddingRight--double">
-                        <strong style="color: white;">
+                        <strong style="color: white;" data-ng-show="!settings.runningElectron">
                             The settings that you configure here will be automatically saved to your browsers local storage so that you don't have to reset them everytime.
                         </strong>
                     </div>
@@ -201,7 +260,7 @@
             <div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor" ng-cloak>
                 <div id="mainDiv">
                     <div class="backButtonContainer">
-                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
                             <span class="glyphicon glyphicon-arrow-left"></span>
                         </button>
                     </div>
@@ -278,9 +337,88 @@
                     </div>
                 </div>
             </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER" data-ng-controller="lobbyController as lobby" ng-cloak>
+                <div class="backButtonContainer">
+                    <button type="button" class="button button-green" data-ng-click="lobby.leaveLobby()">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </button>
+                </div>
+                <div class="row mainMenuBox textCenter">
+                    <div id="lobbiesContainer">
+                        <h3>{{ lobby.room.currentNumberOfPlayers }}</h3>
+                        <h3>{{ lobby.room.roomName }}</h3>
+                        <h3>{{ lobby.userIsHost }}</h3>
+                        <div>
+                            <input type="text" data-ng-model="lobby.message" />
+                            <button type="button" class="button button-green" data-ng-click="lobby.sendMessage()">
+                                Send
+                            </button>
+                        </div>
+                        <div>
+                            <div data-ng-repeat="message in lobby.messages" style="color: white;">
+                                <strong>{{message.sender}}</strong> ({{message.timestamp}}): {{message.message}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="lobbiesController as lobbies" ng-cloak>
+                <div class="backButtonContainer">
+                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                    </button>
+                </div>
+                <div class="row mainMenuBox textCenter">
+                    <div id="lobbiesContainer">
+                        <div data-ng-show="!lobbies.isAuthenticated" class="warning">
+                            <div class="alert alert-warning" role="alert">
+                                You must be logged in to host or join an online game.
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="button button-blue large" data-ng-click="lobbies.hostNewGame()" data-ng-disabled="!lobbies.isAuthenticated">
+                                Host new game
+                            </button>
+                        </div>
+                        <div class="warning paddingTop--double" data-ng-show="lobbies.lobbies.length === 0">
+                            <div class="alert alert-info" role="alert">
+                                There are no active lobbies.
+                            </div>
+                        </div>
+                        <div id="lobbyList" data-ng-show="lobbies.lobbies.length > 0">
+                            <div class="lobbyRow thead">
+                                <div class="lobbyCell"></div>
+                                <div class="lobbyCell">Name</div>
+                                <div class="lobbyCell">Version</div>
+                                <div class="lobbyCell">Creator</div>
+                                <div class="lobbyCell">Players</div>
+                                <div class="lobbyCell">Created</div>
+                                <div class="lobbyCell"></div>
+                            </div>
+                            <div data-ng-repeat="lobby in lobbies.lobbies" class="lobbyRow">
+                                <div class="lobbyCell">
+                                    <span class="glyphicon glyphicon-lock" data-ng-show="lobby.private"></span>
+                                </div>
+                                <div class="lobbyCell" data-ng-bind="lobby.roomName"></div>
+                                <div class="lobbyCell" data-ng-bind="lobby.version"></div>
+                                <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
+                                <div class="lobbyCell">
+                                    {{lobby.currentNumberOfPlayers}} / {{lobby.maxNumberOfPlayer}}
+                                </div>
+                                <div class="lobbyCell" data-ng-bind="lobby.normalizedTime"></div>
+                                <div class="lobbyCell">
+                                    <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.currentNumberOfPlayers === lobby.maxNumberOfPlayer">
+                                        <strong>Join</strong>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" ng-cloak>
                 <div class="backButtonContainer">
-                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)" style="">
+                    <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
                         <span class="glyphicon glyphicon-arrow-left"></span>
                     </button>
                 </div>

@@ -698,10 +698,18 @@ export default class GameController {
         .then(() => this.tutorialService.deploymentIndicatorExplanation())
         .then(() => this.tutorialService.reinforcementRulesExplanation())
         .then(() => this.tutorialService.regionFilterExplanation())
-        .then(() => { this.filterByRegion(); })
+        .then(() => {
+            this.vm.filter = 'byRegion';
+            this.gameEngine.filter = 'byRegion';
+            this.mapService.updateMap(this.gameEngine.filter);
+        })
         .then(() => delay(1500))
         .then(() => this.tutorialService.ownerFilterExplanation())
-        .then(() => { this.filterByOwner(); })
+        .then(() => {
+            this.vm.filter = 'byOwner';
+            this.gameEngine.filter = 'byOwner';
+            this.mapService.updateMap(this.gameEngine.filter);
+        })
         .then(() => delay(1500))
         .then(() => this.tutorialService.reinforcementIntoTerritoryDemonstration())
         .then(() => this.deployTroopsToTerritoryForTutorial())
@@ -749,6 +757,7 @@ export default class GameController {
                 this.settings.toggleSound();
             }
             this.gameEngine.setMusicVolume(0.8);
+            $(`#svgMap .country`).removeClass('blink_me');
         })
     }
 

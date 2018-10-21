@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="modal-body textCenter">
-                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.CHECKING_FOR_UPDATES || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NEW_UPDATE_AVAILABLE || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE" id="loading">
+                        <div data-ng-show="updater.autoUpdatingState.state === undefined || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.CHECKING_FOR_UPDATES || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NEW_UPDATE_AVAILABLE || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE" id="loading">
                             <?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
   <defs>

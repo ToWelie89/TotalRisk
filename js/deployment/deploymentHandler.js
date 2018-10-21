@@ -1,4 +1,4 @@
-import { CONSTANTS } from './gameConstants';
+import { CONSTANTS } from './../gameConstants';
 
 export default class DeploymentHandler {
     calculateReinforcements(players, map, turn) {

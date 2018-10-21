@@ -2,7 +2,7 @@ import { getBestPossibleCombination } from './../card/cardHelpers';
 import { TURN_PHASES } from './../gameConstants';
 import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } from './../map/mapHelpers';
 import { delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } from './../helpers';
-import BattleHandler from './../battleHandler';
+import BattleHandler from './../attack/battleHandler';
 import { PLAYER_TYPES } from './../player/playerConstants';
 import { displayDamageNumbers, displayReinforcementNumbers } from './../animations/animations';
 

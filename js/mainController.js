@@ -1,12 +1,12 @@
-import {GAME_PHASES, VICTORY_GOALS} from './../gameConstants';
-import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './../helpers';
-import Player from './../player/player';
-import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
-import {MESSAGE_TYPES, ERROR_TYPES} from './../autoUpdating/updaterConstants';
+import {GAME_PHASES, VICTORY_GOALS} from './gameConstants';
+import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './helpers';
+import Player from './player/player';
+import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './player/playerConstants';
+import {MESSAGE_TYPES, ERROR_TYPES} from './autoUpdating/updaterConstants';
 
 export default class MainController {
 
-    constructor($scope, $rootScope, gameEngine, soundService, $uibModal, toastService, socketService) {
+    constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService, socketService) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -14,6 +14,7 @@ export default class MainController {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.toastService = toastService;
+        this.$compile = $compile;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
         this.vm.startGame = this.startGame;
@@ -24,6 +25,7 @@ export default class MainController {
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
+        this.vm.showOnlineBox = false;
 
         this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
         this.$rootScope.$watch('currentGamePhase', () => {
@@ -37,11 +39,14 @@ export default class MainController {
         });
 
         this.vm.runningElectron = runningElectron();
-        window.goToSettings = this.goToSettings;
 
         this.vm.connected = false;
-        this.vm.connectToSocket = () => {
-            socketService.createSocket('http://localhost', 8123);
+        this.vm.startHosting = () => {
+            socketService.createSocket('http://127.0.0.1', 1119);
+            this.vm.connected = true;
+        }
+        this.vm.connectToHost = () => {
+            socketService.createSocket('http://83.209.122.4', 1119);
             this.vm.connected = true;
         }
         this.vm.sendMessage = msg => {
@@ -71,6 +76,15 @@ export default class MainController {
             });
         }
 
+        this.$rootScope.appVersion = this.vm.appVersion;
+
+        fetch('https://api.ipify.org/?format=json')
+        .then((resp) => resp.json())
+        .then((json) => {
+            this.vm.myIp = json.ip;
+            this.$rootScope.myIp = json.ip;
+        });
+
         console.log('Initialization of mainController');
     }
 
@@ -88,12 +102,18 @@ export default class MainController {
             keyboard: false
         }).result.then((closeResponse = {}) => {
             if (!closeResponse.error) {
-                this.toastService.successToast('Success!', 'The game is up to date');
+                this.toastService.successToast('', 'The game is up to date');
             } else if (closeResponse.error && closeResponse.state === ERROR_TYPES.CONNECTION_TIMED_OUT) {
+                const id = `toast${Math.floor((Math.random() * 1000000000000) + 1)}`;
                 this.toastService.errorToast(
                     'Connection problems',
-                    'Could not connect to the internet to check for updates. Make sure you are connected to the internet. If you are behind a proxy you can setup proxy settings under <strong onclick="goToSettings()">Settings</strong>',
-                    1000000
+                    ' ',
+                    10000,
+                    id,
+                    () => {
+                        var html = this.$compile('<span>Could not connect to the internet to check for updates. Make sure you are connected to the internet. If you are behind a proxy you can setup proxy settings under <strong class="fakeLink" ng-click="main.goToSettings()">Settings</strong></span>')(this.$scope);
+                        angular.element(document.querySelector(`#${id} .iziToast-message`)).prepend(html);
+                    }
                 );
             } else if (closeResponse.error && closeResponse.state === ERROR_TYPES.UNKNOWN) {
                 this.toastService.errorToast(

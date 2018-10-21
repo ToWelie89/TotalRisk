@@ -3,7 +3,7 @@
   "productName": "TotalRisk",
   "version": "1.2.40",
   "description": "A web application game of the classic board game Risk",
-  "main": "main.js",
+  "main": "electron/main.js",
   "license": "MIT",
   "scripts": {
     "start": "http-server",
@@ -61,6 +61,7 @@
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.2",
     "esprima": "^4.0.0",
+    "firebase": "^5.5.5",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.2.0",
     "grunt-bump": "^0.8.0",

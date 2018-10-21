@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="modal-body textCenter">
-                        <div data-ng-show="updater.autoUpdatingState.state === updater.MESSAGE_TYPES.CHECKING_FOR_UPDATES || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NEW_UPDATE_AVAILABLE || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE" id="loading">
+                        <div data-ng-show="updater.autoUpdatingState.state === undefined || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.CHECKING_FOR_UPDATES || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NEW_UPDATE_AVAILABLE || updater.autoUpdatingState.state === updater.MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE" id="loading">
                             @@loadingSvg
                             <h1>Loading</h1>
                         </div>

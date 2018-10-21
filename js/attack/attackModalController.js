@@ -1,4 +1,4 @@
-import BattleHandler from './../battleHandler';
+import BattleHandler from './battleHandler';
 import {delay} from './../helpers';
 import {GAME_PHASES} from './../gameConstants';
 
