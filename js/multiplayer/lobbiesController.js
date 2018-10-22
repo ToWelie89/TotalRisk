@@ -123,7 +123,7 @@ export default class LobbiesController {
                     creatorUid: user.uid,
                     currentNumberOfPlayers: 0,
                     maxNumberOfPlayer: CONSTANTS.MAX_NUMBER_OF_PLAYERS,
-                    hostIp: this.$rootScope.myIp,
+                    hostIp: closeResponse.lanGame ? '127.0.0.1' : this.$rootScope.myIp,
                     version: this.$rootScope.appVersion
                 })
                 .then(() => {

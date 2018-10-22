@@ -24,9 +24,9 @@ export default class LobbiesController {
                     this.$scope.$apply();
 
                     if (this.vm.userIsHost) {
-                        this.socketService.createSocket('http://127.0.0.1', 1119);
+                        this.socketService.createSocket('http://127.0.0.1', 1119, this.room.id, firebase.auth().currentUser.uid);
                     } else {
-                        this.socketService.createSocket(`http://${this.room.hostIp}`, 1119);
+                        this.socketService.createSocket(`http://${this.room.hostIp}`, 1119, this.room.id, firebase.auth().currentUser.uid);
                     }
                     this.addSocketListeners();
                     this.room.currentNumberOfPlayers++;

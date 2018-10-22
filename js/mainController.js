@@ -67,16 +67,16 @@ export default class MainController {
             });
 
             this.vm.appVersion = electron.remote.app.getVersion();
+            this.$rootScope.appVersion = this.vm.appVersion;
         } else {
             fetch('./package.json')
             .then((resp) => resp.json())
             .then((data) => {
                 this.vm.appVersion = data.version;
+                this.$rootScope.appVersion = this.vm.appVersion;
                 $scope.$apply();
             });
         }
-
-        this.$rootScope.appVersion = this.vm.appVersion;
 
         fetch('https://api.ipify.org/?format=json')
         .then((resp) => resp.json())
