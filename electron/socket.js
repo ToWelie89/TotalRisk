@@ -1,7 +1,7 @@
 const firebase = require('firebase');
 
 const io = require('socket.io').listen(1119);
-console.log('listening on *:' + 1119);
+console.log('Llistening on *:' + 1119);
 
 const config = {
   apiKey: "AIzaSyDFz9b6u63g01thrhzSotBUfTgCZQ8U_Bw",
@@ -23,7 +23,7 @@ const newRoomTemplate = {
 
 const updateCurrentPlayersInRoom = room => {
   var updates = {};
-  updates[`/rooms/${room}/currentNumberOfPlayers`] = rooms[room].users.length;
+  updates[`rooms/${room}/currentNumberOfPlayers`] = rooms[room].users.length;
   firebase.database().ref().update(updates);
 }
 
@@ -71,18 +71,13 @@ io.on('connection', function(socket){
     rooms[roomId].users = rooms[roomId].users.filter(uid => uid !== socket.userUid);
     updateCurrentPlayersInRoom(roomId);
 
-    if (rooms[roomId].users.length === 0) {
-      firebase.database().ref('rooms/' + roomId).remove();
+    if (rooms[roomId].users.length === 0 || !rooms[roomId].users.includes(rooms[roomId].host)) {
+      firebase.database().ref('/rooms/' + roomId).remove();
       delete rooms[roomId];
-    } else if (!rooms[roomId].users.includes(rooms[roomId].host)) {
-      // Host left, kick all others
+
       socketList.forEach(currentSocket => {
         currentSocket.emit('hostLeft');
       });
-    }
-
-      firebase.database().ref('rooms/' + roomId).remove();
-      delete rooms[roomId];
     }
 
     console.log(rooms);
@@ -116,21 +111,9 @@ io.on('connection', function(socket){
     rooms[roomId].messages = [...rooms[roomId].messages, msg];
 
     socketList.forEach(currentSocket => {
-      currentSocket.emit('messagesUpdated', rooms[roomId].messages);
+      if (rooms[roomId].users.includes(currentSocket.userUid)) {
+        currentSocket.emit('messagesUpdated', rooms[roomId].messages);
+      }
     });
-  });
-
-  socket.on('getMessagesByRoomId', (roomId) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = Object.assign(newRoomTemplate, {});
-    }
-    socketList.forEach(currentSocket => {
-      currentSocket.emit('messagesUpdated', rooms[roomId].messages);
-    });
-  });
-
-  socket.on('updateView', function(msg1) {
-    console.log(msg1);
-    socket.emit('chat_message', "Reply from server");
   });
 });

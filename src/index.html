@@ -375,41 +375,48 @@
                                 You must be logged in to host or join an online game.
                             </div>
                         </div>
-                        <div>
+                        <div id="lobbiesButtons">
                             <button type="button" class="button button-blue large" data-ng-click="lobbies.hostNewGame()" data-ng-disabled="!lobbies.isAuthenticated">
                                 Host new game
                             </button>
+                            <input id="searchBar" type="text" placeholder="Search rooms" />
                         </div>
                         <div class="warning paddingTop--double" data-ng-show="lobbies.lobbies.length === 0">
                             <div class="alert alert-info" role="alert">
                                 There are no active lobbies.
                             </div>
                         </div>
-                        <div id="lobbyList" data-ng-show="lobbies.lobbies.length > 0">
-                            <div class="lobbyRow thead">
-                                <div class="lobbyCell"></div>
-                                <div class="lobbyCell">Name</div>
-                                <div class="lobbyCell">Version</div>
-                                <div class="lobbyCell">Creator</div>
-                                <div class="lobbyCell">Players</div>
-                                <div class="lobbyCell">Created</div>
-                                <div class="lobbyCell"></div>
+                        <div id="lobbyList">
+                            <div id="theadContainer" data-ng-show="lobbies.lobbies.length > 0">
+                                <div class="lobbyRow thead">
+                                    <div class="lobbyCell"></div>
+                                    <div class="lobbyCell">Name</div>
+                                    <div class="lobbyCell">Version</div>
+                                    <div class="lobbyCell">Creator</div>
+                                    <div class="lobbyCell">Players</div>
+                                    <div class="lobbyCell">Created</div>
+                                    <div class="lobbyCell"></div>
+                                </div>
                             </div>
-                            <div data-ng-repeat="lobby in lobbies.lobbies" class="lobbyRow">
-                                <div class="lobbyCell">
-                                    <span class="glyphicon glyphicon-lock" data-ng-show="lobby.private"></span>
-                                </div>
-                                <div class="lobbyCell" data-ng-bind="lobby.roomName"></div>
-                                <div class="lobbyCell" data-ng-bind="lobby.version"></div>
-                                <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
-                                <div class="lobbyCell">
-                                    {{lobby.currentNumberOfPlayers}} / {{lobby.maxNumberOfPlayer}}
-                                </div>
-                                <div class="lobbyCell" data-ng-bind="lobby.normalizedTime"></div>
-                                <div class="lobbyCell">
-                                    <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.currentNumberOfPlayers === lobby.maxNumberOfPlayer">
-                                        <strong>Join</strong>
-                                    </button>
+                            <div id="tbodyContainer" data-ng-show="lobbies.lobbies.length > 0">
+                                <div id="tbody">
+                                    <div data-ng-repeat="lobby in lobbies.lobbies" class="lobbyRow">
+                                        <div class="lobbyCell">
+                                            <span class="glyphicon glyphicon-lock" data-ng-show="lobby.private"></span>
+                                        </div>
+                                        <div class="lobbyCell" data-ng-bind="lobby.roomName"></div>
+                                        <div class="lobbyCell" data-ng-bind="lobby.version"></div>
+                                        <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
+                                        <div class="lobbyCell">
+                                            {{lobby.currentNumberOfPlayers}} / {{lobby.maxNumberOfPlayer}}
+                                        </div>
+                                        <div class="lobbyCell" data-ng-bind="lobby.normalizedTime"></div>
+                                        <div class="lobbyCell">
+                                            <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.currentNumberOfPlayers === lobby.maxNumberOfPlayer">
+                                                <strong>Join</strong>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

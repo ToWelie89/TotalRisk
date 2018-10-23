@@ -35,16 +35,11 @@ export default class SocketService {
             message,
             timestamp
         });
-        this.getMessages(roomId);
     }
 
     leaveLobby(roomId, userName) {
         this.socket.emit('leaveLobby', roomId);
         this.socket.emit('disconnect');
         this.sendMessage('SERVER', `${userName} left the room`, Date.now(), roomId);
-    }
-
-    getMessages(roomId) {
-        this.socket.emit('getMessagesByRoomId', roomId);
     }
 }
