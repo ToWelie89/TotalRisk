@@ -1,5 +1,17 @@
-var io = require('socket.io').listen(1119);
+const firebase = require('firebase');
+
+const io = require('socket.io').listen(1119);
 console.log('listening on *:' + 1119);
+
+const config = {
+  apiKey: "AIzaSyDFz9b6u63g01thrhzSotBUfTgCZQ8U_Bw",
+  authDomain: "totalrisk-e2899.firebaseapp.com",
+  databaseURL: "https://totalrisk-e2899.firebaseio.com",
+  projectId: "totalrisk-e2899",
+  storageBucket: "totalrisk-e2899.appspot.com",
+  messagingSenderId: "1086373539251"
+};
+firebase.initializeApp(config);
 
 let socketList = [];
 let rooms = {};
@@ -9,33 +21,91 @@ const newRoomTemplate = {
   users: []
 }
 
+const updateCurrentPlayersInRoom = room => {
+  var updates = {};
+  updates[`/rooms/${room}/currentNumberOfPlayers`] = rooms[room].users.length;
+  firebase.database().ref().update(updates);
+}
+
 io.on('connection', function(socket){
   console.log('User connected!');
   socket.emit('connected');
 
-  socket.on('addUserToRoom', (roomId, userUid) => {
+  socketList = [...socketList, socket];
+
+  socket.on('setUser', (userUid) => {
+    socket.userUid = userUid;
+  });
+
+  socket.on('setHost', (roomId, uid) => {
     if (!rooms[roomId]) {
       rooms[roomId] = Object.assign(newRoomTemplate, {});
     }
 
-    if (!rooms[roomId].users.includes(userUid)) {
-      rooms[roomId].users.push(userUid);
+    rooms[roomId].host = uid;
+  });
 
+  socket.on('addUserToRoom', (roomId) => {
+    if (!rooms[roomId]) {
+      rooms[roomId] = Object.assign(newRoomTemplate, {});
+    }
+
+    if (!rooms[roomId].users.includes(socket.userUid)) {
+      rooms[roomId].users.push(socket.userUid);
+
+      // Remove user from all other rooms
       for(let room in rooms) {
         if (room !== roomId) {
-          rooms[room].users = rooms[room].users.filter(uid => uid !== userUid);
+          rooms[room].users = rooms[room].users.filter(uid => uid !== socket.userUid);
         }
+        updateCurrentPlayersInRoom(room);
       }
     }
 
     console.log(rooms);
   });
 
-  socketList = [...socketList, socket];
+  socket.on('leaveLobby', roomId => {
+    console.log('Player left lobby');
 
-  socket.on('disconnect', socket => {
-    console.log('Got disconnected!', socket);
-    // remove user from user list for room
+    rooms[roomId].users = rooms[roomId].users.filter(uid => uid !== socket.userUid);
+    updateCurrentPlayersInRoom(roomId);
+
+    if (rooms[roomId].users.length === 0) {
+      firebase.database().ref('rooms/' + roomId).remove();
+      delete rooms[roomId];
+    } else if (!rooms[roomId].users.includes(rooms[roomId].host)) {
+      // Host left, kick all others
+      socketList.forEach(currentSocket => {
+        currentSocket.emit('hostLeft');
+      });
+    }
+
+      firebase.database().ref('rooms/' + roomId).remove();
+      delete rooms[roomId];
+    }
+
+    console.log(rooms);
+  });
+
+  socket.on('disconnect', reason => {
+    console.log('Got disconnected because of reason ', reason);
+    for(let room in rooms) {
+      rooms[room].users = rooms[room].users.filter(uid => uid !== socket.userUid);
+      updateCurrentPlayersInRoom(room);
+
+      if (rooms[room].users.length === 0) {
+        firebase.database().ref('rooms/' + room).remove();
+        delete rooms[room];
+      } else if (!rooms[room].users.includes(rooms[room].host)) {
+        // Host left, kick all others
+        socketList.forEach(currentSocket => {
+          currentSocket.emit('hostLeft');
+        });
+      }
+    }
+
+    console.log(rooms);
   });
 
   socket.on('sendMessage', (roomId, msg) => {
@@ -54,7 +124,9 @@ io.on('connection', function(socket){
     if (!rooms[roomId]) {
       rooms[roomId] = Object.assign(newRoomTemplate, {});
     }
-    socket.emit('messagesUpdated', rooms[roomId].messages);
+    socketList.forEach(currentSocket => {
+      currentSocket.emit('messagesUpdated', rooms[roomId].messages);
+    });
   });
 
   socket.on('updateView', function(msg1) {

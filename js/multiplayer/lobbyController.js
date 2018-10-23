@@ -20,18 +20,19 @@ export default class LobbiesController {
                         id: snapshot.key
                     });
                     console.log('This room', this.room);
-                    this.vm.userIsHost = this.room.creatorUid === firebase.auth().currentUser.uid;
+                    const user = firebase.auth().currentUser;
+                    this.vm.userIsHost = this.room.creatorUid === user.uid;
                     this.$scope.$apply();
+                    const userName = user.displayName ? user.displayName : user.email;
 
                     if (this.vm.userIsHost) {
-                        this.socketService.createSocket('http://127.0.0.1', 1119, this.room.id, firebase.auth().currentUser.uid);
+                        this.socketService.createSocket('http://127.0.0.1', 1119, this.room.id, user.uid, userName);
                     } else {
-                        this.socketService.createSocket(`http://${this.room.hostIp}`, 1119, this.room.id, firebase.auth().currentUser.uid);
+                        this.socketService.createSocket(`http://${this.room.hostIp}`, 1119, this.room.id, user.uid, userName);
                     }
+
                     this.addSocketListeners();
-                    this.room.currentNumberOfPlayers++;
-                    this.updateCurrentPlayers();
-                    this.socketService.socket.emit('getMessagesByRoomId', this.room.id);
+                    this.socketService.getMessages(this.room.id);
                 });
             }
         });
@@ -44,7 +45,7 @@ export default class LobbiesController {
     }
 
     addSocketListeners() {
-        this.socketService.socket.on('messagesUpdated', messages => {
+        this.socketService.socket.on('messagesUpdated', (messages) => {
             this.vm.messages = messages;
             this.$scope.$apply();
         });
@@ -54,20 +55,15 @@ export default class LobbiesController {
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
         this.socketService.sendMessage(userName, this.vm.message, Date.now(), this.room.id);
-    }
-
-    updateCurrentPlayers() {
-        var updates = {};
-        updates['/rooms/' + this.room.id + '/currentNumberOfPlayers'] = this.room.currentNumberOfPlayers;
-        return firebase.database().ref().update(updates);
+        this.vm.message = '';
     }
 
     leaveLobby() {
         this.soundService.bleep2.play();
-
-        this.room.currentNumberOfPlayers--;
-        this.updateCurrentPlayers();
-
+        const user = firebase.auth().currentUser;
+        const userName = user.displayName ? user.displayName : user.email;
+        this.socketService.leaveLobby(this.room.id, userName);
+        this.$rootScope.currentLobbyId = '';
         this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
     }
 }
