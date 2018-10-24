@@ -20,11 +20,7 @@ export default class SocketService {
                 console.log('You are connected to host ' + url);
             }
             const uid = firebase.auth().currentUser.uid;
-            this.socket.emit('setUser', uid);
-            if (isHost) {
-                this.socket.emit('setHost', roomId, uid);
-            }
-            this.socket.emit('addUserToRoom', roomId);
+            this.socket.emit('setUserAndRoom', uid, roomId, isHost);
             this.sendMessage('SERVER', `${userName} connected to the room`, Date.now(), roomId);
         });
     }
@@ -38,8 +34,8 @@ export default class SocketService {
     }
 
     leaveLobby(roomId, userName) {
-        this.socket.emit('leaveLobby', roomId);
-        this.socket.emit('disconnect');
+        //this.socket.emit('disconnect');
+        this.socket.disconnect();
         this.sendMessage('SERVER', `${userName} left the room`, Date.now(), roomId);
     }
 }

@@ -5,12 +5,13 @@ import {hashString} from './../helpers';
 import {GAME_PHASES} from './../gameConstants';
 
 export default class LobbiesController {
-    constructor($scope, $rootScope, soundService, socketService) {
+    constructor($scope, $rootScope, soundService, socketService, toastService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.soundService = soundService;
         this.socketService = socketService;
+        this.toastService = toastService;
 
         this.$rootScope.$watch('currentLobbyId', () => {
             this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
@@ -32,7 +33,6 @@ export default class LobbiesController {
                     }
 
                     this.addSocketListeners();
-                    this.socketService.getMessages(this.room.id);
                 });
             }
         });
@@ -49,6 +49,15 @@ export default class LobbiesController {
             this.vm.messages = messages;
             this.$scope.$apply();
         });
+
+        this.socketService.socket.on('hostLeft', () => {
+            const user = firebase.auth().currentUser;
+            const userName = user.displayName ? user.displayName : user.email;
+            this.socketService.leaveLobby(this.room.id, userName);
+            this.$rootScope.currentLobbyId = '';
+            this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
+            this.toastService.infoToast('', 'The host has left the lobby. Lobby removed.')
+        })
     }
 
     sendMessage() {

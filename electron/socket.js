@@ -13,17 +13,15 @@ const config = {
 };
 firebase.initializeApp(config);
 
-let socketList = [];
+firebase.database().ref('/rooms/').remove();
+
+let socketList = {};
 let rooms = {};
+let messages = [];
 
-const newRoomTemplate = {
-  messages: [],
-  users: []
-}
-
-const updateCurrentPlayersInRoom = room => {
+const updateCurrentPlayersInRoom = roomId => {
   var updates = {};
-  updates[`rooms/${room}/currentNumberOfPlayers`] = rooms[room].users.length;
+  updates[`rooms/${roomId}/currentNumberOfPlayers`] = Object.values(socketList).filter(s => s.roomId === roomId).length;
   firebase.database().ref().update(updates);
 }
 
@@ -31,89 +29,58 @@ io.on('connection', function(socket){
   console.log('User connected!');
   socket.emit('connected');
 
-  socketList = [...socketList, socket];
-
-  socket.on('setUser', (userUid) => {
+  socket.on('setUserAndRoom', (userUid, roomId, isHost) => {
     socket.userUid = userUid;
-  });
+    socket.roomId = roomId;
+    socket.isHost = isHost;
 
-  socket.on('setHost', (roomId, uid) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = Object.assign(newRoomTemplate, {});
-    }
-
-    rooms[roomId].host = uid;
-  });
-
-  socket.on('addUserToRoom', (roomId) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = Object.assign(newRoomTemplate, {});
-    }
-
-    if (!rooms[roomId].users.includes(socket.userUid)) {
-      rooms[roomId].users.push(socket.userUid);
-
-      // Remove user from all other rooms
-      for(let room in rooms) {
-        if (room !== roomId) {
-          rooms[room].users = rooms[room].users.filter(uid => uid !== socket.userUid);
-        }
-        updateCurrentPlayersInRoom(room);
-      }
-    }
-
-    console.log(rooms);
+    socketList[userUid] = socket;
+    updateCurrentPlayersInRoom(roomId);
   });
 
   socket.on('leaveLobby', roomId => {
     console.log('Player left lobby');
 
-    rooms[roomId].users = rooms[roomId].users.filter(uid => uid !== socket.userUid);
+    delete socketList[socket.userUid];
     updateCurrentPlayersInRoom(roomId);
 
-    if (rooms[roomId].users.length === 0 || !rooms[roomId].users.includes(rooms[roomId].host)) {
-      firebase.database().ref('/rooms/' + roomId).remove();
-      delete rooms[roomId];
+    const usersInSameRoom = Object.values(socketList).filter(s => s.roomId === roomId);
 
-      socketList.forEach(currentSocket => {
-        currentSocket.emit('hostLeft');
-      });
+    if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
+      firebase.database().ref('/rooms/' + roomId).remove();
+      for (socket in socketList) {
+        socketList[socket].emit('hostLeft');
+      }
     }
 
-    console.log(rooms);
+    console.log(socketList);
   });
 
   socket.on('disconnect', reason => {
     console.log('Got disconnected because of reason ', reason);
-    for(let room in rooms) {
-      rooms[room].users = rooms[room].users.filter(uid => uid !== socket.userUid);
-      updateCurrentPlayersInRoom(room);
+    delete socketList[socket.userUid];
+    updateCurrentPlayersInRoom(socket.roomId);
 
-      if (rooms[room].users.length === 0) {
-        firebase.database().ref('rooms/' + room).remove();
-        delete rooms[room];
-      } else if (!rooms[room].users.includes(rooms[room].host)) {
-        // Host left, kick all others
-        socketList.forEach(currentSocket => {
-          currentSocket.emit('hostLeft');
-        });
+    const usersInSameRoom = Object.values(socketList).filter(s => s.roomId === socket.roomId);
+
+    if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
+      firebase.database().ref('/rooms/' + socket.roomId).remove();
+      for (socket in socketList) {
+        socketList[socket].emit('hostLeft');
       }
     }
-
-    console.log(rooms);
+    console.log(socketList);
   });
 
   socket.on('sendMessage', (roomId, msg) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = Object.assign(newRoomTemplate, {});
-    }
+    msg.roomId = roomId;
+    messages.push(msg);
 
-    rooms[roomId].messages = [...rooms[roomId].messages, msg];
-
-    socketList.forEach(currentSocket => {
-      if (rooms[roomId].users.includes(currentSocket.userUid)) {
-        currentSocket.emit('messagesUpdated', rooms[roomId].messages);
+    for (currentSocket in socketList) {
+      if (socketList[currentSocket].roomId === roomId) {
+        const allMessages = messages.filter(msg => msg.roomId === roomId);
+        socketList[currentSocket].emit('messagesUpdated', allMessages);
       }
-    });
+    }
   });
 });

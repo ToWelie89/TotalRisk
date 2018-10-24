@@ -35,4 +35,17 @@ export default class ToastService {
 			})
 		);
 	}
+
+	infoToast(title, message, duration = 6000, id = null, onOpening = (() => {})) {
+		iziToast.info(
+			Object.assign(this.defaultToastSettings, {
+				id,
+				title,
+				message,
+				timeout: duration,
+				//image: 'assets/toastIcons/error.svg',
+				onOpening
+			})
+		);
+	}
 }

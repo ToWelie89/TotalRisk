@@ -111,6 +111,7 @@ export default class LobbiesController {
             controllerAs: 'hostNewGame',
             keyboard: false
         }).result.then((closeResponse) => {
+            //load
             if (closeResponse && closeResponse.gameName) {
                 const id = Math.floor((Math.random() * 1000000000) + 1);
                 const user = firebase.auth().currentUser;
@@ -130,6 +131,7 @@ export default class LobbiesController {
                     this.$rootScope.currentLobbyId = id;
                     this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
                     this.$rootScope.$apply();
+                    //stop load
                 });
             }
         });
