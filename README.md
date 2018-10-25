@@ -106,13 +106,15 @@ This will automatically push your commit to the repo, bump the version in packag
 
 ## Troubleshooting
 
+### Electron problem
+
 If you have problems with running the app using Electron you might need to install Electron globally.
 
 ```
 npm install -g electron
 ```
 
-### lol
+### Failed to load gRPC binary module error
 
 If you get an error message sort of like this it might have something to do with a known issue between Firebase and Electron. I managed to fix this by running (in a console with admin rights):
 
@@ -120,11 +122,13 @@ If you get an error message sort of like this it might have something to do with
 npm --add-python-to-path='true' --debug install --global windows-build-tools
 ```
 
-then
+This will install a bunch of useful dev tools for Windows and add them to your PATH. In this case we need Python so that we then can run:
 
 ```
 npm rebuild --runtime=electron --target=3.0.2 --disturl=https://atom.io/download/electron
 ```
+
+### Other
 
 For other issues please leave a bug report [here](https://github.com/ToWelie89/TotalRisk/issues) or contact me directly via mail: sonesson8909@hotmail.com
 
