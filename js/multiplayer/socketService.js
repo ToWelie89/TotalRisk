@@ -35,7 +35,7 @@ export default class SocketService {
 
     leaveLobby(roomId, userName) {
         //this.socket.emit('disconnect');
-        this.socket.disconnect();
         this.sendMessage('SERVER', `${userName} left the room`, Date.now(), roomId);
+        this.socket.disconnect();
     }
 }

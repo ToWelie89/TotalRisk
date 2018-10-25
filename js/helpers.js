@@ -67,4 +67,47 @@ const hashString = string => {
     return hash;
 }
 
-export {shuffle, arraysEqual, delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, hashString};
+const normalizeTimeFromTimestamp = timestamp => {
+    const date = new Date(timestamp);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+
+    if (hours < 10) {
+        hours = `0${hours}`;
+    }
+    if (minutes < 10) {
+        minutes = `0${minutes}`;
+    }
+
+    return `${hours}:${minutes}`;
+}
+
+const getRandomColor = () => {
+    const h = getRandomInteger(0, 359);
+    const s = getRandomInteger(20, 100);
+    const l = getRandomInteger(50, 90);
+    const a = 1;
+
+    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
+}
+
+const getRandomInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+export {
+    shuffle,
+    arraysEqual,
+    delay,
+    allValuesInArrayAreEqual,
+    removeDuplicates,
+    chancePercentage,
+    randomIntFromInterval,
+    randomDoubleFromInterval,
+    runningElectron,
+    electronDevVersion,
+    hashString,
+    normalizeTimeFromTimestamp,
+    getRandomColor,
+    getRandomInteger
+};

@@ -12,7 +12,8 @@
     "electron:dev": "cross-env NODE_ENV=dev electron .",
     "build": "build",
     "publish": "build -p always",
-    "test": "jest --no-cache --config js/test/jest.conf.js --coverage"
+    "test": "jest --no-cache --config js/test/jest.conf.js --coverage",
+    "rebuild": "npm rebuild --runtime=electron --target=3.0.2 --disturl=https://atom.io/download/electron"
   },
   "keywords": [
     "angular",

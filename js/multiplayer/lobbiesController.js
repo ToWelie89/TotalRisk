@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import {hashString} from './../helpers';
 import {GAME_PHASES, CONSTANTS} from './../gameConstants';
+import {normalizeTimeFromTimestamp, getRandomColor} from './../helpers';
 
 export default class LobbiesController {
     constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService) {
@@ -15,6 +16,13 @@ export default class LobbiesController {
         this.soundService = soundService;
 
         this.vm.isAuthenticated = false;
+        this.vm.searchText = '';
+        this.vm.chatMessage = '';
+        this.vm.chatMaxLengthMessage = 150;
+        this.vm.muteChat = false;
+        this.firstLoad = true;
+
+        this.userChatColor = getRandomColor();
 
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -27,6 +35,38 @@ export default class LobbiesController {
         });
 
         this.vm.lobbies = [];
+        this.vm.globalChatMessages = [];
+
+        firebase.database().ref('globalChat').on('value', snapshot => {
+            if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES && !this.firstLoad) {
+                this.soundService.newMessage.play();
+            }
+            this.firstLoad = false;
+            const messages = snapshot.val();
+
+            this.vm.globalChatMessages = [];
+            for (let message in messages) {
+                this.vm.globalChatMessages.push(messages[message]);
+            }
+
+            this.vm.globalChatMessages.map(message => {
+                message.normalizedTime = normalizeTimeFromTimestamp(message.timestamp);
+            });
+
+            this.vm.globalChatMessages.sort((a, b) => {
+                return a.timestamp - b.timestamp;
+            });
+
+            // Get last 100
+            this.vm.globalChatMessages = this.vm.globalChatMessages.slice(this.vm.globalChatMessages.length - 100, this.vm.globalChatMessages.length);
+
+            console.log('Global chat messags', this.vm.globalChatMessages);
+            this.$timeout(() => {
+                this.$scope.$apply();
+                const objDiv = document.getElementById('chatMessagesContainer');
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }, 1);
+        });
 
         firebase.database().ref('rooms').on('value', snapshot => {
             const rooms = snapshot.val();
@@ -44,18 +84,7 @@ export default class LobbiesController {
             });
 
             this.vm.lobbies.map(lobby => {
-                const date = new Date(lobby.creationTimestamp);
-                let hours = date.getHours();
-                let minutes = date.getMinutes();
-
-                if (hours < 10) {
-                    hours = `0${hours}`;
-                }
-                if (minutes < 10) {
-                    minutes = `0${minutes}`;
-                }
-
-                lobby.normalizedTime = `${hours}:${minutes}`;
+                lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);
                 lobby.private = lobby.password !== hashString('');
             });
 
@@ -64,13 +93,22 @@ export default class LobbiesController {
             });
 
             console.log('Game lobbies', this.vm.lobbies);
+            this.vm.filteredLobbies = this.vm.lobbies;
             this.$timeout(() => {
                 this.$scope.$apply();
             }, 1);
         });
 
+        // PUBLIC METHODS
         this.vm.hostNewGame = this.hostNewGame;
         this.vm.joinLobby = this.joinLobby;
+        this.vm.filterRooms = this.filterRooms;
+        this.vm.sendChatMessage = this.sendChatMessage;
+        this.vm.charactersLeft = this.charactersLeft;
+    }
+
+    charactersLeft () {
+        return (this.vm.chatMaxLengthMessage - this.vm.chatMessage.length);
     }
 
     joinLobby(lobby) {
@@ -134,6 +172,34 @@ export default class LobbiesController {
                     //stop load
                 });
             }
+        });
+    }
+
+    filterRooms() {
+        if (this.vm.searchText === '') {
+            this.vm.filteredLobbies = this.vm.lobbies;
+            return;
+        }
+        this.vm.filteredLobbies = this.vm.lobbies.filter(
+            x =>
+                x.roomName.toLowerCase().includes(this.vm.searchText.toLowerCase()) ||
+                x.creator.toLowerCase().includes(this.vm.searchText.toLowerCase())
+         );
+    }
+
+    sendChatMessage() {
+        this.soundService.tick.play();
+        const id = Math.floor((Math.random() * 100000000000) + 1);
+        const user = firebase.auth().currentUser;
+        const creator = user.displayName ? user.displayName : user.email;
+        const message = this.vm.chatMessage;
+        this.vm.chatMessage = '';
+        firebase.database().ref('globalChat/' + id).set({
+            timestamp: Date.now(),
+            creator,
+            creatorUid: user.uid,
+            message,
+            color: this.userChatColor
         });
     }
 

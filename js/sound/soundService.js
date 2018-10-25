@@ -20,5 +20,6 @@ export default class SoundService {
         this.movement = new Sound(`${this.soundPath}/armysound1.wav`, this.gameEngine);
         this.tick = new Sound(`${this.soundPath}/tick.wav`, this.gameEngine);
         this.denied = new Sound(`${this.soundPath}/denied.wav`, this.gameEngine);
+        this.newMessage = new Sound(`${this.soundPath}/newMessage.wav`, this.gameEngine);
     }
 }

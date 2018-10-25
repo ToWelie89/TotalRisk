@@ -22,6 +22,7 @@ export default class MainController {
         this.vm.goBackToMenu = this.goBackToMenu;
         this.vm.setGamePhase = this.setGamePhase;
         this.vm.aiTester = this.aiTester;
+        this.vm.quit = this.quit;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -35,6 +36,11 @@ export default class MainController {
                 setTimeout(() => {
                     window.dispatchEvent(new Event('resize'));
                 }, 50);
+            } else if (this.vm.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES) {
+                setTimeout(() => {
+                    const objDiv = document.getElementById('chatMessagesContainer');
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }, 20);
             }
         });
 
@@ -188,5 +194,9 @@ export default class MainController {
 
     startTutorial() {
         this.$rootScope.currentGamePhase = GAME_PHASES.TUTORIAL;
+    }
+
+    quit() {
+        window.close();
     }
 }

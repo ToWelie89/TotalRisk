@@ -122,7 +122,7 @@ export default class AuthenticationController {
                 displayName: result.user.displayName,
                 email: result.user.email
             };
-            this.toastService.successToast('', 'You have been registered successfully and logged in!');
+            this.toastService.successToast('', 'You have been registered successfully!');
             this.vm.signupData = {
                 email: '',
                 password: ''

@@ -154,9 +154,6 @@
                         </div>
                         <strong>Online Game</strong>
                     </button>
-                    <button type="button" class="button button-green main-menu-button" data-ng-disabled="true">
-                        <strong>Load Game</strong>
-                    </button>
                     <button type="button" class="button button-green main-menu-button" data-ng-click="main.startTutorial()">
                         <div class="main-menu-button-icon" id="tutorialIcon">
                             @@tutorialIcon
@@ -174,6 +171,9 @@
                             @@settingsIcon
                         </div>
                         <strong>Settings</strong>
+                    </button>
+                    <button type="button" class="button button-green main-menu-button" data-ng-click="main.quit()" data-ng-show="main.runningElectron">
+                        <strong>Exit</strong>
                     </button>
                 </div>
             </div>
@@ -379,15 +379,10 @@
                             <button type="button" class="button button-blue large" data-ng-click="lobbies.hostNewGame()" data-ng-disabled="!lobbies.isAuthenticated">
                                 Host new game
                             </button>
-                            <input id="searchBar" type="text" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" />
-                        </div>
-                        <div class="warning paddingTop--double" data-ng-show="lobbies.lobbies.length === 0">
-                            <div class="alert alert-info" role="alert">
-                                There are no active lobbies.
-                            </div>
+                            <input id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" ng-change="lobbies.filterRooms()" />
                         </div>
                         <div id="lobbyList">
-                            <div id="theadContainer" data-ng-show="lobbies.lobbies.length > 0">
+                            <div id="theadContainer">
                                 <div class="lobbyRow thead">
                                     <div class="lobbyCell"></div>
                                     <div class="lobbyCell">Name</div>
@@ -398,9 +393,15 @@
                                     <div class="lobbyCell"></div>
                                 </div>
                             </div>
-                            <div id="tbodyContainer" data-ng-show="lobbies.lobbies.length > 0">
+                            <div id="tbodyContainer">
                                 <div id="tbody">
-                                    <div data-ng-repeat="lobby in lobbies.lobbies" class="lobbyRow">
+                                    <p id="noRoomsMatchinFilter" class="marginTop--double marginBottom--double" data-ng-show="lobbies.searchText !== '' && lobbies.filteredLobbies.length === 0">
+                                        No rooms matching current search could be found
+                                    </p>
+                                    <p id="noRoomsMatchinFilter" class="marginTop--double marginBottom--double" data-ng-show="lobbies.lobbies.length === 0">
+                                        There are no active lobbies.
+                                    </p>
+                                    <div data-ng-repeat="lobby in lobbies.filteredLobbies" class="lobbyRow">
                                         <div class="lobbyCell">
                                             <span class="glyphicon glyphicon-lock" data-ng-show="lobby.private"></span>
                                         </div>
@@ -418,6 +419,39 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div id="muteChatContainer" class="paddingBottom">
+                            <div>
+                                <h3>Global chat</h3>
+                            </div>
+                            <div>
+                                <button type="button" class="button" data-ng-click="lobbies.muteChat = !lobbies.muteChat" data-ng-class="{'button-green': lobbies.muteChat, 'button-red': !lobbies.muteChat}">
+                                    <span data-ng-show="lobbies.muteChat">Unmute chat</span>
+                                    <span class="glyphicon glyphicon-volume-up" data-ng-show="lobbies.muteChat"></span>
+                                    <span data-ng-show="!lobbies.muteChat">Mute chat</span>
+                                    <span class="glyphicon glyphicon-volume-off" data-ng-show="!lobbies.muteChat"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="globalChat">
+                            <div id="chatMessagesContainer">
+                                <div id="topShadowOverlay">
+                                </div>
+                                <div class="globalChatMessage" data-ng-repeat="message in lobbies.globalChatMessages">
+                                    <strong style="color: {{ message.color }};">{{ message.creator }}</strong> <span>({{ message.normalizedTime }})</span>: {{ message.message }}
+                                </div>
+                            </div>
+                            <div id="senderBar">
+                                <form action="" onsubmit="return false;">
+                                    <input type="text" data-ng-model="lobbies.chatMessage" placeholder="Type a message . . ." maxlength="{{ lobbies.chatMaxLengthMessage }}" ng-trim="false" />
+                                    <p id="charactersLeft">
+                                        {{ lobbies.charactersLeft() }}
+                                    </p>
+                                    <button type="submit" class="button button-blue" data-ng-click="lobbies.sendChatMessage()" data-ng-disabled="lobbies.chatMessage.length === 0">
+                                        <strong>Send</strong>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

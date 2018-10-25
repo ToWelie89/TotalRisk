@@ -112,6 +112,20 @@ If you have problems with running the app using Electron you might need to insta
 npm install -g electron
 ```
 
+### lol
+
+If you get an error message sort of like this it might have something to do with a known issue between Firebase and Electron. I managed to fix this by running (in a console with admin rights):
+
+```
+npm --add-python-to-path='true' --debug install --global windows-build-tools
+```
+
+then
+
+```
+npm rebuild --runtime=electron --target=3.0.2 --disturl=https://atom.io/download/electron
+```
+
 For other issues please leave a bug report [here](https://github.com/ToWelie89/TotalRisk/issues) or contact me directly via mail: sonesson8909@hotmail.com
 
 ## Default Grunt build job explained
