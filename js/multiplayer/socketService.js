@@ -19,23 +19,32 @@ export default class SocketService {
             } else {
                 console.log('You are connected to host ' + url);
             }
-            const uid = firebase.auth().currentUser.uid;
-            this.socket.emit('setUserAndRoom', uid, roomId, isHost);
-            this.sendMessage('SERVER', `${userName} connected to the room`, Date.now(), roomId);
+            const user = firebase.auth().currentUser;
+            const userName = user.displayName ? user.displayName : user.email;
+            this.socket.emit('setUserAndRoom', user.uid, userName, roomId, isHost);
+            this.sendMessage('SERVER', 'SERVER', `${userName} connected to the room`, Date.now(), roomId);
         });
     }
 
-    sendMessage(sender, message, timestamp, roomId) {
+    sendMessage(sender, uid, message, timestamp, roomId) {
         this.socket.emit('sendMessage', roomId, {
             sender,
+            uid,
             message,
             timestamp
         });
     }
 
+    updateLockedSlotsForRoom(lockedSlots, roomId) {
+        this.socket.emit('lockedSlots', lockedSlots, roomId);
+    }
+
     leaveLobby(roomId, userName) {
-        //this.socket.emit('disconnect');
-        this.sendMessage('SERVER', `${userName} left the room`, Date.now(), roomId);
+        this.sendMessage('SERVER', 'SERVER', `${userName} left the room`, Date.now(), roomId);
         this.socket.disconnect();
+    }
+
+    kickPlayer(roomId, userUid) {
+        this.socket.emit('kickPlayer', roomId, userUid);
     }
 }

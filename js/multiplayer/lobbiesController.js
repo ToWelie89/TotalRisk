@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import {hashString} from './../helpers';
-import {GAME_PHASES, CONSTANTS} from './../gameConstants';
+import {GAME_PHASES, CONSTANTS, MAPS} from './../gameConstants';
 import {normalizeTimeFromTimestamp, getRandomColor} from './../helpers';
 
 export default class LobbiesController {
@@ -63,8 +63,9 @@ export default class LobbiesController {
             console.log('Global chat messags', this.vm.globalChatMessages);
             this.$timeout(() => {
                 this.$scope.$apply();
-                const objDiv = document.getElementById('chatMessagesContainer');
-                objDiv.scrollTop = objDiv.scrollHeight;
+                document.querySelectorAll('.chatMessagesContainer').forEach(el => {
+                    el.scrollTop = el.scrollHeight;
+                });
             }, 1);
         });
 
@@ -163,7 +164,8 @@ export default class LobbiesController {
                     currentNumberOfPlayers: 0,
                     maxNumberOfPlayer: CONSTANTS.MAX_NUMBER_OF_PLAYERS,
                     hostIp: closeResponse.lanGame ? '127.0.0.1' : this.$rootScope.myIp,
-                    version: this.$rootScope.appVersion
+                    version: this.$rootScope.appVersion,
+                    map: MAPS.WORLD_MAP
                 })
                 .then(() => {
                     this.$rootScope.currentLobbyId = id;
@@ -188,6 +190,10 @@ export default class LobbiesController {
     }
 
     sendChatMessage() {
+        this.vm.disableSendButton = true;
+        this.$timeout(() => {
+            this.vm.disableSendButton = false;
+        }, 1000);
         this.soundService.tick.play();
         const id = Math.floor((Math.random() * 100000000000) + 1);
         const user = firebase.auth().currentUser;

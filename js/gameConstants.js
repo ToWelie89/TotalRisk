@@ -25,6 +25,14 @@ const GAME_PHASES = {
     MULTIPLAYER_LOBBIES: 9
 };
 
+const MAPS = {
+    WORLD_MAP: {
+        mainMap: './assets/maps/worldMap/worldMap.svg',
+        previewMap: './assets/maps/worldMap/worldMapPreview.svg',
+        name: 'Classic world map'
+    }
+}
+
 const CONSTANTS = {
     MIN_NUMBER_OF_PLAYERS: 2,
     MAX_NUMBER_OF_PLAYERS: 6,
@@ -102,5 +110,6 @@ export {
     MUSIC_VOLUME_DURING_TUTORIAL,
     VICTORY_GOALS,
     POSSIBLE_CARD_COMBINATIONS,
-    PAUSE_MODES
+    PAUSE_MODES,
+    MAPS
 };

@@ -1,0 +1,176 @@
+#lobbyContainer {
+	padding: 20px;
+	background-color: rgba(75, 75, 75, 0.8117647058823529);
+	border-radius: 30px;
+	width: 100%;
+    display: table;
+
+	#lobbyLeftPanel {
+		width: 50%;
+		display: table-cell;
+		padding-left: 100px;
+		vertical-align: top;
+
+		#lobbyDescription {
+			h2 {
+				font-size: 40px;
+				font-weight: 900;
+				text-shadow: 0 0 12px rgba(0, 0, 0, 0.3803921568627451);
+				text-align: left;
+				color: white;
+
+				.glyphicon {
+					padding-left: 15px;
+					font-size: 26px;
+				}
+			}
+
+			#playersInLobby {
+		        font-size: 24px;
+		        text-align: left;
+		        color: white;
+			}
+
+			#lobbyMapContainer {
+				background-color: #5397d1;
+			    width: 50%;
+				float: left;
+			    padding: 20px;
+			    box-shadow: 0 0 30px rgba(0, 0, 0, 0.46);
+
+			    svg {
+			    	pointer-events: none;
+			    	.troopCounter, .troopCounterText, text {
+			    		display: none;
+			    	}
+			    	text {
+			    		display: none;
+			    	}
+			    }
+			}
+
+			#lobbyGameInfo {
+				width: 50%;
+				float: left;
+				text-align: left;
+				padding: 30px;
+				color: white;
+				font-size: 20px;
+			}
+		}
+
+		#lobbyChatBoxes {
+			padding-top: 10px;
+			clear: both;
+			.muteChatContainer {
+				width: 100%;
+			}
+			.chatBox {
+				width: 100%;
+				.chatMessagesContainer {
+					height: 300px;
+				}
+			}
+		}
+
+	}
+
+	#lobbyRightPanel {
+		width: 50%;
+	    display: table-cell;
+
+	    .setupBoxAvatarsContainer {
+	    	width: 100%;
+
+	    	&__item {
+	    		&__delete {
+					width: auto;
+					color: white;
+					padding: 5px 10px;
+					height: auto;
+					font-size: 18px;
+					font-weight: 900;
+					top: 170px;
+					right: 0px;
+					border-radius: 10px;
+
+					&:hover {
+						background-color: #ed584d !important;
+					}
+	    		}
+
+	    		&__lock {
+	    			width: auto;
+	    			color: white;
+	    			padding: 5px 10px;
+	    			height: auto;
+	    			font-size: 18px;
+	    			font-weight: 900;
+	    			top: 170px;
+	    			right: 0px;
+	    			border-radius: 10px;
+	    			background-color: #777;
+	    			position: absolute;
+    			    z-index: 100;
+    			    cursor: pointer;
+
+    			    * {
+    			    	cursor: pointer;
+    			    }
+
+	    			&:hover {
+	    				background-color: #555;
+	    			}
+	    		}
+
+	    		&__host {
+	    			top: 0;
+	    			left: 0;
+	    			position: absolute;
+	    			width: 100%;
+
+	    			&__inner {
+	    				background-color: #ed584d;
+	    				border-radius: 10px;
+	    				font-size: 18px;
+	    				font-weight: 900;
+	    				color: white;
+    				    padding: 5px 20px;
+    				    display: inline-block;
+	    			}
+	    		}
+
+	    		&__portrait {
+					&.notMine {
+						&:hover {
+						    .setupBoxAvatarsContainer__item__portrait__inner {
+						        opacity: 0;
+						        cursor: default !important;
+						        * {
+						        	cursor: default !important;
+						        }
+						    }
+						}
+					}
+
+					&.locked {
+						background: #3c3c3c;
+					}
+
+		    		&.empty {
+		    			.setupBoxAvatarsContainer__item__portrait__inner {
+		    				display: table;
+		    				opacity: 1;
+	    				    background: transparent;
+	    				    border: 8px solid transparent;
+	    				    cursor: default !important;
+	    				    * {
+	    				    	cursor: default !important;
+	    				    }
+		    			}
+		    		}
+	    		}
+	    	}
+	    }
+	}
+}

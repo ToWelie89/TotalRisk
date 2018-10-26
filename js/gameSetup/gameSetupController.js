@@ -1,6 +1,7 @@
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
 import {CONSTANTS, VICTORY_GOALS} from './../gameConstants';
+import {lightenDarkenColor} from './../helpers';
 
 export default class GameSetupController {
 
@@ -53,35 +54,7 @@ export default class GameSetupController {
     }
 
     lightenDarkenColor(colorCode, amount) {
-        if (!colorCode) {
-            return '';
-        }
-
-        var usePound = false;
-        if (colorCode[0] === '#') {
-            colorCode = colorCode.slice(1);
-            usePound = true;
-        }
-        var num = parseInt(colorCode, 16);
-        var r = (num >> 16) + amount;
-        if (r > 255) {
-            r = 255;
-        } else if (r < 0) {
-            r = 0;
-        }
-        var b = ((num >> 8) & 0x00FF) + amount;
-        if (b > 255) {
-            b = 255;
-        } else if (b < 0) {
-            b = 0;
-        }
-        var g = (num & 0x0000FF) + amount;
-        if (g > 255) {
-            g = 255;
-        } else if (g < 0) {
-            g = 0;
-        }
-        return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+        return lightenDarkenColor(colorCode, amount);
     }
 
     setGoal(goal) {
@@ -158,7 +131,10 @@ export default class GameSetupController {
         }
 
         this.soundService.bleep2.play();
-        this.vm.players.push(new Player(this.getFirstUnusedName(), this.getUnusedColor(), this.getUnusedAvatar().avatar, PLAYER_TYPES.HUMAN));
+
+        const avatar = this.getUnusedAvatar();
+
+        this.vm.players.push(new Player(avatar.name, this.getUnusedColor(), avatar.avatar, PLAYER_TYPES.HUMAN));
 
         if (this.vm.chosenGoal.requiredAmountOfPlayers > this.vm.players.length) {
             this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];

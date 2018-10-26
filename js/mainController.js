@@ -38,8 +38,9 @@ export default class MainController {
                 }, 50);
             } else if (this.vm.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES) {
                 setTimeout(() => {
-                    const objDiv = document.getElementById('chatMessagesContainer');
-                    objDiv.scrollTop = objDiv.scrollHeight;
+                    document.querySelectorAll('.chatMessagesContainer').forEach(el => {
+                        el.scrollTop = el.scrollHeight;
+                    });
                 }, 20);
             }
         });
