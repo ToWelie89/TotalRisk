@@ -192,7 +192,7 @@ export default class AuthenticationController {
                 'Update failed',
                 ' '
             );
-        })
+        });
     }
 
     cancelUpdate() {

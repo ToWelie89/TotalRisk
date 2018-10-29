@@ -127,6 +127,67 @@ const lightenDarkenColor = (colorCode, amount) => {
     return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
 }
 
+const objectsAreEqual = (obj1, obj2) => {
+    let returnValue = true;
+
+    Object.keys(obj1).forEach(key => {
+        if (!(key in obj2) || obj1[key] !== obj2[key]) {
+            returnValue = false;
+        }
+    })
+
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+        returnValue = false;
+    }
+
+    return returnValue;
+}
+
+const arrayIncludesObject = (array, object) => {
+    const o = array.find(x => objectsAreEqual(x, object));
+    return o !== undefined;
+}
+
+const loadSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
+    $.get(svgPath, (svg) => {
+        svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/filter-/g, 'filter-' + Math.floor((Math.random() * 100000000000) + 1));
+        $(divSelector).html(svg);
+
+        if (callback) {
+            setTimeout(() => {
+                callback();
+            }, callbackTimer);
+        }
+    }, 'text');
+}
+
+const startGlobalLoading = () => {
+    $('#backgroundImage').css('filter', 'blur(5px)');
+    $('#backgroundImage').css('-webkit-filter', 'blur(5px)');
+
+    $('.mainWrapper').css('filter', 'blur(5px)');
+    $('.mainWrapper').css('-webkit-filter', 'blur(5px)');
+
+    $('#authenticationBox').css('filter', 'blur(5px)');
+    $('#authenticationBox').css('-webkit-filter', 'blur(5px)');
+
+    $('#globalLoading').css('opacity', '1');
+}
+
+const stopGlobalLoading = () => {
+    $('#backgroundImage').css('filter', '');
+    $('#backgroundImage').css('-webkit-filter', '');
+
+    $('.mainWrapper').css('filter', '');
+    $('.mainWrapper').css('-webkit-filter', '');
+
+    $('#authenticationBox').css('filter', '');
+    $('#authenticationBox').css('-webkit-filter', '');
+
+    $('#globalLoading').css('opacity', '0');
+}
+
 module.exports = {
     shuffle,
     arraysEqual,
@@ -142,5 +203,10 @@ module.exports = {
     normalizeTimeFromTimestamp,
     getRandomColor,
     getRandomInteger,
-    lightenDarkenColor
+    lightenDarkenColor,
+    objectsAreEqual,
+    arrayIncludesObject,
+    loadSvgIntoDiv,
+    startGlobalLoading,
+    stopGlobalLoading
 };

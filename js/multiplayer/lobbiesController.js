@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import {hashString} from './../helpers';
 import {GAME_PHASES, CONSTANTS, MAPS} from './../gameConstants';
-import {normalizeTimeFromTimestamp, getRandomColor} from './../helpers';
+import {normalizeTimeFromTimestamp, getRandomColor, startGlobalLoading, stopGlobalLoading} from './../helpers';
 
 export default class LobbiesController {
     constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService) {
@@ -152,6 +152,7 @@ export default class LobbiesController {
         }).result.then((closeResponse) => {
             //load
             if (closeResponse && closeResponse.gameName) {
+                startGlobalLoading()
                 const id = Math.floor((Math.random() * 1000000000) + 1);
                 const user = firebase.auth().currentUser;
                 const creator = user.displayName ? user.displayName : user.email;
@@ -171,6 +172,7 @@ export default class LobbiesController {
                     this.$rootScope.currentLobbyId = id;
                     this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
                     this.$rootScope.$apply();
+                    stopGlobalLoading();
                     //stop load
                 });
             }

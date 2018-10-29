@@ -191,10 +191,10 @@
                     padding-top: 30px;
                     padding-bottom: 30px;
                     &__item {
-                        display: inline-block;
+                        display: inline-flex;
                         padding: 5px;
 
-                        img {
+                        img, div[character] {
                             width: 80px;
                             height: 80px;
                             border-radius: 5%;
@@ -206,6 +206,11 @@
                             cursor: pointer;
                             box-shadow: 1px 1px 3px black;
                             transition: all 0.2s;
+                            overflow: hidden;
+
+                            * {
+                                cursor: pointer;
+                            }
 
                             &:hover {
                                 border: 3px solid #ff6d6d;
@@ -216,6 +221,10 @@
                                 -webkit-transform: translate(0px, 3px);
                                 border: 3px solid;
                             }
+                        }
+
+                        div[character] {
+                            display: table-caption;
                         }
 
                         &--selected {

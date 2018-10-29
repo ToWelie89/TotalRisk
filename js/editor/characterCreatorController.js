@@ -1,15 +1,18 @@
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import {GAME_PHASES} from './../gameConstants';
+import {startGlobalLoading, stopGlobalLoading} from './../helpers';
 
 export default class CharacterCreatorController {
 
-    constructor($scope, $rootScope, settings, soundService) {
+    constructor($scope, $rootScope, soundService, toastService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
-        this.vm.settings = settings;
         this.soundService = soundService;
+        this.toastService = toastService;
 
-        this.vm.characters = settings.characters;
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
         this.vm.showEditor = false;
@@ -61,6 +64,31 @@ export default class CharacterCreatorController {
             '#7d5137'
         ];
 
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.vm.isAuthenticated = true;
+                this.vm.showEditor = false;
+                const user = firebase.auth().currentUser;
+
+                firebase.database().ref('users/' + user.uid).on('value', snapshot => {
+                    const user = snapshot.val();
+                    if (user && user.characters) {
+                        this.vm.characters = snapshot.val().characters;
+                        setTimeout(() => {
+                            this.$scope.$apply();
+                            this.loadSavedCharacterPortraits();
+                        }, 30);
+                    } else {
+                        this.vm.characters = [];
+                    }
+                });
+            } else {
+                this.vm.isAuthenticated = false;
+                this.vm.showEditor = false;
+                this.vm.characters = [];
+            }
+        });
+
         $(document).ready(() => {
             this.vm.currentSelection.forEach(part => {
                 if (part.type === 'skinTone') {
@@ -68,12 +96,12 @@ export default class CharacterCreatorController {
                     this.applySkinTone();
                 } else {
                     part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                    part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).first().attr('name');
+
                     $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                    $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                    $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).first().css('visibility', 'visible');
                 }
             });
-
-            this.loadSavedCharacterPortraits();
         });
 
         this.$rootScope.$watch('currentGamePhase', () => {
@@ -108,22 +136,22 @@ export default class CharacterCreatorController {
                 $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g`).css('visibility', 'hidden');
                 $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g`).css('visibility', 'hidden');
 
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g:nth-child(${character.hat})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g:nth-child(${character.head})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g:nth-child(${character.eyebrows})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g:nth-child(${character.eyes})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g:nth-child(${character.nose})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g:nth-child(${character.mouth})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g:nth-child(${character.torso})`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g:nth-child(${character.legs})`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
 
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', this.skinTones[character.skinTone - 1]);
+                $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', character.skinTone);
             }
         });
     }
 
     applySkinTone() {
-        $('#editorSvgContainer svg .skinTone').css('fill', this.skinTones[this.vm.currentSelection.find(x => x.type === 'skinTone').selection - 1]);
+        $('#editorSvgContainer svg .skinTone').css('fill', this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId);
     }
 
     previousPart(type) {
@@ -136,10 +164,12 @@ export default class CharacterCreatorController {
         }
 
         if (type === 'skinTone') {
+            part.selectedPartId = this.skinTones[part.selection - 1];
             this.applySkinTone();
         } else {
+            part.selectedPartId = $(`#editorSvgContainer svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
             $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
-            $(`#editorSvgContainer svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            $(`#editorSvgContainer svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
         }
 
         this.adjustSvgOffset();
@@ -155,10 +185,12 @@ export default class CharacterCreatorController {
         }
 
         if (type === 'skinTone') {
+            part.selectedPartId = this.skinTones[part.selection - 1];
             this.applySkinTone();
         } else {
+            part.selectedPartId = $(`#editorSvgContainer svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
             $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
-            $(`#editorSvgContainer svg g[category="${type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+            $(`#editorSvgContainer svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
         }
 
         this.adjustSvgOffset();
@@ -171,10 +203,12 @@ export default class CharacterCreatorController {
             part.selection = Math.floor(Math.random() * part.maxChoices) + 1 ;
 
             if (part.type === 'skinTone') {
+                part.selectedPartId = this.skinTones[part.selection - 1];
                 this.applySkinTone();
             } else {
+                part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).get(part.selection - 1).getAttribute('name');
                 $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
             }
         });
         this.adjustSvgOffset();
@@ -183,44 +217,71 @@ export default class CharacterCreatorController {
     saveCharacter() {
         this.soundService.tick.play();
 
-        if (!this.vm.selectedCharacterId) {
-            // Create new character
-            const id = this.generateId();
-            this.vm.settings.characters.push({
-                id,
-                name: this.vm.name,
-                hat: this.vm.currentSelection.find(x => x.type === 'hat').selection,
-                head: this.vm.currentSelection.find(x => x.type === 'head').selection,
-                eyebrows: this.vm.currentSelection.find(x => x.type === 'eyebrows').selection,
-                eyes: this.vm.currentSelection.find(x => x.type === 'eyes').selection,
-                nose: this.vm.currentSelection.find(x => x.type === 'nose').selection,
-                mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selection,
-                torso: this.vm.currentSelection.find(x => x.type === 'torso').selection,
-                legs: this.vm.currentSelection.find(x => x.type === 'legs').selection,
-                skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selection
+        let userCharacters;
+
+        const user = firebase.auth().currentUser;
+
+        startGlobalLoading();
+
+        firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+            const user = snapshot.val();
+            userCharacters = user && user.characters ? user.characters : [];
+        })
+        .then(() => {
+            if (!this.vm.selectedCharacterId) {
+                const id = this.generateId();
+                this.vm.selectedCharacterId = id;
+                userCharacters.push({
+                    id,
+                    name: this.vm.name,
+                    hat: this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId,
+                    head: this.vm.currentSelection.find(x => x.type === 'head').selectedPartId,
+                    eyebrows: this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId,
+                    eyes: this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId,
+                    nose: this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId,
+                    mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId,
+                    torso: this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId,
+                    legs: this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId,
+                    skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId
+                });
+            } else {
+                const character = userCharacters.find(x => x.id === this.vm.selectedCharacterId);
+                character.name = this.vm.name;
+                character.hat = this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId;
+                character.head = this.vm.currentSelection.find(x => x.type === 'head').selectedPartId;
+                character.eyebrows = this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId;
+                character.eyes = this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId;
+                character.nose = this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId;
+                character.mouth = this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId;
+                character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId;
+                character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId;
+                character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId;
+            }
+        })
+        .then(() => {
+            return firebase.database().ref('users/' + user.uid).set({
+                characters: userCharacters
             });
-            this.vm.selectedCharacterId = id;
-        } else {
-            // Update existing character
-            const character = this.vm.characters.find(x => x.id === this.vm.selectedCharacterId);
-            character.name = this.vm.name;
-            character.hat = this.vm.currentSelection.find(x => x.type === 'hat').selection;
-            character.head = this.vm.currentSelection.find(x => x.type === 'head').selection;
-            character.eyebrows = this.vm.currentSelection.find(x => x.type === 'eyebrows').selection;
-            character.eyes = this.vm.currentSelection.find(x => x.type === 'eyes').selection;
-            character.nose = this.vm.currentSelection.find(x => x.type === 'nose').selection;
-            character.mouth = this.vm.currentSelection.find(x => x.type === 'mouth').selection;
-            character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selection;
-            character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selection;
-            character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selection;
-        }
-
-        this.vm.settings.saveSettings();
-        this.vm.characters = this.vm.settings.characters;
-
-        setTimeout(() => {
-            this.loadSavedCharacterPortraits();
-        }, 50);
+        })
+        .then(() => {
+            stopGlobalLoading();
+            this.toastService.successToast(
+                'Character saved!',
+                ' '
+            );
+            this.vm.characters = userCharacters;
+            setTimeout(() => {
+                this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
+                this.loadSavedCharacterPortraits();
+            }, 50);
+        })
+        .catch(err => {
+            stopGlobalLoading();
+            this.toastService.errorToast(
+                'Save failed',
+                ' '
+            );
+        });
     }
 
     generateId() {
@@ -232,21 +293,23 @@ export default class CharacterCreatorController {
 
         this.vm.selectedCharacterId = character.id;
         this.vm.name = character.name;
-        this.vm.currentSelection.find(x => x.type === 'hat').selection = character.hat;
-        this.vm.currentSelection.find(x => x.type === 'head').selection = character.head;
-        this.vm.currentSelection.find(x => x.type === 'eyebrows').selection = character.eyebrows;
-        this.vm.currentSelection.find(x => x.type === 'eyes').selection = character.eyes;
-        this.vm.currentSelection.find(x => x.type === 'nose').selection = character.nose;
-        this.vm.currentSelection.find(x => x.type === 'mouth').selection = character.mouth;
-        this.vm.currentSelection.find(x => x.type === 'torso').selection = character.torso;
-        this.vm.currentSelection.find(x => x.type === 'legs').selection = character.legs;
-        this.vm.currentSelection.find(x => x.type === 'skinTone').selection = character.skinTone;
+        this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId = character.hat;
+        this.vm.currentSelection.find(x => x.type === 'head').selectedPartId = character.head;
+        this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId = character.eyebrows;
+        this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId = character.eyes;
+        this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId = character.nose;
+        this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId = character.mouth;
+        this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId = character.torso;
+        this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId = character.legs;
+        this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId = character.skinTone;
 
         this.vm.currentSelection.forEach(part => {
             if (part.type !== 'skinTone') {
+                const selectedPart = $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`);
                 part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                part.selection = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).index(selectedPart) + 1;
                 $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                selectedPart.css('visibility', 'visible');
             } else {
                 part.maxChoices = this.skinTones.length;
                 this.applySkinTone();
@@ -262,33 +325,71 @@ export default class CharacterCreatorController {
         this.soundService.tick.play();
 
         this.vm.showEditor = true;
+        this.vm.name = '';
         this.vm.currentSelection.forEach(part => {
             part.selection = 1;
             if (part.type !== 'skinTone') {
                 part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
+                part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).first().attr('name');
                 $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g:nth-child(${part.selection})`).css('visibility', 'visible');
+                $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
             } else {
                 part.maxChoices = this.skinTones.length;
+                part.selectedPartId = this.skinTones[part.selection];
                 this.applySkinTone();
             }
         });
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
+        setTimeout(() => {
+            this.$scope.$apply();
+        }, 1);
         this.adjustSvgOffset();
     }
 
     deleteCharacter() {
         this.soundService.tick.play();
 
-        this.vm.settings.characters = this.vm.settings.characters.filter(x => x.id !== this.vm.selectedCharacterId);
-        this.vm.characters = this.vm.settings.characters;
-        this.vm.settings.saveSettings();
-        this.createNewCharacter();
+        startGlobalLoading();
 
-        setTimeout(() => {
-            this.loadSavedCharacterPortraits();
-        }, 50);
+        let userCharacters;
+
+        const user = firebase.auth().currentUser;
+
+        firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+            const user = snapshot.val();
+            userCharacters = user && user.characters ? user.characters : [];
+            userCharacters = userCharacters.filter(x => x.id !== this.vm.selectedCharacterId);
+        })
+        .then(() => {
+            return firebase.database().ref('users/' + user.uid).set({
+                characters: userCharacters
+            });
+        })
+        .then(() => {
+            stopGlobalLoading();
+            this.toastService.successToast(
+                'Character deleted!',
+                ' '
+            );
+            this.vm.characters = userCharacters;
+            setTimeout(() => {
+                if (this.vm.characters.length > 0) {
+                    this.createNewCharacter();
+                    this.loadSavedCharacterPortraits();
+                } else {
+                    this.vm.showEditor = false;
+                    this.$scope.$apply();
+                }
+            }, 50);
+        })
+        .catch(err => {
+            stopGlobalLoading();
+            this.toastService.errorToast(
+                'Deletion failed',
+                ' '
+            );
+        });
     }
 
     adjustSvgOffset() {

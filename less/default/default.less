@@ -8,6 +8,10 @@ p, span, h1, h2, h3, h4, strong, i {
     cursor: default;
 }
 
+html {
+    height: 100%;
+}
+
 body::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
@@ -33,17 +37,49 @@ body {
     font-size: 16px;
     padding: 0;
     margin: 0;
-    background: #143242;
+    background: black;
     padding-right: 0px !important;
-    //background-image: url(./../assets/img/mainbg.png);
-    //background-position: center top;
     overflow-x: hidden;
-    color: white;
-    background-image: url(https://png2.kisspng.com/sh/116cc6db3e9b70d58746bd8527aea229/L0KzQYm3VcA2N5ZuiZH0aYP2gLBuTgNxaaN5eZ91ZXBxebXok71qNZNmjOZ1ZT3ydn77iPVzdZD1kd5qZT24cbbsUfE6a2FnSqdrNz67Roq9VsAzOmI6SqcANUO7QoG3VMU4NqFzf3==/kisspng-sparta-leonidas-i-battle-of-thermopylae-5aee1a9c0b25b7.8696602215255538200457.png);
-    background-repeat: no-repeat;
-    background-position-x: 100%;
-    background-position-y: 200px;
+    height: 100%;
 }
+
+#backgroundImage {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -500;
+    background-repeat: no-repeat;
+    background-size: 110%;
+    background-image: url(./../assets/backgroundImages/battle2.png);
+
+    animation: scroll_bg 120s linear infinite;
+}
+
+#backgroundSmoke {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -400;
+    background-image: url(../assets/backgroundImages/smoke.png);
+    background-repeat: no-repeat;
+    background-position-y: bottom;
+    filter: blur(3px);
+    opacity: 0.3;
+
+    animation: scroll_cloud 60s linear infinite;
+}
+
+@keyframes scroll_cloud {
+    0% { background-position-x: -2560px; }
+    100% { background-position-x: 0px; }
+}
+
+@keyframes scroll_bg {
+    0% { background-position-x: 0%; }
+    50% { background-position-x: 100%; }
+    100% { background-position-x: 0%; }
+}
+
 
 a {
     color: #03A9F4;
@@ -158,6 +194,7 @@ span.rz-bubble.rz-limit.rz-floor {
 
 .mainWrapper {
     width: 100%;
+    height: 100%;
     max-width: 100%;
 }
 

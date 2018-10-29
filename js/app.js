@@ -35,6 +35,7 @@ import AiHandler from './ai/aiHandler';
 import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
 import WavingFlagDirective from './directives/wavingFlagDirective';
+import PlayerPortraitDirective from './directives/playerPortraitDirective';
 
 const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 
@@ -73,3 +74,4 @@ app.service('toastService', ToastService);
 app.service('socketService', SocketService);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
+app.directive('playerPortrait', () => new PlayerPortraitDirective());

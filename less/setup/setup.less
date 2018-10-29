@@ -35,10 +35,19 @@
             border-radius: 50%;
             border: 8px solid #979292;
             transition: all 0.5s;
+            overflow: hidden;
 
             &:hover {
                 .setupBoxAvatarsContainer__item__portrait__inner {
                     opacity: 1;
+                }
+            }
+
+            &__svgCustom {
+                svg {
+                    width: 130%;
+                    margin-left: -30px;
+                    margin-top: -90px;
                 }
             }
 

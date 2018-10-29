@@ -47,4 +47,8 @@ export default class SocketService {
     kickPlayer(roomId, userUid) {
         this.socket.emit('kickPlayer', roomId, userUid);
     }
+
+    updateAvatar(userUid, avatar) {
+        this.socket.emit('updateAvatar', userUid, avatar);
+    }
 }

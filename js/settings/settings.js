@@ -30,7 +30,6 @@ export default class Settings {
         this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
-        this.characters    = savedSettings ? savedSettings.characters    : settings.characters;
         this.aiSpeedValues = {
             'Slow': 1000,
             'Medium': 600,
@@ -53,8 +52,7 @@ export default class Settings {
             playSound:     this.playSound,
             aiSpeed:       this.aiSpeed,
             showAnnouncer: this.showAnnouncer,
-            fullScreen:    this.fullScreen,
-            characters:    this.characters
+            fullScreen:    this.fullScreen
         };
 
         if (this.runningElectron) {

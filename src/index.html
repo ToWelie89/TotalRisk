@@ -59,6 +59,17 @@
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
+    <div id="backgroundImage"></div>
+    <div id="backgroundSmoke"></div>
+
+    <div id="globalLoading">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+    </div>
+
     <div id="authenticationBox" data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU || main.currentGamePhase == main.gamePhases.SETTINGS || main.currentGamePhase == main.gamePhases.PLAYER_SETUP || main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR || main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER || main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="authenticationController as auth" ng-cloak>
         <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE">
             <p>
@@ -137,7 +148,7 @@
             </div>
         </div>
         <div class="container mainContent">
-            <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox">
+            <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox" ng-cloak>
                 <div style="margin-top: 70px;
                             width: 600px;
                             margin: 0 auto;
@@ -276,7 +287,7 @@
                                         @@customCharacterSvg
                                     </div>
                                 </div>
-                                <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()">
+                                <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()" data-ng-show="characterCreator.characters.length < 5">
                                     <div class="existingCharactersContainer__item__inner">
                                         <span class="glyphicon glyphicon-plus">
                                     </div>
@@ -319,7 +330,7 @@
                                     Delete
                                 </button>
                                 <button type="button" class="button button-green" data-ng-click="characterCreator.saveCharacter()" data-ng-disabled="characterCreator.name.length === 0">
-                                    <span data-ng-show="!characterCreator.selectedCharacterId">Save</span>
+                                    <span data-ng-show="!characterCreator.selectedCharacterId" data-ng-disabled="characterCreator.characters.length === 5">Save</span>
                                     <span data-ng-show="characterCreator.selectedCharacterId">Update</span>
                                 </button>
                             </div>
@@ -327,11 +338,15 @@
                     </div>
                     <div class="row" data-ng-show="!characterCreator.showEditor">
                         <div class="col-xs-12">
-                            <div data-ng-show="characterCreator.characters.length === 0">
-                                <div class="paddingTop--double paddingBottom--double">
-                                    <strong style="color: white;">
-                                        You have not created any characters yet
-                                    </strong>
+                            <div class="alert alert-warning" role="alert" data-ng-show="characterCreator.isAuthenticated && characterCreator.characters.length === 5" style="width: 800px; margin: 0 auto; margin-top: 30px;">
+                                You have reached the maximum amount of custom characters.
+                            </div>
+                            <div class="alert alert-warning" role="alert" data-ng-show="!characterCreator.isAuthenticated" style="width: 800px; margin: 0 auto; margin-top: 30px;">
+                                You must be logged in to create characters or look at your current ones.
+                            </div>
+                            <div data-ng-show="characterCreator.characters.length === 0 && characterCreator.isAuthenticated">
+                                <div class="alert alert-info" role="info" style="width: 800px; margin: 0 auto; margin-top: 30px; margin-bottom: 30px;">
+                                    You have not created any characters yet.
                                 </div>
                                 <button type="button" class="button button-purple large" data-ng-click="characterCreator.createNewCharacter()">
                                     Create new character
@@ -364,7 +379,9 @@
                                         <strong>Map</strong>
                                     </div>
                                     <div>
-                                        <span data-ng-if="lobby.room.map === 'WORLD_MAP'">Classic world map</span>
+                                        <span>
+                                            {{ lobby.room.map.name }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -439,13 +456,22 @@
                             <div class="setupBoxAvatarsContainer">
                                 <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                                     <div
+                                        id="playerPortrait{{i}}"
+                                        player-portrait
+                                        avatar="lobby.players[i].avatar"
+                                        id="setupPortrait{{i}}"
                                         data-ng-if="lobby.players[i] && lobby.players[i].avatar"
                                         class="box-shadow setupBoxAvatarsContainer__item__portrait"
                                         data-ng-class="{'notMine': lobby.players[i].userUid !== lobby.myUid }"
-                                        style="background-image: url({{lobby.players[i].avatar.picture}});
+                                        style="background-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}};
                                                border-color: {{lobby.players[i].color.mainColor}};">
+
+                                        <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="lobby.players[i].avatar.svg">
+                                        </div>
+                                        <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="lobby.players[i].avatar.customCharacter">
+                                        </div>
                                         <div class="setupBoxAvatarsContainer__item__portrait__inner"
-                                             data-ng-click="setup.openSelectionScreen(setup.players[i])"
+                                             data-ng-click="lobby.openSelectionScreen(lobby.players[i])"
                                              style="border-color: {{lobby.players[i].color.mainColor}};">
                                             <h2>CHANGE</h2>
                                         </div>
@@ -485,7 +511,6 @@
                                         <waving-flag flag-width="90" flag-height="50" flag-url="lobby.players[i].avatar.flag"></waving-flag>
                                     </div>
                                     <div
-                                        data-ng-click="lobby.openSelectionScreen(null)"
                                         data-ng-if="!lobby.players[i]"
                                         class="box-shadow setupBoxAvatarsContainer__item__portrait empty"
                                         data-ng-class="{'locked': lobby.lockedSlots.includes(i) }">
@@ -623,10 +648,17 @@
                         <div class="setupBoxAvatarsContainer">
                             <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                                 <div
+                                    id="playerSingleplayerPortrait{{i}}"
+                                    player-portrait
+                                    avatar="setup.players[i].avatar"
                                     data-ng-if="setup.players[i] && setup.players[i].avatar"
                                     class="box-shadow setupBoxAvatarsContainer__item__portrait"
-                                    style="background-image: url({{setup.players[i].avatar.picture}});
+                                    style="background-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}};
                                            border-color: {{setup.players[i].color.mainColor}};">
+                                    <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="setup.players[i].avatar.svg">
+                                    </div>
+                                    <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="setup.players[i].avatar.customCharacter">
+                                    </div>
                                     <div class="setupBoxAvatarsContainer__item__portrait__inner"
                                          data-ng-click="setup.openSelectionScreen(setup.players[i])"
                                          style="border-color: {{setup.players[i].color.mainColor}};">

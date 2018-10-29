@@ -109,6 +109,9 @@ module.exports = function(grunt) {
                     }, {
                         match: 'patchLoadingSvg',
                         replacement: '<%= grunt.file.read("assets/patchLoading.svg") %>'
+                    }, {
+                        match: 'customCharacterSvg',
+                        replacement: '<%= grunt.file.read("assets/avatarSvg/custom.svg") %>'
                     }]
                 },
                 files: [{
@@ -123,6 +126,9 @@ module.exports = function(grunt) {
                 }, {
                     src: ['src/autoUpdaterModal.html'],
                     dest: 'autoUpdaterModal.html'
+                }, {
+                    src: ['src/characterSelectionModal.html'],
+                    dest: 'characterSelectionModal.html'
                 }]
             }
         },

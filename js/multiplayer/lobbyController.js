@@ -3,11 +3,11 @@ import 'firebase/auth';
 import 'firebase/database';
 import {hashString} from './../helpers';
 import {GAME_PHASES, CONSTANTS} from './../gameConstants';
-import {normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor} from './../helpers';
+import {normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv} from './../helpers';
 import {avatars, PLAYER_COLORS} from './../player/playerConstants';
 
 export default class LobbiesController {
-    constructor($scope, $rootScope, $timeout, soundService, socketService, toastService) {
+    constructor($scope, $rootScope, $timeout, $uibModal, soundService, socketService, toastService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -15,39 +15,10 @@ export default class LobbiesController {
         this.soundService = soundService;
         this.socketService = socketService;
         this.toastService = toastService;
+        this.$uibModal = $uibModal;
 
         this.$rootScope.$watch('currentLobbyId', () => {
-            this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
-            if (this.vm.currentLobbyId) {
-                const user = firebase.auth().currentUser;
-                this.vm.myUid = user.uid;
-                this.vm.lockedSlots = [];
-                this.vm.unreadLobbyMessages = 0;
-                this.vm.unreadGlobalMessages = 0;
-                this.vm.showLobbyChat = true;
-                this.vm.lobbyChatMessage = '';
-                this.vm.globalChatMessage = '';
-                firebase.database().ref('/rooms/' + this.vm.currentLobbyId).once('value').then(snapshot => {
-                    this.vm.room = Object.assign(snapshot.val(), {
-                        id: snapshot.key
-                    });
-                    console.log('This room', this.vm.room);
-
-                    $('#lobbyMapContainer').load('./assets/maps/worldMap/worldMapPreview.svg');
-
-                    this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
-                    this.$scope.$apply();
-                    const userName = user.displayName ? user.displayName : user.email;
-
-                    if (this.vm.userIsHost) {
-                        this.socketService.createSocket('http://127.0.0.1', 1119, this.vm.room.id, user.uid, userName);
-                    } else {
-                        this.socketService.createSocket(`http://${this.vm.room.hostIp}`, 1119, this.vm.room.id, user.uid, userName);
-                    }
-
-                    this.addSocketListeners();
-                });
-            }
+            this.initLobby();
         });
 
         this.vm.players = [];
@@ -107,6 +78,41 @@ export default class LobbiesController {
         this.vm.lockUnlockSlot = this.lockUnlockSlot;
         this.vm.existingPlayers = this.existingPlayers;
         this.vm.kickPlayer = this.kickPlayer;
+        this.vm.openSelectionScreen = this.openSelectionScreen;
+    }
+
+    initLobby() {
+        this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
+        if (this.vm.currentLobbyId) {
+            const user = firebase.auth().currentUser;
+            this.vm.myUid = user.uid;
+            this.vm.lockedSlots = [];
+            this.vm.unreadLobbyMessages = 0;
+            this.vm.unreadGlobalMessages = 0;
+            this.vm.showLobbyChat = true;
+            this.vm.lobbyChatMessage = '';
+            this.vm.globalChatMessage = '';
+            firebase.database().ref('/rooms/' + this.vm.currentLobbyId).once('value').then(snapshot => {
+                this.vm.room = Object.assign(snapshot.val(), {
+                    id: snapshot.key
+                });
+                console.log('This room', this.vm.room);
+
+                loadSvgIntoDiv('./assets/maps/worldMap/worldMap.svg', '#lobbyMapContainer');
+
+                this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
+                this.$scope.$apply();
+                const userName = user.displayName ? user.displayName : user.email;
+
+                if (this.vm.userIsHost) {
+                    this.socketService.createSocket('http://127.0.0.1', 1119, this.vm.room.id, user.uid, userName);
+                } else {
+                    this.socketService.createSocket(`http://${this.vm.room.hostIp}`, 1119, this.vm.room.id, user.uid, userName);
+                }
+
+                this.addSocketListeners();
+            });
+        }
     }
 
     switchChat(showLobbyChat) {
@@ -126,6 +132,39 @@ export default class LobbiesController {
     charactersLeft () {
         return this.vm.showLobbyChat ? (this.vm.chatMaxLengthMessage - this.vm.lobbyChatMessage.length)
                                      : (this.vm.chatMaxLengthMessage - this.vm.globalChatMessage.length);
+    }
+
+    openSelectionScreen(clickedPlayer) {
+        const user = firebase.auth().currentUser;
+        const uid = user.uid;
+        const currentSelectedPlayer = this.vm.players.find(x => x.userUid === uid);
+
+        if (clickedPlayer.userUid !== uid) {
+            return;
+        }
+
+        this.$uibModal.open({
+            templateUrl: 'characterSelectionModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal characterSelect',
+            controller: 'characterSelectionController',
+            controllerAs: 'characterSelection',
+            keyboard: false,
+            resolve: {
+                currentSelectedPlayer: () => currentSelectedPlayer,
+                selectedPlayers: () => this.vm.players
+            }
+        }).result.then(closeResponse => {
+            $('.mainWrapper').css('filter', 'none');
+            $('.mainWrapper').css('-webkit-filter', 'none');
+
+            if (!objectsAreEqual(closeResponse.avatar, currentSelectedPlayer.avatar)) {
+                // update to BE
+                this.socketService.updateAvatar(uid, closeResponse.avatar);
+            }
+
+            console.log(closeResponse);
+        });
     }
 
     addSocketListeners() {
@@ -196,7 +235,16 @@ export default class LobbiesController {
             if (player) {
                 player.type = 0;
             }
+        });
+
+        this.vm.players.forEach(p => {
+            const index = this.vm.players.indexOf(p);
+            if (this.vm.players[index]) {
+                $(`.setupBoxAvatarsContainer #setupPortrait${index}`).css('background-image', `url(${p.avatar.picture})`);
+            }
         })
+
+        this.$scope.$apply();
     }
 
     lightenDarkenColor(colorCode, amount) {

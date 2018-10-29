@@ -146,6 +146,12 @@ io.on('connection', function(socket){
     }
   });
 
+  socket.on('updateAvatar', (userUid, avatar) => {
+    socketList[userUid].avatar = avatar;
+    const roomId = socketList[userUid].roomId;
+    setPlayers(roomId);
+  });
+
   socket.on('sendMessage', (roomId, msg) => {
     addNewMessage(roomId, msg);
   });

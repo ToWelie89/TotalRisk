@@ -102,6 +102,10 @@ const avatars = {
         selectSound: '',
         flag: './assets/flags/france.png',
         svg: './assets/avatarSvg/napoleon.svg',
+        svgWidth: '160%',
+        svgHeight: '440px',
+        svgMarginLeft: '-75px',
+        svgMarginTop: '-20px',
         biography: 'Napoleon Bonaparte was a man who came from nothing, being a minor nobleman from the island of Corsica and a captain in the french army after the french revolution, but he would later become the empereor of France, the greatest empire in Europe during his time. Napoleon is regarded as one of the greatest military geniuses of all time, having defeated most of the mighty kingdoms and empires of Europe through tactical brilliance making him perhaps the most powerful man in the world. His greatest triumph was the battle of Austerlitz where he completely destroyed the organized Russian and Austrian resistance.'
     },
     'Hannibal Barca': {
@@ -115,6 +119,9 @@ const avatars = {
         selectSound: '',
         flag: './assets/flags/macedon.png',
         svg: './assets/avatarSvg/alexander.svg',
+        svgWidth: '90%',
+        svgMarginLeft: '0px',
+        svgMarginTop: '-30px',
         biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
     },
     'Genghis Khan': {
