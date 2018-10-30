@@ -1,6 +1,10 @@
 /*
 * IMPORTS
 */
+import firebase from 'firebase';
+
+import FirebaseSettings from './firebaseSettings';
+firebase.initializeApp(FirebaseSettings);
 
 import AutoUpdater from './autoUpdating/AutoUpdater';
 const autoUpdater = new AutoUpdater();

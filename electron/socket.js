@@ -3,6 +3,7 @@ import { getRandomInteger } from './../js/helpers';
 import { PLAYER_COLORS, avatars, PLAYER_TYPES } from './../js/player/playerConstants';
 import Player from './../js/player/player';
 import GameEngine from './../js/gameEngine';
+import FirebaseSettings from './../js/firebaseSettings';
 import { VICTORY_GOALS } from './../js/gameConstants';
 
 const states = {
@@ -18,15 +19,7 @@ const gameEngine = new GameEngine({}, {});
 const io = require('socket.io').listen(1119);
 console.log('Llistening on *:' + 1119);
 
-const config = {
-  apiKey: "AIzaSyDFz9b6u63g01thrhzSotBUfTgCZQ8U_Bw",
-  authDomain: "totalrisk-e2899.firebaseapp.com",
-  databaseURL: "https://totalrisk-e2899.firebaseio.com",
-  projectId: "totalrisk-e2899",
-  storageBucket: "totalrisk-e2899.appspot.com",
-  messagingSenderId: "1086373539251"
-};
-firebase.initializeApp(config);
+firebase.initializeApp(FirebaseSettings);
 
 let socketList = {};
 let currentLockedSlots = {};
