@@ -79,6 +79,8 @@ export default class LobbiesController {
         this.vm.existingPlayers = this.existingPlayers;
         this.vm.kickPlayer = this.kickPlayer;
         this.vm.openSelectionScreen = this.openSelectionScreen;
+        this.vm.startGameIsDisabled = this.startGameIsDisabled;
+        this.vm.startGame = this.startGame;
     }
 
     initLobby() {
@@ -193,10 +195,10 @@ export default class LobbiesController {
         });
 
         this.socketService.socket.on('kicked', () => {
-            this.socketService.socket.disconnect();
             this.$rootScope.currentLobbyId = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
-            this.toastService.errorToast('', 'You have been kicked from the lobby.')
+            this.toastService.errorToast('', 'You have been kicked from the lobby.');
+            this.socketService.socket.disconnect();
         });
 
         this.socketService.socket.on('hostLeft', () => {
@@ -236,13 +238,6 @@ export default class LobbiesController {
                 player.type = 0;
             }
         });
-
-        this.vm.players.forEach(p => {
-            const index = this.vm.players.indexOf(p);
-            if (this.vm.players[index]) {
-                $(`.setupBoxAvatarsContainer #setupPortrait${index}`).css('background-image', `url(${p.avatar.picture})`);
-            }
-        })
 
         this.$scope.$apply();
     }
@@ -320,5 +315,13 @@ export default class LobbiesController {
 
     existingPlayers() {
         return this.vm.players.filter(x => x !== undefined);
+    }
+
+    startGameIsDisabled() {
+        return this.existingPlayers().length < CONSTANTS.MIN_NUMBER_OF_PLAYERS;
+    }
+
+    startGame() {
+        this.socketService.startGame();
     }
 }

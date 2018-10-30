@@ -64,6 +64,8 @@ export default class GameController {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
+                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {

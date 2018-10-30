@@ -18,8 +18,6 @@ export default class PlayerPortraitDirective {
             var avatar = scope.avatar();
             var id = portraitBox.id;
 
-            console.log('SET AVATAR', avatar);
-
             if (avatar.customCharacter) {
                 portraitBox.style.backgroundImage = '';
 

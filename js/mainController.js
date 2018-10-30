@@ -47,19 +47,6 @@ export default class MainController {
 
         this.vm.runningElectron = runningElectron();
 
-        this.vm.connected = false;
-        this.vm.startHosting = () => {
-            socketService.createSocket('http://127.0.0.1', 1119);
-            this.vm.connected = true;
-        }
-        this.vm.connectToHost = () => {
-            socketService.createSocket('http://83.209.122.4', 1119);
-            this.vm.connected = true;
-        }
-        this.vm.sendMessage = msg => {
-            socketService.sendMessage(msg);
-        }
-
         if (this.vm.runningElectron) {
             this.openUpdaterModal();
             if (electronDevVersion()) {

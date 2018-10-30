@@ -1,7 +1,7 @@
 import {PLAYER_TYPES, AI_VALUES} from './playerConstants';
 
 export default class Player {
-    constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN) {
+    constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN, userUid = undefined, isHost = undefined) {
         this.name = name;
         this.color = color;
         this.avatar = avatar;

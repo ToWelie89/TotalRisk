@@ -1,14 +1,14 @@
-const { MESSAGE_TYPES, ERROR_TYPES } = require('./../js/autoUpdating/updaterConstants');
+import { MESSAGE_TYPES, ERROR_TYPES } from './../js/autoUpdating/updaterConstants';
 
-const electron = require('electron');
-const {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} = require('electron');
-const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
-const path = require('path');
-const url = require('url');
+import electron from 'electron';
+import {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} from 'electron';
+import log from 'electron-log';
+import {autoUpdater} from 'electron-updater';
+import path from 'path';
+import url from 'url';
 
-const Store = require('./../js/settings/electronStore.js');
-const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
+import Store from './../js/settings/electronStore.js';
+import ElectronSettings from './../js/settings/electronDefaultSettings.js';
 
 let win;
 const store = new Store({
@@ -41,7 +41,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
 
 // Create window here
 const createDefaultWindow = () => {
-  const isDev = process.env.NODE_ENV === 'dev';
+  const isDev = process.env.NODE_ENV === 'electron';
 
   let windowBounds = store.get('windowBounds');
   let riskSettings = store.get('riskSettings');

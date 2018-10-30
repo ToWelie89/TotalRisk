@@ -1,6 +1,19 @@
-const firebase = require('firebase');
-const { getRandomInteger } = require('./../js/helpers');
-const { PLAYER_COLORS, avatars } = require('./../js/player/playerConstants');
+import firebase from 'firebase';
+import { getRandomInteger } from './../js/helpers';
+import { PLAYER_COLORS, avatars, PLAYER_TYPES } from './../js/player/playerConstants';
+import Player from './../js/player/player';
+import GameEngine from './../js/gameEngine';
+import { VICTORY_GOALS } from './../js/gameConstants';
+
+const states = {
+  LOBBY: 'LOBBY',
+  IN_GAME: 'IN_GAME',
+  RESULT_SCREEN: 'RESULT_SCREEN'
+};
+
+let currentState = states.LOBBY;
+
+const gameEngine = new GameEngine({}, {});
 
 const io = require('socket.io').listen(1119);
 console.log('Llistening on *:' + 1119);
@@ -15,12 +28,10 @@ const config = {
 };
 firebase.initializeApp(config);
 
-firebase.database().ref('/rooms/').remove();
-
 let socketList = {};
-let rooms = {};
 let currentLockedSlots = {};
 let messages = [];
+let playerList = [];
 
 const setPlayers = (roomId) => {
   const currentPlayersInRoom = Object.values(socketList).filter(s => s.roomId === roomId).map(x => ({
@@ -31,7 +42,7 @@ const setPlayers = (roomId) => {
     avatar: x.avatar
   }));
 
-  for (socket in socketList) {
+  for (let socket in socketList) {
     if (socketList[socket].roomId === roomId) {
       socketList[socket].emit('updatedPlayers', currentPlayersInRoom);
     }
@@ -61,6 +72,32 @@ io.on('connection', function(socket){
   console.log('User connected!');
   socket.emit('connected');
 
+  // GAME EVENTS
+
+  socket.on('startGame', () => {
+    currentState = states.IN_GAME;
+
+    playerList = Object.values(socketList).map(x => new Player(
+      x.userName,
+      x.color,
+      x.avatar,
+      PLAYER_TYPES.HUMAN,
+      x.userUid,
+      x.isHost
+    ));
+
+    const victoryGoal = VICTORY_GOALS.find(x => x.percentage === 100);
+
+    gameEngine.startGame(playerList, victoryGoal);
+
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn);
+    }
+  });
+
+
+  // LOBBY EVENTS
+
   socket.on('setUserAndRoom', (userUid, userName, roomId, isHost) => {
     socket.userUid = userUid;
     socket.userName = userName;
@@ -86,7 +123,7 @@ io.on('connection', function(socket){
 
     if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
       firebase.database().ref('/rooms/' + roomId).remove();
-      for (socket in socketList) {
+      for (let socket in socketList) {
         socketList[socket].emit('hostLeft');
       }
     }
@@ -129,7 +166,7 @@ io.on('connection', function(socket){
 
     if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
       firebase.database().ref('/rooms/' + socket.roomId).remove();
-      for (socket in socketList) {
+      for (let socket in socketList) {
         socketList[socket].emit('hostLeft');
       }
     }
@@ -139,7 +176,7 @@ io.on('connection', function(socket){
 
   socket.on('lockedSlots', (lockedSlots, roomId) => {
     currentLockedSlots[roomId] = lockedSlots;
-    for (socket in socketList) {
+    for (let socket in socketList) {
       if (socketList[socket].roomId === roomId) {
         socketList[socket].emit('updatedLockedSlots', lockedSlots);
       }
@@ -171,7 +208,7 @@ io.on('connection', function(socket){
     msg.roomId = roomId;
     messages.push(msg);
 
-    for (currentSocket in socketList) {
+    for (let currentSocket in socketList) {
       if (socketList[currentSocket].roomId === roomId) {
         const allMessages = messages.filter(msg => msg.roomId === roomId);
         socketList[currentSocket].emit('messagesUpdated', allMessages);

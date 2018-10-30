@@ -14,6 +14,8 @@ import {settings} from './settings/defaultSettings';
 export default class GameEngine {
 
     constructor(gameAnnouncerService, $rootScope) {
+        this.multiplayer = process.env && process.env.NODE_ENV === 'web' || process.env.NODE_ENV === 'electron';
+
         this.gameAnnouncerService = gameAnnouncerService;
         this.$rootScope = $rootScope;
         this.filter = 'byOwner';
@@ -22,18 +24,25 @@ export default class GameEngine {
         this.playSound = settings.playSound;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
-        $(document).ready(() => {
-            this.setMusic();
-        });
+
+        if (!this.multiplayer) {
+            $(document).ready(() => {
+                this.setMusic();
+            });
+        }
     }
 
     setMusicVolume(volume) {
+        if (this.multiplayer) return;
+
         if (this.bgMusic && this.playSound) {
             this.bgMusic.volume = volume;
         }
     }
 
     toggleSound(playSound) {
+        if (this.multiplayer) return;
+
         this.playSound = playSound;
         if (this.playSound) {
             this.setMusic((this.isTutorialMode ||
@@ -49,6 +58,8 @@ export default class GameEngine {
     }
 
     setMusic(music = MAIN_MUSIC) {
+        if (this.multiplayer) return;
+
         if (this.playSound) {
             if (this.currentMusicPlaying && this.currentMusicPlaying === music && !this.bgMusic.paused) {
                 return;

@@ -1,8 +1,12 @@
 import io from 'socket.io-client';
 import firebase from 'firebase/app';
+import {GAME_PHASES} from './../gameConstants';
 
 export default class SocketService {
-    constructor() {
+    constructor(gameEngine, $rootScope, mapService) {
+        this.gameEngine = gameEngine;
+        this.mapService = mapService;
+        this.$rootScope = $rootScope;
     }
 
     createSocket(url, port, roomId, userUid, userName) {
@@ -23,6 +27,22 @@ export default class SocketService {
             const userName = user.displayName ? user.displayName : user.email;
             this.socket.emit('setUserAndRoom', user.uid, userName, roomId, isHost);
             this.sendMessage('SERVER', 'SERVER', `${userName} connected to the room`, Date.now(), roomId);
+        });
+
+        this.socket.on('gameStarted', (players, victoryGoal, map, turn) => {
+            this.$rootScope.players = players;
+            this.$rootScope.chosenGoal = victoryGoal;
+
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
+            this.$rootScope.$apply();
+
+            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                const territoryFromServer = map.find(x => x.name === t.name);
+                t.owner = territoryFromServer.owner;
+            });
+            this.gameEngine.turn = turn;
+
+            this.mapService.updateMap(this.gameEngine.filter);
         });
     }
 
@@ -50,5 +70,9 @@ export default class SocketService {
 
     updateAvatar(userUid, avatar) {
         this.socket.emit('updateAvatar', userUid, avatar);
+    }
+
+    startGame() {
+        this.socket.emit('startGame');
     }
 }

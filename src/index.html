@@ -130,11 +130,6 @@
         </div>
     </div>
 
-    <!-- <button data-ng-click="main.startHosting()" data-ng-disabled="main.connected">Start hosting</button>
-    <button data-ng-click="main.connectToHost()" data-ng-disabled="main.connected">Connect to host</button>
-    <button data-ng-click="main.sendMessage('Hello')">Hello!</button>
-    <p>my ip is: {{main.myIp}}</p> -->
-
     <div class="wrapper mainWrapper">
         <div class="textCenter mainMenuBox" data-ng-hide="main.currentGamePhase === main.gamePhases.GAME || main.currentGamePhase === main.gamePhases.AI_TESTING || main.currentGamePhase === main.gamePhases.TUTORIAL || main.currentGamePhase === main.gamePhases.END_SCREEN">
             <div>
@@ -453,6 +448,11 @@
                             </div>
                         </div>
                         <div id="lobbyRightPanel">
+                            <div>
+                                <button type="button" class="button button-green large" data-ng-disabled="lobby.startGameIsDisabled()" data-ng-click="lobby.startGame()" data-ng-show="lobby.userIsHost">
+                                    <strong>Start</strong>
+                                </button>
+                            </div>
                             <div class="setupBoxAvatarsContainer">
                                 <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                                     <div
