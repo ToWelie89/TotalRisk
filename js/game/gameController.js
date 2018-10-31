@@ -17,7 +17,7 @@ import {displayReinforcementNumbers} from './../animations/animations';
 
 export default class GameController {
 
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService) {
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -46,6 +46,7 @@ export default class GameController {
         this.aiHandler = aiHandler;
         this.settings = settings;
         this.gameAnnouncerService = gameAnnouncerService;
+        this.socketService = socketService;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
@@ -109,6 +110,7 @@ export default class GameController {
 
     startGame(players, winningCondition, aiTesting = false) {
         this.gameEngine.startGame(players, winningCondition, aiTesting);
+        this.gameEngine.currentGameIsMultiplayer = false;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
 
         this.vm.turn = this.gameEngine.turn;
@@ -565,6 +567,13 @@ export default class GameController {
         this.mapService.updateMap(this.vm.filter);
     }
 
+    emit(functionName, args) {
+        if (!this.gameEngine.currentGameIsMultiplayer) {
+            return;
+        }
+        this.socketService[functionName](...args);
+    }
+
     clickCountry(evt) {
         if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
             return;
@@ -580,6 +589,8 @@ export default class GameController {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
+
+                this.emit('troopAddedToTerritory', [ clickedTerritory.name ])
             } else {
                 this.soundService.denied.play();
             }

@@ -5,6 +5,7 @@ import Player from './../js/player/player';
 import GameEngine from './../js/gameEngine';
 import FirebaseSettings from './../js/firebaseSettings';
 import { VICTORY_GOALS } from './../js/gameConstants';
+import { getTerritoryByName } from './../js/map/mapHelpers';
 
 const states = {
   LOBBY: 'LOBBY',
@@ -88,6 +89,15 @@ io.on('connection', function(socket){
     }
   });
 
+  socket.on('troopAddedToTerritory', (territoryName, senderUid) => {
+    getTerritoryByName(gameEngine.map, territoryName).numberOfTroops++;
+
+    for (let currentSocket in socketList) {
+      if (socketList[currentSocket].userUid !== senderUid) {
+        socketList[currentSocket].emit('troopAddedToTerritoryNotifier', territoryName);
+      }
+    }
+  });
 
   // LOBBY EVENTS
 

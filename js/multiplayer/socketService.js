@@ -1,12 +1,15 @@
 import io from 'socket.io-client';
 import firebase from 'firebase/app';
 import {GAME_PHASES} from './../gameConstants';
+import {displayReinforcementNumbers} from './../animations/animations';
+import { getTerritoryByName } from './../map/mapHelpers';
 
 export default class SocketService {
-    constructor(gameEngine, $rootScope, mapService) {
+    constructor(gameEngine, $rootScope, mapService, soundService) {
         this.gameEngine = gameEngine;
         this.mapService = mapService;
         this.$rootScope = $rootScope;
+        this.soundService = soundService;
     }
 
     createSocket(url, port, roomId, userUid, userName) {
@@ -24,6 +27,7 @@ export default class SocketService {
                 console.log('You are connected to host ' + url);
             }
             const user = firebase.auth().currentUser;
+            this.userUid = user.uid;
             const userName = user.displayName ? user.displayName : user.email;
             this.socket.emit('setUserAndRoom', user.uid, userName, roomId, isHost);
             this.sendMessage('SERVER', 'SERVER', `${userName} connected to the room`, Date.now(), roomId);
@@ -35,12 +39,24 @@ export default class SocketService {
 
             this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
             this.$rootScope.$apply();
+            this.gameEngine.currentGameIsMultiplayer = true;
 
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = map.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
             });
             this.gameEngine.turn = turn;
+            // set troops to deploy
+            // move game related listeners to gamecontroller
+
+            this.mapService.updateMap(this.gameEngine.filter);
+        });
+
+        this.socket.on('troopAddedToTerritoryNotifier', (territoryName) => {
+            this.gameEngine.addTroopToTerritory(territoryName);
+
+            this.soundService.addTroopSound.play();
+            displayReinforcementNumbers(territoryName);
 
             this.mapService.updateMap(this.gameEngine.filter);
         });
@@ -74,5 +90,9 @@ export default class SocketService {
 
     startGame() {
         this.socket.emit('startGame');
+    }
+
+    troopAddedToTerritory(territoryName) {
+        this.socket.emit('troopAddedToTerritory', territoryName, this.userUid);
     }
 }
