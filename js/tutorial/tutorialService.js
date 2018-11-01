@@ -441,7 +441,7 @@ export default class TutorialService {
     openMovementModal() {
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
-                templateUrl: 'movementModal.html',
+                templateUrl: 'src/modals/movementModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'movementModalController',

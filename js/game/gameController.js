@@ -258,7 +258,7 @@ export default class GameController {
         }
 
         this.$uibModal.open({
-            templateUrl: 'pauseMenuModal.html',
+            templateUrl: 'src/modals/pauseMenuModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
             controller: 'pauseMenuModalController',
@@ -625,7 +625,7 @@ export default class GameController {
 
     engageMovementPhase(toTerritory) {
         this.$uibModal.open({
-            templateUrl: 'movementModal.html',
+            templateUrl: 'src/modals/movementModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
             controller: 'movementModalController',

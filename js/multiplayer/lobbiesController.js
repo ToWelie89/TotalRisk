@@ -143,7 +143,7 @@ export default class LobbiesController {
     hostNewGame() {
         this.soundService.tick.play();
         this.$uibModal.open({
-            templateUrl: 'hostNewGameModal.html',
+            templateUrl: 'src/modals/hostNewGameModal.html',
             backdrop: 'static',
             windowClass: 'riskModal hostNewGameModal',
             controller: 'hostNewGameModalController',
