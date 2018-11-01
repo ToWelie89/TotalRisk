@@ -1,0 +1,39 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox" ng-cloak>
+    <div style="margin-top: 70px;
+                width: 600px;
+                margin: 0 auto;
+                padding-top: 30px;
+                padding-bottom: 40px;
+                background: rgba(59, 59, 59, 0.788235294117647);
+                box-shadow: 0 0 100px rgba(0, 0, 0, 0.58);
+                border-radius: 30px;">
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.PLAYER_SETUP)">
+            <div class="main-menu-button-icon" id="newGameIcon" inject-svg src="assets/mainMenuIcons/newGame.svg">
+            </div>
+            <strong>Local Game</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.MULTIPLAYER_LOBBIES)">
+            <div class="main-menu-button-icon" id="newGameIcon2" inject-svg src="assets/mainMenuIcons/newGame.svg">
+            </div>
+            <strong>Online Game</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.startTutorial()">
+            <div class="main-menu-button-icon" id="tutorialIcon" inject-svg src="assets/mainMenuIcons/tutorial.svg">
+            </div>
+            <strong>Tutorial</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.CHARACTER_CREATOR)">
+            <div class="main-menu-button-icon" id="characterEditorIcon" inject-svg src="assets/mainMenuIcons/editor.svg">
+            </div>
+            <strong>Character Editor</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.SETTINGS)">
+            <div class="main-menu-button-icon" id="settingsIcon" inject-svg src="assets/mainMenuIcons/settings.svg">
+            </div>
+            <strong>Settings</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.quit()" data-ng-show="main.runningElectron">
+            <strong>Exit</strong>
+        </button>
+    </div>
+</div>

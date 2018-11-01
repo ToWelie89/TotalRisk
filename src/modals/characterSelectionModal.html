@@ -42,14 +42,16 @@
                          data-ng-dblclick="characterSelection.selectAvatarAndClose(avatar)"
                          data-ng-class="{'selectableAvatars__item--selected': characterSelection.avatarIsSelected(avatar),
                                          'selectableAvatars__item--taken': characterSelection.avatarIsTaken(avatar)}" />
-                     <div character="{{ avatar.id }}"
+                     <div id="selectionModalCustomCharacter{{ avatar.id }}"
+                          character="{{ avatar.id }}"
                           style="background-color: {{ avatar.bgColor }}"
                           data-ng-if="avatar.customCharacter"
                           data-ng-click="characterSelection.selectAvatar(avatar)"
                           data-ng-dblclick="characterSelection.selectAvatarAndClose(avatar)"
                           data-ng-class="{'selectableAvatars__item--selected': characterSelection.avatarIsSelected(avatar),
-                                          'selectableAvatars__item--taken': characterSelection.avatarIsTaken(avatar)}">
-                          @@customCharacterSvg
+                                          'selectableAvatars__item--taken': characterSelection.avatarIsTaken(avatar)}"
+                          inject-svg
+                          src="assets/avatarSvg/custom.svg">
                       </div>
                 </div>
             </div>

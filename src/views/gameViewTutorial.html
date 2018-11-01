@@ -1,0 +1,159 @@
+<div class="container mainContent" id="tutorialContainer" data-ng-controller="gameControllerTutorial as gameTutorial">
+    <div data-ng-show="main.currentGamePhase == main.gamePhases.TUTORIAL" ng-cloak>
+        <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
+                                border-radius: 30px;
+                                border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
+            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
+                <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ gameTutorial.turn.player.avatar.picture }});"></div>
+                <div class="col-xs-9">
+                    <div class="col-xs-12" style="padding: 0px;">
+                        <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ gameTutorial.getCurrentPlayerColor() }}"><span data-ng-bind="gameTutorial.turn.player.name"></span></strong>
+                    </div>
+                    <div class="col-xs-12" style="padding: 0px;">
+                        <img src="assets/img/cards.png"
+                             id="cardButton"
+                             class="floatLeft"
+                             style="width: 30px;"
+                             data-ng-disabled="gameTutorial.turn.turnPhase !== 0"
+                             data-ng-click="gameTutorial.turnInCards()"
+                             data-ng-class="{'cardButton--disabled': gameTutorial.aiTurn}"
+                             data-toggle="tooltip"
+                             data-placement="bottom"
+                             value="Open cards view" />
+                        <h4 class="floatLeft marginLeft" id="cardCounter">({{gameTutorial.turn.player.cards.length}})</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
+                <div class="buttonGroup">
+                    <button type="button" class="button button-blue" data-ng-class="{'filter-selected': gameTutorial.filter === 'byOwner'}" id="showByOwner" data-ng-click="gameTutorial.filterByOwner()">
+                        <strong>Color by owner</strong>
+                    </button>
+                    <button type="button" class="button button-blue" data-ng-class="{'filter-selected': gameTutorial.filter === 'byRegion'}" id="showByRegion" data-ng-click="gameTutorial.filterByRegion()" data-ng-class="{'active': gameTutorial.filter == 'byRegion'}">
+                        <strong>Color by region</strong>
+                    </button>
+                    <button type="button" class="button button-purple" data-ng-click="gameTutorial.pause()" style="width: 46px; height: 34px;" data-ng-show="gameTutorial.aiTurn">
+                        <span class="glyphicon glyphicon-pause" aria-hidden="true" data-ng-show="gameTutorial.gamePaused === gameTutorial.pauseModes.NOT_PAUSED"></span>
+                        <span data-ng-show="gameTutorial.gamePaused === gameTutorial.pauseModes.PAUSING">{{ gameTutorial.pausingDots }}</span>
+                        <span class="glyphicon glyphicon-play" aria-hidden="true" data-ng-show="gameTutorial.gamePaused === gameTutorial.pauseModes.PAUSED"></span>
+                    </button>
+                    <button type="button" class="button button-green" data-ng-click="gameTutorial.openMenu()" style="height: 34px;">
+                        MENU
+                    </button>
+                </div>
+                <h4>Turn number <strong data-ng-bind="gameTutorial.turn.turnNumber"></strong></h4>
+            </div>
+            <div class="col-xs-3 paddingTop--double " id="turnInfo">
+                <div class="row">
+                    <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
+                        <div>
+                            <div data-ng-show="gameTutorial.turn.turnPhase == 0" class="troop_{{ gameTutorial.turn.player.color.name }}">
+                                <div>Deployment phase</div>
+                                <div data-ng-if="gameTutorial.troopsToDeploy <= 9">
+                                    <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in gameTutorial.toArray(gameTutorial.troopsToDeploy) track by $index">
+                                        <div id="reinforcementTroopIconTutorial{{ $index }}" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                    </div>
+                                </div>
+                                <div data-ng-if="gameTutorial.troopsToDeploy > 9">
+                                    <div class="floatLeft">
+                                        <div id="reinforcementTroopIconTutorial-static" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                    </div>
+                                    <span class="floatLeft paddingLeft">x{{ gameTutorial.troopsToDeploy }}</span>
+                                </div>
+                                <div data-ng-if="gameTutorial.troopsToDeploy === 0">
+                                    <strong>No more reinforcements!</strong>
+                                </div>
+                            </div>
+                            <span data-ng-show="gameTutorial.turn.turnPhase == 1">
+                                Attack phase
+                            </span>
+                            <span data-ng-show="gameTutorial.turn.turnPhase == 2">
+                                Movement phase
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-3" style="line-height: 30px;">
+                        <span id="nextButton"
+                              data-ng-click="gameTutorial.nextTurn()"
+                              data-ng-show="!gameTutorial.aiTurn"
+                              data-ng-class="{'nextButton--disabled': gameTutorial.checkIfNextIsDisabled()}">
+                                  <span>
+                                      Next
+                                  </span>
+                              </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+           <div id="tutorialMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
+             style="background: #5397d1;
+                    border-radius: 30px;
+                    margin-top: 20px;
+                    box-shadow: 3px 3px 8px #202020;"
+                    inject-svg
+                    src="assets/maps/worldMap/worldMap.svg">
+           </div>
+        </div>
+        <div class="row">
+            <div id="currentTerritoryInfo">
+            </div>
+        </div>
+    </div>
+    <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen" ng-cloak>
+        <div class="textCenter">
+            <h1>VICTORY</h1>
+            <h3 class="text-shadow" style="color: {{ gameTutorial.playerWhoWon.color.mainColor }}">
+                {{ gameTutorial.playerWhoWon.name }}
+            </h3>
+            <img id="victoryPortrait" class="marginTop--double" src="" alt="" data-ng-if="gameTutorial.playerWhoWon">
+            <div id="victoryFlag" class='flag'></div>
+            <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
+                <table id="endScreenTable">
+                    <thead>
+                        <tr>
+                            <th>Place</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th class="textRight">Battles Won</th>
+                            <th class="textRight">Battles Lost</th>
+                            <th class="textRight">Retreats</th>
+                            <th class="textRight">Card combos used</th>
+                            <th class="textRight">Total reinforcements</th>
+                            <th class="textRight">Troops killed</th>
+                            <th class="textRight">Troops lost</th>
+                            <th class="textRight">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="player in endScreenTable.players">
+                            <td data-ng-bind="player.rank" class="textCenter"></td>
+                            <td data-ng-bind="player.name"></td>
+                            <td>
+                                <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
+                            </td>
+                            <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
+                            <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
+                            <td>
+                                <span data-ng-show="player.dead">
+                                    Dead (Turn {{ player.deadTurn }})
+                                </span>
+                                <span data-ng-show="!player.dead">
+                                    Alive
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
+                <strong>Back to Menu</strong>
+            </button>
+        </div>
+    </div>
+</div>

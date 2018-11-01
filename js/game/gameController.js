@@ -132,7 +132,7 @@ export default class GameController {
         if (this.settings.showAnnouncer) {
             this.turnPresenterIsOpen = true;
             this.$uibModal.open({
-                templateUrl: 'turnPresentationModal.html',
+                templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'turnPresentationController',
@@ -238,7 +238,7 @@ export default class GameController {
                 this.gameAnnouncerService.mute();
                 this.$scope.$apply();
             }
-        } else if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
+        } else if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME || this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
             if (e.keyCode === 27) {
                 this.escapeWasPressed = true;
             }
@@ -317,7 +317,7 @@ export default class GameController {
         this.soundService.tick.play();
 
         this.$uibModal.open({
-            templateUrl: 'cardTurnInModal.html',
+            templateUrl: 'src/modals/cardTurnInModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
             controller: 'cardTurnInModalController',
@@ -376,7 +376,7 @@ export default class GameController {
         if (this.settings.showAnnouncer) {
             this.turnPresenterIsOpen = true;
             this.$uibModal.open({
-                templateUrl: 'turnPresentationModal.html',
+                templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'turnPresentationController',
@@ -407,7 +407,7 @@ export default class GameController {
             return new Promise((resolve, reject) => {
                 this.turnPresenterIsOpen = true;
                 return this.$uibModal.open({
-                    templateUrl: 'turnPresentationModal.html',
+                    templateUrl: 'src/modals/turnPresentationModal.html',
                     backdrop: 'static',
                     windowClass: 'riskModal',
                     controller: 'turnPresentationController',
@@ -487,7 +487,7 @@ export default class GameController {
 
     engageAttackPhase(clickedTerritory) {
         this.$uibModal.open({
-            templateUrl: 'attackModal.html',
+            templateUrl: 'src/modals/attackModal.html',
             backdrop: 'static',
             windowClass: 'riskModal',
             controller: 'attackModalController',

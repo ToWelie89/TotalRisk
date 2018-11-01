@@ -24,6 +24,8 @@ export default class GameControllerMultiplayer extends GameController {
     setSocketListeners() {
         this.socketService.socket.on('troopAddedToTerritoryNotifier', (territoryName) => {
             this.gameEngine.addTroopToTerritory(territoryName);
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            this.$scope.$apply();
 
             this.soundService.addTroopSound.play();
             displayReinforcementNumbers(territoryName);

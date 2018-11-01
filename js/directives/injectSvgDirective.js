@@ -6,7 +6,11 @@ export default class InjectSVGDirective {
     }
 
     link(scope, elem, attr) {
-        const div = elem[0];
-        loadSvgIntoDiv(attr.src, `#${div.id}`, () => {}, 1);
+        $(document).ready(() => {
+            setTimeout(() => {
+                const div = elem[0];
+                loadSvgIntoDiv(attr.src, `#${div.id}`, () => {}, 1);
+            }, 1);
+        });
     }
 }

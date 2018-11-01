@@ -98,7 +98,7 @@ export default class GameSetupController {
         const oldName = currentSelectedPlayer ? currentSelectedPlayer.name : '';
 
         this.$uibModal.open({
-            templateUrl: 'characterSelectionModal.html',
+            templateUrl: 'src/modals/characterSelectionModal.html',
             backdrop: 'static',
             windowClass: 'riskModal characterSelect',
             controller: 'characterSelectionController',

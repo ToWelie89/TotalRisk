@@ -19,20 +19,17 @@
                         <div class="row marginBottom--double" style="margin-top: 50px;">
                             <div class="col-xs-12">
                                 <div class="card"
-                                     data-ng-repeat="card in cardTurnIn.cards"
+                                     data-ng-repeat="card in cardTurnIn.cards track by $index"
                                      data-territory-name="{{card.name}}"
                                      data-region-name="{{card.regionName}}"
                                      data-ng-class="{'card__selected': card.isSelected}"
                                      data-ng-click="cardTurnIn.toggleCardSelection(card)">
                                         <span>
-                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.CANNON" class="troopIcon cannon">
-                                                @@cannonSvg
+                                            <span id="cardTroopIconCannon{{ $index }}" data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.CANNON" class="troopIcon cannon" inject-svg src="assets/troopIcons/cannon.svg">
                                             </span>
-                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.HORSE" class="troopIcon horse">
-                                                @@horseSvg
+                                            <span id="cardTroopIconHorse{{ $index }}" data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.HORSE" class="troopIcon horse" inject-svg src="assets/troopIcons/horse.svg">
                                             </span>
-                                            <span data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.TROOP" class="troopIcon troop">
-                                                @@troopSvg
+                                            <span id="cardTroopIconSoldier{{ $index }}" data-ng-show="card.cardType === cardTurnIn.CARD_TYPE.TROOP" class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg">
                                             </span>
                                         </span>
                                 </div>
@@ -73,14 +70,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6" style="text-align: right;">
-                                    <span class="troopIcon troop_Black cannon">
-                                        @@cannonSvg
+                                    <span class="troopIcon troop_Black cannon" id="cardModalCombination1Cannon1" inject-svg src="assets/troopIcons/cannon.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black horse">
-                                        @@horseSvg
+                                    <span class="troopIcon troop_Black horse" id="cardModalCombination1Horse1" inject-svg src="assets/troopIcons/horse.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black troop">
-                                        @@troopSvg
+                                    <span class="troopIcon troop_Black troop" id="cardModalCombination1Soldier1" inject-svg src="assets/troopIcons/soldier.svg">
                                     </span>
                                 </div>
                                 <div class="col-xs-6"" style="text-align: left;">
@@ -89,14 +83,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6" style="text-align: right;">
-                                    <span class="troopIcon troop_Black cannon">
-                                        @@cannonSvg
+                                    <span class="troopIcon troop_Black cannon" id="cardModalCombination2Cannon1" inject-svg src="assets/troopIcons/cannon.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black cannon">
-                                        @@cannonSvg
+                                    <span class="troopIcon troop_Black cannon" id="cardModalCombination2Cannon2" inject-svg src="assets/troopIcons/cannon.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black cannon">
-                                        @@cannonSvg
+                                    <span class="troopIcon troop_Black cannon" id="cardModalCombination2Cannon3" inject-svg src="assets/troopIcons/cannon.svg">
                                     </span>
                                 </div>
                                 <div class="col-xs-6"" style="text-align: left;">
@@ -105,14 +96,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6" style="text-align: right;">
-                                    <span class="troopIcon troop_Black horse">
-                                        @@horseSvg
+                                    <span class="troopIcon troop_Black horse" id="cardModalCombination3Horse1" inject-svg src="assets/troopIcons/horse.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black horse">
-                                        @@horseSvg
+                                    <span class="troopIcon troop_Black horse" id="cardModalCombination3Horse2" inject-svg src="assets/troopIcons/horse.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black horse">
-                                        @@horseSvg
+                                    <span class="troopIcon troop_Black horse" id="cardModalCombination3Horse3" inject-svg src="assets/troopIcons/horse.svg">
                                     </span>
                                 </div>
                                 <div class="col-xs-6"" style="text-align: left;">
@@ -121,14 +109,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6" style="text-align: right;">
-                                    <span class="troopIcon troop_Black troop">
-                                        @@troopSvg
+                                    <span class="troopIcon troop_Black troop" id="cardModalCombination4Soldier1" inject-svg src="assets/troopIcons/soldier.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black troop">
-                                        @@troopSvg
+                                    <span class="troopIcon troop_Black troop" id="cardModalCombination4Soldier2" inject-svg src="assets/troopIcons/soldier.svg">
                                     </span>
-                                    <span class="troopIcon troop_Black troop">
-                                        @@troopSvg
+                                    <span class="troopIcon troop_Black troop" id="cardModalCombination4Soldier3" inject-svg src="assets/troopIcons/soldier.svg">
                                     </span>
                                 </div>
                                 <div class="col-xs-6"" style="text-align: left;">

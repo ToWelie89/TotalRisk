@@ -146,7 +146,7 @@ export default class LobbiesController {
         }
 
         this.$uibModal.open({
-            templateUrl: 'characterSelectionModal.html',
+            templateUrl: 'src/modals/characterSelectionModal.html',
             backdrop: 'static',
             windowClass: 'riskModal characterSelect',
             controller: 'characterSelectionController',

@@ -1,0 +1,174 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER" data-ng-controller="lobbyController as lobby" ng-cloak>
+    <div class="backButtonContainer">
+        <button type="button" class="button button-green" data-ng-click="lobby.leaveLobby()">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+        </button>
+    </div>
+    <div class="row mainMenuBox textCenter">
+        <div id="lobbyContainer">
+            <div id="lobbyLeftPanel">
+                <div id="lobbyDescription">
+                    <h2>
+                        {{ lobby.room.roomName }} <span class="glyphicon glyphicon-lock" data-ng-show="lobby.room.private"></span>
+                    </h2>
+                    <p id="playersInLobby">
+                        {{ lobby.existingPlayers().length }} / {{ lobby.room.maxNumberOfPlayer }} players in lobby
+                    </p>
+                    <div id="lobbyMapContainer">
+                    </div>
+                    <div id="lobbyGameInfo">
+                        <div>
+                            <strong>Map</strong>
+                        </div>
+                        <div>
+                            <span>
+                                {{ lobby.room.map.name }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="lobbyChatBoxes">
+                    <div class="muteChatContainer">
+                        <div>
+                            <div class="chatTab" data-ng-click="lobby.switchChat(true)" data-ng-class="{'chatTab--active': lobby.showLobbyChat}">
+                                Lobby chat
+                                <div class="unreadCount" data-ng-show="lobby.unreadLobbyMessages > 0">
+                                    {{ lobby.unreadLobbyMessages <= 99 ? lobby.unreadLobbyMessages : '...' }}
+                                </div>
+                            </div>
+                            <div class="chatTab" data-ng-click="lobby.switchChat(false)" data-ng-class="{'chatTab--active': !lobby.showLobbyChat}">
+                                Global chat
+                                <div class="unreadCount" data-ng-show="lobby.unreadGlobalMessages > 0">
+                                    {{ lobby.unreadGlobalMessages <= 99 ? lobby.unreadGlobalMessages : '...' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="button marginBottom" data-ng-click="lobby.muteChat = !lobby.muteChat" data-ng-class="{'button-green': lobby.muteChat, 'button-red': !lobby.muteChat}">
+                                <span data-ng-show="lobby.muteChat">Unmute chat</span>
+                                <span class="glyphicon glyphicon-volume-up" data-ng-show="lobby.muteChat"></span>
+                                <span data-ng-show="!lobby.muteChat">Mute chat</span>
+                                <span class="glyphicon glyphicon-volume-off" data-ng-show="!lobby.muteChat"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chatBox" data-ng-show="lobby.showLobbyChat">
+                        <div class="chatMessagesContainer">
+                            <div class="topShadowOverlay">
+                            </div>
+                            <div class="globalChatMessage" data-ng-repeat="message in lobby.lobbyChatMessages">
+                                <strong style="color: {{ message.color }};">{{ message.sender }}</strong> <span>({{ message.normalizedTime }})</span>: {{ message.message }}
+                            </div>
+                        </div>
+                        <div class="senderBar">
+                            <form action="" onsubmit="return false;">
+                                <input type="text" data-ng-model="lobby.lobbyChatMessage" placeholder="Type a message . . ." maxlength="{{ lobby.chatMaxLengthMessage }}" ng-trim="false" />
+                                <p class="charactersLeft">
+                                    {{ lobby.charactersLeft() }}
+                                </p>
+                                <button type="submit" class="button button-blue" data-ng-click="lobby.sendMessageLobby()" data-ng-disabled="lobby.lobbyChatMessage.length === 0 || lobby.disableSendButton">
+                                    <strong>Send</strong>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="chatBox" data-ng-show="!lobby.showLobbyChat">
+                        <div class="chatMessagesContainer">
+                            <div class="topShadowOverlay">
+                            </div>
+                            <div class="globalChatMessage" data-ng-repeat="message in lobby.globalChatMessages">
+                                <strong style="color: {{ message.color }};">{{ message.creator }}</strong> <span>({{ message.normalizedTime }})</span>: {{ message.message }}
+                            </div>
+                        </div>
+                        <div class="senderBar">
+                            <form action="" onsubmit="return false;">
+                                <input type="text" data-ng-model="lobby.globalChatMessage" placeholder="Type a message . . ." maxlength="{{ lobby.chatMaxLengthMessage }}" ng-trim="false" />
+                                <p class="charactersLeft">
+                                    {{ lobby.charactersLeft() }}
+                                </p>
+                                <button type="submit" class="button button-blue" data-ng-click="lobby.sendMessageGlobal()" data-ng-disabled="lobby.globalChatMessage.length === 0 || lobby.disableSendButton">
+                                    <strong>Send</strong>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="lobbyRightPanel">
+                <div>
+                    <button type="button" class="button button-green large" data-ng-disabled="lobby.startGameIsDisabled()" data-ng-click="lobby.startGame()" data-ng-show="lobby.userIsHost">
+                        <strong>Start</strong>
+                    </button>
+                </div>
+                <div class="setupBoxAvatarsContainer">
+                    <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
+                        <div
+                            id="playerPortrait{{i}}"
+                            player-portrait
+                            avatar="lobby.players[i].avatar"
+                            id="setupPortrait{{i}}"
+                            data-ng-if="lobby.players[i] && lobby.players[i].avatar"
+                            class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                            data-ng-class="{'notMine': lobby.players[i].userUid !== lobby.myUid }"
+                            style="background-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}};
+                                   border-color: {{lobby.players[i].color.mainColor}};">
+
+                            <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="lobby.players[i].avatar.svg">
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="lobby.players[i].avatar.customCharacter">
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__portrait__inner"
+                                 data-ng-click="lobby.openSelectionScreen(lobby.players[i])"
+                                 style="border-color: {{lobby.players[i].color.mainColor}};">
+                                <h2>CHANGE</h2>
+                            </div>
+                        </div>
+                        <div data-ng-if="lobby.players[i]" class="box-shadow setupBoxAvatarsContainer__item__name">
+                            <div style="background: {{lobby.players[i].color.mainColor}};" class="box-shadow" data-color="{{lobby.players[i].color.mainColor}}">
+                                <span style="border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}}; border-left-color: transparent;"></span>
+                                <span>{{ lobby.players[i].userName }}{{ (lobby.players[i].type !== 0) ? " (AI)" : "" }}</span>
+                                <span style="border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}}; border-right-color: transparent;"></span>
+                            </div>
+                        </div>
+                        <div
+                            data-ng-if="lobby.players[i] && lobby.userIsHost && lobby.players[i].userUid !== lobby.myUid"
+                            class="setupBoxAvatarsContainer__item__delete box-shadow"
+                            style="background-color: {{lobby.players[i].color.mainColor}}; border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -50)}}"
+                            data-ng-click="lobby.kickPlayer(lobby.players[i])"
+                        >
+                            Kick
+                        </div>
+                        <div
+                            data-ng-if="!lobby.players[i] && lobby.userIsHost"
+                            class="setupBoxAvatarsContainer__item__lock box-shadow"
+                            data-ng-click="lobby.lockUnlockSlot(i)"
+                        >
+                            <span data-ng-show="!lobby.lockedSlots.includes(i)">Lock</span>
+                            <span data-ng-show="lobby.lockedSlots.includes(i)">Unlock</span>
+                        </div>
+                        <div
+                            data-ng-if="lobby.players[i] && lobby.players[i].userUid === lobby.room.creatorUid"
+                            class="setupBoxAvatarsContainer__item__host"
+                        >
+                            <div class="setupBoxAvatarsContainer__item__host__inner box-shadow">
+                                HOST
+                            </div>
+                        </div>
+                        <div class="setupBoxAvatarsContainer__item__flag" data-ng-if="lobby.players[i]">
+                            <waving-flag flag-width="90" flag-height="50" flag-url="lobby.players[i].avatar.flag"></waving-flag>
+                        </div>
+                        <div
+                            data-ng-if="!lobby.players[i]"
+                            class="box-shadow setupBoxAvatarsContainer__item__portrait empty"
+                            data-ng-class="{'locked': lobby.lockedSlots.includes(i) }">
+                            <div class="setupBoxAvatarsContainer__item__portrait__inner">
+                                <h2 data-ng-show="!lobby.lockedSlots.includes(i)">OPEN SLOT</h2>
+                                <h2 data-ng-show="lobby.lockedSlots.includes(i)">LOCKED SLOT</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -88,7 +88,7 @@ export default class MainController {
 
     openUpdaterModal() {
         this.$uibModal.open({
-            templateUrl: 'autoUpdaterModal.html',
+            templateUrl: 'src/modals/autoUpdaterModal.html',
             backdrop: 'static',
             windowClass: 'riskModal autoUpdaterModal',
             controller: 'autoUpdaterModalController',

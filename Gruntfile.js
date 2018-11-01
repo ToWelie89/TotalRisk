@@ -58,77 +58,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-        replace: {
-            inlineSvg: {
-                options: {
-                    patterns: [{
-                        match: 'troopSvg',
-                        replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
-                    }, {
-                        match: 'customCharacterSvg',
-                        replacement: '<%= grunt.file.read("assets/avatarSvg/custom.svg") %>'
-                    }, {
-                        match: 'logo',
-                        replacement: '<%= grunt.file.read("assets/logo.svg") %>'
-                    }, {
-                        match: 'settingsIcon',
-                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/settings.svg") %>'
-                    }, {
-                        match: 'newGameIcon',
-                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/newGame.svg") %>'
-                    }, {
-                        match: 'tutorialIcon',
-                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/tutorial.svg") %>'
-                    }, {
-                        match: 'characterEditorIcon',
-                        replacement: '<%= grunt.file.read("assets/mainMenuIcons/editor.svg") %>'
-                    }]
-                },
-                files: [{
-                    src: ['src/index.html'],
-                    dest: 'index.html'
-                }]
-            },
-            inlineModalSvgs: {
-                options: {
-                    patterns: [{
-                        match: 'cannonSvg',
-                        replacement: '<%= grunt.file.read("assets/troopIcons/cannon.svg") %>'
-                    }, {
-                        match: 'horseSvg',
-                        replacement: '<%= grunt.file.read("assets/troopIcons/horse.svg") %>'
-                    }, {
-                        match: 'troopSvg',
-                        replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
-                    }, {
-                        match: 'loadingSvg',
-                        replacement: '<%= grunt.file.read("assets/loading.svg") %>'
-                    }, {
-                        match: 'patchLoadingSvg',
-                        replacement: '<%= grunt.file.read("assets/patchLoading.svg") %>'
-                    }, {
-                        match: 'customCharacterSvg',
-                        replacement: '<%= grunt.file.read("assets/avatarSvg/custom.svg") %>'
-                    }]
-                },
-                files: [{
-                    src: ['src/attackModal.html'],
-                    dest: 'attackModal.html'
-                }, {
-                    src: ['src/turnPresentationModal.html'],
-                    dest: 'turnPresentationModal.html'
-                }, {
-                    src: ['src/cardTurnInModal.html'],
-                    dest: 'cardTurnInModal.html'
-                }, {
-                    src: ['src/autoUpdaterModal.html'],
-                    dest: 'autoUpdaterModal.html'
-                }, {
-                    src: ['src/characterSelectionModal.html'],
-                    dest: 'characterSelectionModal.html'
-                }]
-            }
-        },
         bump: {
             options: {
                 files: ['package.json'],
@@ -155,7 +84,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-notify');
-    grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-bump');
 
@@ -165,8 +93,6 @@ module.exports = function(grunt) {
         'browserify:build', // Use browserify to transpile ES6 source code with babel
         // 'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
-        'replace:inlineModalSvgs',
-        'replace:inlineSvg',
         'notify:build'
     ]);
 };

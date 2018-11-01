@@ -1,0 +1,81 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor" ng-cloak>
+    <div id="mainDiv">
+        <div class="backButtonContainer">
+            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="existingCharactersContainer" data-ng-show="characterCreator.characters.length > 0">
+                    <div class="existingCharactersContainer__item" data-ng-class="{'existingCharactersContainer__item-selected': characterCreator.selectedCharacterId === character.id}" data-ng-repeat="character in characterCreator.characters track by $index" data-ng-click="characterCreator.selectCharacter(character)">
+                        <div class="existingCharactersContainer__item__inner" character="{{ character.id }}" id="editorCustomCharacterThumbnail{{ $index }}" inject-svg src="assets/avatarSvg/custom.svg"></div>
+                    </div>
+                    <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()" data-ng-show="characterCreator.characters.length < 5">
+                        <div class="existingCharactersContainer__item__inner">
+                            <span class="glyphicon glyphicon-plus">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-ng-show="characterCreator.showEditor">
+            <div class="col-xs-8" id="editorCustomCharacterMain" inject-svg src="assets/avatarSvg/custom.svg">
+            </div>
+            <div class="col-xs-4" id="editorControls">
+                <div class="row">
+                    <div class="col-xs-12" style="display: table-cell; width: 100%;">
+                        <input type="text" placeholder="Name" data-ng-model="characterCreator.name" maxlength="20" />
+                    </div>
+                </div>
+                <div data-ng-repeat="bodypart in characterCreator.currentSelection" style="display: table-row;">
+                    <div style="display: table-cell; padding-top: 3px;">
+                        <button type="button" class="button button-blue arrowButton" data-ng-click="characterCreator.previousPart(bodypart.type)">
+                            <p>
+                                <span class="glyphicon glyphicon-arrow-left"></span>
+                            </p>
+                        </button>
+                    </div>
+                    <div style="display: table-cell; color: white; width: 100%;">
+                        {{ bodypart.displayName }} ({{ bodypart.selection }} / {{ bodypart.maxChoices }})
+                    </div>
+                    <div style="display: table-cell;">
+                        <button type="button" class="button button-blue arrowButton" data-ng-click="characterCreator.nextPart(bodypart.type)">
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row marginTop">
+                    <button type="button" class="button button-blue" data-ng-click="characterCreator.randomize()">
+                        Randomize
+                    </button>
+                    <button type="button" class="button button-red" data-ng-click="characterCreator.deleteCharacter()" data-ng-show="characterCreator.selectedCharacterId">
+                        Delete
+                    </button>
+                    <button type="button" class="button button-green" data-ng-click="characterCreator.saveCharacter()" data-ng-disabled="characterCreator.name.length === 0">
+                        <span data-ng-show="!characterCreator.selectedCharacterId" data-ng-disabled="characterCreator.characters.length === 5">Save</span>
+                        <span data-ng-show="characterCreator.selectedCharacterId">Update</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-ng-show="!characterCreator.showEditor">
+            <div class="col-xs-12">
+                <div class="alert alert-warning" role="alert" data-ng-show="characterCreator.isAuthenticated && characterCreator.characters.length === 5" style="width: 800px; margin: 0 auto; margin-top: 30px;">
+                    You have reached the maximum amount of custom characters.
+                </div>
+                <div class="alert alert-warning" role="alert" data-ng-show="!characterCreator.isAuthenticated" style="width: 800px; margin: 0 auto; margin-top: 30px;">
+                    You must be logged in to create characters or look at your current ones.
+                </div>
+                <div data-ng-show="characterCreator.characters.length === 0 && characterCreator.isAuthenticated">
+                    <div class="alert alert-info" role="info" style="width: 800px; margin: 0 auto; margin-top: 30px; margin-bottom: 30px;">
+                        You have not created any characters yet.
+                    </div>
+                    <button type="button" class="button button-purple large" data-ng-click="characterCreator.createNewCharacter()">
+                        Create new character
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

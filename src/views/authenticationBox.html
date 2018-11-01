@@ -1,0 +1,59 @@
+<div id="authenticationBox" data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU || main.currentGamePhase == main.gamePhases.SETTINGS || main.currentGamePhase == main.gamePhases.PLAYER_SETUP || main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR || main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER || main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="authenticationController as auth" ng-cloak>
+    <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE">
+        <p>
+            Logged in as {{ auth.user.displayName ? auth.user.displayName : auth.user.email }}
+        </p>
+        <button type="button" class="button button-red marginLeft" data-ng-click="auth.logout()" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER">
+            Logout
+        </button>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" id="editProfile">
+        <p
+            class="fakeLink"
+            data-ng-click="auth.goToState(auth.states.EDIT_PROFILE)"
+            data-ng-show="auth.currentState === auth.states.LOGGED_IN && main.currentGamePhase !== main.gamePhases.PLAYER_SETUP_MULTIPLAYER">
+            Edit profile
+        </p>
+        <div data-ng-show="auth.currentState === auth.states.EDIT_PROFILE">
+            <p class="paddingBottom paddingTop--double">Display name</p>
+            <input type="text" data-ng-model="auth.newDisplayNameData" class="marginRight" placeholder="Display name" maxlength="20" />
+            <button type="button" class="button button-red marginTop" data-ng-click="auth.cancelUpdate()">
+                Cancel
+            </button>
+            <button type="button" class="button button-green marginTop" data-ng-click="auth.updateProfile()">
+                Update profile
+            </button>
+        </div>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.NOT_LOGGED_IN">
+        <p>
+            You are not logged in
+        </p>
+        <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.LOGIN)">
+            Login
+        </button>
+        <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.SIGNUP)">
+            Signup
+        </button>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.LOGIN">
+        <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+        </button>
+        <input type="text" data-ng-model="auth.loginData.email" class="marginRight" placeholder="Email" />
+        <input type="password" data-ng-model="auth.loginData.password" class="marginRight" placeholder="Password" />
+        <button type="button" class="button button-green" data-ng-click="auth.login()">
+            Login
+        </button>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.SIGNUP">
+        <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+        </button>
+        <input type="text" data-ng-model="auth.signupData.email" class="marginRight" placeholder="Email" />
+        <input type="password" data-ng-model="auth.signupData.password" class="marginRight" placeholder="Password" />
+        <button type="button" class="button button-green" data-ng-click="auth.signup()">
+            Signup
+        </button>
+    </div>
+</div>

@@ -85,7 +85,7 @@ io.on('connection', function(socket){
     gameEngine.startGame(playerList, victoryGoal);
 
     for (let currentSocket in socketList) {
-      socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn);
+      socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
     }
   });
 

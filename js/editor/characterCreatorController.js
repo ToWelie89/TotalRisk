@@ -77,7 +77,7 @@ export default class CharacterCreatorController {
                         setTimeout(() => {
                             this.$scope.$apply();
                             this.loadSavedCharacterPortraits();
-                        }, 30);
+                        }, 200);
                     } else {
                         this.vm.characters = [];
                     }
@@ -95,11 +95,11 @@ export default class CharacterCreatorController {
                     part.maxChoices = this.skinTones.length;
                     this.applySkinTone();
                 } else {
-                    part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
-                    part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).first().attr('name');
+                    part.maxChoices = $(`#editorCustomCharacterMain svg g[category=${part.type}] > g`).length;
+                    part.selectedPartId = $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).first().attr('name');
 
-                    $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                    $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).first().css('visibility', 'visible');
+                    $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                    $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).first().css('visibility', 'visible');
                 }
             });
         });
@@ -119,39 +119,41 @@ export default class CharacterCreatorController {
     }
 
     loadSavedCharacterPortraits() {
-        document.querySelectorAll('.existingCharactersContainer__item__inner').forEach(characterBox => {
-            const id = characterBox.getAttribute('character');
+        setTimeout(() => {
+            document.querySelectorAll('.existingCharactersContainer__item__inner').forEach(characterBox => {
+                const id = characterBox.getAttribute('character');
 
-            if (characterBox.querySelector('svg')) {
-                characterBox.querySelector('svg').setAttribute('viewBox', '120 20 400 400');
+                if (characterBox.querySelector('svg')) {
+                    characterBox.querySelector('svg').setAttribute('viewBox', '120 20 400 400');
 
-                const character = this.vm.characters.find(x => x.id === id);
+                    const character = this.vm.characters.find(x => x.id === id);
 
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g`).css('visibility', 'hidden');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g`).css('visibility', 'hidden');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g`).css('visibility', 'hidden');
 
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
 
-                $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', character.skinTone);
-            }
-        });
+                    $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', character.skinTone);
+                }
+            });
+        }, 10);
     }
 
     applySkinTone() {
-        $('#editorSvgContainer svg .skinTone').css('fill', this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId);
+        $('#editorCustomCharacterMain svg .skinTone').css('fill', this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId);
     }
 
     previousPart(type) {
@@ -167,9 +169,9 @@ export default class CharacterCreatorController {
             part.selectedPartId = this.skinTones[part.selection - 1];
             this.applySkinTone();
         } else {
-            part.selectedPartId = $(`#editorSvgContainer svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
-            $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
-            $(`#editorSvgContainer svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
+            part.selectedPartId = $(`#editorCustomCharacterMain svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
+            $(`#editorCustomCharacterMain svg g[category="${type}"] > g`).css('visibility', 'hidden');
+            $(`#editorCustomCharacterMain svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
         }
 
         this.adjustSvgOffset();
@@ -188,9 +190,9 @@ export default class CharacterCreatorController {
             part.selectedPartId = this.skinTones[part.selection - 1];
             this.applySkinTone();
         } else {
-            part.selectedPartId = $(`#editorSvgContainer svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
-            $(`#editorSvgContainer svg g[category="${type}"] > g`).css('visibility', 'hidden');
-            $(`#editorSvgContainer svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
+            part.selectedPartId = $(`#editorCustomCharacterMain svg g[category="${type}"] > g`).get(part.selection - 1).getAttribute('name');
+            $(`#editorCustomCharacterMain svg g[category="${type}"] > g`).css('visibility', 'hidden');
+            $(`#editorCustomCharacterMain svg g[category="${type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
         }
 
         this.adjustSvgOffset();
@@ -206,9 +208,9 @@ export default class CharacterCreatorController {
                 part.selectedPartId = this.skinTones[part.selection - 1];
                 this.applySkinTone();
             } else {
-                part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).get(part.selection - 1).getAttribute('name');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
+                part.selectedPartId = $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).get(part.selection - 1).getAttribute('name');
+                $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
             }
         });
         this.adjustSvgOffset();
@@ -273,7 +275,7 @@ export default class CharacterCreatorController {
             setTimeout(() => {
                 this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
                 this.loadSavedCharacterPortraits();
-            }, 50);
+            }, 200);
         })
         .catch(err => {
             stopGlobalLoading();
@@ -305,10 +307,10 @@ export default class CharacterCreatorController {
 
         this.vm.currentSelection.forEach(part => {
             if (part.type !== 'skinTone') {
-                const selectedPart = $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`);
-                part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
-                part.selection = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).index(selectedPart) + 1;
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                const selectedPart = $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`);
+                part.maxChoices = $(`#editorCustomCharacterMain svg g[category=${part.type}] > g`).length;
+                part.selection = $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).index(selectedPart) + 1;
+                $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
                 selectedPart.css('visibility', 'visible');
             } else {
                 part.maxChoices = this.skinTones.length;
@@ -329,10 +331,10 @@ export default class CharacterCreatorController {
         this.vm.currentSelection.forEach(part => {
             part.selection = 1;
             if (part.type !== 'skinTone') {
-                part.maxChoices = $(`#editorSvgContainer svg g[category=${part.type}] > g`).length;
-                part.selectedPartId = $(`#editorSvgContainer svg g[category="${part.type}"] > g`).first().attr('name');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
-                $(`#editorSvgContainer svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
+                part.maxChoices = $(`#editorCustomCharacterMain svg g[category=${part.type}] > g`).length;
+                part.selectedPartId = $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).first().attr('name');
+                $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g`).css('visibility', 'hidden');
+                $(`#editorCustomCharacterMain svg g[category="${part.type}"] > g[name="${part.selectedPartId}"]`).css('visibility', 'visible');
             } else {
                 part.maxChoices = this.skinTones.length;
                 part.selectedPartId = this.skinTones[part.selection];
@@ -381,7 +383,7 @@ export default class CharacterCreatorController {
                     this.vm.showEditor = false;
                     this.$scope.$apply();
                 }
-            }, 50);
+            }, 200);
         })
         .catch(err => {
             stopGlobalLoading();
@@ -393,7 +395,7 @@ export default class CharacterCreatorController {
     }
 
     adjustSvgOffset() {
-        /*$('#editorSvgContainer').css('margin-top', '0px');
+        /*$('#editorCustomCharacterMain').css('margin-top', '0px');
 
         const mainDiv = document.querySelector('#characterEditor #mainDiv').getBoundingClientRect();
         const mainDivTopOffset = mainDiv.top;
@@ -403,6 +405,6 @@ export default class CharacterCreatorController {
 
         const offset = Math.round(mainDivTopOffset - hatElementTopOffset);
 
-        $('#editorSvgContainer').css('margin-top', `${offset}px`);*/
+        $('#editorCustomCharacterMain').css('margin-top', `${offset}px`);*/
     }
 }

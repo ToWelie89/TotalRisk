@@ -15,8 +15,7 @@
                         </div>
                         <div id="troops" class="textCenter paddingBottom">
                             <span data-ng-repeat="troop in turnPresentation.troopsToDeploy track by $index" class="troop_{{ turnPresentation.turn.player.color.name }}">
-                                <span class="troopIcon troop">
-                                    @@troopSvg
+                                <span class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg" id="presentationModalTroopIcon{{ $index }}">
                                 </span>
                             </span>
                         </div>

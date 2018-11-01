@@ -212,7 +212,7 @@ export default class TutorialService {
     attackModalStart() {
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
-                templateUrl: 'attackModal.html',
+                templateUrl: 'src/modals/attackModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'attackModalController',
@@ -338,7 +338,7 @@ export default class TutorialService {
     openCardModal() {
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
-                templateUrl: 'cardTurnInModal.html',
+                templateUrl: 'src/modals/cardTurnInModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'cardTurnInModalController',
@@ -502,7 +502,7 @@ export default class TutorialService {
         }
         return new Promise((resolve, reject) => {
             return this.$uibModal.open({
-                templateUrl: 'turnPresentationModal.html',
+                templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'turnPresentationController',

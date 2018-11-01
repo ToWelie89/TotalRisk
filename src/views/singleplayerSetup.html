@@ -1,0 +1,150 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" ng-cloak>
+    <div class="backButtonContainer">
+        <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+        </button>
+    </div>
+    <div class="row mainMenuBox textCenter">
+    <div id="gameSetupBox">
+        <div class="row">
+            <div class="col-xs-12 textCenter marginTop--double">
+                <div class="buttonGroup" style="height: 40px;">
+                    <button type="button" class="button button-green button-unclickable">
+                        <strong>Map control percentage for victory</strong>
+                    </button>
+                    <button type="button" class="button button-green" data-ng-repeat="goal in setup.victoryGoals"
+                    data-ng-class="{'button--selected': goal === setup.chosenGoal}" data-ng-click="setup.setGoal(goal)" data-ng-show="setup.players.length >= goal.requiredAmountOfPlayers">
+                        <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row textCenter">
+            <div class="setupBoxAvatarsContainer">
+                <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
+                    <div
+                        id="playerSingleplayerPortrait{{i}}"
+                        player-portrait
+                        avatar="setup.players[i].avatar"
+                        data-ng-if="setup.players[i] && setup.players[i].avatar"
+                        class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                        style="background-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}};
+                               border-color: {{setup.players[i].color.mainColor}};">
+                        <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="setup.players[i].avatar.svg">
+                        </div>
+                        <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="setup.players[i].avatar.customCharacter">
+                        </div>
+                        <div class="setupBoxAvatarsContainer__item__portrait__inner"
+                             data-ng-click="setup.openSelectionScreen(setup.players[i])"
+                             style="border-color: {{setup.players[i].color.mainColor}};">
+                            <h2>CHANGE</h2>
+                        </div>
+                    </div>
+                    <div data-ng-if="setup.players[i]" class="box-shadow setupBoxAvatarsContainer__item__name">
+                        <div style="background: {{setup.players[i].color.mainColor}};" class="box-shadow" data-color="{{setup.players[i].color.mainColor}}">
+                            <span style="border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}}; border-left-color: transparent;"></span>
+                            <span>{{ setup.players[i].name }}{{ (setup.players[i].type !== 0) ? " (AI)" : "" }}</span>
+                            <span style="border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -30)}}; border-right-color: transparent;"></span>
+                        </div>
+                    </div>
+                    <div
+                        data-ng-if="setup.players[i]"
+                        class="setupBoxAvatarsContainer__item__color box-shadow"
+                        style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
+                        role="button"
+                        tabIndex="0"
+                        popover-placement="left"
+                        popover-title="Select a color"
+                        popover-trigger="'focus'"
+                        uib-popover-template="'src/popoverColorTemplate.html'"
+                        data-ng-controller="colorPopoverController as colorPopover"
+                        data-ng-init="colorPopover.init(setup.players[i])"
+                    >
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div
+                        data-ng-if="setup.players[i]"
+                        class="setupBoxAvatarsContainer__item__type box-shadow"
+                        style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
+                        role="button"
+                        tabIndex="0"
+                        popover-placement="left"
+                        popover-title="Select a type (human or AI)"
+                        popover-trigger="'focus'"
+                        uib-popover-template="'src/popoverPlayerTypeTemplate.html'"
+                        data-ng-controller="playerTypePopoverController as playerTypePopover"
+                        data-ng-init="playerTypePopover.init(setup.players[i])"
+                    >
+                        <i class="fas fa-user" data-ng-show="setup.players[i].type === 0"></i>
+                        <i class="fas fa-desktop" data-ng-show="setup.players[i].type !== 0"></i>
+                    </div>
+                    <div
+                        data-ng-if="setup.players[i]"
+                        data-ng-class="{'setupBoxAvatarsContainer__item__delete--disabled': setup.players.length == setup.minPlayers}"
+                        class="setupBoxAvatarsContainer__item__delete box-shadow"
+                        style="background-color: {{setup.players[i].color.mainColor}}; border-color: {{setup.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
+                        data-ng-click="setup.removePlayer(setup.players[i])"
+                    >
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="setupBoxAvatarsContainer__item__flag" data-ng-if="setup.players[i]">
+                        <waving-flag flag-width="90" flag-height="50" flag-url="setup.players[i].avatar.flag"></waving-flag>
+                    </div>
+
+                    <div
+                        class="box-shadow setupBoxAvatarsContainer__item__portrait empty"
+                        data-ng-click="setup.openSelectionScreen(null)"
+                        data-ng-if="!setup.players[i]"
+                    >
+                        <div>
+                            <span class="glyphicon glyphicon-plus">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row marginTop--double">
+            <div class="col-xs-12 textCenter gameSetupError" data-ng-show="setup.hasDuplicates()">
+                You are not allowed to have duplicate names.
+            </div>
+        </div>
+        <div class="row marginTop">
+            <div class="col-xs-12 textCenter gameSetupError" data-ng-show="setup.emptyNamesExists()">
+                Empty player names are not allowed.
+            </div>
+        </div>
+        <div class="row marginTop">
+            <div class="col-xs-12 textCenter gameSetupWarning" data-ng-show="setup.onlyAIsExists()">
+                Only AI players exists. Are you sure no human player wants to play?
+            </div>
+        </div>
+        <div class="row marginTop">
+            <div class="col-xs-12 textCenter">
+                <div class="buttonGroup">
+                    <!-- <button type="button" class="button button-blue" data-ng-click="setup.addPlayer()" data-ng-disabled="setup.players.length == setup.maxPlayers" data-toggle="tooltip"
+                         data-placement="bottom" title="Add player">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    </button> -->
+                    <button type="button" class="button button-green large" data-ng-disabled="setup.startGameIsDisabled()" data-ng-click="main.startGame(setup.players, setup.chosenGoal)">
+                        <strong>Start</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- TESTING STUFF -->
+        <div class="row marginTop--double" data-ng-hide="true">
+            <div class="col-xs-12 textCenter">
+                <button type="button" class="button button-blue" data-ng-click="game.testAttackPhase(setup.players)">
+                    <strong>Test battle modal</strong>
+                </button>
+                <button type="button" class="button button-blue" data-ng-click="game.testPresentationModal()">
+                    <strong>Test presentation modal</strong>
+                </button>
+                <button type="button" class="button button-blue" data-ng-click="main.aiTester()">
+                    <strong>AI tester</strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

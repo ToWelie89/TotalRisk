@@ -42,7 +42,7 @@ export default class PauseMenuModalController {
 
     exitToMenu() {
         this.soundService.tick.play();
-        this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
         this.$uibModalInstance.close();
+        this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
     }
 }

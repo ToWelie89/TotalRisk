@@ -15,10 +15,16 @@ export default class GameControllerTutorial extends GameController {
         super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
     }
 
+    setListeners() {
+        this.boundListener = evt => this.escapeEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
+    }
+
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
                 this.mapService.init('tutorialMap');
+                this.setListeners();
                 this.startTutorial();
             }
         });

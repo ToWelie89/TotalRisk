@@ -33,7 +33,7 @@ export default class SocketService {
             this.sendMessage('SERVER', 'SERVER', `${userName} connected to the room`, Date.now(), roomId);
         });
 
-        this.socket.on('gameStarted', (players, victoryGoal, map, turn) => {
+        this.socket.on('gameStarted', (players, victoryGoal, map, turn, troopsToDeploy) => {
             this.$rootScope.players = players;
             this.$rootScope.chosenGoal = victoryGoal;
 
@@ -46,8 +46,7 @@ export default class SocketService {
                 t.owner = territoryFromServer.owner;
             });
             this.gameEngine.turn = turn;
-            // set troops to deploy
-            // move game related listeners to gamecontroller
+            this.gameEngine.troopsToDeploy = troopsToDeploy;
 
             this.mapService.updateMap(this.gameEngine.filter);
         });
