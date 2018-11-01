@@ -270,7 +270,7 @@ export default class AttackModalController {
     }
 
     getCountrySvg(territoryName) {
-        const territorySvg = $(`#svgMap .country[id='${territoryName}']`).clone();
+        const territorySvg = $(`#${ this.attackData.tutorialMode ? 'tutorialMap' : 'map' } #svgMap .country[id='${territoryName}']`).clone();
         territorySvg.removeClass('attackCursor highlighted');
         $('#territorySvg').html(territorySvg);
 

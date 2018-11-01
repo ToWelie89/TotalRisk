@@ -50,7 +50,7 @@ export default class AiHandler {
                     this.updateCallback();
                     resolve();
                 } else {
-                    $('#mainTroopIndicator').addClass('animated infinite bounce');
+                    $('.mainTroopIndicator').addClass('animated infinite bounce');
                     this.soundService.cardTurnIn.play();
                     this.gameEngine.troopsToDeploy += bestCombo.value;
 
@@ -58,7 +58,7 @@ export default class AiHandler {
 
                     setTimeout(() => {
                         resolve();
-                        $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                        $('.mainTroopIndicator').removeClass('animated infinite bounce');
                     }, 1000);
                 }
 

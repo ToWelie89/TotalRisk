@@ -4,8 +4,6 @@ import {
     MAIN_MUSIC,
     AI_MUSIC,
     MAX_CARDS_ON_HAND,
-    MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING,
-    MUSIC_VOLUME_DURING_TUTORIAL,
     ATTACK_MUSIC,
     PAUSE_MODES
 } from './../gameConstants';
@@ -42,11 +40,11 @@ export default class GameController {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.mapService = mapService;
-        this.tutorialService = tutorialService;
         this.aiHandler = aiHandler;
         this.settings = settings;
         this.gameAnnouncerService = gameAnnouncerService;
         this.socketService = socketService;
+        this.tutorialService = tutorialService;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
@@ -62,25 +60,7 @@ export default class GameController {
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
         });
 
-        this.$rootScope.$watch('currentGamePhase', () => {
-            if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
-                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
-            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
-                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
-            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
-                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
-            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
-                this.startTutorial();
-            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
-                if (this.gameEngine.aiTesting) {
-                    this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
-                }
-                this.handleVictory();
-            }
-        });
-
-        this.boundListener = evt => this.escapeEventListener(evt);
-        document.addEventListener('keyup', this.boundListener);
+        this.setCurrentGamePhaseWatcher();
 
         this.startMenuIsOpen = false;
         this.escapeWasPressed = false;
@@ -88,6 +68,13 @@ export default class GameController {
 
         this.vm.pauseModes = PAUSE_MODES;
         this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
+
+        console.log('Initialization of gameController');
+    }
+
+    setListeners() {
+        this.boundListener = evt => this.escapeEventListener(evt);
+        document.addEventListener('keyup', this.boundListener);
 
         document.querySelectorAll('.country').forEach(country => {
             country.addEventListener('click', (e) => {
@@ -104,8 +91,23 @@ export default class GameController {
                 this.clickCountry(e);
             });
         });
+    }
 
-        console.log('Initialization of gameController');
+    setCurrentGamePhaseWatcher() {
+        this.$rootScope.$watch('currentGamePhase', () => {
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
+                this.mapService.init('map');
+                this.setListeners();
+                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
+                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
+                if (this.gameEngine.aiTesting) {
+                    this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
+                }
+                this.handleVictory();
+            }
+        });
     }
 
     startGame(players, winningCondition, aiTesting = false) {
@@ -221,9 +223,6 @@ export default class GameController {
     }
 
     openMenu() {
-        if (this.gameEngine.isTutorialMode) {
-            return;
-        }
         this.soundService.tick.play();
         this.openPauseModal();
     }
@@ -333,7 +332,7 @@ export default class GameController {
         }).result.then(closeResponse => {
             if (closeResponse && closeResponse.newTroops) {
                 console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
-                $('#mainTroopIndicator').addClass('animated infinite bounce');
+                $('.mainTroopIndicator').addClass('animated infinite bounce');
                 this.soundService.cardTurnIn.play();
                 this.gameEngine.troopsToDeploy += closeResponse.newTroops;
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
@@ -341,7 +340,7 @@ export default class GameController {
                     this.$scope.$apply();
                 }, 100);
                 setTimeout(() => {
-                    $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                    $('.mainTroopIndicator').removeClass('animated infinite bounce');
                 }, 1000);
 
                 // Update stats
@@ -439,9 +438,6 @@ export default class GameController {
     }
 
     filterByOwner() {
-        if (this.vm.isTutorialMode) {
-            return;
-        }
         this.soundService.tick.play();
         this.vm.filter = 'byOwner';
         this.gameEngine.filter = 'byOwner';
@@ -449,9 +445,6 @@ export default class GameController {
     }
 
     filterByRegion() {
-        if (this.vm.isTutorialMode) {
-            return;
-        }
         this.soundService.tick.play();
         this.vm.filter = 'byRegion';
         this.gameEngine.filter = 'byRegion';
@@ -469,6 +462,10 @@ export default class GameController {
     }
 
     getCurrentPlayerColor() {
+        if (!this.vm.turn || !this.vm.turn.player) {
+            return;
+        }
+
         return this.gameEngine.players && this.gameEngine.players.get(this.vm.turn.player.name) ?
                         this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor : '';
     }
@@ -486,10 +483,6 @@ export default class GameController {
 
         this.gameEngine.setMusic(ATTACK_MUSIC);
         this.engageAttackPhase(clickedTerritory);
-    }
-
-    testPresentationModal() {
-        this.tutorialService.testPresentationModal();
     }
 
     engageAttackPhase(clickedTerritory) {
@@ -568,10 +561,7 @@ export default class GameController {
     }
 
     emit(functionName, args) {
-        if (!this.gameEngine.currentGameIsMultiplayer) {
-            return;
-        }
-        this.socketService[functionName](...args);
+        return;
     }
 
     clickCountry(evt) {
@@ -670,170 +660,5 @@ export default class GameController {
         movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
 
         this.mapService.updateMap(this.vm.filter);
-    }
-
-    /*
-     *  EVERYTHING BELOW THIS LINE IS FOR THE TUTORIAL MODE
-     */
-
-    startTutorial() {
-        let soundWasMutedBeforeTutorial = false;
-        if (!this.settings.playSound) {
-            soundWasMutedBeforeTutorial = true;
-            this.settings.toggleSound();
-        }
-
-        const players = Array.from(
-            new Array(4), (x, i) =>
-                new Player(Object.keys(avatars).map(key => key)[i],
-                           Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
-                           Object.keys(avatars).map(key => avatars[key])[i],
-                           PLAYER_TYPES.HUMAN)
-        );
-        this.gameEngine.startGame(players);
-
-        this.gameEngine.isTutorialMode = true;
-        this.vm.isTutorialMode = true;
-
-        this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-
-        this.vm.turn = this.gameEngine.turn;
-        this.vm.filter = this.gameEngine.filter;
-        this.mapService.updateMap(this.gameEngine.filter);
-
-        this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
-
-        this.tutorialService.initTutorialData();
-
-        this.tutorialService.openingMessage()
-        .then(() => this.tutorialService.phasesAndMapExplanation())
-        .then(() => this.tutorialService.deploymentPhaseExplanation())
-        .then(() => this.tutorialService.deploymentIndicatorExplanation())
-        .then(() => this.tutorialService.reinforcementRulesExplanation())
-        .then(() => this.tutorialService.regionFilterExplanation())
-        .then(() => {
-            this.vm.filter = 'byRegion';
-            this.gameEngine.filter = 'byRegion';
-            this.mapService.updateMap(this.gameEngine.filter);
-        })
-        .then(() => delay(1500))
-        .then(() => this.tutorialService.ownerFilterExplanation())
-        .then(() => {
-            this.vm.filter = 'byOwner';
-            this.gameEngine.filter = 'byOwner';
-            this.mapService.updateMap(this.gameEngine.filter);
-        })
-        .then(() => delay(1500))
-        .then(() => this.tutorialService.reinforcementIntoTerritoryDemonstration())
-        .then(() => this.deployTroopsToTerritoryForTutorial())
-        .then(() => this.tutorialService.goingForwardToAttackPhase())
-        .then(() => { this.vm.turn = this.gameEngine.nextTurn() })
-        .then(() => this.tutorialService.attackPhaseExplanation())
-        .then(() => this.tutorialService.readyToInvadeExplanation())
-        .then(() => this.selectTerritoryToAttackFromForTutorial())
-        .then(() => this.tutorialService.hightlightExplanation())
-        .then(() => this.tutorialService.attackModalStart())
-        .then((closeResponse) => this.handleAttackModalResponseForTutorial(closeResponse))
-        .then(() => this.tutorialService.cardExplanation())
-        .then(() => this.tutorialService.cardExplanation2())
-        .then(() => this.tutorialService.openCardModal())
-        .then(() => this.tutorialService.endOfAttackPhase())
-        .then(() => { this.vm.turn = this.gameEngine.nextTurn() })
-        .then(() => this.tutorialService.startOfMovementPhase())
-        .then(() => this.tutorialService.startOfMovementPhase2())
-        .then(() => this.selectTerritoryToMoveFromForTutorial())
-        .then(() => delay(1500))
-        .then(() => this.tutorialService.startOfMovementPhase3())
-        .then(() => this.tutorialService.openMovementModal())
-        .then((resp) => this.updateGameAfterMovement(resp))
-        .then(() => this.tutorialService.endOfTurnExplanation())
-        .then(() => delay(1500))
-        .then(() => {
-            if (!soundWasMutedBeforeTutorial) {
-                this.gameEngine.setMusic();
-            } else {
-                this.settings.toggleSound();
-            }
-
-            this.gameEngine.setMusicVolume(0.8);
-            this.gameEngine.isTutorialMode = false;
-            this.vm.isTutorialMode = false;
-            this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
-            this.$scope.$apply();
-        })
-        .catch(err => {
-            console.log(err);
-            this.gameAnnouncerService.mute();
-            if (!soundWasMutedBeforeTutorial) {
-                this.gameEngine.setMusic();
-            } else {
-                this.settings.toggleSound();
-            }
-            this.gameEngine.setMusicVolume(0.8);
-            $(`#svgMap .country`).removeClass('blink_me');
-        })
-    }
-
-    deployTroopsToTerritoryForTutorial() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-        const promises = [];
-        for (let i = 0; i < this.gameEngine.troopsToDeploy; i++) {
-            promises.push(new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    this.simulateClickCountry(territory.name);
-                    resolve();
-                }, 700 * (i + 1));
-            }));
-        }
-        return Promise.all(promises);
-    }
-
-    selectTerritoryToAttackFromForTutorial() {
-        const currentPlayer = this.gameEngine.turn.player.name;
-        const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
-        const territory = territories.find(terr => {
-            return terr.adjacentTerritories.some(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        });
-
-        let territoryToAttack = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner !== currentPlayer);
-        this.territoryToAttackFrom = territory;
-        this.territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
-
-        return new Promise((resolve, reject) => {
-            this.simulateClickCountry(territory.name);
-            this.soundService.click.play();
-            resolve();
-        });
-    }
-
-    handleAttackModalResponseForTutorial(closeResponse) {
-        return new Promise((resolve, reject) => {
-            this.gameEngine.setMusic();
-            this.gameEngine.setMusicVolume(MUSIC_VOLUME_DURING_TUTORIAL);
-            this.updatePlayerDataAfterAttack(closeResponse);
-            resolve();
-        });
-    }
-
-    simulateClickCountry(territory) {
-        this.clickCountry({
-            target: {
-                getAttribute: () => {
-                    return territory;
-                }
-            }
-        });
-    }
-
-    selectTerritoryToMoveFromForTutorial() {
-        return new Promise((resolve, reject) => {
-            this.simulateClickCountry(this.territoryToAttack.name);
-            this.soundService.click.play();
-            resolve();
-        });
     }
 }

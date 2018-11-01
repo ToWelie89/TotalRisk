@@ -62,9 +62,6 @@ module.exports = function(grunt) {
             inlineSvg: {
                 options: {
                     patterns: [{
-                        match: 'mapSvg',
-                        replacement: '<%= grunt.file.read("assets/maps/worldMap/worldMap.svg") %>'
-                    }, {
                         match: 'troopSvg',
                         replacement: '<%= grunt.file.read("assets/troopIcons/soldier.svg") %>'
                     }, {

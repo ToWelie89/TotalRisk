@@ -67,7 +67,7 @@ export default class TutorialService {
                 markup: `Right now it's <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}s</strong> turn, whose name is presented here. The first phase is the <strong>deployment phase</strong> in which the player can reinforce his territories with fresh troops.`
             }],
             () => {
-                $('#playerName').addClass('animated infinite bounce');
+                $('#tutorialContainer #playerName').addClass('animated infinite bounce');
                 /*zoom.to({
                     x: 350,
                     y: 200,
@@ -80,7 +80,7 @@ export default class TutorialService {
     }
 
     deploymentIndicatorExplanation() {
-        $('#playerName').removeClass('animated infinite bounce');
+        $('#tutorialContainer #playerName').removeClass('animated infinite bounce');
         //zoom.out();
 
         return this.openTutorialPresenter(
@@ -89,7 +89,7 @@ export default class TutorialService {
                 markup: `Here you can see the amount of troops that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have to distribute between the different territories that he controls.`
             }],
             () => {
-                $('#currentPhaseIndicator').addClass('animated infinite bounce');
+                $('#tutorialContainer #currentPhaseIndicator').addClass('animated infinite bounce');
             },
             () => {},
             1000
@@ -97,7 +97,7 @@ export default class TutorialService {
     }
 
     reinforcementRulesExplanation() {
-        $('#currentPhaseIndicator').removeClass('animated infinite bounce');
+        $('#tutorialContainer #currentPhaseIndicator').removeClass('animated infinite bounce');
 
         return this.openTutorialPresenter(
             [{
@@ -116,10 +116,10 @@ export default class TutorialService {
                 markup: `By changing the filter to <strong>region</strong> you can switch the colors of the map to color by regions. This way you can more easily determine which <strong>territories</strong> make up each <strong>region</strong>.`,
             }],
             () => {
-                $('#showByRegion').addClass('blink_me');
+                $('#tutorialContainer #showByRegion').addClass('blink_me');
             },
             () => {
-                $('#showByRegion').removeClass('blink_me');
+                $('#tutorialContainer #showByRegion').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );
@@ -131,10 +131,10 @@ export default class TutorialService {
                 message: `To view the map by territorial ownership again just press this button.`
             }],
             () => {
-                $('#showByOwner').addClass('blink_me');
+                $('#tutorialContainer #showByOwner').addClass('blink_me');
             },
             () => {
-                $('#showByOwner').removeClass('blink_me');
+                $('#tutorialContainer #showByOwner').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );
@@ -147,10 +147,10 @@ export default class TutorialService {
                 markup: `<strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> decides he wants to put all his reinforcements in ${this.territoryToAttackFrom.name}.`
             }],
             () => {
-                $(`#svgMap .country[id="${this.territoryToAttackFrom.name}"]`).addClass('blink_me');
+                $(`#tutorialContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).addClass('blink_me');
             },
             () => {
-                $(`#svgMap .country[id="${this.territoryToAttackFrom.name}"]`).removeClass('blink_me');
+                $(`#tutorialContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).removeClass('blink_me');
             },
             1000
         );
@@ -163,10 +163,10 @@ export default class TutorialService {
                 markup: `<strong>${this.territoryToAttackFrom.name}</strong> is now inhabited by <strong>${this.territoryToAttackFrom.numberOfTroops}</strong> troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the <strong>NEXT</strong> button.`
             }],
             () => {
-                $('#nextButton').addClass('blink_me');
+                $('#tutorialContainer #nextButton').addClass('blink_me');
             },
             () => {
-                $('#nextButton').removeClass('blink_me');
+                $('#tutorialContainer #nextButton').removeClass('blink_me');
                 this.soundService.click.play();
             },
             1000
@@ -317,7 +317,7 @@ export default class TutorialService {
                 markup: `Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`
             }],
             () => {
-                $('#cardButton').addClass('blink_me');
+                $('#tutorialContainer #cardButton').addClass('blink_me');
             }
         );
     }
@@ -330,7 +330,7 @@ export default class TutorialService {
             }],
             () => {},
             () => {
-                $('#cardButton').removeClass('blink_me');
+                $('#tutorialContainer #cardButton').removeClass('blink_me');
             }
         );
     }
@@ -354,7 +354,7 @@ export default class TutorialService {
             }).result.then(closeResponse => {
                 if (closeResponse && closeResponse.newTroops) {
                     console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
-                    $('#mainTroopIndicator').addClass('animated infinite bounce');
+                    $('.mainTroopIndicator').addClass('animated infinite bounce');
                     this.soundService.cardTurnIn.play();
                     this.gameEngine.troopsToDeploy += closeResponse.newTroops;
                     this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
@@ -362,7 +362,7 @@ export default class TutorialService {
                         this.$scope.$apply();
                     }, 100);
                     setTimeout(() => {
-                        $('#mainTroopIndicator').removeClass('animated infinite bounce');
+                        $('#tutorialContainer .mainTroopIndicator').removeClass('animated infinite bounce');
                     }, 1000);
                 }
                 resolve();
@@ -399,10 +399,10 @@ export default class TutorialService {
                 markup: `During the attack phase a player can keep attacking for as long as he wants. Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has taken over ${this.territoryToAttack.name} and moved forces there he can keep invading new territories from there if he wants. When the player feels he is done he can end the attack phase by pressing the <strong>NEXT</strong> button.`,
             }],
             () => {
-                $('#nextButton').addClass('blink_me');
+                $('#tutorialContainer #nextButton').addClass('blink_me');
             },
             () => {
-                $('#nextButton').removeClass('blink_me');
+                $('#tutorialContainer #nextButton').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );

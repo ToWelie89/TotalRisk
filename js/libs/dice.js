@@ -165,7 +165,7 @@ this.material_options = {
     specular: 0x172022,
     color: 0xf0f0f0,
     shininess: 40,
-    shading: THREE.FlatShading,
+    flatShading: true,
 };
 this.label_color = '#aaaaaa';
 this.ambient_light_color = 0xf0f5fb;
@@ -180,7 +180,7 @@ this.scale = 50;
 
 this.create_d6 = function(dice_color) {
     if (!this.d6_geometry) this.d6_geometry = this.create_d6_geometry(this.scale * 1.9);
-    this.dice_material = new THREE.MeshFaceMaterial(this.create_dice_materials(this.standart_d20_dice_face_labels, this.scale / 2, 1.0, dice_color));
+    this.dice_material = this.create_dice_materials(this.standart_d20_dice_face_labels, this.scale / 2, 1.0, dice_color)
     return new THREE.Mesh(this.d6_geometry, this.dice_material);
 }
 
@@ -206,7 +206,7 @@ this.dice_box = function(container, dimentions, options) {
 
     this.reinit(container, dimentions);
 
-    this.world.gravity.set(0, 0, -9.8 * 800);
+    this.world.gravity.set(0, 0, -20 * 800);
     this.world.broadphase = new CANNON.NaiveBroadphase();
     this.world.solver.iterations = 16;
 
@@ -279,18 +279,17 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
     this.light.target.position.set(0, 0, 0);
     this.light.distance = mw * 5;
     this.light.castShadow = true;
-    this.light.shadowCameraNear = mw / 10;
-    this.light.shadowCameraFar = mw * 5;
-    this.light.shadowCameraFov = 50;
-    this.light.shadowBias = 0.001;
-    this.light.shadowDarkness = 1.1;
-    this.light.shadowMapWidth = 1024;
-    this.light.shadowMapHeight = 1024;
+    this.light.shadow.camera.near = mw / 10;
+    this.light.shadow.camera.far = mw * 5;
+    this.light.shadow.camera.fov = 50;
+    this.light.shadow.bias = 0.001;
+    this.light.shadow.mapSize.width = 1024;
+    this.light.shadow.mapSize.height = 1024;
     this.scene.add(this.light);
 
     if (this.desk) this.scene.remove(this.desk);
     this.desk = new THREE.Mesh(new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
-            new THREE.MeshPhongMaterial({ color: that.desk_color }));
+            new THREE.MeshBasicMaterial({ color: that.desk_color }));
     this.desk.receiveShadow = true;
     this.scene.add(this.desk);
 

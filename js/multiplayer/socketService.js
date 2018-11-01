@@ -37,7 +37,7 @@ export default class SocketService {
             this.$rootScope.players = players;
             this.$rootScope.chosenGoal = victoryGoal;
 
-            this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
             this.$rootScope.$apply();
             this.gameEngine.currentGameIsMultiplayer = true;
 
@@ -48,15 +48,6 @@ export default class SocketService {
             this.gameEngine.turn = turn;
             // set troops to deploy
             // move game related listeners to gamecontroller
-
-            this.mapService.updateMap(this.gameEngine.filter);
-        });
-
-        this.socket.on('troopAddedToTerritoryNotifier', (territoryName) => {
-            this.gameEngine.addTroopToTerritory(territoryName);
-
-            this.soundService.addTroopSound.play();
-            displayReinforcementNumbers(territoryName);
 
             this.mapService.updateMap(this.gameEngine.filter);
         });

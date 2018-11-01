@@ -11,6 +11,8 @@ const autoUpdater = new AutoUpdater();
 
 import MainController from './mainController';
 import GameController from './game/gameController';
+import GameControllerTutorial from './game/gameControllerTutorial';
+import GameControllerMultiplayer from './game/gameControllerMultiplayer';
 import AuthenticationController from './authentication/authenticationController';
 import GameSetupController from './gameSetup/gameSetupController';
 import AttackModalController from './attack/attackModalController';
@@ -40,6 +42,7 @@ import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
 import WavingFlagDirective from './directives/wavingFlagDirective';
 import PlayerPortraitDirective from './directives/playerPortraitDirective';
+import InjectSVGDirective from './directives/injectSvgDirective';
 
 const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 
@@ -50,6 +53,8 @@ app.service('settings', Settings);
 /* CONTROLLERS */
 app.controller('mainController', MainController);
 app.controller('gameController', GameController);
+app.controller('gameControllerTutorial', GameControllerTutorial);
+app.controller('gameControllerMultiplayer', GameControllerMultiplayer);
 app.controller('authenticationController', AuthenticationController);
 app.controller('gameSetupController', GameSetupController);
 app.controller('attackModalController', AttackModalController);
@@ -79,3 +84,4 @@ app.service('socketService', SocketService);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
 app.directive('playerPortrait', () => new PlayerPortraitDirective());
+app.directive('injectSvg', () => new InjectSVGDirective());

@@ -5,8 +5,10 @@ import { PLAYER_TYPES } from './../player/playerConstants';
 export default class MapService {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
-        this.svg = document.getElementById('svgMap');
-        this.doc = this.svg.ownerDocument;
+    }
+
+    init(parentId) {
+        this.svg = document.querySelector(`#${parentId} #svgMap`);
 
         this.initEvents();
         this.clearWholeMap();
