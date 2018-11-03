@@ -10,6 +10,8 @@ describe('GameEngine', () => {
     beforeEach(() => {
         mockGameAnnouncerService = createGameAnnouncerService();
         mockRootScope = createRootScope();
+        process.env.NODE_ENV = 'lol';
+        delete process.env.COMPUTERNAME;
         gameEngine = new GameEngine(mockGameAnnouncerService, mockRootScope);
     });
 

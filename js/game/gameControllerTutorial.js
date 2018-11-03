@@ -1,15 +1,15 @@
-import {
+const {
     MUSIC_VOLUME_DURING_TUTORIAL,
     GAME_PHASES
-} from './../gameConstants';
-import Player from './../player/player';
-import {delay} from './../helpers';
-import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
-import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
+} = require('./../gameConstants');
+const Player = require('./../player/player');
+const {delay} = require('./../helpers');
+const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
+const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
 
-import GameController from './gameController';
+const GameController = require('./gameController');
 
-export default class GameControllerTutorial extends GameController {
+class GameControllerTutorial extends GameController {
 
     constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
@@ -207,3 +207,5 @@ export default class GameControllerTutorial extends GameController {
         });
     }
 }
+
+module.exports = GameControllerTutorial;

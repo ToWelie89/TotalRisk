@@ -1,4 +1,4 @@
-export default class JoinPrivateLobbyController {
+class JoinPrivateLobbyController {
 
     constructor($scope, $uibModalInstance, soundService) {
         this.vm = this;
@@ -25,3 +25,5 @@ export default class JoinPrivateLobbyController {
         this.$uibModalInstance.close();
     }
 }
+
+module.exports = JoinPrivateLobbyController;

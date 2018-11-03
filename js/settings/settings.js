@@ -1,7 +1,7 @@
-import {settings} from './defaultSettings';
-import {runningElectron} from './../helpers';
+const {settings} = require('./defaultSettings');
+const {runningElectron} = require('./../helpers');
 
-export default class Settings {
+class Settings {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
         this.runningElectron = runningElectron();
@@ -62,3 +62,5 @@ export default class Settings {
         }
     }
 }
+
+module.exports = Settings;

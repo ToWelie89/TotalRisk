@@ -1,8 +1,8 @@
-import { getTerritoryByName, getAdjacentApplicableTerritories } from './mapHelpers';
-import { TURN_PHASES } from './../gameConstants';
-import { PLAYER_TYPES } from './../player/playerConstants';
+const { getTerritoryByName, getAdjacentApplicableTerritories } = require('./mapHelpers');
+const { TURN_PHASES } = require('./../gameConstants');
+const { PLAYER_TYPES } = require('./../player/playerConstants');
 
-export default class MapService {
+class MapService {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
     }
@@ -154,3 +154,5 @@ export default class MapService {
         document.getElementById('currentTerritoryInfo').innerHTML = `${territory.name}<br>Owner: ${territory.owner}<br>Troops: ${territory.numberOfTroops}`;
     }
 }
+
+module.exports = MapService;

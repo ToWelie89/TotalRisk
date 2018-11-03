@@ -1,6 +1,6 @@
-import { MESSAGE_TYPES, ERROR_TYPES } from './updaterConstants';
+const { MESSAGE_TYPES, ERROR_TYPES } = require('./updaterConstants');
 
-export default class AutoUpdater {
+class AutoUpdater {
     constructor() {
         window.state = {
             currentStateInternal: {},
@@ -52,3 +52,5 @@ export default class AutoUpdater {
         }
     }
 }
+
+module.exports = AutoUpdater;

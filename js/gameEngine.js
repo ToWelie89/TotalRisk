@@ -1,20 +1,20 @@
 /*
- * IMPORTS
+ * Imports
  */
 
-import WorldMap from './map/worldMap';
-import { getTerritoryByName, getTerritoriesByOwner } from './map/mapHelpers';
-import { playerIterator, PLAYER_TYPES } from './player/playerConstants';
-import { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } from './gameConstants';
-import { shuffle, randomIntFromInterval, randomDoubleFromInterval } from './helpers';
-import { initiatieCardDeck } from './card/cardHandler';
-import DeploymentHandler from './deployment/deploymentHandler';
-import {settings} from './settings/defaultSettings';
+const WorldMap = require('./map/worldMap');
+const { getTerritoryByName, getTerritoriesByOwner } = require('./map/mapHelpers');
+const { playerIterator, PLAYER_TYPES } = require('./player/playerConstants');
+const { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } = require('./gameConstants');
+const { shuffle, randomIntFromInterval, randomDoubleFromInterval } = require('./helpers');
+const { initiatieCardDeck } = require('./card/cardHandler');
+const DeploymentHandler = require('./deployment/deploymentHandler');
+const {settings} = require('./settings/defaultSettings');
 
-export default class GameEngine {
+class GameEngine {
 
     constructor(gameAnnouncerService, $rootScope) {
-        this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.NODE_ENV === 'electron';
+        this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.COMPUTERNAME;
 
         this.gameAnnouncerService = gameAnnouncerService;
         this.$rootScope = $rootScope;
@@ -248,7 +248,7 @@ export default class GameEngine {
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
         if (this.playSound) {
-            this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated from the game by ${playerWhoDefeatedHim}`, () => {
+            this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
                 this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
             }, () => {
                 this.setMusicVolume(0.8);
@@ -263,3 +263,5 @@ export default class GameEngine {
         return cards;
     }
 }
+
+module.exports = GameEngine;

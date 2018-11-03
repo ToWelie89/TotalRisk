@@ -1,6 +1,6 @@
-import { TURN_PHASES } from './../gameConstants';
+const { TURN_PHASES } = require('./../gameConstants');
 
-export default class GameAnnouncer {
+class GameAnnouncer {
     constructor() {
         this.announcerType = 'UK English Male';
         this.pitch = 0.7;
@@ -55,3 +55,5 @@ export default class GameAnnouncer {
         });
     }
 }
+
+module.exports = GameAnnouncer;

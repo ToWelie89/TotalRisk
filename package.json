@@ -3,11 +3,11 @@
   "productName": "TotalRisk",
   "version": "1.2.52",
   "description": "A web application game of the classic board game Risk",
-  "main": "electron/start.js",
+  "main": "electron/main.js",
   "license": "MIT",
   "scripts": {
     "start": "http-server",
-    "server": "cross-env NODE_ENV=web node electron/start.js",
+    "server": "cross-env NODE_ENV=web node electron/socket.js",
     "electron": "electron .",
     "electron:dev": "cross-env NODE_ENV=electron electron .",
     "build": "build",

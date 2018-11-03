@@ -1,6 +1,6 @@
-import Sound from './sound';
+const Sound = require('./sound');
 
-export default class SoundService {
+class SoundService {
     constructor(gameEngine) {
         this.gameEngine = gameEngine;
 
@@ -23,3 +23,6 @@ export default class SoundService {
         this.newMessage = new Sound(`${this.soundPath}/newMessage.wav`, this.gameEngine);
     }
 }
+
+
+module.exports = SoundService;

@@ -1,11 +1,11 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import {hashString} from './../helpers';
-import {GAME_PHASES, CONSTANTS, MAPS} from './../gameConstants';
-import {normalizeTimeFromTimestamp, getRandomColor, startGlobalLoading, stopGlobalLoading} from './../helpers';
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
+const {hashString} = require('./../helpers');
+const {GAME_PHASES, CONSTANTS, MAPS} = require('./../gameConstants');
+const {normalizeTimeFromTimestamp, getRandomColor, startGlobalLoading, stopGlobalLoading} = require('./../helpers');
 
-export default class LobbiesController {
+class LobbiesController {
     constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService) {
         this.vm = this;
         this.$scope = $scope;
@@ -212,3 +212,5 @@ export default class LobbiesController {
     }
 
 }
+
+module.exports = LobbiesController;

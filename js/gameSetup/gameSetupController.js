@@ -1,9 +1,9 @@
-import Player from './../player/player';
-import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
-import {CONSTANTS, VICTORY_GOALS} from './../gameConstants';
-import {lightenDarkenColor} from './../helpers';
+const Player = require('./../player/player');
+const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
+const {CONSTANTS, VICTORY_GOALS} = require('./../gameConstants');
+const {lightenDarkenColor} = require('./../helpers');
 
-export default class GameSetupController {
+class GameSetupController {
 
     constructor($scope, soundService, $uibModal) {
         this.vm = this;
@@ -210,3 +210,5 @@ export default class GameSetupController {
         return names.some(name => name === undefined || name === null || name === '');
     }
 }
+
+module.exports = GameSetupController;

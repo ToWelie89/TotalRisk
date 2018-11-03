@@ -1,4 +1,4 @@
-import {allValuesInArrayAreEqual} from './../helpers';
+const { allValuesInArrayAreEqual } = require('./../helpers');
 
 const getTerritoryByName = (map, name) => {
     let terr;
@@ -78,4 +78,4 @@ const getCurrentOwnershipStandings = (map, players) => {
     return standings;
 }
 
-export {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings};
+module.exports = {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings};

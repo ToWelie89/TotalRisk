@@ -1,7 +1,7 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+const firebase = require('firebase/app');
+require('firebase/auth');
 
-export default class AuthenticationController {
+class AuthenticationController {
     constructor($scope, toastService, soundService) {
         this.vm = this;
         this.$scope = $scope;
@@ -191,3 +191,5 @@ export default class AuthenticationController {
         this.vm.newDisplayNameData = firebase.auth().currentUser.displayName;
     }
 }
+
+module.exports = AuthenticationController;

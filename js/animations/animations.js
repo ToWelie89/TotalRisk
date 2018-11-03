@@ -54,4 +54,4 @@ const displayReinforcementNumbers = (territoryName, reinforcementValue = 1) => {
     });
 };
 
-export {displayDamageNumbers, displayReinforcementNumbers};
+module.exports = {displayDamageNumbers, displayReinforcementNumbers};

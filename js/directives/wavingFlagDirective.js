@@ -1,4 +1,4 @@
-export default class WavingFlagDirective {
+class WavingFlagDirective {
     constructor() {
         this.restrict = 'E';
         this.template = `<div id="wavingFlag" class='flag'></div>`;
@@ -46,3 +46,5 @@ export default class WavingFlagDirective {
         }, 50);
     }
 }
+
+module.exports = WavingFlagDirective;

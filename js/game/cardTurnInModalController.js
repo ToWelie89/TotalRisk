@@ -1,10 +1,10 @@
-import {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS, GAME_PHASES} from './../gameConstants';
-import {CARD_TYPE} from './../card/cardConstants';
-import {arraysEqual} from './../helpers';
-import {delay} from './../helpers';
-import {getBestPossibleCombination} from './../card/cardHelpers';
+const {MAX_CARDS_ON_HAND, POSSIBLE_CARD_COMBINATIONS, GAME_PHASES} = require('./../gameConstants');
+const {CARD_TYPE} = require('./../card/cardConstants');
+const {arraysEqual} = require('./../helpers');
+const {delay} = require('./../helpers');
+const {getBestPossibleCombination} = require('./../card/cardHelpers');
 
-export default class CardTurnInModalController {
+class CardTurnInModalController {
     constructor($scope, $rootScope, $uibModalInstance, gameEngine, soundService, tutorialService, data) {
         this.vm = this;
 
@@ -142,3 +142,5 @@ export default class CardTurnInModalController {
         }
     }
 }
+
+module.exports = CardTurnInModalController;

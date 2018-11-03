@@ -7,4 +7,4 @@ const settings = {
 	fullScreen: false
 };
 
-export {settings};
+module.exports = {settings};

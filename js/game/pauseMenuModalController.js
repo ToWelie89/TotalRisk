@@ -1,6 +1,6 @@
-import { GAME_PHASES } from './../gameConstants';
+const { GAME_PHASES } = require('./../gameConstants');
 
-export default class PauseMenuModalController {
+class PauseMenuModalController {
 
     constructor($scope, $rootScope, $uibModalInstance, soundService) {
         this.vm = this;
@@ -46,3 +46,5 @@ export default class PauseMenuModalController {
         this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
     }
 }
+
+module.exports = PauseMenuModalController;

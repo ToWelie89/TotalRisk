@@ -1,10 +1,10 @@
-import {GAME_PHASES, VICTORY_GOALS} from './gameConstants';
-import {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} from './helpers';
-import Player from './player/player';
-import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './player/playerConstants';
-import {MESSAGE_TYPES, ERROR_TYPES} from './autoUpdating/updaterConstants';
+const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
+const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} = require('./helpers');
+const Player = require('./player/player');
+const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
+const {MESSAGE_TYPES, ERROR_TYPES} = require('./autoUpdating/updaterConstants');
 
-export default class MainController {
+class MainController {
 
     constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService, socketService) {
         this.vm = this;
@@ -188,3 +188,5 @@ export default class MainController {
         window.close();
     }
 }
+
+module.exports = MainController;

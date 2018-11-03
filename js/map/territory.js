@@ -1,4 +1,4 @@
-export default class Territory {
+class Territory {
     constructor(territory) {
         this.name = territory.name;
         this.adjacentTerritories = territory.adjacentTerritories;
@@ -6,3 +6,5 @@ export default class Territory {
         this.numberOfTroops = 0;
     }
 }
+
+module.exports = Territory;

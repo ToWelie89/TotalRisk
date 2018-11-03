@@ -1,6 +1,6 @@
-import { loadSvgIntoDiv } from './../helpers';
+const { loadSvgIntoDiv } = require('./../helpers');
 
-export default class InjectSVGDirective {
+class InjectSVGDirective {
     constructor() {
         this.restrict = 'A';
     }
@@ -14,3 +14,5 @@ export default class InjectSVGDirective {
         });
     }
 }
+
+module.exports = InjectSVGDirective;

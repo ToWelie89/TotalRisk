@@ -1,7 +1,7 @@
-import { worldMap } from './../map/worldMapConfiguration';
-import { shuffle } from './../helpers';
-import Card from './card';
-import { CARD_TYPE } from './cardConstants';
+const { worldMap } = require('./../map/worldMapConfiguration');
+const { shuffle } = require('./../helpers');
+const Card = require('./card');
+const { CARD_TYPE } = require('./cardConstants');
 
 const initiatieCardDeck = () => {
     const cardDeck = [];
@@ -34,4 +34,4 @@ const initiatieCardDeck = () => {
     return cardDeck;
 };
 
-export {initiatieCardDeck};
+module.exports = { initiatieCardDeck };

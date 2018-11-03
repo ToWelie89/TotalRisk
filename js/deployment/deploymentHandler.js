@@ -1,6 +1,6 @@
-import { CONSTANTS } from './../gameConstants';
+const { CONSTANTS } = require('./../gameConstants');
 
-export default class DeploymentHandler {
+class DeploymentHandler {
     calculateReinforcements(players, map, turn) {
         let numberOfReinforcements = 0;
         const currentPlayer = players.get(turn.player.name);
@@ -20,3 +20,5 @@ export default class DeploymentHandler {
         return (numberOfReinforcements > CONSTANTS.MIN_REINFORCEMENTS) ? numberOfReinforcements : CONSTANTS.MIN_REINFORCEMENTS;
     }
 }
+
+module.exports = DeploymentHandler;

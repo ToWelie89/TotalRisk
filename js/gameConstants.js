@@ -1,4 +1,4 @@
-import {CARD_TYPE} from './card/cardConstants';
+const { CARD_TYPE } = require('./card/cardConstants');
 
 const TURN_PHASES = {
     DEPLOYMENT: 0,
@@ -98,7 +98,7 @@ const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 0.3;
 
 const MAX_CARDS_ON_HAND = 5;
 
-export {
+module.exports = {
     TURN_PHASES,
     GAME_PHASES,
     CONSTANTS,

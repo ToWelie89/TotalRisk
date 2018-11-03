@@ -1,7 +1,7 @@
-import { GAME_PHASES } from './../gameConstants';
-import { getCurrentOwnershipStandings } from './../map/mapHelpers';
+const { GAME_PHASES } = require('./../gameConstants');
+const { getCurrentOwnershipStandings } = require('./../map/mapHelpers');
 
-export default class EndScreenTableController {
+class EndScreenTableController {
     constructor($scope, $rootScope, gameEngine) {
         this.vm = this;
         this.$rootScope = $rootScope;
@@ -59,3 +59,5 @@ export default class EndScreenTableController {
 
     }
 }
+
+module.exports = EndScreenTableController;

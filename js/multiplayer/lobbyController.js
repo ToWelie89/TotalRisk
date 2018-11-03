@@ -1,12 +1,12 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import {hashString} from './../helpers';
-import {GAME_PHASES, CONSTANTS} from './../gameConstants';
-import {normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv} from './../helpers';
-import {avatars, PLAYER_COLORS} from './../player/playerConstants';
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
+const {hashString} = require('./../helpers');
+const {GAME_PHASES, CONSTANTS} = require('./../gameConstants');
+const {normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv} = require('./../helpers');
+const {avatars, PLAYER_COLORS} = require('./../player/playerConstants');
 
-export default class LobbiesController {
+class LobbiesController {
     constructor($scope, $rootScope, $timeout, $uibModal, soundService, socketService, toastService) {
         this.vm = this;
         this.$scope = $scope;
@@ -197,7 +197,7 @@ export default class LobbiesController {
         this.socketService.socket.on('kicked', () => {
             this.$rootScope.currentLobbyId = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
-            this.toastService.errorToast('', 'You have been kicked from the lobby.');
+            this.toastService.errorToast('', 'You have been kicked = require(the lobby.');
             this.socketService.socket.disconnect();
         });
 
@@ -325,3 +325,5 @@ export default class LobbiesController {
         this.socketService.startGame();
     }
 }
+
+module.exports = LobbiesController;

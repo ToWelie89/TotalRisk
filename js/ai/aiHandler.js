@@ -1,12 +1,12 @@
-import { getBestPossibleCombination } from './../card/cardHelpers';
-import { TURN_PHASES } from './../gameConstants';
-import { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } from './../map/mapHelpers';
-import { delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } from './../helpers';
-import BattleHandler from './../attack/battleHandler';
-import { PLAYER_TYPES } from './../player/playerConstants';
-import { displayDamageNumbers, displayReinforcementNumbers } from './../animations/animations';
+const { getBestPossibleCombination } = require('./../card/cardHelpers');
+const { TURN_PHASES } = require('./../gameConstants');
+const { getTerritoriesInRegionByOwner, getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } = require('./../map/mapHelpers');
+const { delay, allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } = require('./../helpers');
+const BattleHandler = require('./../attack/battleHandler');
+const { PLAYER_TYPES } = require('./../player/playerConstants');
+const { displayDamageNumbers, displayReinforcementNumbers } = require('./../animations/animations');
 
-export default class AiHandler {
+class AiHandler {
     constructor(gameEngine, soundService, mapService, settings) {
         this.gameEngine = gameEngine;
         this.soundService = soundService;
@@ -441,7 +441,7 @@ export default class AiHandler {
 
     movementPhase() {
         return new Promise((resolve, reject) => {
-            // GET ALL TERRITORIES WITH MORE THAN ONE TROOP FROM WHICH THE PLAYER CAN MOVE TROOPS
+            // GET ALL TERRITORIES WITH MORE THAN ONE TROOP = require(WHICH THE PLAYER CAN MOVE TROOPS
             let territoriesByOwner = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
             territoriesByOwner = territoriesByOwner.filter(t => t.numberOfTroops > 1);
 
@@ -628,3 +628,5 @@ export default class AiHandler {
         return currentStandings;
     }
 }
+
+module.exports = AiHandler;

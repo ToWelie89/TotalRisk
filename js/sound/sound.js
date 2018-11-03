@@ -1,4 +1,4 @@
-export default class Sound {
+class Sound {
     constructor(reference, gameEngine) {
         this.reference = reference;
         this.audio = new Audio(this.reference);
@@ -16,3 +16,5 @@ export default class Sound {
         }
     }
 }
+
+module.exports = Sound;

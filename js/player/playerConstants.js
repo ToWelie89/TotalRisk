@@ -319,4 +319,10 @@ const playerIterator = (playerMap, turnPhases) => {
     };
 };
 
-export {PLAYER_COLORS, playerIterator, avatars, PLAYER_TYPES, AI_VALUES};
+module.exports = {
+    PLAYER_COLORS,
+    playerIterator,
+    avatars,
+    PLAYER_TYPES,
+    AI_VALUES
+};

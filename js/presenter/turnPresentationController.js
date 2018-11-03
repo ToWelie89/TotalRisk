@@ -1,7 +1,7 @@
-import {TURN_PHASES, GAME_PHASES} from './../gameConstants';
-import { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } from './../gameConstants';
+const {TURN_PHASES, GAME_PHASES} = require('./../gameConstants');
+const { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } = require('./../gameConstants');
 
-export default class TurnPresentationController {
+class TurnPresentationController {
 
     constructor($scope, $rootScope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, data) {
         this.vm = this;
@@ -134,3 +134,5 @@ export default class TurnPresentationController {
         });
     }
 }
+
+module.exports = TurnPresentationController;

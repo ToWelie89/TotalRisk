@@ -1,4 +1,4 @@
-export default class ToastService {
+class ToastService {
 	constructor($compile) {
 		this.defaultToastSettings = {
 			class: 'myToast',
@@ -49,3 +49,5 @@ export default class ToastService {
 		);
 	}
 }
+
+module.exports = ToastService;

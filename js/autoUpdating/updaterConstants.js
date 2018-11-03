@@ -16,4 +16,4 @@ const stateIsError = state => {
     return ERROR_TYPES[state] !== undefined
 }
 
-export { MESSAGE_TYPES, ERROR_TYPES, stateIsError };
+module.exports = { MESSAGE_TYPES, ERROR_TYPES, stateIsError };

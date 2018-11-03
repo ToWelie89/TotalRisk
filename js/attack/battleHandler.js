@@ -1,4 +1,4 @@
-export default class BattleHandler {
+class BattleHandler {
     handleAttack(attacker, defender, preDeterminedAttackDice = null, preDeterminedDefendDice = null) {
         const newAttacker = Object.assign({}, attacker);
         const newDefender = Object.assign({}, defender);
@@ -44,3 +44,5 @@ export default class BattleHandler {
         return Math.floor(Math.random() * 6) + 1;
     }
 }
+
+module.exports = BattleHandler;

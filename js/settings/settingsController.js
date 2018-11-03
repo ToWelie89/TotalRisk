@@ -1,6 +1,6 @@
-import {runningElectron} from './../helpers';
+const {runningElectron} = require('./../helpers');
 
-export default class SettingsController {
+class SettingsController {
 
     constructor($scope, $timeout, settings, aiHandler, soundService) {
         this.vm = this;
@@ -57,3 +57,5 @@ export default class SettingsController {
     }
 
 }
+
+module.exports = SettingsController;

@@ -1,4 +1,4 @@
-export default class HostNewGameModalController {
+class HostNewGameModalController {
 
     constructor($scope, $uibModalInstance, soundService) {
         this.vm = this;
@@ -29,3 +29,5 @@ export default class HostNewGameModalController {
         this.$uibModalInstance.close();
     }
 }
+
+module.exports = HostNewGameModalController;

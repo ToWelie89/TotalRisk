@@ -1,8 +1,8 @@
-import BattleHandler from './battleHandler';
-import {delay} from './../helpers';
-import {GAME_PHASES} from './../gameConstants';
+const BattleHandler = require('./battleHandler');
+const {delay} = require('./../helpers');
+const {GAME_PHASES} = require('./../gameConstants');
 
-export default class AttackModalController {
+class AttackModalController {
     constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData) {
         this.vm = this;
 
@@ -281,3 +281,5 @@ export default class AttackModalController {
         }
     }
 }
+
+module.exports = AttackModalController;

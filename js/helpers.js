@@ -188,7 +188,7 @@ const stopGlobalLoading = () => {
     $('#globalLoading').css('opacity', '0');
 }
 
-export {
+module.exports = {
     shuffle,
     arraysEqual,
     delay,

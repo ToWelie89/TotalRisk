@@ -1,4 +1,4 @@
-import {
+const {
     GAME_PHASES,
     TURN_PHASES,
     MAIN_MUSIC,
@@ -6,14 +6,14 @@ import {
     MAX_CARDS_ON_HAND,
     ATTACK_MUSIC,
     PAUSE_MODES
-} from './../gameConstants';
-import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
-import Player from './../player/player';
-import {PLAYER_COLORS, avatars, PLAYER_TYPES} from './../player/playerConstants';
-import {delay} from './../helpers';
-import {displayReinforcementNumbers} from './../animations/animations';
+} = require('./../gameConstants');
+const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
+const Player = require('./../player/player');
+const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
+const {delay} = require('./../helpers');
+const {displayReinforcementNumbers} = require('./../animations/animations');
 
-export default class GameController {
+class GameController {
 
     constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         this.vm = this;
@@ -662,3 +662,5 @@ export default class GameController {
         this.mapService.updateMap(this.vm.filter);
     }
 }
+
+module.exports = GameController;

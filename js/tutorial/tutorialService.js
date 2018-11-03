@@ -1,7 +1,7 @@
-import {getTerritoryByName, getTerritoriesByOwner} from './../map/mapHelpers';
-import {MUSIC_VOLUME_DURING_TUTORIAL, GAME_PHASES} from './../gameConstants';
+const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
+const {MUSIC_VOLUME_DURING_TUTORIAL, GAME_PHASES} = require('./../gameConstants');
 
-export default class TutorialService {
+class TutorialService {
     constructor(gameEngine, $uibModal, soundService, $rootScope) {
         this.gameEngine = gameEngine;
         this.$uibModal = $uibModal;
@@ -526,3 +526,5 @@ export default class TutorialService {
         });
     }
 }
+
+module.exports = TutorialService;

@@ -1,8 +1,8 @@
-import { worldMap } from './worldMapConfiguration';
-import Region from './region';
-import { shuffle } from './../helpers';
+const { worldMap } = require('./worldMapConfiguration');
+const Region = require('./region');
+const { shuffle } = require('./../helpers');
 
-export default class WorldMap {
+class WorldMap {
     constructor() {
         this.regions = new Map();
 
@@ -65,3 +65,5 @@ export default class WorldMap {
         map.regions.forEach(region => shuffle(region.territories)); // Shuffle every territory in every region
     }
 }
+
+module.exports = WorldMap;

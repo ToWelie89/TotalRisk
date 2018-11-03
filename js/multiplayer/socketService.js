@@ -1,10 +1,10 @@
-import io from 'socket.io-client';
-import firebase from 'firebase/app';
-import {GAME_PHASES} from './../gameConstants';
-import {displayReinforcementNumbers} from './../animations/animations';
-import { getTerritoryByName } from './../map/mapHelpers';
+const io = require('socket.io-client');
+const firebase = require('firebase/app');
+const {GAME_PHASES} = require('./../gameConstants');
+const {displayReinforcementNumbers} = require('./../animations/animations');
+const { getTerritoryByName } = require('./../map/mapHelpers');
 
-export default class SocketService {
+class SocketService {
     constructor(gameEngine, $rootScope, mapService, soundService) {
         this.gameEngine = gameEngine;
         this.mapService = mapService;
@@ -91,3 +91,5 @@ export default class SocketService {
         this.socket.emit('troopAddedToTerritory', territoryName, this.userUid);
     }
 }
+
+module.exports = SocketService;

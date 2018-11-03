@@ -1,6 +1,6 @@
-import {PLAYER_TYPES} from './../player/playerConstants';
+const {PLAYER_TYPES} = require('./../player/playerConstants');
 
-export default class PlayerTypePopoverController {
+class PlayerTypePopoverController {
     constructor($scope) {
         this.vm = this;
         this.vm.init = this.init;
@@ -21,3 +21,5 @@ export default class PlayerTypePopoverController {
     	}
     }
 }
+
+module.exports = PlayerTypePopoverController;

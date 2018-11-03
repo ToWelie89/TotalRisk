@@ -1,6 +1,6 @@
-import { MESSAGE_TYPES, ERROR_TYPES, stateIsError } from './../autoUpdating/updaterConstants';
+const { MESSAGE_TYPES, ERROR_TYPES, stateIsError } = require( './../autoUpdating/updaterConstants');
 
-export default class AutoUpdaterModalController {
+class AutoUpdaterModalController {
 
     constructor($scope, $uibModalInstance, $interval) {
         this.vm = this;
@@ -71,3 +71,5 @@ export default class AutoUpdaterModalController {
         window.close();
     }
 }
+
+module.exports = AutoUpdaterModalController;

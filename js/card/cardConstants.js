@@ -5,4 +5,4 @@ const CARD_TYPE = {
     JOKER: 3
 };
 
-export {CARD_TYPE};
+module.exports = {CARD_TYPE};

@@ -1,10 +1,10 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import {GAME_PHASES} from './../gameConstants';
-import {startGlobalLoading, stopGlobalLoading} from './../helpers';
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
+const {GAME_PHASES} = require('./../gameConstants');
+const {startGlobalLoading, stopGlobalLoading} = require('./../helpers');
 
-export default class CharacterCreatorController {
+class CharacterCreatorController {
 
     constructor($scope, $rootScope, soundService, toastService) {
         this.vm = this;
@@ -408,3 +408,5 @@ export default class CharacterCreatorController {
         $('#editorCustomCharacterMain').css('margin-top', `${offset}px`);*/
     }
 }
+
+module.exports = CharacterCreatorController;

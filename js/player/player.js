@@ -1,6 +1,6 @@
-import {PLAYER_TYPES, AI_VALUES} from './playerConstants';
+const {PLAYER_TYPES, AI_VALUES} = require('./playerConstants');
 
-export default class Player {
+class Player {
     constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN, userUid = undefined, isHost = undefined) {
         this.name = name;
         this.color = color;
@@ -21,3 +21,5 @@ export default class Player {
         };
     }
 }
+
+module.exports = Player;

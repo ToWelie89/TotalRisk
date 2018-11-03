@@ -1,7 +1,7 @@
-import {delay} from './../helpers';
-import {GAME_PHASES} from './../gameConstants';
+const {delay} = require('./../helpers');
+const {GAME_PHASES} = require('./../gameConstants');
 
-export default class MovementModalController {
+class MovementModalController {
 
     constructor($scope, $rootScope, $uibModalInstance, tutorialService, data) {
         this.vm = this;
@@ -103,3 +103,5 @@ export default class MovementModalController {
         });
     }
 }
+
+module.exports = MovementModalController;

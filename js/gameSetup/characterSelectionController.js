@@ -1,10 +1,10 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import {avatars} from './../player/playerConstants';
-import {objectsAreEqual, arrayIncludesObject, getRandomColor, loadSvgIntoDiv} from './../helpers';
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
+const {avatars} = require('./../player/playerConstants');
+const {objectsAreEqual, arrayIncludesObject, getRandomColor, loadSvgIntoDiv} = require('./../helpers');
 
-export default class CharacterSelectionController {
+class CharacterSelectionController {
     constructor($scope, $uibModalInstance, socketService, currentSelectedPlayer, selectedPlayers) {
         this.vm = this;
         this.$scope = $scope;
@@ -173,3 +173,5 @@ export default class CharacterSelectionController {
         });
     }
 }
+
+module.exports = CharacterSelectionController;

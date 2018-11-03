@@ -1,4 +1,4 @@
-export const worldMap = {
+const worldMap = {
     regions: [{
         name: "Africa",
         bonusTroops: 3,
@@ -384,3 +384,5 @@ export const worldMap = {
         }]
     }]
 };
+
+module.exports = { worldMap };

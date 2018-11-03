@@ -1,6 +1,6 @@
-import { loadSvgIntoDiv } from './../helpers';
+const { loadSvgIntoDiv } = require('./../helpers');
 
-export default class PlayerPortraitDirective {
+class PlayerPortraitDirective {
     constructor() {
         this.restrict = 'A';
         this.scope = {
@@ -67,3 +67,5 @@ export default class PlayerPortraitDirective {
         }, 100);
     }
 }
+
+module.exports = PlayerPortraitDirective;

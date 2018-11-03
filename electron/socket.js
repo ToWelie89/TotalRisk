@@ -1,11 +1,11 @@
-import firebase from 'firebase';
-import { getRandomInteger } from './../js/helpers';
-import { PLAYER_COLORS, avatars, PLAYER_TYPES } from './../js/player/playerConstants';
-import Player from './../js/player/player';
-import GameEngine from './../js/gameEngine';
-import FirebaseSettings from './../js/firebaseSettings';
-import { VICTORY_GOALS } from './../js/gameConstants';
-import { getTerritoryByName } from './../js/map/mapHelpers';
+const firebase = require('firebase');
+const { getRandomInteger } = require('./../js/helpers');
+const { PLAYER_COLORS, avatars, PLAYER_TYPES } = require('./../js/player/playerConstants');
+const Player = require('./../js/player/player');
+const GameEngine = require('./../js/gameEngine');
+const FirebaseSettings = require('./../js/firebaseSettings');
+const { VICTORY_GOALS } = require('./../js/gameConstants');
+const { getTerritoryByName } = require('./../js/map/mapHelpers');
 
 const states = {
   LOBBY: 'LOBBY',
@@ -136,12 +136,12 @@ io.on('connection', function(socket){
   });
 
   socket.on('kickPlayer', (roomId, userUid) => {
-    console.log('Player kicked from lobby');
+    console.log('Player kicked = require(lobby');
 
     addNewMessage(socket.roomId, {
       sender: 'SERVER',
       uid: 'SERVER',
-      message: `${socketList[userUid].userName} was kicked from the room`,
+      message: `${socketList[userUid].userName} was kicked = require(the room`,
       timestamp: Date.now()
     });
 

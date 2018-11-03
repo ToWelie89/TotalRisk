@@ -9,4 +9,4 @@ const ElectronSettings = {
     }
 };
 
-export default ElectronSettings;
+module.exports = ElectronSettings;

@@ -1,14 +1,14 @@
-import { MESSAGE_TYPES, ERROR_TYPES } from './../js/autoUpdating/updaterConstants';
+const { MESSAGE_TYPES, ERROR_TYPES } = require('./../js/autoUpdating/updaterConstants');
 
-import electron from 'electron';
-import {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} from 'electron';
-import log from 'electron-log';
-import {autoUpdater} from 'electron-updater';
-import path from 'path';
-import url from 'url';
+const electron = require('electron');
+const {app, BrowserWindow, Menu, protocol, ipcMain, globalShortcut} = require('electron');
+const log = require('electron-log');
+const {autoUpdater} = require('electron-updater');
+const path = require('path');
+const url = require('url');
 
-import Store from './../js/settings/electronStore.js';
-import ElectronSettings from './../js/settings/electronDefaultSettings.js';
+const Store = require('./../js/settings/electronStore.js');
+const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
 
 let win;
 const store = new Store({

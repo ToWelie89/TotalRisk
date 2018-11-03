@@ -1,6 +1,6 @@
-import {PLAYER_COLORS} from './../player/playerConstants';
+const {PLAYER_COLORS} = require('./../player/playerConstants');
 
-export default class ColorPopoverController {
+class ColorPopoverController {
     constructor($scope) {
         this.vm = this;
         this.vm.init = this.init;
@@ -11,3 +11,5 @@ export default class ColorPopoverController {
         this.vm.player = player;
     }
 }
+
+module.exports = ColorPopoverController;

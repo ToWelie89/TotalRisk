@@ -1,6 +1,6 @@
-import Territory from './territory';
+const Territory = require('./territory');
 
-export default class Region {
+class Region {
     constructor(region) {
         this.name = region.name;
         this.bonusTroops = region.bonusTroops;
@@ -14,3 +14,5 @@ export default class Region {
         this.territories.set(territory.name, (new Territory(territory)));
     }
 }
+
+module.exports = Region;

@@ -1,15 +1,15 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import {
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
+const {
     GAME_PHASES
-} from './../gameConstants';
-import { normalizeTimeFromTimestamp, getRandomColor } from './../helpers';
-import { displayReinforcementNumbers } from './../animations/animations';
+} = require('./../gameConstants');
+const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
+const { displayReinforcementNumbers } = require('./../animations/animations');
 
-import GameController from './gameController';
+const GameController = require('./gameController');
 
-export default class GameControllerMultiplayer extends GameController {
+class GameControllerMultiplayer extends GameController {
     constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
 
@@ -179,3 +179,5 @@ export default class GameControllerMultiplayer extends GameController {
     }
 
 }
+
+module.exports = GameControllerMultiplayer;
