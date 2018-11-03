@@ -65,6 +65,7 @@ const getUnusedAvatar = () => {
 io.on('connection', function(socket){
   console.log('User connected!');
   socket.emit('connected');
+  messages = [];
 
   // GAME EVENTS
 
@@ -196,6 +197,12 @@ io.on('connection', function(socket){
     addNewMessage(roomId, msg);
   });
 
+  socket.on('getMessages', () => {
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('messagesUpdated', messages);
+    }
+  });
+
   const updateCurrentPlayersInRoom = roomId => {
     const updates = {};
     updates[`rooms/${roomId}/currentNumberOfPlayers`] = Object.values(socketList).filter(s => s.roomId === roomId).length;
@@ -205,6 +212,8 @@ io.on('connection', function(socket){
   }
 
   const addNewMessage = (roomId, msg) => {
+    console.log('roomId', roomId)
+    console.log('msg', msg)
     if (msg.uid && msg.uid !== 'SERVER') {
       msg.color = socketList[msg.uid].color.mainColor;
     }
@@ -212,10 +221,7 @@ io.on('connection', function(socket){
     messages.push(msg);
 
     for (let currentSocket in socketList) {
-      if (socketList[currentSocket].roomId === roomId) {
-        const allMessages = messages.filter(msg => msg.roomId === roomId);
-        socketList[currentSocket].emit('messagesUpdated', allMessages);
-      }
+      socketList[currentSocket].emit('messagesUpdated', messages);
     }
   }
 });

@@ -49,7 +49,12 @@ export default class SocketService {
             this.gameEngine.troopsToDeploy = troopsToDeploy;
 
             this.mapService.updateMap(this.gameEngine.filter);
+            this.sendMessage('SERVER', 'SERVER', `GAME STARTED!`, Date.now(), roomId);
         });
+    }
+
+    getMessages() {
+        this.socket.emit('getMessages');
     }
 
     sendMessage(sender, uid, message, timestamp, roomId) {

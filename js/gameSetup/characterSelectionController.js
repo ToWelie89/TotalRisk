@@ -53,7 +53,7 @@ export default class CharacterSelectionController {
                     }
                     setTimeout(() => {
                         this.loadSavedCharacterPortraits();
-                    }, 50);
+                    }, 500);
                 });
             }
         });
@@ -71,7 +71,7 @@ export default class CharacterSelectionController {
         document.querySelectorAll('.selectableAvatars__item').forEach(characterBox => {
             if (characterBox.querySelector('div[character]')) {
                 const avatarId = characterBox.querySelector('div[character]').getAttribute('character');
-                characterBox.querySelector('svg').setAttribute('viewBox', '120 20 400 400');
+                characterBox.querySelector('svg').setAttribute('viewBox', '127 10 398 400');
                 characterBox.querySelector('svg').setAttribute('xmlns', 'http://www.w3.org/2000/svg'+Math.random());
                 characterBox.querySelector('svg').setAttribute('xmlns:bx', 'https://boxy-svg.com'+Math.random());
 

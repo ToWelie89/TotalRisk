@@ -1,9 +1,5 @@
 /node_modules
 /assetsDist
-/index.html
-/attackModal.html
-/turnPresentationModal.html
-/cardTurnInModal.html
 /dist
 /coverage
 /$Recycle.Bin

@@ -1,0 +1,57 @@
+#multiplayerContainer {
+	#topBar {
+		background: rgba(67, 64, 64, 0.6901960784313725);
+        border-top-right-radius: 30px;
+        border-top-left-radius: 60px;
+        box-shadow: 3px 3px 8px #202020;
+	}
+	#multiplayerMap {
+	    background: #5397d1;
+	    box-shadow: 3px 3px 8px #202020;
+	}
+	#lobbyChatBoxes {
+		width: 100%;
+		margin-top: -47px;
+
+		.muteChatContainer {
+			width: 100%;
+		    margin-top: 0px;
+
+		    button {
+		    	margin-right: 10px;
+	    	    font-size: 15px;
+		    }
+
+		    .chatTab {
+		    	padding: 14px;
+		    	font-size: 14px;
+		    }
+		}
+
+		.chatBox {
+			width: 100%;
+			border-top-left-radius: 0px;
+			border-top-right-radius: 0px;
+
+			.chatMessagesContainer {
+				min-height: 200px;
+				height: 200px;
+				max-height: 200px;
+				resize: none;
+
+				.topShadowOverlay {
+				    border-top-left-radius: 0px;
+				}
+
+				&::-webkit-scrollbar-track {
+				    border-top-right-radius: 0px;
+				}
+
+				&::-webkit-scrollbar {
+				    border-top-right-radius: 0px;
+				}
+			}
+		}
+	}
+}
+

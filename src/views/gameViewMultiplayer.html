@@ -1,8 +1,6 @@
 <div class="container mainContent" id="multiplayerContainer" data-ng-controller="gameControllerMultiplayer as gameMultiplayer"">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
-        <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
-                                border-radius: 30px;
-                                border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
+        <div class="row" id="topBar">
             <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
                 <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ gameMultiplayer.turn.player.avatar.picture }});"></div>
                 <div class="col-xs-9">
@@ -86,17 +84,73 @@
             </div>
         </div>
         <div class="row">
-           <div id="multiplayerMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
-             style="background: #5397d1;
-                    border-radius: 30px;
-                    margin-top: 20px;
-                    box-shadow: 3px 3px 8px #202020;"
-                    inject-svg
-                    src="assets/maps/worldMap/worldMap.svg">
+           <div id="multiplayerMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}" inject-svg src="assets/maps/worldMap/worldMap.svg">
            </div>
         </div>
-        <div class="row">
-            <div id="currentTerritoryInfo">
+        <div id="lobbyChatBoxes">
+            <div class="muteChatContainer">
+                <div>
+                    <div class="chatTab" data-ng-click="gameMultiplayer.switchChat(true)" data-ng-class="{'chatTab--active': gameMultiplayer.showLobbyChat}">
+                        Lobby chat
+                        <div class="unreadCount" data-ng-show="gameMultiplayer.unreadLobbyMessages > 0">
+                            {{ gameMultiplayer.unreadLobbyMessages <= 99 ? gameMultiplayer.unreadLobbyMessages : '...' }}
+                        </div>
+                    </div>
+                    <div class="chatTab" data-ng-click="gameMultiplayer.switchChat(false)" data-ng-class="{'chatTab--active': !gameMultiplayer.showLobbyChat}">
+                        Global chat
+                        <div class="unreadCount" data-ng-show="gameMultiplayer.unreadGlobalMessages > 0">
+                            {{ gameMultiplayer.unreadGlobalMessages <= 99 ? gameMultiplayer.unreadGlobalMessages : '...' }}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="button marginBottom" data-ng-click="gameMultiplayer.muteChat = !gameMultiplayer.muteChat" data-ng-class="{'button-green': gameMultiplayer.muteChat, 'button-red': !gameMultiplayer.muteChat}">
+                        <span data-ng-show="gameMultiplayer.muteChat">Unmute chat</span>
+                        <span class="glyphicon glyphicon-volume-up" data-ng-show="gameMultiplayer.muteChat"></span>
+                        <span data-ng-show="!gameMultiplayer.muteChat">Mute chat</span>
+                        <span class="glyphicon glyphicon-volume-off" data-ng-show="!gameMultiplayer.muteChat"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="chatBox" data-ng-show="gameMultiplayer.showLobbyChat">
+                <div class="chatMessagesContainer">
+                    <div class="topShadowOverlay">
+                    </div>
+                    <div class="globalChatMessage" data-ng-repeat="message in gameMultiplayer.lobbyChatMessages">
+                        <strong style="color: {{ message.color }};">{{ message.sender }}</strong> <span>({{ message.normalizedTime }})</span>: {{ message.message }}
+                    </div>
+                </div>
+                <div class="senderBar">
+                    <form action="" onsubmit="return false;">
+                        <input type="text" data-ng-model="gameMultiplayer.lobbyChatMessage" placeholder="Type a message . . ." maxlength="{{ gameMultiplayer.chatMaxLengthMessage }}" ng-trim="false" />
+                        <p class="charactersLeft">
+                            {{ gameMultiplayer.charactersLeft() }}
+                        </p>
+                        <button type="submit" class="button button-blue" data-ng-click="gameMultiplayer.sendMessageLobby()" data-ng-disabled="gameMultiplayer.lobbyChatMessage.length === 0 || gameMultiplayer.disableSendButton">
+                            <strong>Send</strong>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="chatBox" data-ng-show="!gameMultiplayer.showLobbyChat">
+                <div class="chatMessagesContainer">
+                    <div class="topShadowOverlay">
+                    </div>
+                    <div class="globalChatMessage" data-ng-repeat="message in gameMultiplayer.globalChatMessages">
+                        <strong style="color: {{ message.color }};">{{ message.creator }}</strong> <span>({{ message.normalizedTime }})</span>: {{ message.message }}
+                    </div>
+                </div>
+                <div class="senderBar">
+                    <form action="" onsubmit="return false;">
+                        <input type="text" data-ng-model="gameMultiplayer.globalChatMessage" placeholder="Type a message . . ." maxlength="{{ gameMultiplayer.chatMaxLengthMessage }}" ng-trim="false" />
+                        <p class="charactersLeft">
+                            {{ gameMultiplayer.charactersLeft() }}
+                        </p>
+                        <button type="submit" class="button button-blue" data-ng-click="gameMultiplayer.sendMessageGlobal()" data-ng-disabled="gameMultiplayer.globalChatMessage.length === 0 || gameMultiplayer.disableSendButton">
+                            <strong>Send</strong>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
