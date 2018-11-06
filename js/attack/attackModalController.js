@@ -3,7 +3,7 @@ const {delay} = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
 
 class AttackModalController {
-    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, socketService, attackData) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -34,6 +34,7 @@ class AttackModalController {
         this.soundService = soundService;
         this.attackData = attackData;
         this.tutorialService = tutorialService;
+        this.socketService = socketService;
 
         this.vm.battleHandler = new BattleHandler();
 
@@ -59,6 +60,12 @@ class AttackModalController {
         this.closeModalDelay = 2500;
         this.startShakeAnimationDelay = 100;
         this.stopShakeAnimationDelay = 500;
+
+        this.multiplayerMode = this.attackData.multiplayer;
+
+        if (this.multiplayerMode) {
+            // display territories in battle for other players
+        }
 
         const defendingNationName = this.vm.defender.name;
         setTimeout(() => {
@@ -147,6 +154,20 @@ class AttackModalController {
         this.defender_box.throw(this.vm.defenderDice, this.afterRoll, this);
     }
 
+    battleFought(attackerCasualties, defenderCasualties, attackerNumberOfTroops, defenderNumberOfTroops) {
+        if (!this.multiplayerMode) {
+            return;
+        }
+        this.socketService.battleFought({
+            attackerCasualties,
+            defenderCasualties,
+            attackerNumberOfTroops: (attackerNumberOfTroops + 1),
+            defenderNumberOfTroops,
+            defenderTerritory: this.vm.defender.name,
+            attackerTerritory: this.vm.attacker.name
+        });
+    }
+
     afterRoll(result, context) {
         context.numberOfRollsComplete++;
         if (context.numberOfRollsComplete !== 2) {
@@ -165,6 +186,13 @@ class AttackModalController {
         context.vm.defender = context.battleHandlerResponse.defender;
         context.vm.attackerCasualties = context.battleHandlerResponse.attackerCasualties;
         context.vm.defenderCasualties = context.battleHandlerResponse.defenderCasualties;
+
+        context.battleFought(
+            context.battleHandlerResponse.attackerCasualties,
+            context.battleHandlerResponse.defenderCasualties,
+            context.vm.attacker.numberOfTroops,
+            context.vm.defender.numberOfTroops
+        )
 
         context.vm.diceAreRolling = false;
 
@@ -240,6 +268,17 @@ class AttackModalController {
         this.vm.defender.owner = this.vm.attacker.owner;
         this.vm.attacker.numberOfTroops = this.vm.attacker.numberOfTroops - this.vm.moveNumberOfTroops + 1;
         this.vm.defender.numberOfTroops = this.vm.moveNumberOfTroops;
+
+        if (this.multiplayerMode) {
+            this.socketService.updateOwnerAfterSuccessfulInvasion({
+                attackerTerritory: this.vm.attacker.name,
+                defenderTerritory: this.vm.defender.name,
+                attackerTerritoryNumberOfTroops: this.vm.attacker.numberOfTroops,
+                defenderTerritoryNumberOfTroops: this.vm.defender.numberOfTroops,
+                owner: this.vm.attacker.owner
+            });
+        }
+
         this.closeModal(true);
     }
 
@@ -270,7 +309,14 @@ class AttackModalController {
     }
 
     getCountrySvg(territoryName) {
-        const territorySvg = $(`#${ this.attackData.tutorialMode ? 'tutorialMap' : 'map' } #svgMap .country[id='${territoryName}']`).clone();
+        let mapContainer = 'map';
+        if (this.attackData.tutorialMode) {
+            mapContainer = 'tutorialMap';
+        } else if (this.multiplayerMode) {
+            mapContainer = 'multiplayerMap';
+        }
+
+        const territorySvg = $(`#${mapContainer} #svgMap .country[id='${territoryName}']`).clone();
         territorySvg.removeClass('attackCursor highlighted');
         $('#territorySvg').html(territorySvg);
 

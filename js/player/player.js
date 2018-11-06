@@ -7,6 +7,8 @@ class Player {
         this.avatar = avatar;
         this.cards = [];
         this.type = type;
+        this.userUid = userUid;
+        this.isHost = isHost;
 
         this.aiValues = AI_VALUES;
 

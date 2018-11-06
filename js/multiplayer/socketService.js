@@ -34,22 +34,23 @@ class SocketService {
         });
 
         this.socket.on('gameStarted', (players, victoryGoal, map, turn, troopsToDeploy) => {
-            this.$rootScope.players = players;
-            this.$rootScope.chosenGoal = victoryGoal;
-
-            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
-            this.$rootScope.$apply();
+            console.log('troopsToDeploy', troopsToDeploy);
             this.gameEngine.currentGameIsMultiplayer = true;
+            this.gameEngine.turn = turn;
+            this.gameEngine.troopsToDeploy = troopsToDeploy;
 
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = map.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
+                t.numberOfTroops = territoryFromServer.numberOfTroops;
             });
-            this.gameEngine.turn = turn;
-            this.gameEngine.troopsToDeploy = troopsToDeploy;
 
-            this.mapService.updateMap(this.gameEngine.filter);
-            this.sendMessage('SERVER', 'SERVER', `GAME STARTED!`, Date.now(), roomId);
+            this.$rootScope.players = players;
+            this.$rootScope.chosenGoal = victoryGoal;
+
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
+
+            this.$rootScope.$apply();
         });
     }
 
@@ -89,6 +90,18 @@ class SocketService {
 
     troopAddedToTerritory(territoryName) {
         this.socket.emit('troopAddedToTerritory', territoryName, this.userUid);
+    }
+
+    nextTurn() {
+        this.socket.emit('nextTurn');
+    }
+
+    battleFought(battleData) {
+        this.socket.emit('battleFought', battleData);
+    }
+
+    updateOwnerAfterSuccessfulInvasion(updateOwnerData) {
+        this.socket.emit('updateOwnerAfterSuccessfulInvasion', updateOwnerData);
     }
 }
 

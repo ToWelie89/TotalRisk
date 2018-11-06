@@ -2,10 +2,14 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {
-    GAME_PHASES
+    GAME_PHASES,
+    TURN_PHASES,
+    ATTACK_MUSIC
 } = require('./../gameConstants');
 const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
-const { displayReinforcementNumbers } = require('./../animations/animations');
+const { displayReinforcementNumbers, displayDamageNumbers } = require('./../animations/animations');
+const { getTerritoryByName } = require('./../map/mapHelpers');
+const { PLAYER_TYPES } = require('./../player/playerConstants');
 
 const GameController = require('./gameController');
 
@@ -123,18 +127,127 @@ class GameControllerMultiplayer extends GameController {
         });
     }
 
+    nextTurn() {
+        if (this.checkIfNextIsDisabled()) {
+            this.soundService.denied.play();
+            return;
+        }
+        this.emit('nextTurn');
+    }
+
+    engageAttackPhase(clickedTerritory) {
+        this.$uibModal.open({
+            templateUrl: 'src/modals/attackModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'attackModalController',
+            controllerAs: 'attack',
+            keyboard: false,
+            resolve: {
+                attackData: () => {
+                    return {
+                        territoryAttacked: clickedTerritory,
+                        attackFrom: this.gameEngine.selectedTerritory,
+                        attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
+                        defender: this.gameEngine.players.get(clickedTerritory.owner),
+                        multiplayer: true
+                    }
+                }
+            }
+        }).result.then(closeResponse => {
+            this.gameEngine.setMusic();
+            console.log('Battle is over ', closeResponse);
+            this.updatePlayerDataAfterAttack(closeResponse);
+            this.gameEngine.checkIfPlayerWonTheGame();
+        });
+    }
+
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
                 const user = firebase.auth().currentUser;
-                this.mapService.init('multiplayerMap');
+                this.vm.myUid = user.uid;
+                this.mapService.init('multiplayerMap', true, this.vm.myUid);
                 this.setListeners();
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
                 this.setSocketListeners();
-                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.emit('getMessages');
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
             }
         });
+    }
+
+    clickCountry(evt) {
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN || this.gameEngine.turn.player.userUid !== this.vm.myUid) {
+            return;
+        }
+
+        let country = evt.target.getAttribute('id');
+        if (!country) {
+            country = evt.target.getAttribute('for');
+        }
+        const clickedTerritory = getTerritoryByName(this.gameEngine.map, country);
+
+        if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
+                this.soundService.addTroopSound.play();
+                displayReinforcementNumbers(clickedTerritory.name);
+
+                this.emit('troopAddedToTerritory', [ clickedTerritory.name ])
+            } else {
+                this.soundService.denied.play();
+            }
+            this.gameEngine.addTroopToTerritory(country);
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            this.$scope.$apply();
+        } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
+            if (this.gameEngine.selectedTerritory &&
+                clickedTerritory.owner !== this.gameEngine.turn.player.name &&
+                clickedTerritory.adjacentTerritories.includes(this.gameEngine.selectedTerritory.name) &&
+                this.gameEngine.selectedTerritory.numberOfTroops > 1) {
+
+                this.gameEngine.setMusic(ATTACK_MUSIC);
+                this.engageAttackPhase(clickedTerritory);
+            } else {
+                this.gameEngine.selectedTerritory = clickedTerritory;
+                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                this.mapService.hightlightTerritory(country);
+            }
+        } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
+            if (this.gameEngine.selectedTerritory &&
+                this.gameEngine.selectedTerritory.name === clickedTerritory.name) {
+                this.gameEngine.selectedTerritory = undefined;
+                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            } else if (this.gameEngine.selectedTerritory &&
+                       clickedTerritory.owner === this.gameEngine.turn.player.name &&
+                       this.gameEngine.selectedTerritory.numberOfTroops > 1 &&
+                       clickedTerritory.name !== this.gameEngine.selectedTerritory.name &&
+                       this.mapService.getTerritoriesForMovement(this.gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
+                // move troops
+                this.engageMovementPhase(clickedTerritory);
+            } else {
+                this.gameEngine.selectedTerritory = clickedTerritory;
+                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                if (this.gameEngine.selectedTerritory.numberOfTroops > 1) {
+                    this.mapService.hightlightTerritory(country);
+                }
+            }
+        }
+    }
+
+    checkIfNextIsDisabled() {
+        if (!this.gameEngine.turn) {
+            return;
+        }
+        if (this.vm.gameEngine.turn.player.userUid !== this.vm.myUid) {
+            return true;
+        }
+        if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.troopsToDeploy > 0) {
+            return true;
+        }
+        return false;
     }
 
     setSocketListeners() {
@@ -146,7 +259,72 @@ class GameControllerMultiplayer extends GameController {
             this.soundService.addTroopSound.play();
             displayReinforcementNumbers(territoryName);
 
-            this.mapService.updateMap(this.gameEngine.filter);
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+        });
+
+        this.socketService.socket.on('nextTurnNotifier', (turn, reinforcements) => {
+            this.gameEngine.turn = turn;
+            this.vm.turn = this.gameEngine.turn;
+            if (reinforcements) {
+                this.gameEngine.troopsToDeploy = reinforcements;
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            }
+            this.$scope.$apply();
+
+            this.soundService.tick.play();
+
+            if (this.settings.showAnnouncer) {
+                this.turnPresenterIsOpen = true;
+                this.$uibModal.open({
+                    templateUrl: 'src/modals/turnPresentationModal.html',
+                    backdrop: 'static',
+                    windowClass: 'riskModal',
+                    controller: 'turnPresentationController',
+                    controllerAs: 'turnPresentation',
+                    keyboard: false,
+                    resolve: {
+                        data: () => {
+                            return {
+                                type: 'newTurn'
+                            };
+                        }
+                    }
+                }).result.then(closeResponse => {
+                    this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                    this.turnPresenterIsOpen = false;
+                    if (this.escapeWasPressed) {
+                        this.openPauseModal();
+                    }
+                });
+            } else {
+                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            }
+        });
+
+        this.socketService.socket.on('battleFoughtNotifier', (battleData) => {
+            getTerritoryByName(this.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
+            getTerritoryByName(this.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
+
+            if (battleData.attackerCasualties) {
+                displayDamageNumbers(battleData.attackerTerritory, battleData.attackerCasualties);
+            }
+            if (battleData.defenderCasualties) {
+                displayDamageNumbers(battleData.defenderTerritory, battleData.defenderCasualties);
+            }
+            if (battleData.attackerCasualties || battleData.defenderCasualties) {
+                this.soundService.muskets.play();
+            }
+
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+        });
+
+        this.socketService.socket.on('updateOwnerAfterSuccessfulInvasionNotifier', (updateOwnerData) => {
+            getTerritoryByName(this.gameEngine.map, updateOwnerData.attackerTerritory).numberOfTroops = updateOwnerData.attackerTerritoryNumberOfTroops;
+            getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).numberOfTroops = updateOwnerData.defenderTerritoryNumberOfTroops;
+            getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).owner = updateOwnerData.owner;
+
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.soundService.movement.play();
         });
 
         this.socketService.socket.on('messagesUpdated', (messages) => {
@@ -174,7 +352,7 @@ class GameControllerMultiplayer extends GameController {
         });
     }
 
-    emit(functionName, args) {
+    emit(functionName, args = []) {
         this.socketService[functionName](...args);
     }
 

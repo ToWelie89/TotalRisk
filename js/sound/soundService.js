@@ -21,6 +21,7 @@ class SoundService {
         this.tick = new Sound(`${this.soundPath}/tick.wav`, this.gameEngine);
         this.denied = new Sound(`${this.soundPath}/denied.wav`, this.gameEngine);
         this.newMessage = new Sound(`${this.soundPath}/newMessage.wav`, this.gameEngine);
+        this.muskets = new Sound(`${this.soundPath}/muskets.wav`, this.gameEngine);
     }
 }
 

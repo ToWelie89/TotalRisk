@@ -7,12 +7,16 @@ class MapService {
         this.gameEngine = gameEngine;
     }
 
-    init(parentId) {
+    init(parentId, multiplayer = false, userUid = undefined) {
         this.svg = document.querySelector(`#${parentId} #svgMap`);
 
         this.initEvents();
         this.clearWholeMap();
-        this.updateMap(this.gameEngine.map);
+        if (multiplayer) {
+            this.updateMapForMultiplayer(this.gameEngine.map, userUid);
+        } else {
+            this.updateMap(this.gameEngine.map);
+        }
     }
 
     updateMap(filter = 'byOwner') {
@@ -38,6 +42,37 @@ class MapService {
                 }
             });
         });
+    }
+
+    updateMapForMultiplayer(filter = 'byOwner', userUid) {
+        console.log('Update map');
+
+        this.gameEngine.map.regions.forEach(region => {
+            region.territories.forEach(territory => {
+                const color = (filter === 'byOwner') ? this.gameEngine.players.get(territory.owner).color : { name: region.name.toUpperCase() };
+                this.updateColorOfTerritory(territory, color);
+                this.updateTroopIndicator(territory, color);
+
+                this.svg.getElementById(territory.name).classList.remove('attackCursor', 'movementCursor', 'highlighted', 'addTroopCursor');
+
+                this.svg.querySelectorAll(`.troopCounter[for="${territory.name}"], .troopCounterText[for="${territory.name}"]`).forEach(el => {
+                    el.classList.remove('attackCursor', 'movementCursor', 'addTroopCursor');
+                });
+            });
+        });
+
+        if (userUid === this.gameEngine.turn.player.userUid) {
+            this.gameEngine.map.regions.forEach(region => {
+                region.territories.forEach(territory => {
+                    if (this.gameEngine.turn && this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.turn.player.name === territory.owner
+                        && this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
+                        this.svg.getElementById(territory.name).classList.add('addTroopCursor');
+                        this.svg.querySelector(`.troopCounter[for="${territory.name}"]`).classList.add('addTroopCursor');
+                        this.svg.querySelector(`.troopCounterText[for="${territory.name}"]`).classList.add('addTroopCursor');
+                    }
+                });
+            });
+        }
     }
 
     hightlightTerritory(target) {

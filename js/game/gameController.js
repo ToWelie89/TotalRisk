@@ -351,6 +351,7 @@ class GameController {
 
     nextTurn() {
         if (this.checkIfNextIsDisabled()) {
+            this.soundService.denied.play();
             return;
         }
 
@@ -499,7 +500,8 @@ class GameController {
                         territoryAttacked: clickedTerritory,
                         attackFrom: this.gameEngine.selectedTerritory,
                         attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
-                        defender: this.gameEngine.players.get(clickedTerritory.owner)
+                        defender: this.gameEngine.players.get(clickedTerritory.owner),
+                        multiplayer: false
                     }
                 }
             }
@@ -560,10 +562,6 @@ class GameController {
         this.mapService.updateMap(this.vm.filter);
     }
 
-    emit(functionName, args) {
-        return;
-    }
-
     clickCountry(evt) {
         if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
             return;
@@ -579,8 +577,6 @@ class GameController {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
-
-                this.emit('troopAddedToTerritory', [ clickedTerritory.name ])
             } else {
                 this.soundService.denied.play();
             }

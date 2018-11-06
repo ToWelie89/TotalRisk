@@ -4,7 +4,7 @@ const { PLAYER_COLORS, avatars, PLAYER_TYPES } = require('./../js/player/playerC
 const Player = require('./../js/player/player');
 const GameEngine = require('./../js/gameEngine');
 const FirebaseSettings = require('./../js/firebaseSettings');
-const { VICTORY_GOALS } = require('./../js/gameConstants');
+const { VICTORY_GOALS, TURN_PHASES } = require('./../js/gameConstants');
 const { getTerritoryByName } = require('./../js/map/mapHelpers');
 
 const states = {
@@ -88,6 +88,13 @@ io.on('connection', function(socket){
     for (let currentSocket in socketList) {
       socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
     }
+
+    addNewMessage(socket.roomId, {
+      sender: 'SERVER',
+      uid: 'SERVER',
+      message: `GAME STARTED!`,
+      timestamp: Date.now()
+    });
   });
 
   socket.on('troopAddedToTerritory', (territoryName, senderUid) => {
@@ -97,6 +104,37 @@ io.on('connection', function(socket){
       if (socketList[currentSocket].userUid !== senderUid) {
         socketList[currentSocket].emit('troopAddedToTerritoryNotifier', territoryName);
       }
+    }
+  });
+
+  socket.on('nextTurn', () => {
+    const turn = gameEngine.nextTurn();
+    let reinforcements = 0;
+    if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+      reinforcements = gameEngine.troopsToDeploy;
+    }
+
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('nextTurnNotifier', turn, reinforcements);
+    }
+  });
+
+  socket.on('battleFought', (battleData) => {
+    getTerritoryByName(gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
+    getTerritoryByName(gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
+
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('battleFoughtNotifier', battleData);
+    }
+  });
+
+  socket.on('updateOwnerAfterSuccessfulInvasion', (updateOwnerData) => {
+    getTerritoryByName(gameEngine.map, updateOwnerData.attackerTerritory).numberOfTroops = updateOwnerData.attackerTerritoryNumberOfTroops;
+    getTerritoryByName(gameEngine.map, updateOwnerData.defenderTerritory).numberOfTroops = updateOwnerData.defenderTerritoryNumberOfTroops;
+    getTerritoryByName(gameEngine.map, updateOwnerData.defenderTerritory).owner = updateOwnerData.owner;
+
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('updateOwnerAfterSuccessfulInvasionNotifier', updateOwnerData);
     }
   });
 

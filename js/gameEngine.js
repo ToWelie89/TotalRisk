@@ -92,15 +92,19 @@ class GameEngine {
         });
         this.cardDeck = initiatieCardDeck();
 
-        this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
-        this.turn = this.iterator.getCurrent();
+        if (!this.currentGameIsMultiplayer) {
+            this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
+            this.turn = this.iterator.getCurrent();
+        }
 
         this.deploymentHandler = new DeploymentHandler();
 
         this.winningCondition = winningCondition;
 
         // Setup game table
-        this.setupInitDeployment();
+        if (!this.currentGameIsMultiplayer) {
+            this.setupInitDeployment();
+        }
 
         console.log('Current turn: ', this.turn);
         this.handleTurnPhase();

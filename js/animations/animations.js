@@ -1,57 +1,82 @@
-const displayDamageNumbers = (territoryName, damageValue) => {
-    const territory = document.querySelector(`.troopCounter[for="${territoryName}"]`);
-
-    const id = `damageText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/ /g,'');
-
-    var damageText = document.createElement('p');
-    damageText.innerHTML = `-${damageValue}`;
-    damageText.id = id;
-    damageText.classList.add('damageText');
-
+const displayText = (territory, textElement) => {
     const bodyRect = document.body.getBoundingClientRect();
     const elemRect = territory.getBoundingClientRect();
     const offsetTop = (elemRect.top - bodyRect.top);
     const offsetLeft = (elemRect.left - bodyRect.left);
 
-    damageText.style.left = (Math.floor(offsetLeft) + 20) + 'px';
-    damageText.style.top = (Math.floor(offsetTop) - 20) + 'px';
+    textElement.style.left = (Math.floor(offsetLeft) + 20) + 'px';
+    textElement.style.top = (Math.floor(offsetTop) - 20) + 'px';
 
-    document.getElementById('map').appendChild(damageText);
+    document.getElementById('mainGameWrapper').appendChild(textElement);
 
-    $(`#${id}`).animate({
+    $(`#${textElement.id}`).animate({
       opacity: 0,
       top: "-=15"
     }, 800, function() {
-      $(`#${id}`).remove();
+      $(`#${textElement.id}`).remove();
     });
+}
+
+const displayDamageNumbers = (territoryName, damageValue) => {
+    const territories = document.querySelectorAll(`.troopCounter[for="${territoryName}"]`);
+    let territory;
+
+    territories.forEach(t => {
+        const bounds = t.getBoundingClientRect();
+        // See if element is visible
+        if (bounds.bottom !== 0 ||
+            bounds.height !== 0 ||
+            bounds.left !== 0 ||
+            bounds.right !== 0 ||
+            bounds.top !== 0 ||
+            bounds.width !== 0 ||
+            bounds.x !== 0 ||
+            bounds.y !== 0) {
+            territory = t;
+        }
+    });
+
+    if (territory) {
+        const id = `damageText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/ /g,'');
+
+        var damageText = document.createElement('p');
+        damageText.innerHTML = `-${damageValue}`;
+        damageText.id = id;
+        damageText.classList.add('damageText');
+
+        displayText(territory, damageText);
+    }
 };
 
 const displayReinforcementNumbers = (territoryName, reinforcementValue = 1) => {
-    const territory = document.querySelector(`.troopCounter[for="${territoryName}"]`);
+    const territories = document.querySelectorAll(`.troopCounter[for="${territoryName}"]`);
+    let territory;
 
-    const id = `reinforcementText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/ /g,'');
-
-    var reinforcementText = document.createElement('p');
-    reinforcementText.innerHTML = `+${reinforcementValue}`;
-    reinforcementText.id = id;
-    reinforcementText.classList.add('reinforcementText');
-
-    const bodyRect = document.body.getBoundingClientRect();
-    const elemRect = territory.getBoundingClientRect();
-    const offsetTop = (elemRect.top - bodyRect.top);
-    const offsetLeft = (elemRect.left - bodyRect.left);
-
-    reinforcementText.style.left = (Math.floor(offsetLeft) + 20) + 'px';
-    reinforcementText.style.top = (Math.floor(offsetTop) - 20) + 'px';
-
-    document.getElementById('map').appendChild(reinforcementText);
-
-    $(`#${id}`).animate({
-      opacity: 0,
-      top: "-=15"
-    }, 800, function() {
-      $(`#${id}`).remove();
+    territories.forEach(t => {
+        const bounds = t.getBoundingClientRect();
+        // See if element is visible
+        if (bounds.bottom !== 0 ||
+            bounds.height !== 0 ||
+            bounds.left !== 0 ||
+            bounds.right !== 0 ||
+            bounds.top !== 0 ||
+            bounds.width !== 0 ||
+            bounds.x !== 0 ||
+            bounds.y !== 0) {
+            territory = t;
+        }
     });
+
+    if (territory) {
+        const id = `reinforcementText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/ /g,'');
+
+        var reinforcementText = document.createElement('p');
+        reinforcementText.innerHTML = `+${reinforcementValue}`;
+        reinforcementText.id = id;
+        reinforcementText.classList.add('reinforcementText');
+
+        displayText(territory, reinforcementText);
+    }
 };
 
 module.exports = {displayDamageNumbers, displayReinforcementNumbers};

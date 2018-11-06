@@ -5,6 +5,7 @@
                 <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ gameMultiplayer.turn.player.avatar.picture }});"></div>
                 <div class="col-xs-9">
                     <div class="col-xs-12" style="padding: 0px;">
+                        <span style="float: left; color: white; margin-bottom: 5px;">Current player:</span>
                         <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ gameMultiplayer.getCurrentPlayerColor() }}"><span data-ng-bind="gameMultiplayer.turn.player.name"></span></strong>
                     </div>
                     <div class="col-xs-12" style="padding: 0px;">
