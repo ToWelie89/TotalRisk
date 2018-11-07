@@ -1,7 +1,7 @@
 "use strict";
 
 var random_storage = [];
-this.frame_rate = 1 / 60;
+this.frame_rate = 1 / 25;
 
 function prepare_rnd(callback) {
     callback();
@@ -414,11 +414,11 @@ var direction_kek = new THREE.Vector3(0.3, 0.5, 0);
 
 this.dice_box.prototype.__animate = function(threadid) {
     var time = (new Date()).getTime();
-    var time_diff = (time - this.last_time) / 1000;
+    var time_diff = (time - this.last_time) / 10;
     if (time_diff > 3) time_diff = that.frame_rate;
     ++this.iteration;
     if (this.use_adapvite_timestep) {
-        while (time_diff > that.frame_rate * 1.1) {
+        while (time_diff > that.frame_rate * 0.5) {
             this.world.step(that.frame_rate);
             time_diff -= that.frame_rate;
         }
@@ -454,7 +454,7 @@ this.dice_box.prototype.__animate = function(threadid) {
         (function(t, tid, uat) {
             if (!uat && time_diff < that.frame_rate) {
                 setTimeout(function() { requestAnimationFrame(function() { t.__animate(tid); }); },
-                    (that.frame_rate - time_diff) * 1000);
+                    (that.frame_rate - time_diff) * 10);
             }
             else requestAnimationFrame(function() { t.__animate(tid); });
         })(this, threadid, this.use_adapvite_timestep);
@@ -471,7 +471,7 @@ this.dice_box.prototype.clear = function() {
     if (this.pane) this.scene.remove(this.pane);
     this.renderer.render(this.scene, this.camera);
     var box = this;
-    setTimeout(function() { box.renderer.render(box.scene, box.camera); }, 100);
+    setTimeout(function() { box.renderer.render(box.scene, box.camera); }, 10);
 }
 
 this.dice_box.prototype.prepare_dices_for_roll = function(vectors) {

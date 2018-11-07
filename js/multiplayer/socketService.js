@@ -103,6 +103,10 @@ class SocketService {
     updateOwnerAfterSuccessfulInvasion(updateOwnerData) {
         this.socket.emit('updateOwnerAfterSuccessfulInvasion', updateOwnerData);
     }
+
+    updateMovement(movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops) {
+        this.socket.emit('updateMovement', movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops);
+    }
 }
 
 module.exports = SocketService;

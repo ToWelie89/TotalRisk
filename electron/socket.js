@@ -27,6 +27,12 @@ let currentLockedSlots = {};
 let messages = [];
 let playerList = [];
 
+let turnTimerSeconds;
+let turnTimerFunction;
+let turnTimer;
+
+const turnLength = 62;
+
 const setPlayers = (roomId) => {
   const currentPlayersInRoom = Object.values(socketList).filter(s => s.roomId === roomId).map(x => ({
     userUid: x.userUid,
@@ -44,22 +50,51 @@ const setPlayers = (roomId) => {
 }
 
 const getRandomUnusedColor = () => {
-    const usedColors = Object.values(socketList).map(socket => socket.color);
-    const allColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
+  const usedColors = Object.values(socketList).map(socket => socket.color);
+  const allColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
 
-    const availableColors = allColors.filter(color => !usedColors.includes(color));
+  const availableColors = allColors.filter(color => !usedColors.includes(color));
 
-    const colorToReturn = availableColors[getRandomInteger(0, (availableColors.length - 1))];
-    return colorToReturn;
+  const colorToReturn = availableColors[getRandomInteger(0, (availableColors.length - 1))];
+  return colorToReturn;
 }
 
 const getUnusedAvatar = () => {
-    const usedAvatars = Object.values(socketList).map(socket => socket.avatar);
-    const allAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
-    const availableAvatars = allAvatars.filter(avatar => !usedAvatars.includes(avatar));
+  const usedAvatars = Object.values(socketList).map(socket => socket.avatar);
+  const allAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
+  const availableAvatars = allAvatars.filter(avatar => !usedAvatars.includes(avatar));
 
-    const avatarToReturn = availableAvatars[getRandomInteger(0, (availableAvatars.length - 1))];
-    return avatarToReturn;
+  const avatarToReturn = availableAvatars[getRandomInteger(0, (availableAvatars.length - 1))];
+  return avatarToReturn;
+}
+
+const skipToNextPlayer = () => {
+  console.log('Skipping to next player due to time being up');
+  clearInterval(turnTimer);
+  let turn = { newPlayer: false };
+
+  while(!turn.newPlayer) {
+    turn = gameEngine.nextTurn();
+  }
+
+  for (let currentSocket in socketList) {
+    socketList[currentSocket].emit('nextTurnNotifier', turn, gameEngine.troopsToDeploy);
+  }
+
+  turnTimerSeconds = turnLength;
+  turnTimer = setInterval(turnTimerFunction, 1000);
+}
+
+const startTimer = () => {
+  clearInterval(turnTimer);
+  turnTimerSeconds = turnLength;
+  turnTimerFunction = () => {
+      turnTimerSeconds--;
+      if (turnTimerSeconds <= 0) {
+        skipToNextPlayer();
+      }
+  };
+  turnTimer = setInterval(turnTimerFunction, 1000);
 }
 
 io.on('connection', function(socket){
@@ -84,6 +119,8 @@ io.on('connection', function(socket){
     const victoryGoal = VICTORY_GOALS.find(x => x.percentage === 100);
 
     gameEngine.startGame(playerList, victoryGoal);
+
+    startTimer();
 
     for (let currentSocket in socketList) {
       socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
@@ -114,6 +151,10 @@ io.on('connection', function(socket){
       reinforcements = gameEngine.troopsToDeploy;
     }
 
+    if (turn.newPlayer) {
+      startTimer();
+    }
+
     for (let currentSocket in socketList) {
       socketList[currentSocket].emit('nextTurnNotifier', turn, reinforcements);
     }
@@ -135,6 +176,15 @@ io.on('connection', function(socket){
 
     for (let currentSocket in socketList) {
       socketList[currentSocket].emit('updateOwnerAfterSuccessfulInvasionNotifier', updateOwnerData);
+    }
+  });
+
+  socket.on('updateMovement', (movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops) => {
+    getTerritoryByName(gameEngine.map, movementFromTerritoryName).numberOfTroops = movementFromTerritoryNumberOfTroops;
+    getTerritoryByName(gameEngine.map, movementToTerritoryName).numberOfTroops = movementToTerritoryNumberOfTroops;
+
+    for (let currentSocket in socketList) {
+      socketList[currentSocket].emit('updateMovementNotifier', gameEngine.map.getAllTerritoriesAsList());
     }
   });
 
@@ -191,6 +241,7 @@ io.on('connection', function(socket){
 
   socket.on('disconnect', reason => {
     console.log('Got disconnected because of reason ', reason);
+    clearInterval(turnTimer);
 
     if (reason === 'transport close') {
       // User was disconnected by closing game/refrehsing window

@@ -27,6 +27,7 @@ class GameControllerMultiplayer extends GameController {
         this.vm.muteChat = false;
         this.firstLoad = true;
         this.vm.showLobbyChat = true;
+        this.vm.timerWidth = 0;
 
         this.$rootScope.$watch('currentLobbyId', () => {
             this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
@@ -165,6 +166,8 @@ class GameControllerMultiplayer extends GameController {
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
+                this.initiateTimer();
+
                 const user = firebase.auth().currentUser;
                 this.vm.myUid = user.uid;
                 this.mapService.init('multiplayerMap', true, this.vm.myUid);
@@ -250,6 +253,40 @@ class GameControllerMultiplayer extends GameController {
         return false;
     }
 
+    updateGameAfterMovement(closeResponse) {
+        const movementFromTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.from.name);
+        movementFromTerritory.numberOfTroops = closeResponse.from.numberOfTroops === 0 ? 1 : closeResponse.from.numberOfTroops;
+
+        const movementToTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.to.name);
+        movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
+
+        this.emit('updateMovement', [
+            movementFromTerritory.name,
+            movementFromTerritory.numberOfTroops,
+            movementToTerritory.name,
+            movementToTerritory.numberOfTroops
+        ])
+
+        this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+    }
+
+    initiateTimer() {
+        clearInterval(this.turnTimer);
+        this.turnTimerSeconds = 60000;
+        this.turnTimerFunction = () => {
+            this.turnTimerSeconds -= 100;
+            const totalWidth = $("#timerBar").width();
+            const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((60000 - this.turnTimerSeconds) / 60000);
+            this.vm.timerWidth = Math.floor(widthPercentage * totalWidth);
+
+            this.$scope.$apply();
+            if (this.turnTimerSeconds <= 0) {
+              clearInterval(this.turnTimer);
+            }
+        };
+        this.turnTimer = setInterval(this.turnTimerFunction, 100);
+    }
+
     setSocketListeners() {
         this.socketService.socket.on('troopAddedToTerritoryNotifier', (territoryName) => {
             this.gameEngine.addTroopToTerritory(territoryName);
@@ -263,6 +300,10 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.socket.on('nextTurnNotifier', (turn, reinforcements) => {
+            if (turn.newPlayer) {
+                this.initiateTimer();
+            }
+
             this.gameEngine.turn = turn;
             this.vm.turn = this.gameEngine.turn;
             if (reinforcements) {
@@ -325,6 +366,14 @@ class GameControllerMultiplayer extends GameController {
 
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
             this.soundService.movement.play();
+        });
+
+        this.socketService.socket.on('updateMovementNotifier', (map) => {
+            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                const territoryFromServer = map.find(x => x.name === t.name);
+                t.owner = territoryFromServer.owner;
+                t.numberOfTroops = territoryFromServer.numberOfTroops;
+            });
         });
 
         this.socketService.socket.on('messagesUpdated', (messages) => {
