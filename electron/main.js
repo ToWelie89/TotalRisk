@@ -15,12 +15,51 @@ const store = new Store({
   configName: 'user-preferences',
   defaults: ElectronSettings
 });
-const proxySettings = store.get('proxySettings');
-const proxyExists = proxySettings && proxySettings.host && proxySettings.username && proxySettings.password;
+
 
 // LOGGING
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'debug';
+
+// PROXY
+
+const getProxyDetails = proxy => {
+  // Remove quote symbols from start and finish
+  if (proxy[0] === '"') {
+    proxy = proxy.substring(1, proxy.length)
+  }
+  if (proxy[proxy.length - 1] === '"') {
+    proxy = proxy.substring(0, proxy.length - 1)
+  }
+
+  proxy = proxy.replace('http://', '');
+  const proxyParts = proxy.split('@');
+  const credentials = proxyParts[0].split(':');
+  const host = `http://${proxyParts[1]}`;
+  const username = credentials[0];
+  const password = credentials[1];
+
+  return {
+    host,
+    username,
+    password
+  }
+}
+
+const proxyFromSettings = store.get('proxySettings');
+let proxyFromEnvironment = process.env.http_proxy ? process.env.http_proxy : '';
+proxyFromEnvironment = process.env.proxy ? process.env.proxy : proxyFromEnvironment;
+
+let proxyToUse;
+
+if (proxyFromSettings) {
+  proxyToUse = proxyFromSettings;
+} else if (proxyFromEnvironment) {
+  proxyToUse = getProxyDetails(proxyFromEnvironment);
+}
+
+const proxyExists = proxyToUse && proxyToUse.host && proxyToUse.username && proxyToUse.password;
+const proxySettings = proxyToUse;
 
 const sendStatusToWindow = (state, type = 'message', data = {}) => {
   log.info(state, data);
