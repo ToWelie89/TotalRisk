@@ -1,0 +1,50 @@
+#singlePlayerContainer {
+	#topBar {
+		background: rgba(67, 64, 64, 0.6901960784313725);
+	    border-top-right-radius: 30px;
+	    border-top-left-radius: 60px;
+	    box-shadow: 3px 3px 8px #202020;
+	}
+
+	#map {
+	    background: #5397d1;
+	    border-radius: 30px;
+	    border-radius: 30px;
+	    border-top-left-radius: 0px;
+	    border-top-right-radius: 0px;
+        box-shadow: 3px 3px 8px #202020;
+	}
+
+	#mainTurnAvatar {
+	    height: 110px;
+	    width: 110px;
+	    background-size: cover;
+	    background-position: center center;
+	}
+
+	#playerName {
+	    font-size: 30px;
+	}
+
+	#turnInfo {
+	    svg {
+	        width: 40px;
+	        height: 40px;
+	        margin-left: -8px;
+	        margin-right: -8px;
+	        filter: url(#droppy);
+	    }
+	}
+
+	#cardButton {
+	    cursor: pointer;
+	    &.cardButton--disabled {
+	        cursor: not-allowed;
+	    }
+	}
+
+	#cardCounter {
+	    margin-bottom: 0;
+	    margin-top: 7px;
+	}
+}

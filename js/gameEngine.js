@@ -21,7 +21,7 @@ class GameEngine {
         this.filter = 'byOwner';
         // Initialize world map
         this.map = new WorldMap();
-        this.playSound = settings.playSound;
+        this.settings = settings;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
 
@@ -35,7 +35,7 @@ class GameEngine {
     setMusicVolume(volume) {
         if (this.thisIsBackendGameEngine) return;
 
-        if (this.bgMusic && this.playSound) {
+        if (this.bgMusic && this.settings.playSound) {
             this.bgMusic.volume = volume;
         }
     }
@@ -43,8 +43,8 @@ class GameEngine {
     toggleSound(playSound) {
         if (this.thisIsBackendGameEngine) return;
 
-        this.playSound = playSound;
-        if (this.playSound) {
+        this.settings.playSound = playSound;
+        if (this.settings.playSound) {
             this.setMusic((this.isTutorialMode ||
                           (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) ||
                            this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP ||
@@ -60,7 +60,7 @@ class GameEngine {
     setMusic(music = MAIN_MUSIC) {
         if (this.thisIsBackendGameEngine) return;
 
-        if (this.playSound) {
+        if (this.settings.playSound) {
             if (this.currentMusicPlaying && this.currentMusicPlaying === music && !this.bgMusic.paused) {
                 return;
             } else {
@@ -213,7 +213,7 @@ class GameEngine {
                     });
 
                     this.$rootScope.players = [winner, loser];
-                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+                    this.$rootScope.currentGamePhase = this.currentGameIsMultiplayer ? GAME_PHASES.END_SCREEN_MULTIPLAYER : GAME_PHASES.END_SCREEN;
 
                     return {
                         playerWon: true,
@@ -225,10 +225,10 @@ class GameEngine {
                     console.log(`Player ${this.turn.player.name} won!`);
                     this.setMusic(VICTORY_MUSIC);
                     this.playerWhoWon = this.turn.player.name;
-                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+                    this.$rootScope.currentGamePhase = this.currentGameIsMultiplayer ? GAME_PHASES.END_SCREEN_MULTIPLAYER : GAME_PHASES.END_SCREEN;
                     setTimeout(() => {
                         const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
-                        if (this.playSound) {
+                        if (this.settings.playSound) {
                             this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
                                 this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                             }, () => {
@@ -251,7 +251,7 @@ class GameEngine {
     }
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
-        if (this.playSound) {
+        if (this.settings.playSound) {
             this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
                 this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
             }, () => {

@@ -20,6 +20,9 @@
             </div>
         </div>
         <div class="row" data-ng-show="characterCreator.showEditor">
+            <div id="flagContainer">
+                <waving-flag flag-width="400" flag-height="200" flag-url="characterCreator.selectedFlag"></waving-flag>
+            </div>
             <div class="col-xs-8" id="editorCustomCharacterMain" inject-svg src="assets/avatarSvg/custom.svg">
             </div>
             <div class="col-xs-4" id="editorControls">
@@ -43,6 +46,13 @@
                         <button type="button" class="button button-blue arrowButton" data-ng-click="characterCreator.nextPart(bodypart.type)">
                             <span class="glyphicon glyphicon-arrow-right"></span>
                         </button>
+                    </div>
+                </div>
+                <div id="flagSelector">
+                    <div data-ng-repeat="flag in characterCreator.flags"
+                         style="background-image: url({{flag}});"
+                         data-ng-class="{'selected': flag === characterCreator.selectedFlag}"
+                         data-ng-click="characterCreator.selectFlag(flag)">
                     </div>
                 </div>
                 <div class="row marginTop">

@@ -1,10 +1,10 @@
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
-const {hashString} = require('./../helpers');
-const {GAME_PHASES, CONSTANTS} = require('./../gameConstants');
-const {normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv} = require('./../helpers');
-const {avatars, PLAYER_COLORS} = require('./../player/playerConstants');
+const { hashString } = require('./../helpers');
+const { GAME_PHASES, CONSTANTS, VICTORY_GOALS } = require('./../gameConstants');
+const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv } = require('./../helpers');
+const { avatars, PLAYER_COLORS } = require('./../player/playerConstants');
 
 class LobbiesController {
     constructor($scope, $rootScope, $timeout, $uibModal, soundService, socketService, toastService) {
@@ -20,6 +20,9 @@ class LobbiesController {
         this.$rootScope.$watch('currentLobbyId', () => {
             this.initLobby();
         });
+
+        this.vm.victoryGoals = VICTORY_GOALS;
+        this.vm.chosenGoal = this.vm.victoryGoals[this.vm.victoryGoals.length - 1];
 
         this.vm.players = [];
 
@@ -81,6 +84,11 @@ class LobbiesController {
         this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.startGameIsDisabled = this.startGameIsDisabled;
         this.vm.startGame = this.startGame;
+    }
+
+    setGoal(goal) {
+        this.vm.chosenGoal = goal;
+        this.soundService.changeColor.play();
     }
 
     initLobby() {
@@ -322,7 +330,7 @@ class LobbiesController {
     }
 
     startGame() {
-        this.socketService.startGame();
+        this.socketService.startGame(this.vm.chosenGoal);
     }
 }
 

@@ -19,12 +19,14 @@ class WavingFlagDirective {
         flag.style.height = attr.flagHeight + 'px';
 
         scope.$watch(scope.flagUrl, (newVal, oldVal) => {
-            if (newVal !== oldVal && !updateManually) {
+            flag.querySelectorAll('.flag-element').forEach(x => {
+                x.style.backgroundImage = `url(${scope.flagUrl()})`;
+            });
+            /*if (newVal !== oldVal && !updateManually) {
                 setTimeout(() => {
-                    flag.innerHTML = '';
                     init();
                 }, 50);
-            }
+            }*/
         });
 
         const init = () => {
@@ -41,7 +43,6 @@ class WavingFlagDirective {
         }
 
         setTimeout(() => {
-            flag.innerHTML = '';
             init();
         }, 50);
     }

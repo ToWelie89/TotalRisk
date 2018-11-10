@@ -84,8 +84,8 @@ class SocketService {
         this.socket.emit('updateAvatar', userUid, avatar);
     }
 
-    startGame() {
-        this.socket.emit('startGame');
+    startGame(chosenGoal) {
+        this.socket.emit('startGame', chosenGoal);
     }
 
     troopAddedToTerritory(territoryName) {

@@ -1,10 +1,11 @@
-<div class="container mainContent" data-ng-controller="gameController as game"">
+<div class="container mainContent" data-ng-controller="gameController as game"" id="singlePlayerContainer">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}" ng-cloak>
-        <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
-                                border-radius: 30px;
-                                border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
-                <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ game.turn.player.avatar.picture }});"></div>
+        <div class="row" id="topBar">
+            <div class="col-xs-4 textCenter paddingTop--double" style="padding-left:0px; overflow:hidden;">
+                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="game.turn.player.avatar" target="mainTurnAvatarSingleplayer" small>
+                    <div id="mainTurnAvatarSingleplayer">
+                    </div>
+                </div>
                 <div class="col-xs-9">
                     <div class="col-xs-12" style="padding: 0px;">
                         <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ game.getCurrentPlayerColor() }}"><span data-ng-bind="game.turn.player.name"></span></strong>
@@ -86,13 +87,10 @@
             </div>
         </div>
         <div class="row">
-           <div id="map" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
-             style="background: #5397d1;
-                    border-radius: 30px;
-                    margin-top: 20px;
-                    box-shadow: 3px 3px 8px #202020;"
-                    inject-svg
-                    src="assets/maps/worldMap/worldMap.svg">
+           <div id="map"
+                data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
+                inject-svg
+                src="assets/maps/worldMap/worldMap.svg">
            </div>
         </div>
         <div class="row">
@@ -100,7 +98,9 @@
             </div>
         </div>
     </div>
-    <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen" ng-cloak>
+</div>
+<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" class="victoryScreen" ng-cloak>
+    <div class="victoryScreen__inner">
         <div class="textCenter">
             <h1>VICTORY</h1>
             <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
@@ -128,7 +128,7 @@
                     <tbody>
                         <tr data-ng-repeat="player in endScreenTable.players">
                             <td data-ng-bind="player.rank" class="textCenter"></td>
-                            <td data-ng-bind="player.name"></td>
+                            <td data-ng-bind="player.name" style="color: {{ player.color.mainColor }};"></td>
                             <td>
                                 <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
                             </td>

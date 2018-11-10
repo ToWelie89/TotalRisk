@@ -23,7 +23,8 @@ const GAME_PHASES = {
     CHARACTER_CREATOR: 7,
     PLAYER_SETUP_MULTIPLAYER: 8,
     MULTIPLAYER_LOBBIES: 9,
-    GAME_MULTIPLAYER: 10
+    GAME_MULTIPLAYER: 10,
+    END_SCREEN_MULTIPLAYER: 11
 };
 
 const MAPS = {
@@ -41,16 +42,6 @@ const CONSTANTS = {
 };
 
 const VICTORY_GOALS = [
-    {
-        type: 'mapControl',
-        percentage: 60,
-        requiredAmountOfPlayers: 3
-    },
-    {
-        type: 'mapControl',
-        percentage: 70,
-        requiredAmountOfPlayers: 3
-    },
     {
         type: 'mapControl',
         percentage: 80,

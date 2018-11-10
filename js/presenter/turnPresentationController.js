@@ -3,13 +3,14 @@ const { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } = require('./../gameConstants');
 
 class TurnPresentationController {
 
-    constructor($scope, $rootScope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, data) {
+    constructor($scope, $rootScope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, settings, data) {
         this.vm = this;
 
         this.$uibModalInstance = $uibModalInstance;
         this.$rootScope = $rootScope;
         this.gameAnnouncerService = gameAnnouncerService;
         this.gameEngine = gameEngine;
+        this.settings = settings;
         this.data = data;
 
         this.vm.messages = this.data.messages ? this.data.messages : [];
@@ -69,7 +70,7 @@ class TurnPresentationController {
             this.vm.turn = this.gameEngine.turn;
             this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
 
-            if (this.gameEngine.playSound) {
+            if (this.settings.playSound) {
                 this.gameAnnouncerService.speak('Game started', () => {
                     this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {
@@ -89,7 +90,7 @@ class TurnPresentationController {
                 this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
             }
 
-            if (this.gameEngine.playSound) {
+            if (this.settings.playSound) {
                 this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
                     this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }, () => {

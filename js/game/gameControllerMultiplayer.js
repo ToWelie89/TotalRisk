@@ -278,6 +278,7 @@ class GameControllerMultiplayer extends GameController {
             const totalWidth = $("#timerBar").width();
             const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((60000 - this.turnTimerSeconds) / 60000);
             this.vm.timerWidth = Math.floor(widthPercentage * totalWidth);
+            this.vm.secondsLeft = Math.floor(this.turnTimerSeconds / 1000);
 
             this.$scope.$apply();
             if (this.turnTimerSeconds <= 0) {
@@ -288,6 +289,10 @@ class GameControllerMultiplayer extends GameController {
     }
 
     setSocketListeners() {
+        this.socketService.socket.on('playerWonNotifier', () => {
+
+        });
+
         this.socketService.socket.on('troopAddedToTerritoryNotifier', (territoryName) => {
             this.gameEngine.addTroopToTerritory(territoryName);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;

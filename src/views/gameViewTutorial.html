@@ -3,8 +3,11 @@
         <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
                                 border-radius: 30px;
                                 border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
-                <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ gameTutorial.turn.player.avatar.picture }});"></div>
+            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px; overflow:hidden;">
+                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="gameTutorial.turn.player.avatar" target="mainTurnAvatarTutorial" small>
+                    <div id="mainTurnAvatarTutorial">
+                    </div>
+                </div>
                 <div class="col-xs-9">
                     <div class="col-xs-12" style="padding: 0px;">
                         <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ gameTutorial.getCurrentPlayerColor() }}"><span data-ng-bind="gameTutorial.turn.player.name"></span></strong>
@@ -86,7 +89,7 @@
             </div>
         </div>
         <div class="row">
-           <div id="tutorialMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
+           <div id="tutorialMap"
              style="background: #5397d1;
                     border-radius: 30px;
                     margin-top: 20px;
@@ -98,62 +101,6 @@
         <div class="row">
             <div id="currentTerritoryInfo">
             </div>
-        </div>
-    </div>
-    <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen" ng-cloak>
-        <div class="textCenter">
-            <h1>VICTORY</h1>
-            <h3 class="text-shadow" style="color: {{ gameTutorial.playerWhoWon.color.mainColor }}">
-                {{ gameTutorial.playerWhoWon.name }}
-            </h3>
-            <img id="victoryPortrait" class="marginTop--double" src="" alt="" data-ng-if="gameTutorial.playerWhoWon">
-            <div id="victoryFlag" class='flag'></div>
-            <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
-                <table id="endScreenTable">
-                    <thead>
-                        <tr>
-                            <th>Place</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th class="textRight">Battles Won</th>
-                            <th class="textRight">Battles Lost</th>
-                            <th class="textRight">Retreats</th>
-                            <th class="textRight">Card combos used</th>
-                            <th class="textRight">Total reinforcements</th>
-                            <th class="textRight">Troops killed</th>
-                            <th class="textRight">Troops lost</th>
-                            <th class="textRight">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="player in endScreenTable.players">
-                            <td data-ng-bind="player.rank" class="textCenter"></td>
-                            <td data-ng-bind="player.name"></td>
-                            <td>
-                                <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
-                            </td>
-                            <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
-                            <td>
-                                <span data-ng-show="player.dead">
-                                    Dead (Turn {{ player.deadTurn }})
-                                </span>
-                                <span data-ng-show="!player.dead">
-                                    Alive
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
-                <strong>Back to Menu</strong>
-            </button>
         </div>
     </div>
 </div>

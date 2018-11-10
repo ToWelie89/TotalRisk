@@ -48,7 +48,7 @@ class GameSetupController {
             }
         });
 
-        this.vm.chosenGoal = this.vm.victoryGoals.filter(x => this.vm.players.length >= x.requiredAmountOfPlayers)[0];
+        this.vm.chosenGoal = this.vm.victoryGoals[this.vm.victoryGoals.length - 1];
 
         console.log('Players: ', this.vm.players);
     }

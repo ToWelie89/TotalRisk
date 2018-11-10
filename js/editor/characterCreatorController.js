@@ -3,6 +3,7 @@ require('firebase/auth');
 require('firebase/database');
 const {GAME_PHASES} = require('./../gameConstants');
 const {startGlobalLoading, stopGlobalLoading} = require('./../helpers');
+const {flags} = require('./editorConstants');
 
 class CharacterCreatorController {
 
@@ -16,6 +17,9 @@ class CharacterCreatorController {
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
         this.vm.showEditor = false;
+
+        this.vm.flags = flags;
+        this.vm.selectedFlag = flags[0];
 
         this.vm.currentSelection = [{
             type: 'hat',
@@ -116,6 +120,12 @@ class CharacterCreatorController {
         this.vm.randomize = this.randomize;
         this.vm.saveCharacter = this.saveCharacter;
         this.vm.createNewCharacter = this.createNewCharacter;
+        this.vm.selectFlag = this.selectFlag;
+    }
+
+    selectFlag(flag) {
+        this.soundService.tick.play();
+        this.vm.selectedFlag = flag;
     }
 
     loadSavedCharacterPortraits() {

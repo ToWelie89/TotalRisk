@@ -47,9 +47,8 @@ class GameControllerTutorial extends GameController {
      */
 
     startTutorial() {
-        let soundWasMutedBeforeTutorial = false;
-        if (!this.settings.playSound) {
-            soundWasMutedBeforeTutorial = true;
+        let playSoundSettingBeforeTutorial = this.settings.playSound;
+        if (!playSoundSettingBeforeTutorial) {
             this.settings.toggleSound();
         }
 
@@ -119,7 +118,7 @@ class GameControllerTutorial extends GameController {
         .then(() => this.tutorialService.endOfTurnExplanation())
         .then(() => delay(1500))
         .then(() => {
-            if (!soundWasMutedBeforeTutorial) {
+            if (playSoundSettingBeforeTutorial) {
                 this.gameEngine.setMusic();
             } else {
                 this.settings.toggleSound();
@@ -134,7 +133,7 @@ class GameControllerTutorial extends GameController {
         .catch(err => {
             console.log(err);
             this.gameAnnouncerService.mute();
-            if (!soundWasMutedBeforeTutorial) {
+            if (playSoundSettingBeforeTutorial) {
                 this.gameEngine.setMusic();
             } else {
                 this.settings.toggleSound();

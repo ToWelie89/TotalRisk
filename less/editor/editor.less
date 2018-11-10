@@ -8,7 +8,65 @@
         border-radius: 30px;
         height: 896px;
 
+        #flagContainer {
+            position: absolute;
+            z-index: 1;
+            left: 120px;
+            margin-top: 36px;
+        }
+
         #editorControls {
+            #flagSelector {
+                width: 100%;
+                margin-top: 10px;
+                max-height: 170px;
+                overflow-y: scroll;
+                padding-left: 15px;
+                margin-bottom: 20px;
+                border: 2px solid rgba(0, 0, 0, 0.48);
+                border-radius: 15px;
+                text-align: left;
+                padding-top: 8px;
+                padding-bottom: 8px;
+
+                > div {
+                    width: 50px;
+                    height: 35px;
+                    display: inline-block;
+                    margin-right: 5px;
+                    cursor: pointer;
+                    background-size: auto 100%;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    border: 3px solid transparent;
+
+                    &.selected {
+                        border: 3px solid #66D5FE;
+                        box-shadow: 0 0 10px rgba(102, 213, 254, 0.71);
+                    }
+                }
+
+                &::-webkit-scrollbar-track {
+                    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                    border-radius: 10px;
+                    background-color: #F5F5F5;
+                }
+
+                &::-webkit-scrollbar {
+                    width: 12px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    border-radius: 10px;
+                    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                    background-color: #555;
+
+                    &:hover {
+                        background-color: #222;
+                    }
+                }
+            }
+
         	input {
 		    	width: 100%;
 			    border-radius: 5px;
@@ -37,6 +95,8 @@
         }
 
         #editorCustomCharacterMain {
+            position: relative;
+            z-index: 100;
         	svg {
     		    height: 750px;
         	}

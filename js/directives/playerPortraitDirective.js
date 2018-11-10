@@ -4,7 +4,9 @@ class PlayerPortraitDirective {
     constructor() {
         this.restrict = 'A';
         this.scope = {
-            avatar: '&avatar'
+            avatar: '&avatar',
+            target: '&target',
+            small: '&small'
         }
     }
 
@@ -16,39 +18,61 @@ class PlayerPortraitDirective {
         const setPortrait = () => {
             var portraitBox = elem[0];
             var avatar = scope.avatar();
+            var small = portraitBox.attributes.getNamedItem('small');
+            var target = portraitBox.attributes.getNamedItem('target');
+            if (target) {
+                target = `#${target.value}`;
+            }
             var id = portraitBox.id;
+
+            if (!avatar) {
+                return;
+            }
 
             if (avatar.customCharacter) {
                 portraitBox.style.backgroundImage = '';
 
-                loadSvgIntoDiv('assets/avatarSvg/custom.svg', `#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom`, () => {
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="hat"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="head"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="eyes"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="nose"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="mouth"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="torso"] > g`).css('visibility', 'hidden');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="legs"] > g`).css('visibility', 'hidden');
+                const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom`;
 
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="hat"] > g[name="${avatar.hat}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="head"] > g[name="${avatar.head}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="eyebrows"] > g[name="${avatar.eyebrows}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="eyes"] > g[name="${avatar.eyes}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="nose"] > g[name="${avatar.nose}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="mouth"] > g[name="${avatar.mouth}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="torso"] > g[name="${avatar.torso}"]`).css('visibility', 'visible');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg g[category="legs"] > g[name="${avatar.legs}"]`).css('visibility', 'visible');
+                loadSvgIntoDiv('assets/avatarSvg/custom.svg', targetSelector, () => {
+                    $(`${targetSelector} svg g[category="hat"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="head"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="eyes"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="nose"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="mouth"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="torso"] > g`).css('visibility', 'hidden');
+                    $(`${targetSelector} svg g[category="legs"] > g`).css('visibility', 'hidden');
 
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom svg .skinTone`).css('fill', avatar.skinTone);
+                    $(`${targetSelector} svg g[category="hat"] > g[name="${avatar.hat}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="head"] > g[name="${avatar.head}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="eyebrows"] > g[name="${avatar.eyebrows}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="eyes"] > g[name="${avatar.eyes}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="nose"] > g[name="${avatar.nose}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="mouth"] > g[name="${avatar.mouth}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="torso"] > g[name="${avatar.torso}"]`).css('visibility', 'visible');
+                    $(`${targetSelector} svg g[category="legs"] > g[name="${avatar.legs}"]`).css('visibility', 'visible');
+
+                    $(`${targetSelector} svg .skinTone`).css('fill', avatar.skinTone);
+
+                    if (small) {
+                        $(`${targetSelector} svg`).css('width', '207%');
+                        $(`${targetSelector} svg`).css('margin-left', '-39px');
+                        $(`${targetSelector} svg`).css('margin-top', '-40px');
+                    }
                 });
             } else if (avatar.svg) {
                 portraitBox.style.backgroundImage = '';
-                loadSvgIntoDiv(avatar.svg, `#${id} .setupBoxAvatarsContainer__item__portrait__svg`, () => {
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).css('width', avatar.svgWidth ? avatar.svgWidth : '100%');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).css('height', avatar.svgHeight ? avatar.svgHeight : '100%');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).css('margin-left', avatar.svgMarginLeft ? avatar.svgMarginLeft : '0px');
-                    $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).css('margin-top', avatar.svgMarginTop ? avatar.svgMarginTop : '0px');
+
+                const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svg`;
+
+                var attributes = small ? avatar.svgAttributesSmall : avatar.svgAttributesLarge;
+
+                loadSvgIntoDiv(avatar.svg, targetSelector, () => {
+                    $(`${targetSelector} svg`).css('width', attributes && attributes.svgWidth ? attributes.svgWidth : '100%');
+                    $(`${targetSelector} svg`).css('height', attributes && attributes.svgHeight ? attributes.svgHeight : '100%');
+                    $(`${targetSelector} svg`).css('margin-left', attributes && attributes.svgMarginLeft ? attributes.svgMarginLeft : '0px');
+                    $(`${targetSelector} svg`).css('margin-top', attributes && attributes.svgMarginTop ? attributes.svgMarginTop : '0px');
                 }, 10);
             } else {
                 $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).remove();

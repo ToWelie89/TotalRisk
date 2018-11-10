@@ -1,8 +1,11 @@
 <div class="container mainContent" id="multiplayerContainer" data-ng-controller="gameControllerMultiplayer as gameMultiplayer"">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
         <div class="row" id="topBar">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
-                <div class="col-xs-3" id="mainTurnAvatar" style="background-image: url({{ gameMultiplayer.turn.player.avatar.picture }});"></div>
+            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px; overflow: hidden;">
+                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="gameMultiplayer.turn.player.avatar" target="mainTurnAvatarMultiplayer" small>
+                    <div id="mainTurnAvatarMultiplayer">
+                    </div>
+                </div>
                 <div class="col-xs-9">
                     <div class="col-xs-12" style="padding: 0px;">
                         <span style="float: left; color: white;">Current player:</span>
@@ -85,10 +88,14 @@
             </div>
         </div>
         <div class="row" id="timerBar">
-            <div id="timerBarInner" style="width: {{ gameMultiplayer.timerWidth }}px;"></div>
+            <p data-ng-show="gameMultiplayer.secondsLeft">
+                {{ gameMultiplayer.secondsLeft }}
+            </p>
+            <div id="timerBarInner" style="width: {{ gameMultiplayer.timerWidth }}px;">
+            </div>
         </div>
         <div class="row">
-           <div id="multiplayerMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}" inject-svg src="assets/maps/worldMap/worldMap.svg">
+           <div id="multiplayerMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN_MULTIPLAYER}" inject-svg src="assets/maps/worldMap/worldMap.svg">
            </div>
         </div>
         <div id="lobbyChatBoxes">
@@ -158,60 +165,60 @@
             </div>
         </div>
     </div>
-    <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" id="victoryScreen" ng-cloak>
-        <div class="textCenter">
-            <h1>VICTORY</h1>
-            <h3 class="text-shadow" style="color: {{ gameMultiplayer.playerWhoWon.color.mainColor }}">
-                {{ gameMultiplayer.playerWhoWon.name }}
-            </h3>
-            <img id="victoryPortrait" class="marginTop--double" src="" alt="" data-ng-if="gameMultiplayer.playerWhoWon">
-            <div id="victoryFlag" class='flag'></div>
-            <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
-                <table id="endScreenTable">
-                    <thead>
-                        <tr>
-                            <th>Place</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th class="textRight">Battles Won</th>
-                            <th class="textRight">Battles Lost</th>
-                            <th class="textRight">Retreats</th>
-                            <th class="textRight">Card combos used</th>
-                            <th class="textRight">Total reinforcements</th>
-                            <th class="textRight">Troops killed</th>
-                            <th class="textRight">Troops lost</th>
-                            <th class="textRight">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="player in endScreenTable.players">
-                            <td data-ng-bind="player.rank" class="textCenter"></td>
-                            <td data-ng-bind="player.name"></td>
-                            <td>
-                                <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
-                            </td>
-                            <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
-                            <td>
-                                <span data-ng-show="player.dead">
-                                    Dead (Turn {{ player.deadTurn }})
-                                </span>
-                                <span data-ng-show="!player.dead">
-                                    Alive
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
-                <strong>Back to Menu</strong>
-            </button>
+</div>
+<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN_MULTIPLAYER" id="victoryScreen" ng-cloak>
+    <div class="textCenter">
+        <h1>VICTORY</h1>
+        <h3 class="text-shadow" style="color: {{ gameMultiplayer.playerWhoWon.color.mainColor }}">
+            {{ gameMultiplayer.playerWhoWon.name }}
+        </h3>
+        <img id="victoryPortrait" class="marginTop--double" src="" alt="" data-ng-if="gameMultiplayer.playerWhoWon">
+        <div id="victoryFlag" class='flag'></div>
+        <div style="margin-top: 90px;" data-ng-controller="endScreenTableController as endScreenTable">
+            <table id="endScreenTable">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th></th>
+                        <th class="textRight">Battles Won</th>
+                        <th class="textRight">Battles Lost</th>
+                        <th class="textRight">Retreats</th>
+                        <th class="textRight">Card combos used</th>
+                        <th class="textRight">Total reinforcements</th>
+                        <th class="textRight">Troops killed</th>
+                        <th class="textRight">Troops lost</th>
+                        <th class="textRight">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="player in endScreenTable.players">
+                        <td data-ng-bind="player.rank" class="textCenter"></td>
+                        <td data-ng-bind="player.name"></td>
+                        <td>
+                            <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
+                        </td>
+                        <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
+                        <td>
+                            <span data-ng-show="player.dead">
+                                Dead (Turn {{ player.deadTurn }})
+                            </span>
+                            <span data-ng-show="!player.dead">
+                                Alive
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
+            <strong>Back to Menu</strong>
+        </button>
     </div>
 </div>

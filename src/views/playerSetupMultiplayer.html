@@ -27,6 +27,17 @@
                         </div>
                     </div>
                 </div>
+                <div width="100%" class="floatLeft marginTop--double">
+                    <div class="buttonGroup" style="height: 40px;">
+                        <button type="button" class="button button-green button-unclickable">
+                            <strong>Map control percentage for victory</strong>
+                        </button>
+                        <button type="button" class="button button-green" data-ng-repeat="goal in lobby.victoryGoals"
+                        data-ng-class="{'button--selected': goal === lobby.chosenGoal}" data-ng-click="lobby.setGoal(goal)">
+                            <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
+                        </button>
+                    </div>
+                </div>
                 <div id="lobbyChatBoxes">
                     <div class="muteChatContainer">
                         <div>
@@ -152,6 +163,14 @@
                         >
                             <div class="setupBoxAvatarsContainer__item__host__inner box-shadow">
                                 HOST
+                            </div>
+                        </div>
+                        <div
+                            data-ng-if="lobby.players[i] && lobby.players[i].userUid === lobby.myUid && lobby.players[i].userUid !== lobby.room.creatorUid"
+                            class="setupBoxAvatarsContainer__item__host"
+                        >
+                            <div class="setupBoxAvatarsContainer__item__host__inner box-shadow">
+                                YOU
                             </div>
                         </div>
                         <div class="setupBoxAvatarsContainer__item__flag" data-ng-if="lobby.players[i]">

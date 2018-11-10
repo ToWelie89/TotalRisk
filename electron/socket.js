@@ -100,11 +100,10 @@ const startTimer = () => {
 io.on('connection', function(socket){
   console.log('User connected!');
   socket.emit('connected');
-  messages = [];
 
   // GAME EVENTS
 
-  socket.on('startGame', () => {
+  socket.on('startGame', chosenGoal => {
     currentState = states.IN_GAME;
 
     playerList = Object.values(socketList).map(x => new Player(
@@ -116,14 +115,12 @@ io.on('connection', function(socket){
       x.isHost
     ));
 
-    const victoryGoal = VICTORY_GOALS.find(x => x.percentage === 100);
-
-    gameEngine.startGame(playerList, victoryGoal);
+    gameEngine.startGame(playerList, chosenGoal);
 
     startTimer();
 
     for (let currentSocket in socketList) {
-      socketList[currentSocket].emit('gameStarted', playerList, victoryGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
+      socketList[currentSocket].emit('gameStarted', playerList, chosenGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
     }
 
     addNewMessage(socket.roomId, {
@@ -177,6 +174,13 @@ io.on('connection', function(socket){
     for (let currentSocket in socketList) {
       socketList[currentSocket].emit('updateOwnerAfterSuccessfulInvasionNotifier', updateOwnerData);
     }
+
+    const response = gameEngine.checkIfPlayerWonTheGame();
+    if (response.playerWon) {
+      for (let currentSocket in socketList) {
+        socketList[currentSocket].emit('playerWonNotifier');
+      }
+    }
   });
 
   socket.on('updateMovement', (movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops) => {
@@ -229,7 +233,7 @@ io.on('connection', function(socket){
     addNewMessage(socket.roomId, {
       sender: 'SERVER',
       uid: 'SERVER',
-      message: `${socketList[userUid].userName} was kicked = require(the room`,
+      message: `${socketList[userUid].userName} was kicked from room`,
       timestamp: Date.now()
     });
 
@@ -256,6 +260,10 @@ io.on('connection', function(socket){
     delete socketList[socket.userUid];
 
     const usersInSameRoom = Object.values(socketList).filter(s => s.roomId === socket.roomId);
+
+    if (usersInSameRoom.length === 0) {
+      messages = [];
+    }
 
     if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
       firebase.database().ref('/rooms/' + socket.roomId).remove();
