@@ -93,7 +93,7 @@ const avatars = {
     'Julius Caesar': {
         picture: './assets/img/caesar.png',
         selectSound: '',
-        flag: './assets/flags/rome.png',
+        flag: './assets/flagsSvg/rome.svg',
         svg: './assets/avatarSvg/caesar.svg',
         svgAttributesSmall: {
             svgWidth: '180%',
@@ -106,7 +106,7 @@ const avatars = {
     'Napoleon Bonaparte': {
         picture: './assets/img/napoleon.png',
         selectSound: '',
-        flag: './assets/flags/france.png',
+        flag: './assets/flagsSvg/france.svg',
         svg: './assets/avatarSvg/napoleon.svg',
         svgAttributesLarge: {
             svgWidth: '160%',
@@ -125,13 +125,13 @@ const avatars = {
     'Hannibal Barca': {
         picture: './assets/img/hannibal_barca.png',
         selectSound: '',
-        flag: './assets/flags/carthage.png',
+        flag: './assets/flagsSvg/carthage.png',
         biography: 'Hannibal Barca was a general of the mighty Carthaginian empire in North Africa. During his childhood Rome inflicted a heavy humiliating defeat upon Carthage, to which he swore an oath to never be a friend of the romans, words he lived by for the rest of his life. He led one of the most audacious campaigns in history by crossing the alps in midwinter and challenging the roman empire on their own turf. He won every single battle he fought in the italian peninsula and eventually crushed the romans last ditch all out attack at the legendary battle of Cannae. He is considered one of the best generals in history.'
     },
     'Alexander the Great': {
         picture: './assets/img/alexander.png',
         selectSound: '',
-        flag: './assets/flags/macedon.png',
+        flag: './assets/flagsSvg/macedon.svg',
         svg: './assets/avatarSvg/alexander.svg',
         svgAttributesLarge: {
             svgWidth: '90%',
@@ -150,43 +150,43 @@ const avatars = {
     'Genghis Khan': {
         picture: './assets/img/genghiskhan.png',
         selectSound: '',
-        flag: './assets/flags/goldenhorde.png',
+        flag: './assets/flagsSvg/goldenhorde.svg',
         biography: 'Genghis Khan, whose real name was Timujin, was a feared leader and general who conquered the largest land empire in history. He came from a simple background, being the leader of a small tribe, but he managed to unite all of the mongolian tribes and also completely reformed with ingenious tactics, thus granting him the title \'Genghis Khan\' which means \'Ruler of all\'. He then destroyed the nearby chinese Han Empire and much of the former persian empire and expanded as far away as into Europe.'
     },
     'Attila the Hun': {
         picture: './assets/img/attila.png',
         selectSound: '',
-        flag: './assets/flags/hunnicempire.png',
+        flag: './assets/flagsSvg/hunnicempire.svg',
         biography: 'During the later days of the Roman empire nomadic peoples, referred to as barbarians by the romans, terrorized and attacked everywhere along the vast borders of the empire. None of these barbarian leaders were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
     },
     'Scipio Africanus': {
         picture: './assets/img/scipio.png',
         selectSound: '',
-        flag: './assets/flags/rome.png',
+        flag: './assets/flagsSvg/rome.svg',
         biography: 'Scipio Africanus was a highly successful roman general most known for his victories against the Carthaginians during the Second Punic War. His greatest achievement was at the battle of Zama where Scipio finally defeated Hannibal, the great enemy of Rome, in a decisive victory. He would later become a consul of the Roman Republic.'
     },
     'Miltiades': {
         picture: './assets/img/miltiades.png',
         selectSound: '',
-        flag: './assets/flags/athens.png',
+        flag: './assets/flagsSvg/athens.svg',
         biography: 'Miltiades was an Athenian citizen who was elected to serve as one of the greek generals at the legendary battles of Marathon, where a 10 000 strong greek force defeated a persian invading army of over 25 000. Miltiades have been credited with devising the tactics that defeated the persians in this crucial engagement that saved greek civilisation from persian rule.'
     },
     'Leonidas': {
         picture: './assets/img/leonidas.png',
         selectSound: '',
-        flag: './assets/flags/sparta.png',
+        flag: './assets/flagsSvg/sparta.svg',
         biography: 'Leonidas was king of the renowned warrior citystate known as Sparta. He led a force of 300 spartans supported by 7 000 greek allies against a persian invasion force led by King Xerxes I whose army was at least 10 times bigger. Leonidas and his army successfully defended the mountain pass of Thermopylae for several crucial days despite the severe numerical disadvantage. After being surrounded Leonidas and the last of the men who had chosen to stay fought a valiant last stand, a moment that has been immortalized in both history and legend.'
     },
     'Henry V': {
         picture: './assets/img/henryv.png',
         selectSound: '',
-        flag: './assets/flags/oldEngland.png',
+        flag: './assets/flagsSvg/oldEngland.svg',
         biography: 'Henry V was the king of England between 1413 - 1422, the second English monarch of the House of Lancaster. He embarked on a war with France in the ongoing Hundred Years War where he famously defeted the french, despite having a severe numerical disadvantage, at the battle of Agincourt. The battle has been romantized and the subject of songs and plays, most notably by William Shakespeare.'
     },
     'Charles XII': {
         picture: './assets/img/karlxii.png',
         selectSound: '',
-        flag: './assets/flags/sweden.png',
+        flag: './assets/flagsSvg/sweden.svg',
         biography: 'Charles XII inherited the throne of the Swedish kingdom at the mere age of 15. At this time several of Swedens enemies declared war on them in an attempt to reconquer lands that had been previously conquered by Sweden. This ensured that the life of Charles XII would be almost exclusively paved with war. He is most famous for having defeated the Russians at the battle of Narva where his army of around 12 000 men defeated the russians tsars army of 37 000.'
     },
     'Saladin': {
@@ -198,58 +198,58 @@ const avatars = {
     'William the Conqueror': {
         picture: './assets/img/william.png',
         selectSound: '',
-        flag: './assets/flags/normandy.png',
+        flag: './assets/flagsSvg/normandy.svg',
         biography: 'William the Conquerer, who has viking ancestry, was a duke of Normandy who would later invade England become the first Norman king of England. In a contest for the English throne he would find himself against the English earl Harold Godwinson. The deisive victory was acheived at the famous battle of Hastings where Harold was killed.'
     },
     'Gustavus Adolphus': {
         picture: './assets/img/gustavusadolphus.png',
         selectSound: '',
-        flag: './assets/flags/sweden.png',
+        flag: './assets/flagsSvg/sweden.svg',
         biography: 'Gustavus Adolphus is the only Swedish monarch to be styled as \'the great\'. He is also often referred to the as the \'father of modern warfare\' because of his reforms to the swedish military. He changed the swedish army from relying on conscription and mercenaries into a highly trained professional standing national army. He also innovated the strategies used, like employing smaller and more mobile artillery pieces that could be redirected during a battle, and combining pikemen with musketeers in a single formation. His most famous victory was at the battle of Breitenfeld, as a part of the 30 year war, where he decisively defeated the Catholic league.'
     },
     'Duke of Wellington': {
         picture: './assets/img/dukeofwellington.png',
         selectSound: '',
-        flag: './assets/flags/britain.png',
+        flag: './assets/flagsSvg/britain.svg',
         biography: ''
     },
     'Hernán Cortés': {
         picture: './assets/img/hernancortes.png',
         selectSound: '',
-        flag: './assets/flags/spanishEmpire.png',
+        flag: './assets/flagsSvg/spanishEmpire.svg',
         biography: 'Hernán Cortés was one of the most successful and ruthless of the Spanish conquistadors who fought native americans in the new world. He led an expedition with just a few hundred spaniards accompanied by a few thousands native allies and completely destroyed the Aztec empire after a decisive victory at the battle of Otumba. He later seized the Aztec capital of Tenochtitlan and renamed it to Mexico City, which he became governor of.'
     },
     'Shaka Zulu': {
         picture: './assets/img/shakazulu.png',
         selectSound: '',
-        flag: './assets/flags/zulu.png',
+        flag: './assets/flagsSvg/zulu.svg',
         biography: 'Shaka was one of the most influential monarchs of the Zulu kingdom, located in modern day South Africa. The Zulus went from being a minor tribe among many, perhaps just around 1500 people, to becoming a vast empire that was inhabited by several hundreds of thousands. One of the main reasons for this expansion was the military and tactical reforms that Shaka implemented which allowed him to conquer his rival tribes.'
     },
     'Erich Ludendorff': {
         picture: './assets/img/ludendorff.png',
         selectSound: '',
-        flag: './assets/flags/germanEmpire.png'
+        flag: './assets/flagsSvg/germanEmpire.svg'
     },
     'Bernard Montgomery': {
         picture: './assets/img/montgomery.png',
         selectSound: '',
-        flag: './assets/flags/britain.png'
+        flag: './assets/flagsSvg/britain.svg'
     },
     'George Patton': {
         picture: './assets/img/georgepatton.png',
         selectSound: '',
-        flag: './assets/flags/unitedStates.png'
+        flag: './assets/flagsSvg/unitedStates.svg'
     },
     'Jeanne d\'Arc': {
         picture: './assets/img/jeannedarc.png',
         pronounciation: 'Shann Darc',
         selectSound: '',
-        flag: './assets/flags/oldFrance.png'
+        flag: './assets/flagsSvg/oldFrance.svg'
     },
     'Boudicca': {
         picture: './assets/img/boudicca.png',
         selectSound: '',
-        flag: './assets/flags/iceni.png'
+        flag: './assets/flagsSvg/iceni.svg'
     }
 };
 

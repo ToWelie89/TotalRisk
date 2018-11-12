@@ -157,6 +157,8 @@ class CharacterCreatorController {
                     $(`.existingCharactersContainer__item__inner[character="${id}"] svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
 
                     $(`.existingCharactersContainer__item__inner[character="${id}"] svg .skinTone`).css('fill', character.skinTone);
+
+                    this.vm.selectedFlag = character.flag;
                 }
             });
         }, 10);
@@ -254,7 +256,8 @@ class CharacterCreatorController {
                     mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId,
                     torso: this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId,
                     legs: this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId,
-                    skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId
+                    skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId,
+                    flag: this.vm.selectedFlag
                 });
             } else {
                 const character = userCharacters.find(x => x.id === this.vm.selectedCharacterId);
@@ -268,6 +271,7 @@ class CharacterCreatorController {
                 character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId;
                 character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId;
                 character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId;
+                character.flag = this.vm.selectedFlag;
             }
         })
         .then(() => {
@@ -305,6 +309,7 @@ class CharacterCreatorController {
 
         this.vm.selectedCharacterId = character.id;
         this.vm.name = character.name;
+        this.vm.selectedFlag = character.flag;
         this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId = character.hat;
         this.vm.currentSelection.find(x => x.type === 'head').selectedPartId = character.head;
         this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId = character.eyebrows;
@@ -353,6 +358,7 @@ class CharacterCreatorController {
         });
         this.vm.name = '';
         this.vm.selectedCharacterId = undefined;
+        this.vm.selectedFlag = flags[0];
         setTimeout(() => {
             this.$scope.$apply();
         }, 1);

@@ -1,4 +1,4 @@
-const { loadSvgIntoDiv } = require('./../helpers');
+const { loadSvgIntoDiv, objectsAreEqual } = require('./../helpers');
 
 class PlayerPortraitDirective {
     constructor() {
@@ -12,7 +12,9 @@ class PlayerPortraitDirective {
 
     link(scope, elem, attr) {
         scope.$watch(scope.avatar, (newVal, oldVal) => {
-            setPortrait();
+            if (!objectsAreEqual(newVal, oldVal)) {
+                setPortrait();
+            }
         });
 
         const setPortrait = () => {

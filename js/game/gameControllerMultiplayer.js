@@ -201,10 +201,6 @@ class GameControllerMultiplayer extends GameController {
             } else {
                 this.soundService.denied.play();
             }
-            this.gameEngine.addTroopToTerritory(country);
-            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
-            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-            this.$scope.$apply();
         } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.ATTACK) {
             if (this.gameEngine.selectedTerritory &&
                 clickedTerritory.owner !== this.gameEngine.turn.player.name &&

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="1000" height="600"
+   viewBox="0 0 150 90">
+  <title>Goesch des Deutschen Kaiserreichs</title>
+  <desc>die Goesch des Deutschen Kaiserreichs ab 1903</desc>
+  <rect fill="#D00" width="150" height="90"/>
+  <rect fill="white" width="150" height="60"/>
+  <rect width="150" height="30"/>
+  <svg id="Kreuz" x="45" y="15" width="60" height="60" viewBox="0 0 1000 1000">
+    <path
+      d="M 248,0 C 326,115 377,249 394,394 249,377 115,326 0,248 V 752 C 115,674 249,623 394,606 377,751 326,885 248,1000 H 752 C 674,885 623,751 606,606 751,623 885,674 1000,752 V 248 C 885,326 751,377 606,394 623,249 674,115 752,0 z" />
+    <path fill="none" stroke="white" stroke-width="33"
+      d="M 295,25 C 365,142 410,277 422,422 277,410 142,365 25,295 V 705 C 142,635 277,590 422,578 410,723 365,858 295,975 H 705 C 635,858 590,723 578,578 723,590 858,635 975,705 V 295 C 858,365 723,410 578,422 590,277 635,142 705,25 z" />
+  </svg>
+</svg>

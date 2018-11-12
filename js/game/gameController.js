@@ -77,17 +77,26 @@ class GameController {
         document.addEventListener('keyup', this.boundListener);
 
         document.querySelectorAll('.country').forEach(country => {
-            country.addEventListener('click', (e) => {
+            var clone = country.cloneNode(true);
+            country.parentNode.replaceChild(clone, country);
+
+            clone.addEventListener('click', (e) => {
                 this.clickCountry(e);
             });
         });
         document.querySelectorAll('.troopCounter').forEach(country => {
-            country.addEventListener('click', (e) => {
+            var clone = country.cloneNode(true);
+            country.parentNode.replaceChild(clone, country);
+
+            clone.addEventListener('click', (e) => {
                 this.clickCountry(e);
             });
         });
         document.querySelectorAll('.troopCounterText').forEach(country => {
-            country.addEventListener('click', (e) => {
+            var clone = country.cloneNode(true);
+            country.parentNode.replaceChild(clone, country);
+
+            clone.addEventListener('click', (e) => {
                 this.clickCountry(e);
             });
         });

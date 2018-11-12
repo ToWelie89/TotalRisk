@@ -135,9 +135,7 @@ io.on('connection', function(socket){
     getTerritoryByName(gameEngine.map, territoryName).numberOfTroops++;
 
     for (let currentSocket in socketList) {
-      if (socketList[currentSocket].userUid !== senderUid) {
-        socketList[currentSocket].emit('troopAddedToTerritoryNotifier', territoryName);
-      }
+      socketList[currentSocket].emit('troopAddedToTerritoryNotifier', territoryName);
     }
   });
 

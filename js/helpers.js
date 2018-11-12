@@ -128,6 +128,10 @@ const lightenDarkenColor = (colorCode, amount) => {
 }
 
 const objectsAreEqual = (obj1, obj2) => {
+    if (!obj1 || !obj2) {
+        return false;
+    }
+
     let returnValue = true;
 
     Object.keys(obj1).forEach(key => {
