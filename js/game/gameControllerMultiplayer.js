@@ -194,7 +194,7 @@ class GameControllerMultiplayer extends GameController {
 
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
-                this.soundService.addTroopSound.play();
+                // this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
 
                 this.emit('troopAddedToTerritory', [ clickedTerritory.name ])

@@ -10,7 +10,7 @@ const {
 const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
-const {delay} = require('./../helpers');
+const {delay, loadSvgIntoDiv} = require('./../helpers');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 
 class GameController {
@@ -172,18 +172,24 @@ class GameController {
 
     handleVictory() {
         this.vm.playerWhoWon = this.gameEngine.players.get(this.gameEngine.playerWhoWon);
+        if (this.vm.playerWhoWon.avatar.svg) {
+            loadSvgIntoDiv(this.vm.playerWhoWon.avatar.svg, '.victoryPortrait');
+        }
 
-        var flagW = 200;
+        var flagW = 250;
         var flagElementW = 2;
         var len = flagW/flagElementW;
         var delay = 10;
         var flag = document.getElementById('victoryFlag');
+        flag.innerHTML = '';
         for(var i = 0; i < len; i++){
             var fe = document.createElement('div');
             fe.className = 'flag-element';
+            fe.style.backgroundSize = 250 + 'px 100%';
             fe.style.backgroundPosition = -i*flagElementW+'px 0';
             fe.style.webkitAnimationDelay = i*delay+'ms';
             fe.style.animationDelay = i * delay + 'ms';
+            fe.style.webkitAnimationDelay = i*delay+'ms';
             flag.appendChild(fe);
         }
         $('.flag-element').css('background-image', `url(${this.vm.playerWhoWon.avatar.flag})`);
