@@ -11,7 +11,8 @@
         <p
             class="fakeLink"
             data-ng-click="auth.goToState(auth.states.EDIT_PROFILE)"
-            data-ng-show="auth.currentState === auth.states.LOGGED_IN && main.currentGamePhase !== main.gamePhases.PLAYER_SETUP_MULTIPLAYER">
+            data-ng-show="auth.currentState === auth.states.LOGGED_IN && main.currentGamePhase !== main.gamePhases.PLAYER_SETUP_MULTIPLAYER && false">
+            <!-- Hide for now -->
             Edit profile
         </p>
         <div data-ng-show="auth.currentState === auth.states.EDIT_PROFILE">
@@ -32,6 +33,9 @@
         <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.LOGIN)">
             Login
         </button>
+        <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.RESET_PASSWORD)">
+            Reset password
+        </button>
         <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.SIGNUP)">
             Signup
         </button>
@@ -46,14 +50,34 @@
             Login
         </button>
     </div>
-    <div data-ng-show="auth.currentState === auth.states.SIGNUP">
+    <div data-ng-show="auth.currentState === auth.states.RESET_PASSWORD">
         <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
             <span class="glyphicon glyphicon-arrow-left"></span>
         </button>
-        <input type="text" data-ng-model="auth.signupData.email" class="marginRight" placeholder="Email" />
-        <input type="password" data-ng-model="auth.signupData.password" class="marginRight" placeholder="Password" />
-        <button type="button" class="button button-green" data-ng-click="auth.signup()">
-            Signup
+        <input type="text" data-ng-model="auth.resetPasswordMail" class="marginRight" placeholder="Email" />
+        <button type="button" class="button button-green" data-ng-click="auth.resetPassword()" data-ng-disabled="!auth.resetPasswordMail">
+            Reset password
         </button>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.SIGNUP">
+        <div>
+            <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+        <div class="marginTop">
+            <input type="text" data-ng-model="auth.signupData.userName" class="marginRight" maxlength="20" placeholder="Username" />
+        </div>
+        <div class="marginTop">
+            <input type="text" data-ng-model="auth.signupData.email" class="marginRight" placeholder="Email" />
+        </div>
+        <div class="marginTop">
+            <input type="password" data-ng-model="auth.signupData.password" class="marginRight" placeholder="Password" />
+        </div>
+        <div class="marginTop">
+            <button type="button" class="button button-green" data-ng-click="auth.signup()">
+                Signup
+            </button>
+        </div>
     </div>
 </div>

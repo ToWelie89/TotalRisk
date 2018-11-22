@@ -2,7 +2,7 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {GAME_PHASES} = require('./../gameConstants');
-const {startGlobalLoading, stopGlobalLoading} = require('./../helpers');
+const {startGlobalLoading, stopGlobalLoading, getRandomInteger} = require('./../helpers');
 const {flags} = require('./editorConstants');
 
 class CharacterCreatorController {
@@ -212,7 +212,7 @@ class CharacterCreatorController {
 
     randomize() {
         this.soundService.tick.play();
-
+        this.vm.selectedFlag = flags[getRandomInteger(0, (flags.length - 1))];
         this.vm.currentSelection.forEach(part => {
             part.selection = Math.floor(Math.random() * part.maxChoices) + 1 ;
 

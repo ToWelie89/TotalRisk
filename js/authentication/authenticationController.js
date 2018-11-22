@@ -13,7 +13,8 @@ class AuthenticationController {
             NOT_LOGGED_IN: 1,
             LOGIN: 2,
             SIGNUP: 3,
-            EDIT_PROFILE: 4
+            EDIT_PROFILE: 4,
+            RESET_PASSWORD: 5
         }
 
         this.vm.loginData = {
@@ -22,9 +23,11 @@ class AuthenticationController {
         };
         this.vm.signupData = {
             email: '',
-            password: ''
+            password: '',
+            username: ''
         };
         this.vm.newDisplayNameData = '';
+        this.vm.resetPasswordMail = '';
 
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -42,6 +45,7 @@ class AuthenticationController {
         this.vm.goToState = this.goToState;
         this.vm.updateProfile = this.updateProfile;
         this.vm.cancelUpdate = this.cancelUpdate;
+        this.vm.resetPassword = this.resetPassword;
     }
 
     setUser (user) {
@@ -55,6 +59,27 @@ class AuthenticationController {
     goToState(state) {
         this.soundService.tick.play();
         this.vm.currentState = state;
+    }
+
+    resetPassword() {
+        this.soundService.tick.play();
+        firebase.auth().sendPasswordResetEmail(this.vm.resetPasswordMail).then(() => {
+            this.toastService.successToast('', 'Reset password email sent');
+            this.vm.resetPasswordMail = '';
+            this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
+        }).catch(error => {
+            if (error.code === 'auth/invalid-email') {
+                this.toastService.errorToast(
+                    'Reset password error!',
+                    'The email entered is not valid'
+                );
+            } else if (error.code === 'auth/user-not-found') {
+                this.toastService.errorToast(
+                    'Reset password error!',
+                    'No user found'
+                );
+            }
+        });
     }
 
     login() {
@@ -104,18 +129,36 @@ class AuthenticationController {
 
     signup() {
         this.soundService.tick.play();
-        firebase.auth().createUserWithEmailAndPassword(this.vm.signupData.email, this.vm.signupData.password)
+        firebase.database().ref('/users/').once('value').then(snapshot => {
+            let users = snapshot.val();
+            users = users ? users : [];
+            const existingUser = Object.values(users).find(user => user.userName === this.vm.signupData.userName);
+            if (existingUser) {
+                // username already exists
+                throw 'username-taken';
+            } else {
+                return firebase.auth().createUserWithEmailAndPassword(this.vm.signupData.email, this.vm.signupData.password);
+            }
+        })
         .then(result => {
-            console.log(result);
-            this.vm.currentState = this.vm.states.LOGGED_IN;
             this.vm.user = {
-                displayName: result.user.displayName,
+                displayName: this.vm.signupData.userName,
                 email: result.user.email
             };
+            return firebase.database().ref('users/' + result.user.uid).set({
+                userName: this.vm.signupData.userName
+            });
+        })
+        .then(() => {
+            const user = firebase.auth().currentUser;
+            user.updateProfile({
+                displayName: this.vm.signupData.userName
+            });
             this.toastService.successToast('', 'You have been registered successfully!');
             this.vm.signupData = {
                 email: '',
-                password: ''
+                password: '',
+                userName: ''
             };
         })
         .catch(err => {
@@ -134,6 +177,11 @@ class AuthenticationController {
                 this.toastService.errorToast(
                     'Signup error!',
                     'That password is too weak'
+                );
+            } else if (err === 'username-taken') {
+                this.toastService.errorToast(
+                    'Signup error!',
+                    'That username is already taken'
                 );
             }
         });
@@ -154,7 +202,8 @@ class AuthenticationController {
             };
             this.vm.signupData = {
                 email: '',
-                password: ''
+                password: '',
+                userName: ''
             };
             this.$scope.$apply();
         }).catch(err => {

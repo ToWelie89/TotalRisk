@@ -31,7 +31,7 @@ class PlayerPortraitDirective {
                 return;
             }
 
-            if (avatar.customCharacter) {
+            if (avatar && avatar.customCharacter) {
                 portraitBox.style.backgroundImage = '';
 
                 const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom`;
