@@ -1,45 +1,47 @@
-<div id="hostNewGameModal" class="riskModal" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="modal-body textCenter">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            Game name
+<form action="" onsubmit="return false;">
+    <div id="hostNewGameModal" class="riskModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                Game name
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="text" maxlength="15" data-ng-model="hostNewGame.gameName" />
+                            </div>
                         </div>
-                        <div class="col-xs-8">
-                            <input type="text" maxlength="15" data-ng-model="hostNewGame.gameName" />
+                        <div class="row">
+                            <div class="col-xs-4">
+                                Password (optional)
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="text" data-ng-model="hostNewGame.password" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            Password (optional)
+                        <div class="row">
+                            <div class="col-xs-4">
+                                LAN-game
+                            </div>
+                            <div class="col-xs-8">
+                                <input type="checkbox" data-ng-model="hostNewGame.lanGame" />
+                            </div>
                         </div>
-                        <div class="col-xs-8">
-                            <input type="text" data-ng-model="hostNewGame.password" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            LAN-game
-                        </div>
-                        <div class="col-xs-8">
-                            <input type="checkbox" data-ng-model="hostNewGame.lanGame" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="button" class="button button-red large" data-ng-click="hostNewGame.cancel()">
-                                Cancel
-                            </button>
-                            <button type="button" class="button button-blue large" data-ng-click="hostNewGame.createLobby()" data-ng-disabled="hostNewGame.gameName.length === 0">
-                                Create lobby
-                            </button>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" class="button button-red large" data-ng-click="hostNewGame.cancel()">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="button button-blue large" data-ng-click="hostNewGame.createLobby()" data-ng-disabled="hostNewGame.gameName.length === 0">
+                                    Create lobby
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>

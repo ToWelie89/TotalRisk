@@ -1,31 +1,33 @@
-<div id="joinPrivateLobby" class="riskModal" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="modal-body textCenter">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            Enter password
+<form action="" onsubmit="return false;">
+    <div id="joinPrivateLobby" class="riskModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body textCenter">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                Enter password
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <input type="password" data-ng-model="joinPrivate.password" />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <input type="password" data-ng-model="joinPrivate.password" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="button" class="button button-red large" data-ng-click="joinPrivate.cancel()">
-                                Cancel
-                            </button>
-                            <button type="button" class="button button-blue large" data-ng-click="joinPrivate.join()" data-ng-disabled="joinPrivate.password.length === 0">
-                                Join
-                            </button>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" class="button button-red large" data-ng-click="joinPrivate.cancel()">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="button button-blue large" data-ng-click="joinPrivate.join()" data-ng-disabled="joinPrivate.password.length === 0">
+                                    Join
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>
