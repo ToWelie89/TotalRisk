@@ -1,11 +1,12 @@
-const { GAME_PHASES } = require('./../gameConstants');
+const { GAME_PHASES, MAIN_MUSIC } = require('./../gameConstants');
 
 class PauseMenuModalController {
 
-    constructor($scope, $rootScope, $uibModalInstance, soundService) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, gameEngine) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.soundService = soundService;
+        this.gameEngine = gameEngine;
 
         this.$uibModalInstance = $uibModalInstance;
 
@@ -44,6 +45,7 @@ class PauseMenuModalController {
         this.soundService.tick.play();
         this.$uibModalInstance.close();
         this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
+        this.gameEngine.setMusic(MAIN_MUSIC);
     }
 }
 

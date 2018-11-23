@@ -42,7 +42,7 @@ class TurnPresentationController {
             document.removeEventListener('keyup', this.boundListener);
             this.gameAnnouncerService.mute();
             if (!this.vm.tutorial) {
-                this.gameEngine.setMusicVolume(0.8);
+                this.gameEngine.setMusicVolume(this.settings.musicVolume);
             }
             if (this.data.afterSpeech) {
                 this.data.afterSpeech();
@@ -72,12 +72,16 @@ class TurnPresentationController {
 
             if (this.settings.playSound) {
                 this.gameAnnouncerService.speak('Game started', () => {
-                    this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
+                        this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    }
                 }, () => {
                     this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
-                        this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                        if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
+                            this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                        }
                     }, () => {
-                        this.gameEngine.setMusicVolume(0.8);
+                        this.gameEngine.setMusicVolume(this.settings.musicVolume);
                         this.close();
                     });
                 });
@@ -92,9 +96,11 @@ class TurnPresentationController {
 
             if (this.settings.playSound) {
                 this.gameAnnouncerService.stateTurn(this.vm.turn, () => {
-                    this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
+                        this.gameEngine.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                    }
                 }, () => {
-                    this.gameEngine.setMusicVolume(0.8);
+                    this.gameEngine.setMusicVolume(this.settings.musicVolume);
                     this.close();
                 });
             } else {

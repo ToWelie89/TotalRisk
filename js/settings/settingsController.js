@@ -2,11 +2,12 @@ const {runningElectron} = require('./../helpers');
 
 class SettingsController {
 
-    constructor($scope, $timeout, settings, aiHandler, soundService) {
+    constructor($scope, $timeout, settings, aiHandler, soundService, gameEngine) {
         this.vm = this;
         this.vm.settings = settings;
         this.aiHandler = aiHandler;
         this.soundService = soundService;
+        this.gameEngine = gameEngine;
 
         this.vm.runningElectron = runningElectron();
 
@@ -22,7 +23,26 @@ class SettingsController {
                 this.vm.settings.saveSettings();
             }
         };
+        this.vm.musicVolumeSliderOptions = {
+            showTicks: false,
+            stepsArray: Array.from(new Array(101), (x, i) => i),
+            onChange: () => {
+                this.vm.settings.musicVolume = this.vm.musicVolume;
+                this.gameEngine.setMusicVolume(this.vm.settings.musicVolume);
+                this.vm.settings.saveSettings();
+            }
+        };
+        this.vm.sfxVolumeSliderOptions = {
+            showTicks: false,
+            stepsArray: Array.from(new Array(101), (x, i) => i),
+            onChange: () => {
+                this.vm.settings.sfxVolume = this.vm.sfxVolume;
+                this.vm.settings.saveSettings();
+            }
+        };
         this.vm.aiSpeed = this.vm.settings.aiSpeed;
+        this.vm.musicVolume = this.vm.settings.musicVolume;
+        this.vm.sfxVolume = this.vm.settings.sfxVolume;
 
         // PUBLIC FUNCTIONS
         this.vm.toggleSound = this.toggleSound;
@@ -34,8 +54,10 @@ class SettingsController {
         if (this.vm.settings.playSound) {
             this.soundService.changeColor.play();
             this.vm.settings.toggleSound();
+            this.gameEngine.toggleSound();
         } else {
             this.vm.settings.toggleSound();
+            this.gameEngine.toggleSound();
             this.soundService.changeColor.play();
         }
     }

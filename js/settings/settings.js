@@ -2,8 +2,7 @@ const {settings} = require('./defaultSettings');
 const {runningElectron} = require('./../helpers');
 
 class Settings {
-    constructor(gameEngine) {
-        this.gameEngine = gameEngine;
+    constructor() {
         this.runningElectron = runningElectron();
         let savedSettings;
 
@@ -30,20 +29,18 @@ class Settings {
         this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
+        this.musicVolume   = savedSettings ? savedSettings.musicVolume   : settings.musicVolume;
+        this.sfxVolume     = savedSettings ? savedSettings.sfxVolume     : settings.sfxVolume;
         this.aiSpeedValues = {
             'Slow': 1000,
             'Medium': 600,
             'Fast': 200,
             'Superspeed': 40
         };
-
-        this.gameEngine.toggleSound(this.playSound);
     }
 
     toggleSound() {
         this.playSound = !this.playSound;
-        this.gameEngine.toggleSound(this.playSound);
-
         this.saveSettings();
     }
 
@@ -52,7 +49,9 @@ class Settings {
             playSound:     this.playSound,
             aiSpeed:       this.aiSpeed,
             showAnnouncer: this.showAnnouncer,
-            fullScreen:    this.fullScreen
+            fullScreen:    this.fullScreen,
+            musicVolume:   this.musicVolume,
+            sfxVolume:     this.sfxVolume
         };
 
         if (this.runningElectron) {

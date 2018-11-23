@@ -5,15 +5,14 @@
 const WorldMap = require('./map/worldMap');
 const { getTerritoryByName, getTerritoriesByOwner } = require('./map/mapHelpers');
 const { playerIterator, PLAYER_TYPES } = require('./player/playerConstants');
-const { TURN_PHASES, MAIN_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } = require('./gameConstants');
+const { TURN_PHASES, MAIN_MUSIC, IN_GAME_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } = require('./gameConstants');
 const { shuffle, randomIntFromInterval, randomDoubleFromInterval } = require('./helpers');
 const { initiatieCardDeck } = require('./card/cardHandler');
 const DeploymentHandler = require('./deployment/deploymentHandler');
-const {settings} = require('./settings/defaultSettings');
 
 class GameEngine {
 
-    constructor(gameAnnouncerService, $rootScope) {
+    constructor(gameAnnouncerService, $rootScope, settings) {
         this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.COMPUTERNAME;
 
         this.gameAnnouncerService = gameAnnouncerService;
@@ -33,6 +32,7 @@ class GameEngine {
     }
 
     setMusicVolume(volume) {
+        volume = (volume / 100);
         if (this.thisIsBackendGameEngine) return;
 
         if (this.bgMusic && this.settings.playSound) {
@@ -42,14 +42,17 @@ class GameEngine {
 
     toggleSound(playSound) {
         if (this.thisIsBackendGameEngine) return;
-
-        this.settings.playSound = playSound;
         if (this.settings.playSound) {
-            this.setMusic((this.isTutorialMode ||
-                          (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN) ||
-                           this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP ||
-                           this.$rootScope.currentGamePhase === GAME_PHASES.MAIN_MENU ||
-                           this.$rootScope.currentGamePhase === GAME_PHASES.SETTINGS) ? MAIN_MUSIC : AI_MUSIC);
+            let music;
+
+            if (this.isTutorialMode || (this.turn && this.turn.player.type === PLAYER_TYPES.HUMAN)) {
+                music = IN_GAME_MUSIC;
+            } else if (this.turn && this.turn.player.type === PLAYER_TYPES.AI) {
+                music = AI_MUSIC;
+            } else {
+                music = MAIN_MUSIC;
+            }
+            this.setMusic(music);
         } else {
             this.gameAnnouncerService.mute();
             if (this.bgMusic)
@@ -72,6 +75,7 @@ class GameEngine {
                 this.bgMusic = new Audio(music);
                 this.currentMusicPlaying = music;
                 this.bgMusic.loop = true;
+                this.bgMusic.volume = (this.settings.musicVolume / 100);
                 this.bgMusic.play();
             }
         }
@@ -111,7 +115,7 @@ class GameEngine {
 
         this.aiTesting = aiTesting;
 
-        this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
+        this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? IN_GAME_MUSIC : AI_MUSIC);
 
         this.startGameTimestamp = Date.now();
     }
@@ -230,9 +234,11 @@ class GameEngine {
                         const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
                         if (this.settings.playSound) {
                             this.gameAnnouncerService.speak(`${name} has won the game!`, () => {
-                                this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                                if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
+                                    this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                                }
                             }, () => {
-                                this.setMusicVolume(0.8);
+                                this.setMusicVolume(this.settings.musicVolume);
                             });
                         }
                     }, 1000);
@@ -253,9 +259,11 @@ class GameEngine {
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
         if (this.settings.playSound) {
             this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
-                this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
+                    this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
+                }
             }, () => {
-                this.setMusicVolume(0.8);
+                this.setMusicVolume(this.settings.musicVolume);
             });
         }
 

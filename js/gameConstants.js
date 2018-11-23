@@ -75,17 +75,19 @@ const POSSIBLE_CARD_COMBINATIONS = [
     {combination: [CARD_TYPE.TROOP, CARD_TYPE.TROOP, CARD_TYPE.JOKER], value: 3}
 ];
 
-const MAIN_MUSIC = './audio/bgmusic.mp3';
+const MAIN_MUSIC = './audio/bgmusic3.mp3';
 
 const AI_MUSIC = './audio/bgmusic2.mp3';
 
-const ATTACK_MUSIC = './audio/bgmusic_attack.mp3';
+const ATTACK_MUSIC = './audio/attackMusic.wav';
+
+const IN_GAME_MUSIC = './audio/ingameMusic.wav';
 
 const VICTORY_MUSIC = './audio/victory.mp3';
 
-const MUSIC_VOLUME_DURING_TUTORIAL = 0.1;
+const MUSIC_VOLUME_DURING_TUTORIAL = 10;
 
-const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 0.3;
+const MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING = 30;
 
 const MAX_CARDS_ON_HAND = 5;
 
@@ -97,6 +99,7 @@ module.exports = {
     AI_MUSIC,
     ATTACK_MUSIC,
     VICTORY_MUSIC,
+    IN_GAME_MUSIC,
     MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING,
     MAX_CARDS_ON_HAND,
     MUSIC_VOLUME_DURING_TUTORIAL,

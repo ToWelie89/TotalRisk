@@ -5,7 +5,9 @@ const ElectronSettings = {
         playSound: true,
         aiSpeed: 'Fast',
         showAnnouncer: true,
-        fullScreen: false
+        fullScreen: false,
+        musicVolume: 80,
+        sfxVolume: 60
     }
 };
 

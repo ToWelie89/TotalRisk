@@ -1,7 +1,8 @@
 const { TURN_PHASES } = require('./../gameConstants');
 
 class GameAnnouncer {
-    constructor() {
+    constructor(settings) {
+        this.settings = settings;
         this.announcerType = 'UK English Male';
         this.pitch = 0.7;
     }
@@ -9,6 +10,7 @@ class GameAnnouncer {
     speak(text, onstartCallback, onendCallback) {
         responsiveVoice.speak(text, this.announcerType, {
             pitch: this.pitch,
+            volume: (this.settings.musicVolume / 100),
             onstart: onstartCallback,
             onend: onendCallback
         });
@@ -18,6 +20,7 @@ class GameAnnouncer {
         return new Promise((resolve, reject) => {
             responsiveVoice.speak(text, this.announcerType, {
                 pitch: this.pitch,
+                volume: (this.settings.musicVolume / 100),
                 onstart: onstartCallback,
                 onend: () => {
                     if (onendCallback) {
@@ -36,12 +39,14 @@ class GameAnnouncer {
     stateTurn(turn, onstartCallback, onendCallback) {
         const parameters = {
             pitch: this.pitch,
+            volume: (this.settings.musicVolume / 100),
             onstart: onstartCallback,
             onend: onendCallback
         };
 
         responsiveVoice.speak(turn.newPlayer ? (`${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`) : ' ', this.announcerType, {
             pitch: this.pitch,
+            volume: (this.settings.musicVolume / 100),
             onstart: onstartCallback,
             onend: () => {
                 if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {

@@ -124,7 +124,7 @@ class GameControllerTutorial extends GameController {
                 this.settings.toggleSound();
             }
 
-            this.gameEngine.setMusicVolume(0.8);
+            this.gameEngine.setMusicVolume(this.settings.musicVolume);
             this.gameEngine.isTutorialMode = false;
             this.vm.isTutorialMode = false;
             this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -138,7 +138,7 @@ class GameControllerTutorial extends GameController {
             } else {
                 this.settings.toggleSound();
             }
-            this.gameEngine.setMusicVolume(0.8);
+            this.gameEngine.setMusicVolume(this.settings.musicVolume);
             $(`#svgMap .country`).removeClass('blink_me');
         })
     }

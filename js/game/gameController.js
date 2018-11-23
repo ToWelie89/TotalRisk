@@ -1,7 +1,7 @@
 const {
     GAME_PHASES,
     TURN_PHASES,
-    MAIN_MUSIC,
+    IN_GAME_MUSIC,
     AI_MUSIC,
     MAX_CARDS_ON_HAND,
     ATTACK_MUSIC,
@@ -248,8 +248,8 @@ class GameController {
                 this.gameEngine.isTutorialMode = false;
                 this.vm.isTutorialMode = false;
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
-                this.gameEngine.setMusic();
-                this.gameEngine.setMusicVolume(0.8);
+                this.gameEngine.setMusic(IN_GAME_MUSIC);
+                this.gameEngine.setMusicVolume(this.settings.musicVolume);
                 this.gameAnnouncerService.mute();
                 this.$scope.$apply();
             }
@@ -378,7 +378,7 @@ class GameController {
             console.log('New turn: ', this.vm.turn);
             console.log('Current carddeck: ', this.gameEngine.cardDeck);
 
-            this.gameEngine.setMusic(this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN ? MAIN_MUSIC : AI_MUSIC);
+            this.gameEngine.setMusic(this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN ? IN_GAME_MUSIC : AI_MUSIC);
 
             if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
                 this.handleAi();
@@ -521,7 +521,7 @@ class GameController {
                 }
             }
         }).result.then(closeResponse => {
-            this.gameEngine.setMusic();
+            this.gameEngine.setMusic(IN_GAME_MUSIC);
             console.log('Battle is over ', closeResponse);
             this.updatePlayerDataAfterAttack(closeResponse);
             this.gameEngine.checkIfPlayerWonTheGame();
@@ -655,7 +655,7 @@ class GameController {
                 return;
             }
 
-            this.gameEngine.setMusic();
+            this.gameEngine.setMusic(IN_GAME_MUSIC);
             console.log('Movement complete ', closeResponse);
             this.updateGameAfterMovement(closeResponse);
             this.soundService.movement.play();
