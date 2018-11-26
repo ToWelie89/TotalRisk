@@ -79,9 +79,9 @@ const MAIN_MUSIC = './audio/bgmusic3.mp3';
 
 const AI_MUSIC = './audio/bgmusic2.mp3';
 
-const ATTACK_MUSIC = './audio/attackMusic.wav';
+const ATTACK_MUSIC = './audio/attackMusic.mp3';
 
-const IN_GAME_MUSIC = './audio/ingameMusic.wav';
+const IN_GAME_MUSIC = './audio/ingameMusic.mp3';
 
 const VICTORY_MUSIC = './audio/victory.mp3';
 
