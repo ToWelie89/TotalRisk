@@ -4,6 +4,8 @@ const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {MESSAGE_TYPES, ERROR_TYPES} = require('./autoUpdating/updaterConstants');
 
+const io = require('socket.io-client');
+
 class MainController {
 
     constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService, socketService) {
