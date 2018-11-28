@@ -1,20 +1,20 @@
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+'use strict';
 
-server.listen(80);
-console.log('Listening on port 9000');
-// WARNING: app.listen(80) will NOT work here!
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
 
-app.get('/', function (req, res) {
-  res.send('Server ;)');
-});
+const PORT = process.env.PORT || 5000;
+const INDEX = path.join(__dirname, '../index.html');
 
-io.on('connection', function (socket) {
-  console.log('User connected');
-  socket.emit('kekistan', { hello: 'world' });
+const server = express()
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-  setTimeout(function() {
-    socket.emit('kekistan', { hello: 'LOOOL' });
-  }, 3000);
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.emit('kekistan', { msg: 'testtttttttttt' });
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
