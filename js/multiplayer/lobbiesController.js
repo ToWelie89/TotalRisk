@@ -1,3 +1,4 @@
+const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -69,36 +70,7 @@ class LobbiesController {
             }, 1);
         });
 
-        firebase.database().ref('rooms').on('value', snapshot => {
-            const rooms = snapshot.val();
-
-            this.vm.lobbies = [];
-            for (let room in rooms) {
-                this.vm.lobbies.push(Object.assign({
-                    id: room
-                }, rooms[room]));
-            }
-
-            this.vm.lobbies = this.vm.lobbies.filter(lobby => {
-                const threeHoursToMS = 1000 * 60 * 60 * 3;
-                return lobby.creationTimestamp > (Date.now() - threeHoursToMS);
-            });
-
-            this.vm.lobbies.map(lobby => {
-                lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);
-                lobby.private = lobby.password !== hashString('');
-            });
-
-            this.vm.lobbies.sort((a, b) => {
-                return b.creationTimestamp - a.creationTimestamp;
-            });
-
-            console.log('Game lobbies', this.vm.lobbies);
-            this.vm.filteredLobbies = this.vm.lobbies;
-            this.$timeout(() => {
-                this.$scope.$apply();
-            }, 1);
-        });
+        this.setupSocket();
 
         // PUBLIC METHODS
         this.vm.hostNewGame = this.hostNewGame;
@@ -150,13 +122,13 @@ class LobbiesController {
             controllerAs: 'hostNewGame',
             keyboard: false
         }).result.then((closeResponse) => {
-            //load
             if (closeResponse && closeResponse.gameName) {
                 startGlobalLoading()
                 const id = Math.floor((Math.random() * 1000000000) + 1);
                 const user = firebase.auth().currentUser;
                 const creator = user.displayName ? user.displayName : user.email;
-                firebase.database().ref('rooms/' + id).set({
+                const newRoom = {
+                    id,
                     roomName: closeResponse.gameName,
                     password: hashString(closeResponse.password),
                     creationTimestamp: Date.now(),
@@ -167,15 +139,47 @@ class LobbiesController {
                     hostIp: closeResponse.lanGame ? '127.0.0.1' : this.$rootScope.myIp,
                     version: this.$rootScope.appVersion,
                     map: MAPS.WORLD_MAP
-                })
-                .then(() => {
-                    this.$rootScope.currentLobbyId = id;
-                    this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
-                    this.$rootScope.$apply();
-                    stopGlobalLoading();
-                    //stop load
-                });
+                };
+                this.lobbiesSocket.emit('createNewRoom', newRoom);
             }
+        });
+    }
+
+    setupSocket() {
+        this.lobbiesSocket = io.connect(`http://127.0.0.1:5000/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
+
+        this.lobbiesSocket.on('currentLobbies', lobbies => {
+            this.vm.lobbies = [];
+            console.log(lobbies)
+            lobbies.forEach(lobby => {
+                this.vm.lobbies.push(lobby);
+            });
+
+            this.vm.lobbies = this.vm.lobbies.filter(lobby => {
+                const threeHoursToMS = 1000 * 60 * 60 * 3;
+                return lobby.creationTimestamp > (Date.now() - threeHoursToMS);
+            });
+
+            this.vm.lobbies.map(lobby => {
+                lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);
+                lobby.private = lobby.password !== hashString('');
+            });
+
+            this.vm.lobbies.sort((a, b) => {
+                return b.creationTimestamp - a.creationTimestamp;
+            });
+
+            console.log('Game lobbies', this.vm.lobbies);
+            this.vm.filteredLobbies = this.vm.lobbies;
+            this.$timeout(() => {
+                this.$scope.$apply();
+            }, 1);
+        });
+        this.lobbiesSocket.on('createNewRoomResponse', room => {
+            this.$rootScope.currentLobbyId = room.id;
+            this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
+            this.$rootScope.$apply();
+            stopGlobalLoading();
         });
     }
 
