@@ -19,3 +19,4 @@ const server = express()
 const io = socketIO(server);
 
 const lobbies = require('./lobbies.js')(io);
+const game = require('./game.js')(io, lobbies);

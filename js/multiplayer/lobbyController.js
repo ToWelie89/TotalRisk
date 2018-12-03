@@ -1,3 +1,4 @@
+const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -17,7 +18,7 @@ class LobbiesController {
         this.toastService = toastService;
         this.$uibModal = $uibModal;
 
-        this.$rootScope.$watch('currentLobbyId', () => {
+        this.$rootScope.$watch('currentLobby', () => {
             this.initLobby();
         });
 
@@ -92,8 +93,8 @@ class LobbiesController {
     }
 
     initLobby() {
-        this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
-        if (this.vm.currentLobbyId) {
+        this.vm.room = this.$rootScope.currentLobby;
+        if (this.vm.room) {
             const user = firebase.auth().currentUser;
             this.vm.myUid = user.uid;
             this.vm.lockedSlots = [];
@@ -102,26 +103,25 @@ class LobbiesController {
             this.vm.showLobbyChat = true;
             this.vm.lobbyChatMessage = '';
             this.vm.globalChatMessage = '';
-            firebase.database().ref('/rooms/' + this.vm.currentLobbyId).once('value').then(snapshot => {
-                this.vm.room = Object.assign(snapshot.val(), {
-                    id: snapshot.key
-                });
-                console.log('This room', this.vm.room);
 
-                loadSvgIntoDiv('./assets/maps/worldMap/worldMap.svg', '#lobbyMapContainer');
+            console.log('This room', this.vm.room);
 
-                this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
-                this.$scope.$apply();
-                const userName = user.displayName ? user.displayName : user.email;
+            loadSvgIntoDiv('./assets/maps/worldMap/worldMap.svg', '#lobbyMapContainer');
 
-                if (this.vm.userIsHost) {
-                    this.socketService.createSocket('http://127.0.0.1', 1119, this.vm.room.id, user.uid, userName);
-                } else {
-                    this.socketService.createSocket(`http://${this.vm.room.hostIp}`, 1119, this.vm.room.id, user.uid, userName);
-                }
+            this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
+            const userName = user.displayName ? user.displayName : user.email;
 
-                this.addSocketListeners();
+            this.lobbiesSocket = io.connect(`http://127.0.0.1:5000/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
+            this.lobbySocket = io.connect(`http://127.0.0.1:5000/game`, {transports: ['websocket', 'polling', 'flashsocket']});
+            this.lobbySocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost);
+            this.lobbySocket.emit('sendMessage', this.vm.room.id, {
+                sender: 'SERVER',
+                uid: 'SERVER',
+                message: `${userName} connected to the room`,
+                timestamp: Date.now()
             });
+
+            this.addSocketListeners();
         }
     }
 
@@ -169,8 +169,7 @@ class LobbiesController {
             $('.mainWrapper').css('-webkit-filter', 'none');
 
             if (!objectsAreEqual(closeResponse.avatar, currentSelectedPlayer.avatar)) {
-                // update to BE
-                this.socketService.updateAvatar(uid, closeResponse.avatar);
+                this.lobbySocket.emit('updateAvatar', uid, closeResponse.avatar);
             }
 
             console.log(closeResponse);
@@ -178,7 +177,7 @@ class LobbiesController {
     }
 
     addSocketListeners() {
-        this.socketService.socket.on('messagesUpdated', (messages) => {
+        this.lobbySocket.on('messagesUpdated', (messages) => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && this.vm.showLobbyChat) {
                 this.soundService.newMessage.play();
             }
@@ -202,28 +201,37 @@ class LobbiesController {
             console.log('Lobby messages', this.vm.lobbyChatMessages);
         });
 
-        this.socketService.socket.on('kicked', () => {
-            this.$rootScope.currentLobbyId = '';
+        this.lobbySocket.on('kicked', () => {
+            this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
-            this.toastService.errorToast('', 'You have been kicked = require(the lobby.');
-            this.socketService.socket.disconnect();
+            this.toastService.errorToast('', 'You have been kicked from the lobby.');
+            this.lobbySocket.disconnect();
         });
 
-        this.socketService.socket.on('hostLeft', () => {
+        this.lobbySocket.on('hostLeft', () => {
             const user = firebase.auth().currentUser;
             const userName = user.displayName ? user.displayName : user.email;
-            this.socketService.leaveLobby(this.vm.room.id, userName);
-            this.$rootScope.currentLobbyId = '';
+            this.lobbySocket.leaveLobby(this.vm.room.id, userName);
+
+            this.lobbySocket.emit('sendMessage', this.vm.room.id, {
+                sender: 'SERVER',
+                uid: 'SERVER',
+                message: `${userName} left the room`,
+                timestamp: Date.now()
+            });
+
+            this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
-            this.toastService.infoToast('', 'The host has left the lobby. Lobby removed.')
+            this.toastService.infoToast('', 'The host has left the lobby. Lobby removed.');
+            this.lobbySocket.disconnect();
         });
 
-        this.socketService.socket.on('updatedPlayers', players => {
+        this.lobbySocket.on('updatedPlayers', players => {
             this.setPlayers(players);
             console.log('Players updated in room', this.vm.players);
         });
 
-        this.socketService.socket.on('updatedLockedSlots', lockedSlots => {
+        this.lobbySocket.on('updatedLockedSlots', lockedSlots => {
             this.vm.lockedSlots = lockedSlots;
             this.setPlayers(this.vm.players);
             this.vm.room.maxNumberOfPlayer = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
@@ -265,7 +273,12 @@ class LobbiesController {
         }
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
-        this.socketService.sendMessage(userName, user.uid, this.vm.lobbyChatMessage, Date.now(), this.vm.room.id);
+        this.lobbySocket.emit('sendMessage', this.vm.room.id, {
+            sender: userName,
+            uid: user.uid,
+            message: this.vm.lobbyChatMessage,
+            timestamp: Date.now()
+        });
         this.vm.lobbyChatMessage = '';
     }
 
@@ -296,13 +309,21 @@ class LobbiesController {
         this.soundService.bleep2.play();
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
-        this.socketService.leaveLobby(this.vm.room.id, userName);
-        this.$rootScope.currentLobbyId = '';
+
+        this.lobbySocket.emit('sendMessage', this.vm.room.id, {
+            sender: 'SERVER',
+            uid: 'SERVER',
+            message: `${userName} left the room`,
+            timestamp: Date.now()
+        });
+
+        this.$rootScope.currentLobby = '';
         this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
+        this.lobbySocket.disconnect();
     }
 
     kickPlayer(player) {
-        this.socketService.kickPlayer(this.vm.room.id, player.userUid);
+        this.lobbySocket.emit('kickPlayer', this.vm.room.id, player.userUid);
     }
 
     lockUnlockSlot(index) {
@@ -312,13 +333,10 @@ class LobbiesController {
             this.vm.lockedSlots.push(index);
         }
 
-        this.socketService.updateLockedSlotsForRoom(this.vm.lockedSlots, this.vm.room.id);
-
-        const updates = {};
-        updates[`rooms/${this.vm.room.id}/maxNumberOfPlayer`] = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
-        firebase.database().ref().update(updates);
+        this.lobbySocket.emit('lockedSlots', this.vm.lockedSlots, this.vm.room.id);
 
         this.vm.room.maxNumberOfPlayer = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
+        this.lobbiesSocket.emit('setMaxNumberOfPlayers', this.vm.room.maxNumberOfPlayer, this.vm.room.id);
     }
 
     existingPlayers() {
@@ -330,7 +348,7 @@ class LobbiesController {
     }
 
     startGame() {
-        this.socketService.startGame(this.vm.chosenGoal);
+        this.lobbySocket.emit('startGame', this.vm.chosenGoal);
     }
 }
 

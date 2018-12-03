@@ -86,6 +86,12 @@ class LobbiesController {
 
     joinLobby(lobby) {
         this.soundService.tick.play();
+
+        const joinRoom = () => {
+            this.$rootScope.currentLobby = lobby;
+            this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
+        }
+
         if (lobby.private) {
             this.$uibModal.open({
                 templateUrl: 'joinPrivateLobby.html',
@@ -98,8 +104,7 @@ class LobbiesController {
                 if (closeResponse && closeResponse.password) {
                     if (hashString(closeResponse.password) === lobby.password) {
                         console.log('correct password');
-                        this.$rootScope.currentLobbyId = lobby.id;
-                        this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
+                        joinRoom();
                     } else {
                         console.log('incorrect password');
                         this.toastService.errorToast('', 'Incorrect password');
@@ -107,8 +112,7 @@ class LobbiesController {
                 }
             });
         } else {
-            this.$rootScope.currentLobbyId = lobby.id;
-            this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
+            joinRoom();
         }
     }
 
@@ -176,7 +180,7 @@ class LobbiesController {
             }, 1);
         });
         this.lobbiesSocket.on('createNewRoomResponse', room => {
-            this.$rootScope.currentLobbyId = room.id;
+            this.$rootScope.currentLobby = room;
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
             this.$rootScope.$apply();
             stopGlobalLoading();
