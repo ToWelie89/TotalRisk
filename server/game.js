@@ -3,8 +3,7 @@ const { getRandomInteger } = require('./../js/helpers');
 
 const GameEngine = require('./../js/gameEngine');
 
-let socketList = {};
-let lobbies = [];
+let gameSocketList = {};
 let messages = [];
 let currentLockedSlots = {};
 
@@ -13,7 +12,7 @@ let turnTimerFunction;
 let turnTimer;
 
 const getRandomUnusedColor = () => {
-  const usedColors = Object.values(socketList).map(socket => socket.color);
+  const usedColors = Object.values(gameSocketList).map(socket => socket.color);
   const allColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
 
   const availableColors = allColors.filter(color => !usedColors.includes(color));
@@ -23,7 +22,7 @@ const getRandomUnusedColor = () => {
 }
 
 const getUnusedAvatar = () => {
-  const usedAvatars = Object.values(socketList).map(socket => socket.avatar);
+  const usedAvatars = Object.values(gameSocketList).map(socket => socket.avatar);
   const allAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
   const availableAvatars = allAvatars.filter(avatar => !usedAvatars.includes(avatar));
 
@@ -33,18 +32,18 @@ const getUnusedAvatar = () => {
 
 const addNewMessage = (roomId, msg) => {
   if (msg.uid && msg.uid !== 'SERVER') {
-    msg.color = socketList[msg.uid].color.mainColor;
+    msg.color = gameSocketList[msg.uid].color.mainColor;
   }
   msg.roomId = roomId;
   messages.push(msg);
 
-  for (let currentSocket in socketList) {
-    socketList[currentSocket].emit('messagesUpdated', messages);
+  for (let currentSocket in gameSocketList) {
+    gameSocketList[currentSocket].emit('messagesUpdated', messages);
   }
 }
 
 const setPlayers = (roomId) => {
-  const currentPlayersInRoom = Object.values(socketList).filter(s => s.roomId === roomId).map(x => ({
+  const currentPlayersInRoom = Object.values(gameSocketList).filter(s => s.roomId === roomId).map(x => ({
     userUid: x.userUid,
     userName: x.userName,
     isHost: x.isHost,
@@ -52,9 +51,9 @@ const setPlayers = (roomId) => {
     avatar: x.avatar
   }));
 
-  for (let socket in socketList) {
-    if (socketList[socket].roomId === roomId) {
-      socketList[socket].emit('updatedPlayers', currentPlayersInRoom);
+  for (let socket in gameSocketList) {
+    if (gameSocketList[socket].roomId === roomId) {
+      gameSocketList[socket].emit('updatedPlayers', currentPlayersInRoom);
     }
   }
 }
@@ -78,9 +77,9 @@ exports = module.exports = (io, lobbies) => {
             });
           }
 
-          delete socketList[socket.userUid];
+          delete gameSocketList[socket.userUid];
 
-          const usersInSameRoom = Object.values(socketList).filter(s => s.roomId === socket.roomId);
+          const usersInSameRoom = Object.values(gameSocketList).filter(s => s.roomId === socket.roomId);
 
           if (usersInSameRoom.length === 0) {
             messages = [];
@@ -89,8 +88,8 @@ exports = module.exports = (io, lobbies) => {
           if (usersInSameRoom.length === 0 || usersInSameRoom.find(s => s.isHost) === undefined) {
             // remove room
             // firebase.database().ref('/rooms/' + socket.roomId).remove();
-            for (let socket in socketList) {
-              socketList[socket].emit('hostLeft');
+            for (let socket in gameSocketList) {
+              gameSocketList[socket].emit('hostLeft');
             }
           }
 
@@ -102,8 +101,8 @@ exports = module.exports = (io, lobbies) => {
         });
 
         socket.on('updateAvatar', (userUid, avatar) => {
-          socketList[userUid].avatar = avatar;
-          const roomId = socketList[userUid].roomId;
+          gameSocketList[userUid].avatar = avatar;
+          const roomId = gameSocketList[userUid].roomId;
           setPlayers(roomId);
         });
 
@@ -119,8 +118,8 @@ exports = module.exports = (io, lobbies) => {
             socket.emit('updatedLockedSlots', currentLockedSlots[roomId]);
           }
 
-          socketList[userUid] = socket;
-          const currentPlayersInRoom = Object.values(socketList).filter(s => s.roomId === roomId).map(x => ({
+          gameSocketList[userUid] = socket;
+          const currentPlayersInRoom = Object.values(gameSocketList).filter(s => s.roomId === roomId).map(x => ({
             userUid: x.userUid,
             userName: x.userName,
             isHost: x.isHost,
@@ -128,9 +127,9 @@ exports = module.exports = (io, lobbies) => {
             avatar: x.avatar
           }));
 
-          for (let socket in socketList) {
-            if (socketList[socket].roomId === roomId) {
-              socketList[socket].emit('updatedPlayers', currentPlayersInRoom);
+          for (let socket in gameSocketList) {
+            if (gameSocketList[socket].roomId === roomId) {
+              gameSocketList[socket].emit('updatedPlayers', currentPlayersInRoom);
             }
           }
 
@@ -139,9 +138,9 @@ exports = module.exports = (io, lobbies) => {
 
         socket.on('lockedSlots', (lockedSlots, roomId) => {
           currentLockedSlots[roomId] = lockedSlots;
-          for (let socket in socketList) {
-            if (socketList[socket].roomId === roomId) {
-              socketList[socket].emit('updatedLockedSlots', lockedSlots);
+          for (let socket in gameSocketList) {
+            if (gameSocketList[socket].roomId === roomId) {
+              gameSocketList[socket].emit('updatedLockedSlots', lockedSlots);
             }
           }
         });
@@ -150,12 +149,12 @@ exports = module.exports = (io, lobbies) => {
           addNewMessage(socket.roomId, {
             sender: 'SERVER',
             uid: 'SERVER',
-            message: `${socketList[userUid].userName} was kicked from room`,
+            message: `${gameSocketList[userUid].userName} was kicked from room`,
             timestamp: Date.now()
           });
 
-          socketList[userUid].emit('kicked');
-          delete socketList[userUid];
+          gameSocketList[userUid].emit('kicked');
+          delete gameSocketList[userUid];
 
           setPlayers(roomId);
         });
@@ -165,7 +164,7 @@ exports = module.exports = (io, lobbies) => {
 
           // FIX!!!
 
-          /*const playerList = Object.values(socketList).map(x => new Player(
+          /*const playerList = Object.values(gameSocketList).map(x => new Player(
             x.userName,
             x.color,
             x.avatar,
@@ -178,8 +177,8 @@ exports = module.exports = (io, lobbies) => {
 
           startTimer();
 
-          for (let currentSocket in socketList) {
-            socketList[currentSocket].emit('gameStarted', playerList, chosenGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
+          for (let currentSocket in gameSocketList) {
+            gameSocketList[currentSocket].emit('gameStarted', playerList, chosenGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
           }
 
           addNewMessage(socket.roomId, {

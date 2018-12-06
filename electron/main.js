@@ -80,7 +80,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
 
 // Create window here
 const createDefaultWindow = () => {
-  const isDev = process.env.NODE_ENV === 'electron';
+  const isDev = process.env.NODE_ENV === 'dev';
 
   let windowBounds = store.get('windowBounds');
   let riskSettings = store.get('riskSettings');

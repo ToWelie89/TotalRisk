@@ -209,17 +209,6 @@ class LobbiesController {
         });
 
         this.lobbySocket.on('hostLeft', () => {
-            const user = firebase.auth().currentUser;
-            const userName = user.displayName ? user.displayName : user.email;
-            this.lobbySocket.leaveLobby(this.vm.room.id, userName);
-
-            this.lobbySocket.emit('sendMessage', this.vm.room.id, {
-                sender: 'SERVER',
-                uid: 'SERVER',
-                message: `${userName} left the room`,
-                timestamp: Date.now()
-            });
-
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.infoToast('', 'The host has left the lobby. Lobby removed.');

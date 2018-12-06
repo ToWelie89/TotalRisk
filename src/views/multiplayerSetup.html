@@ -45,11 +45,11 @@
                             <div class="lobbyCell" data-ng-bind="lobby.version"></div>
                             <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
                             <div class="lobbyCell">
-                                {{lobby.currentNumberOfPlayers}} / {{lobby.maxNumberOfPlayer}}
+                                {{lobby.players.length}} / {{lobby.maxNumberOfPlayer}}
                             </div>
                             <div class="lobbyCell" data-ng-bind="lobby.normalizedTime"></div>
                             <div class="lobbyCell">
-                                <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.currentNumberOfPlayers === lobby.maxNumberOfPlayer">
+                                <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.players.length === lobby.maxNumberOfPlayer">
                                     <strong>Join</strong>
                                 </button>
                             </div>
