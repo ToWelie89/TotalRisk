@@ -125,7 +125,7 @@ const avatars = {
     'Hannibal Barca': {
         picture: './assets/img/hannibal_barca.png',
         selectSound: '',
-        flag: './assets/flagsSvg/carthage.png',
+        flag: './assets/flagsSvg/carthage.svg',
         biography: 'Hannibal Barca was a general of the mighty Carthaginian empire in North Africa. During his childhood Rome inflicted a heavy humiliating defeat upon Carthage, to which he swore an oath to never be a friend of the romans, words he lived by for the rest of his life. He led one of the most audacious campaigns in history by crossing the alps in midwinter and challenging the roman empire on their own turf. He won every single battle he fought in the italian peninsula and eventually crushed the romans last ditch all out attack at the legendary battle of Cannae. He is considered one of the best generals in history.'
     },
     'Alexander the Great': {

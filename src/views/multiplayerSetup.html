@@ -24,6 +24,7 @@
                         <div class="lobbyCell">Name</div>
                         <div class="lobbyCell">Version</div>
                         <div class="lobbyCell">Creator</div>
+                        <div class="lobbyCell">State</div>
                         <div class="lobbyCell">Players</div>
                         <div class="lobbyCell">Created</div>
                         <div class="lobbyCell"></div>
@@ -45,11 +46,15 @@
                             <div class="lobbyCell" data-ng-bind="lobby.version"></div>
                             <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
                             <div class="lobbyCell">
+                                <span ng-show="lobby.state === 'LOBBY'">Lobby</span>
+                                <span ng-show="lobby.state === 'IN_GAME'">In game</span>
+                            </div>
+                            <div class="lobbyCell">
                                 {{lobby.players.length}} / {{lobby.maxNumberOfPlayer}}
                             </div>
                             <div class="lobbyCell" data-ng-bind="lobby.normalizedTime"></div>
                             <div class="lobbyCell">
-                                <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.players.length === lobby.maxNumberOfPlayer">
+                                <button type="button" class="button button-green joinButton" data-ng-click="lobbies.joinLobby(lobby)" data-ng-disabled="!lobbies.isAuthenticated || lobby.players.length === lobby.maxNumberOfPlayer || lobby.state !== 'LOBBY'">
                                     <strong>Join</strong>
                                 </button>
                             </div>

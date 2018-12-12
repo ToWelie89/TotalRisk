@@ -1,9 +1,10 @@
+const io = require('socket.io-client');
 const BattleHandler = require('./battleHandler');
 const {delay} = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
 
 class AttackModalController {
-    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, socketService, attackData) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -34,7 +35,6 @@ class AttackModalController {
         this.soundService = soundService;
         this.attackData = attackData;
         this.tutorialService = tutorialService;
-        this.socketService = socketService;
 
         this.vm.battleHandler = new BattleHandler();
 
@@ -65,6 +65,7 @@ class AttackModalController {
 
         if (this.multiplayerMode) {
             // display territories in battle for other players
+            this.gameSocket = io.connect(`http://127.0.0.1:5000/game`, {transports: ['websocket', 'polling', 'flashsocket']});
         }
 
         const defendingNationName = this.vm.defender.name;
@@ -158,14 +159,16 @@ class AttackModalController {
         if (!this.multiplayerMode) {
             return;
         }
-        this.socketService.battleFought({
-            attackerCasualties,
-            defenderCasualties,
-            attackerNumberOfTroops: (attackerNumberOfTroops + 1),
-            defenderNumberOfTroops,
-            defenderTerritory: this.vm.defender.name,
-            attackerTerritory: this.vm.attacker.name
-        });
+        if (this.multiplayerMode) {
+            this.gameSocket.emit('battleFought', {
+                attackerCasualties,
+                defenderCasualties,
+                attackerNumberOfTroops: (attackerNumberOfTroops + 1),
+                defenderNumberOfTroops,
+                defenderTerritory: this.vm.defender.name,
+                attackerTerritory: this.vm.attacker.name
+            });
+        }
     }
 
     afterRoll(result, context) {
@@ -270,7 +273,7 @@ class AttackModalController {
         this.vm.defender.numberOfTroops = this.vm.moveNumberOfTroops;
 
         if (this.multiplayerMode) {
-            this.socketService.updateOwnerAfterSuccessfulInvasion({
+            this.gameSocket.emit('updateOwnerAfterSuccessfulInvasion', {
                 attackerTerritory: this.vm.attacker.name,
                 defenderTerritory: this.vm.defender.name,
                 attackerTerritoryNumberOfTroops: this.vm.attacker.numberOfTroops,

@@ -139,7 +139,6 @@ class LobbiesController {
                     creator,
                     creatorUid: user.uid,
                     maxNumberOfPlayer: CONSTANTS.MAX_NUMBER_OF_PLAYERS,
-                    hostIp: closeResponse.lanGame ? '127.0.0.1' : this.$rootScope.myIp,
                     version: this.$rootScope.appVersion,
                     map: MAPS.WORLD_MAP
                 };

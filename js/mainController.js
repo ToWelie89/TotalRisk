@@ -6,7 +6,7 @@ const {MESSAGE_TYPES, ERROR_TYPES} = require('./autoUpdating/updaterConstants');
 
 class MainController {
 
-    constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService, socketService) {
+    constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;

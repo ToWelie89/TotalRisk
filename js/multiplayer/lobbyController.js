@@ -8,15 +8,15 @@ const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsA
 const { avatars, PLAYER_COLORS } = require('./../player/playerConstants');
 
 class LobbiesController {
-    constructor($scope, $rootScope, $timeout, $uibModal, soundService, socketService, toastService) {
+    constructor($scope, $rootScope, $timeout, $uibModal, soundService, toastService, gameEngine) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$timeout = $timeout;
         this.soundService = soundService;
-        this.socketService = socketService;
         this.toastService = toastService;
         this.$uibModal = $uibModal;
+        this.gameEngine = gameEngine;
 
         this.$rootScope.$watch('currentLobby', () => {
             this.initLobby();
@@ -113,6 +113,9 @@ class LobbiesController {
 
             this.lobbiesSocket = io.connect(`http://127.0.0.1:5000/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
             this.lobbySocket = io.connect(`http://127.0.0.1:5000/game`, {transports: ['websocket', 'polling', 'flashsocket']});
+
+            this.addSocketListeners();
+
             this.lobbySocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost);
             this.lobbySocket.emit('sendMessage', this.vm.room.id, {
                 sender: 'SERVER',
@@ -120,8 +123,6 @@ class LobbiesController {
                 message: `${userName} connected to the room`,
                 timestamp: Date.now()
             });
-
-            this.addSocketListeners();
         }
     }
 
@@ -162,14 +163,15 @@ class LobbiesController {
             keyboard: false,
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
-                selectedPlayers: () => this.vm.players
+                selectedPlayers: () => this.vm.players,
+                multiplayer: () => true
             }
         }).result.then(closeResponse => {
             $('.mainWrapper').css('filter', 'none');
             $('.mainWrapper').css('-webkit-filter', 'none');
 
             if (!objectsAreEqual(closeResponse.avatar, currentSelectedPlayer.avatar)) {
-                this.lobbySocket.emit('updateAvatar', uid, closeResponse.avatar);
+                this.lobbySocket.emit('updateAvatar', this.vm.room.id, uid, closeResponse.avatar);
             }
 
             console.log(closeResponse);
@@ -224,6 +226,26 @@ class LobbiesController {
             this.vm.lockedSlots = lockedSlots;
             this.setPlayers(this.vm.players);
             this.vm.room.maxNumberOfPlayer = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
+        });
+
+        this.lobbySocket.on('gameStarted', (players, victoryGoal, map, turn, troopsToDeploy) => {
+            console.log('troopsToDeploy', troopsToDeploy);
+            this.gameEngine.currentGameIsMultiplayer = true;
+            this.gameEngine.turn = turn;
+            this.gameEngine.troopsToDeploy = troopsToDeploy;
+
+            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                const territoryFromServer = map.find(x => x.name === t.name);
+                t.owner = territoryFromServer.owner;
+                t.numberOfTroops = territoryFromServer.numberOfTroops;
+            });
+
+            this.$rootScope.players = players;
+            this.$rootScope.chosenGoal = victoryGoal;
+
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
+
+            this.$rootScope.$apply();
         });
     }
 
@@ -337,7 +359,7 @@ class LobbiesController {
     }
 
     startGame() {
-        this.lobbySocket.emit('startGame', this.vm.chosenGoal);
+        this.lobbySocket.emit('startGame', this.vm.room.id, this.vm.chosenGoal);
     }
 }
 

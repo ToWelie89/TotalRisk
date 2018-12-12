@@ -4,12 +4,21 @@ const express = require('express');
 const socketIO = require('socket.io');
 const path = require('path');
 
-const { PLAYER_COLORS, avatars } = require('./../js/player/playerConstants');
+const { PLAYER_COLORS, PLAYER_TYPES, avatars } = require('./../js/player/playerConstants');
 const { getRandomInteger } = require('./../js/helpers');
+const { getTerritoryByName } = require('./../js/map/mapHelpers');
+const { VICTORY_GOALS, TURN_PHASES } = require('./../js/gameConstants');
 const GameEngine = require('./../js/gameEngine');
+const Player = require('./../js/player/player');
 
 const PORT = process.env.PORT || 5000;
 const INDEX = path.join(__dirname, 'index.html');
+
+const states = {
+  LOBBY: 'LOBBY',
+  IN_GAME: 'IN_GAME',
+  RESULT_SCREEN: 'RESULT_SCREEN'
+};
 
 const server = express()
     .get('/', (req, res, next) => {
@@ -25,29 +34,23 @@ const io = socketIO(server);
 let lobbiesSocketList = [];
 let games = [];
 
-let gameSocketList = {};
-let messages = [];
+const turnLength = 62;
 
-/*const games = [{
-    id: 42738942,
-    messages: [],
-    playerIds: [],
-    messages: [],
-    currentLockedSlots: [],
-    timer: {
-        turnTimerSeconds,
-        turnTimerFunction,
-        turnTimer
-    }
-}]*/
-
-let turnTimerSeconds;
-let turnTimerFunction;
-let turnTimer;
-
-const updatePlayersInRoom = () => {
+const updateLobbies = () => {
   lobbiesSocketList.forEach(s => {
-    s.emit('currentLobbies', games);
+    s.emit('currentLobbies', games.map(game => ({
+      id: game.id,
+      roomName: game.roomName,
+      password: game.password,
+      creationTimestamp: game.creationTimestamp,
+      creator: game.creator,
+      creatorUid: game.creatorUid,
+      maxNumberOfPlayer: game.maxNumberOfPlayer,
+      version: game.version,
+      map: game.map,
+      state: game.state,
+      players: game.players.map(p => ({}))
+    })));
   });
 }
 
@@ -80,16 +83,56 @@ const addNewMessage = (roomId, msg) => {
   }
   game.messages.push(msg);
 
-  for (let playerSocket in game.players) {
+  game.players.forEach(playerSocket => {
     playerSocket.emit('messagesUpdated', game.messages);
-  }
+  })
 }
 
 const setPlayers = (roomId) => {
   const game = games.find(game => game.id === roomId);
-  for (let playerSocket in game.players) {
-    playerSocket.emit('updatedPlayers', game.players);
+
+  game.players.forEach(playerSocket => {
+    playerSocket.emit('updatedPlayers', game.players.map(p => ({
+      userUid: p.userUid,
+      userName: p.userName,
+      isHost: p.isHost,
+      color: p.color,
+      avatar: p.avatar
+    })));
+  });
+}
+
+const startTimer = roomId => {
+  const game = games.find(game => game.id === roomId);
+  if (game.timer && game.timer.turnTimer) {
+    clearInterval(game.timer.turnTimer);
   }
+  game.timer.turnTimerSeconds = turnLength;
+  game.timer.turnTimerFunction = () => {
+      game.timer.turnTimerSeconds--;
+      if (game.timer.turnTimerSeconds <= 0) {
+        skipToNextPlayer(roomId);
+      }
+  };
+  game.timer.turnTimer = setInterval(game.timer.turnTimerFunction, 1000);
+}
+
+const skipToNextPlayer = roomId => {
+  console.log('Skipping to next player due to time being up');
+  const game = games.find(game => game.id === roomId);
+  clearInterval(game.timer.turnTimer);
+  let turn = { newPlayer: false };
+
+  while(!turn.newPlayer) {
+    turn = game.gameEngine.nextTurn();
+  }
+
+  game.players.forEach(player => {
+    player.emit('nextTurnNotifier', turn, game.gameEngine.troopsToDeploy);
+  });
+
+  game.timer.turnTimerSeconds = turnLength;
+  game.timer.turnTimer = setInterval(game.timer.turnTimerFunction, 1000);
 }
 
 io
@@ -97,23 +140,22 @@ io
 .on('connection', (socket) => {
     lobbiesSocketList.push(socket);
 
-    socket.emit('currentLobbies', games);
+    updateLobbies();
 
     socket.on('createNewRoom', newRoom => {
         newRoom.players = [];
+        newRoom.messages = [];
         newRoom.currentLockedSlots = [];
+        newRoom.timer = {};
+        newRoom.state = states.LOBBY;
         games.push(newRoom);
-        lobbiesSocketList.forEach(s => {
-            s.emit('currentLobbies', games);
-        });
+        updateLobbies();
         socket.emit('createNewRoomResponse', newRoom);
     });
 
     socket.on('setMaxNumberOfPlayers', (maxAmount, roomId) => {
-        games.find(lobby => lobby.id === roomId).maxNumberOfPlayer = maxAmount;
-        lobbiesSocketList.forEach(s => {
-            s.emit('currentLobbies', games);
-        });
+        games.find(game => game.id === roomId).maxNumberOfPlayer = maxAmount;
+        updateLobbies();
     });
 });
 
@@ -121,10 +163,12 @@ io
 .of('game')
 .on('connection', (socket) => {
     socket.on('disconnect', reason => {
-      const game = games.find(game => game.id === roomId);
+      const game = games.find(game => game.id === socket.roomId);
 
       console.log('Got disconnected because of reason ', reason);
-      clearInterval(turnTimer);
+      if (game.timer && game.timer.turnTimer) {
+        clearInterval(game.timer.turnTimer);
+      }
 
       if (reason === 'transport close') {
         // User was disconnected by closing game/refrehsing window
@@ -140,20 +184,16 @@ io
 
       if (game.players.length === 0) {
         games = games.filter(game => game.id !== socket.roomId);
-        lobbiesSocketList.forEach(s => {
-          s.emit('currentLobbies', games);
-        });
+        updateLobbies();
       }
 
       if (game.players.length === 0 || game.players.find(player => player.isHost) === undefined) {
         // Host left
         games = games.filter(game => game.id !== socket.roomId);
-        lobbiesSocketList.forEach(s => {
-            s.emit('currentLobbies', games);
-        });
-        for (let playerSocket in game.players) {
+        updateLobbies();
+        game.players.forEach(playerSocket => {
           playerSocket.emit('hostLeft');
-        }
+        });
       }
 
       setPlayers(socket.roomId);
@@ -163,9 +203,10 @@ io
       addNewMessage(roomId, msg);
     });
 
-    socket.on('updateAvatar', (userUid, avatar) => {
-      gameSocketList[userUid].avatar = avatar;
-      const roomId = gameSocketList[userUid].roomId;
+    socket.on('updateAvatar', (roomId, userUid, avatar) => {
+      const game = games.find(game => game.id === roomId);
+      const player = game.players.find(player => player.userUid === userUid);
+      player.avatar = avatar;
       setPlayers(roomId);
     });
 
@@ -183,52 +224,56 @@ io
 
       socket.emit('updatedLockedSlots', game.currentLockedSlots);
 
-      gameSocketList[userUid] = socket;
-      const currentPlayersInRoom = Object.values(gameSocketList).filter(s => s.roomId === roomId).map(x => ({
-        userUid: x.userUid,
-        userName: x.userName,
-        isHost: x.isHost,
-        color: x.color,
-        avatar: x.avatar
-      }));
+      game.players.forEach(player => {
+        player.emit('updatedPlayers', game.players.map(p => ({
+          userUid: p.userUid,
+          userName: p.userName,
+          isHost: p.isHost,
+          color: p.color,
+          avatar: p.avatar
+        })));
+      });
 
-      for (let socket in gameSocketList) {
-        if (gameSocketList[socket].roomId === roomId) {
-          gameSocketList[socket].emit('updatedPlayers', currentPlayersInRoom);
-        }
-      }
-
-      updatePlayersInRoom(roomId)
+      updateLobbies(roomId);
     });
 
     socket.on('lockedSlots', (lockedSlots, roomId) => {
       const game = games.find(game => game.id === roomId);
       game.currentLockedSlots = lockedSlots;
-      for (let socket in game.players) {
-        gameSocketList[socket].emit('updatedLockedSlots', lockedSlots);
-      }
+      game.players.forEach(playerSocket => {
+        playerSocket.emit('updatedLockedSlots', game.currentLockedSlots);
+      });
     });
 
     socket.on('kickPlayer', (roomId, userUid) => {
+      const game = games.find(game => game.id === roomId);
+      const player = game.players.find(player => player.userUid === userUid);
       addNewMessage(socket.roomId, {
         sender: 'SERVER',
         uid: 'SERVER',
-        message: `${gameSocketList[userUid].userName} was kicked from room`,
+        message: `${player.userName} was kicked from room`,
         timestamp: Date.now()
       });
 
-      gameSocketList[userUid].emit('kicked');
-      delete gameSocketList[userUid];
+      player.emit('kicked');
+      game.players = game.players.filter(player => player.userUid !== userUid);
 
       setPlayers(roomId);
+      updateLobbies(roomId);
     });
 
-    socket.on('startGame', chosenGoal => {
-      //currentState = states.IN_GAME;
+    // GAME EVENTS
 
-      // FIX!!!
+    socket.on('startGame', (roomId, chosenGoal) => {
+      const game = games.find(game => game.id === roomId);
 
-      /*const playerList = Object.values(gameSocketList).map(x => new Player(
+      game.state = states.IN_GAME;
+
+      updateLobbies();
+
+      game.gameEngine = new GameEngine({}, {});
+
+      const playerList = game.players.map(x => new Player(
         x.userName,
         x.color,
         x.avatar,
@@ -237,19 +282,89 @@ io
         x.isHost
       ));
 
-      gameEngine.startGame(playerList, chosenGoal);
+      game.gameEngine.startGame(playerList, chosenGoal);
 
-      startTimer();
+      startTimer(game.id);
 
-      for (let currentSocket in gameSocketList) {
-        gameSocketList[currentSocket].emit('gameStarted', playerList, chosenGoal, gameEngine.map.getAllTerritoriesAsList(), gameEngine.turn, gameEngine.troopsToDeploy);
-      }
+      game.players.forEach(player => {
+        player.emit('gameStarted', playerList, chosenGoal, game.gameEngine.map.getAllTerritoriesAsList(), game.gameEngine.turn, game.gameEngine.troopsToDeploy);
+      });
 
       addNewMessage(socket.roomId, {
         sender: 'SERVER',
         uid: 'SERVER',
         message: `GAME STARTED!`,
         timestamp: Date.now()
-      });*/
+      });
+    });
+
+    socket.on('troopAddedToTerritory', (territoryName) => {
+      console.log('socket.roomId', socket.roomId)
+      const game = games.find(game => game.id === socket.roomId);
+
+      getTerritoryByName(game.gameEngine.map, territoryName).numberOfTroops++;
+
+      game.players.forEach(player => {
+        player.emit('troopAddedToTerritoryNotifier', territoryName);
+      });
+    });
+
+    socket.on('nextTurn', () => {
+      const game = games.find(game => game.id === socket.roomId);
+
+      const turn = game.gameEngine.nextTurn();
+      let reinforcements = 0;
+      if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+        reinforcements = game.gameEngine.troopsToDeploy;
+      }
+
+      if (turn.newPlayer) {
+        startTimer();
+      }
+
+      game.players.forEach(player => {
+        player.emit('nextTurnNotifier', turn, reinforcements);
+      });
+    });
+
+    socket.on('battleFought', (battleData) => {
+      const game = games.find(game => game.id === socket.roomId);
+
+      getTerritoryByName(game.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
+      getTerritoryByName(game.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
+
+      game.players.forEach(player => {
+        player.emit('battleFoughtNotifier', battleData);
+      });
+    });
+
+    socket.on('updateOwnerAfterSuccessfulInvasion', (updateOwnerData) => {
+      const game = games.find(game => game.id === socket.roomId);
+
+      getTerritoryByName(game.gameEngine.map, updateOwnerData.attackerTerritory).numberOfTroops = updateOwnerData.attackerTerritoryNumberOfTroops;
+      getTerritoryByName(game.gameEngine.map, updateOwnerData.defenderTerritory).numberOfTroops = updateOwnerData.defenderTerritoryNumberOfTroops;
+      getTerritoryByName(game.gameEngine.map, updateOwnerData.defenderTerritory).owner = updateOwnerData.owner;
+
+      game.players.forEach(player => {
+        player.emit('updateOwnerAfterSuccessfulInvasionNotifier', updateOwnerData);
+      });
+
+      const response = game.gameEngine.checkIfPlayerWonTheGame();
+      if (response.playerWon) {
+        game.players.forEach(player => {
+          player.emit('playerWonNotifier');
+        });
+      }
+    });
+
+    socket.on('updateMovement', (movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops) => {
+      const game = games.find(game => game.id === socket.roomId);
+
+      getTerritoryByName(game.gameEngine.map, movementFromTerritoryName).numberOfTroops = movementFromTerritoryNumberOfTroops;
+      getTerritoryByName(game.gameEngine.map, movementToTerritoryName).numberOfTroops = movementToTerritoryNumberOfTroops;
+
+      game.players.forEach(player => {
+        player.emit('updateMovementNotifier', game.gameEngine.map.getAllTerritoriesAsList());
+      });
     });
 });

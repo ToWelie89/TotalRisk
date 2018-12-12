@@ -106,7 +106,8 @@ class GameSetupController {
             keyboard: false,
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
-                selectedPlayers: () => this.vm.players
+                selectedPlayers: () => this.vm.players,
+                multiplayer: () => false
             }
         }).result.then(closeResponse => {
             $('.mainWrapper').css('filter', 'none');
