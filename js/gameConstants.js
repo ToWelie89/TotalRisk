@@ -10,7 +10,7 @@ const PAUSE_MODES = {
     NOT_PAUSED: 0,
     PAUSING: 1,
     PAUSED: 2
-}
+};
 
 const GAME_PHASES = {
     MAIN_MENU: 0,
@@ -33,13 +33,22 @@ const MAPS = {
         previewMap: './assets/maps/worldMap/worldMapPreview.svg',
         name: 'Classic world map'
     }
-}
+};
 
 const CONSTANTS = {
     MIN_NUMBER_OF_PLAYERS: 2,
     MAX_NUMBER_OF_PLAYERS: 6,
     MIN_REINFORCEMENTS: 3
 };
+
+const TURN_LENGTHS = [
+    30,
+    60,
+    90,
+    120,
+    150,
+    180
+];
 
 const VICTORY_GOALS = [
     {
@@ -106,5 +115,6 @@ module.exports = {
     VICTORY_GOALS,
     POSSIBLE_CARD_COMBINATIONS,
     PAUSE_MODES,
-    MAPS
+    MAPS,
+    TURN_LENGTHS
 };

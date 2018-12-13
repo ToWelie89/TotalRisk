@@ -33,6 +33,7 @@ import LobbiesController from './multiplayer/lobbiesController.js';
 import LobbyController from './multiplayer/lobbyController.js';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
+import SocketService from './multiplayer/socketService';
 import MapService from './map/mapService';
 import ToastService from './toast/toastService';
 import Settings from './settings/settings';
@@ -79,6 +80,7 @@ app.service('gameAnnouncerService', GameAnnouncer);
 app.service('tutorialService', TutorialService);
 app.service('aiHandler', AiHandler);
 app.service('toastService', ToastService);
+app.service('socketService', SocketService);
 /* DIRECTIVES */
 app.directive('wavingFlag', () => new WavingFlagDirective());
 app.directive('playerPortrait', () => new PlayerPortraitDirective());

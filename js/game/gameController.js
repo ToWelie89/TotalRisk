@@ -15,7 +15,7 @@ const {displayReinforcementNumbers} = require('./../animations/animations');
 
 class GameController {
 
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService) {
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -44,6 +44,7 @@ class GameController {
         this.settings = settings;
         this.gameAnnouncerService = gameAnnouncerService;
         this.tutorialService = tutorialService;
+        this.socketService = socketService;
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {

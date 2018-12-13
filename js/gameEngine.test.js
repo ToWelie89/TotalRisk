@@ -12,7 +12,7 @@ describe('GameEngine', () => {
         mockRootScope = createRootScope();
         process.env.NODE_ENV = 'lol';
         delete process.env.COMPUTERNAME;
-        gameEngine = new GameEngine(mockGameAnnouncerService, mockRootScope);
+        gameEngine = new GameEngine(mockGameAnnouncerService, mockRootScope, { playSound: true, musicVolume: 50 });
     });
 
     it('constructor - sets up gameEngine correctly', () => {
@@ -25,7 +25,7 @@ describe('GameEngine', () => {
         gameEngine.bgMusic = {
             volume: 0.1
         };
-        gameEngine.setMusicVolume(0.5);
+        gameEngine.setMusicVolume(50);
         expect(gameEngine.bgMusic.volume).toEqual(0.5);
     });
 
@@ -39,6 +39,7 @@ describe('GameEngine', () => {
         gameEngine.bgMusic = {
             pause: jest.fn()
         };
+        gameEngine.settings.playSound = false;
         gameEngine.toggleSound(false);
         expect(mockGameAnnouncerService.mute).toHaveBeenCalled();
         expect(gameEngine.bgMusic.pause).toHaveBeenCalled();

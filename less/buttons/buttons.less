@@ -305,6 +305,12 @@ strong {
             box-shadow: inset 0 1px 0 #c6e6b3, inset 0 -1px 0 #79b356, inset 0 0 0 1px #a4cc8b;
         }
 
+        &[disabled] {
+            &:hover {
+                background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
+            }
+        }
+
         &:active {
             background: #8bcc62;
             box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2);
@@ -317,6 +323,11 @@ strong {
 
         &.button--selected {
             background-image: linear-gradient(to bottom,#ade68a,#81bd5b)!important;
+            &[disabled] {
+                background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
+                border-top: 3px solid #f13434 !important;
+                border-bottom: 3px solid #f13434 !important;
+            }
         }
 
         &.button-unclickable {

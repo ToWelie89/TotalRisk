@@ -28,14 +28,27 @@
                     </div>
                 </div>
                 <div width="100%" class="floatLeft marginTop--double">
+                    <div>
+                        <p class="floatLeft" style="color: white;">
+                            Victory condition
+                        </p>
+                    </div>
                     <div class="buttonGroup" style="height: 40px;">
                         <button type="button" class="button button-green button-unclickable">
                             <strong>Map control percentage for victory</strong>
                         </button>
                         <button type="button" class="button button-green" data-ng-repeat="goal in lobby.victoryGoals"
-                        data-ng-class="{'button--selected': goal === lobby.chosenGoal}" data-ng-click="lobby.setGoal(goal)">
+                        data-ng-class="{'button--selected': goal.percentage === lobby.chosenGoal.percentage}" data-ng-click="lobby.setGoal(goal)" data-ng-disabled="!lobby.userIsHost">
                             <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
                         </button>
+                    </div>
+                    <div>
+                        <p class="floatLeft" style="color: white;">
+                            Turn length
+                        </p>
+                    </div>
+                    <div>
+                        <rzslider rz-slider-model="lobby.turnLength" rz-slider-options="lobby.turnLengthSliderOptions"></rzslider>
                     </div>
                 </div>
                 <div id="lobbyChatBoxes">

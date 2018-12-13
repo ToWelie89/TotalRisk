@@ -7,7 +7,7 @@ const {GAME_PHASES, CONSTANTS, MAPS} = require('./../gameConstants');
 const {normalizeTimeFromTimestamp, getRandomColor, startGlobalLoading, stopGlobalLoading} = require('./../helpers');
 
 class LobbiesController {
-    constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService) {
+    constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -15,6 +15,7 @@ class LobbiesController {
         this.$timeout = $timeout;
         this.toastService = toastService;
         this.soundService = soundService;
+        this.socketService = socketService;
 
         this.vm.isAuthenticated = false;
         this.vm.searchText = '';
@@ -94,7 +95,7 @@ class LobbiesController {
 
         if (lobby.private) {
             this.$uibModal.open({
-                templateUrl: 'joinPrivateLobby.html',
+                templateUrl: 'src/modals/joinPrivateLobby.html',
                 backdrop: 'static',
                 windowClass: 'riskModal joinPrivateLobby',
                 controller: 'joinPrivateLobbyController',
@@ -142,15 +143,15 @@ class LobbiesController {
                     version: this.$rootScope.appVersion,
                     map: MAPS.WORLD_MAP
                 };
-                this.lobbiesSocket.emit('createNewRoom', newRoom);
+                this.socketService.lobbiesSocket.emit('createNewRoom', newRoom);
             }
         });
     }
 
     setupSocket() {
-        this.lobbiesSocket = io.connect(`http://127.0.0.1:5000/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
+        this.socketService.createLobbiesSocket();
 
-        this.lobbiesSocket.on('currentLobbies', lobbies => {
+        this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
             this.vm.lobbies = [];
             console.log(lobbies)
             lobbies.forEach(lobby => {
@@ -177,7 +178,7 @@ class LobbiesController {
                 this.$scope.$apply();
             }, 1);
         });
-        this.lobbiesSocket.on('createNewRoomResponse', room => {
+        this.socketService.lobbiesSocket.on('createNewRoomResponse', room => {
             this.$rootScope.currentLobby = room;
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
             this.$rootScope.$apply();

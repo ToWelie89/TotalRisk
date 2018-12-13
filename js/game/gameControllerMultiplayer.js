@@ -1,4 +1,3 @@
-const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -15,8 +14,8 @@ const { PLAYER_TYPES } = require('./../player/playerConstants');
 const GameController = require('./gameController');
 
 class GameControllerMultiplayer extends GameController {
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService) {
-        super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService);
+    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
+        super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
 
         this.vm.lobbyChatMessage = '';
         this.vm.lobbyChatMessages = [];
@@ -103,7 +102,7 @@ class GameControllerMultiplayer extends GameController {
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
 
-        this.gameSocket.emit('sendMessage', this.vm.currentLobbyId, {
+        this.socketService.gameSocket.emit('sendMessage', this.vm.currentLobbyId, {
             sender: userName,
             uid: user.uid,
             message: this.vm.lobbyChatMessage,
@@ -141,7 +140,7 @@ class GameControllerMultiplayer extends GameController {
             this.soundService.denied.play();
             return;
         }
-        this.gameSocket.emit('nextTurn');
+        this.socketService.gameSocket.emit('nextTurn');
     }
 
     engageAttackPhase(clickedTerritory) {
@@ -174,8 +173,6 @@ class GameControllerMultiplayer extends GameController {
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
-                this.gameSocket = io.connect(`http://127.0.0.1:5000/game`, {transports: ['websocket', 'polling', 'flashsocket']});
-
                 this.initiateTimer();
 
                 const user = firebase.auth().currentUser;
@@ -184,7 +181,7 @@ class GameControllerMultiplayer extends GameController {
                 this.setListeners();
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
                 this.setSocketListeners();
-                this.gameSocket.emit('getMessages');
+                this.socketService.gameSocket.emit('getMessages');
                 this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
                 this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
             }
@@ -207,7 +204,7 @@ class GameControllerMultiplayer extends GameController {
                 // this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
 
-                this.gameSocket.emit('troopAddedToTerritory', clickedTerritory.name)
+                this.socketService.gameSocket.emit('troopAddedToTerritory', clickedTerritory.name)
             } else {
                 this.soundService.denied.play();
             }
@@ -266,18 +263,20 @@ class GameControllerMultiplayer extends GameController {
         const movementToTerritory = getTerritoryByName(this.gameEngine.map, closeResponse.to.name);
         movementToTerritory.numberOfTroops = closeResponse.to.numberOfTroops;
 
-        this.gameSocket.emit('updateMovement', movementFromTerritory.name, movementFromTerritory.numberOfTroops, movementToTerritory.name, movementToTerritory.numberOfTroops);
+        this.socketService.gameSocket.emit('updateMovement', movementFromTerritory.name, movementFromTerritory.numberOfTroops, movementToTerritory.name, movementToTerritory.numberOfTroops);
 
         this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
     }
 
     initiateTimer() {
         clearInterval(this.turnTimer);
-        this.turnTimerSeconds = 60000;
+        const turnLength = this.$rootScope.turnLength;
+        const turnLengthMs = (turnLength * 1000);
+        this.turnTimerSeconds = turnLengthMs;
         this.turnTimerFunction = () => {
             this.turnTimerSeconds -= 100;
             const totalWidth = $("#timerBar").width();
-            const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((60000 - this.turnTimerSeconds) / 60000);
+            const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((turnLengthMs - this.turnTimerSeconds) / turnLengthMs);
             this.vm.timerWidth = Math.floor(widthPercentage * totalWidth);
             this.vm.secondsLeft = Math.floor(this.turnTimerSeconds / 1000);
 
@@ -290,11 +289,11 @@ class GameControllerMultiplayer extends GameController {
     }
 
     setSocketListeners() {
-        this.gameSocket.on('playerWonNotifier', () => {
+        this.socketService.gameSocket.on('playerWonNotifier', () => {
 
         });
 
-        this.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName) => {
+        this.socketService.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName) => {
             this.gameEngine.addTroopToTerritory(territoryName);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
             this.$scope.$apply();
@@ -305,7 +304,7 @@ class GameControllerMultiplayer extends GameController {
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
         });
 
-        this.gameSocket.on('nextTurnNotifier', (turn, reinforcements) => {
+        this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcements) => {
             if (turn.newPlayer) {
                 this.initiateTimer();
             }
@@ -348,7 +347,7 @@ class GameControllerMultiplayer extends GameController {
             }
         });
 
-        this.gameSocket.on('battleFoughtNotifier', (battleData) => {
+        this.socketService.gameSocket.on('battleFoughtNotifier', (battleData) => {
             getTerritoryByName(this.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
 
@@ -365,7 +364,7 @@ class GameControllerMultiplayer extends GameController {
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
         });
 
-        this.gameSocket.on('updateOwnerAfterSuccessfulInvasionNotifier', (updateOwnerData) => {
+        this.socketService.gameSocket.on('updateOwnerAfterSuccessfulInvasionNotifier', (updateOwnerData) => {
             getTerritoryByName(this.gameEngine.map, updateOwnerData.attackerTerritory).numberOfTroops = updateOwnerData.attackerTerritoryNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).numberOfTroops = updateOwnerData.defenderTerritoryNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).owner = updateOwnerData.owner;
@@ -374,7 +373,7 @@ class GameControllerMultiplayer extends GameController {
             this.soundService.movement.play();
         });
 
-        this.gameSocket.on('updateMovementNotifier', (map) => {
+        this.socketService.gameSocket.on('updateMovementNotifier', (map) => {
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = map.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
@@ -382,7 +381,7 @@ class GameControllerMultiplayer extends GameController {
             });
         });
 
-        this.gameSocket.on('messagesUpdated', (messages) => {
+        this.socketService.gameSocket.on('messagesUpdated', (messages) => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER && this.vm.showLobbyChat) {
                 this.soundService.newMessage.play();
             }

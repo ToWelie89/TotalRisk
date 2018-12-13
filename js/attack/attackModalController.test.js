@@ -42,7 +42,7 @@ describe('attackModalController', () => {
         mockRootScope = createRootScope();
         mockTutorialService = createTutorialService();
 
-        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, {}, mockAttackData);
+        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, {});
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;

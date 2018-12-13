@@ -1,4 +1,3 @@
-const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -6,10 +5,11 @@ const {avatars} = require('./../player/playerConstants');
 const {objectsAreEqual, arrayIncludesObject, getRandomColor, loadSvgIntoDiv} = require('./../helpers');
 
 class CharacterSelectionController {
-    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer) {
+    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$uibModalInstance = $uibModalInstance;
+        this.socketService = socketService;
 
         this.vm.currentSelectedPlayer = currentSelectedPlayer ? Object.assign({}, currentSelectedPlayer) : null;
         this.vm.oldAvatar = currentSelectedPlayer ? currentSelectedPlayer.avatar : null;
@@ -60,9 +60,7 @@ class CharacterSelectionController {
         });
 
         if (this.multiplayer) { // Is multiplayer game
-            this.gameSocket = io.connect(`http://127.0.0.1:5000/game`, {transports: ['websocket', 'polling', 'flashsocket']});
-
-            this.gameSocket.on('updatedPlayers', players => {
+            this.socketService.gameSocket.on('updatedPlayers', players => {
                 this.vm.selectedPlayers = players.filter(x => x !== undefined);
                 this.vm.takenAvatars = this.vm.selectedPlayers.map(x => x.avatar);
                 this.$scope.$apply();
