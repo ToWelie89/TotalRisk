@@ -28,8 +28,6 @@ class CharacterSelectionController {
 
         this.vm.takenAvatars = this.vm.selectedPlayers.map(x => x.avatar);
 
-        console.log('current selected player', this.vm.currentSelectedPlayer);
-
         // PUBLIC FIELDS
 
         $('.mainWrapper').css('filter', 'blur(5px)');
@@ -103,11 +101,24 @@ class CharacterSelectionController {
     }
 
     avatarIsSelected(avatar) {
-        return objectsAreEqual(avatar, this.vm.currentSelectedPlayer ? this.vm.currentSelectedPlayer.avatar : {});
+        if (avatar.customCharacter) {
+            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.customCharacter) {
+                return (this.vm.currentSelectedPlayer.avatar.id === avatar.id);
+            } else {
+                return false;
+            }
+        } else {
+            return objectsAreEqual(avatar, this.vm.currentSelectedPlayer ? this.vm.currentSelectedPlayer.avatar : {});
+        }
     }
 
     avatarIsTaken(avatar) {
-        return arrayIncludesObject(this.vm.takenAvatars, avatar) && !objectsAreEqual(avatar, this.vm.oldAvatar ? this.vm.oldAvatar : {});
+        if (avatar.customCharacter) {
+            const currentAvatar = this.vm.takenAvatars.find(a => a.id === avatar.id);
+            return (currentAvatar !== undefined);
+        } else {
+            return arrayIncludesObject(this.vm.takenAvatars, avatar) && !objectsAreEqual(avatar, this.vm.oldAvatar ? this.vm.oldAvatar : {});
+        }
     }
 
     selectAvatar(avatar) {

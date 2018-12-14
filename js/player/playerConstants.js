@@ -186,7 +186,7 @@ const avatars = {
     'Charles XII': {
         picture: './assets/img/karlxii.png',
         selectSound: '',
-        flag: './assets/flagsSvg/sweden.svg',
+        flag: './assets/flagsSvg/countries/se.svg',
         biography: 'Charles XII inherited the throne of the Swedish kingdom at the mere age of 15. At this time several of Swedens enemies declared war on them in an attempt to reconquer lands that had been previously conquered by Sweden. This ensured that the life of Charles XII would be almost exclusively paved with war. He is most famous for having defeated the Russians at the battle of Narva where his army of around 12 000 men defeated the russians tsars army of 37 000.'
     },
     'Saladin': {
@@ -204,13 +204,13 @@ const avatars = {
     'Gustavus Adolphus': {
         picture: './assets/img/gustavusadolphus.png',
         selectSound: '',
-        flag: './assets/flagsSvg/sweden.svg',
+        flag: './assets/flagsSvg/countries/se.svg',
         biography: 'Gustavus Adolphus is the only Swedish monarch to be styled as \'the great\'. He is also often referred to the as the \'father of modern warfare\' because of his reforms to the swedish military. He changed the swedish army from relying on conscription and mercenaries into a highly trained professional standing national army. He also innovated the strategies used, like employing smaller and more mobile artillery pieces that could be redirected during a battle, and combining pikemen with musketeers in a single formation. His most famous victory was at the battle of Breitenfeld, as a part of the 30 year war, where he decisively defeated the Catholic league.'
     },
     'Duke of Wellington': {
         picture: './assets/img/dukeofwellington.png',
         selectSound: '',
-        flag: './assets/flagsSvg/britain.svg',
+        flag: './assets/flagsSvg/countries/gb.svg',
         biography: ''
     },
     'Hernán Cortés': {
@@ -233,12 +233,12 @@ const avatars = {
     'Bernard Montgomery': {
         picture: './assets/img/montgomery.png',
         selectSound: '',
-        flag: './assets/flagsSvg/britain.svg'
+        flag: './assets/flagsSvg/countries/gb.svg'
     },
     'George Patton': {
         picture: './assets/img/georgepatton.png',
         selectSound: '',
-        flag: './assets/flagsSvg/unitedStates.svg'
+        flag: './assets/flagsSvg/countries/us.svg'
     },
     'Jeanne d\'Arc': {
         picture: './assets/img/jeannedarc.png',

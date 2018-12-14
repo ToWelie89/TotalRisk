@@ -2,8 +2,9 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {GAME_PHASES} = require('./../gameConstants');
-const {startGlobalLoading, stopGlobalLoading, getRandomInteger} = require('./../helpers');
+const {startGlobalLoading, stopGlobalLoading, getRandomInteger, chancePercentage} = require('./../helpers');
 const {flags} = require('./editorConstants');
+const CountryCodes = require('./countryCodes');
 
 class CharacterCreatorController {
 
@@ -18,7 +19,14 @@ class CharacterCreatorController {
         this.vm.selectedCharacterId = undefined;
         this.vm.showEditor = false;
 
-        this.vm.flags = flags;
+        this.vm.showHistoricFlags = true;
+        this.vm.historicFlags = flags.sort((a, b) => { return a.name - b.name });
+        this.vm.countryFlags = Object.keys(CountryCodes).map(c => {
+            return {
+                name: CountryCodes[c].name,
+                path: `./assets/flagsSvg/countries/${c.toLowerCase()}.svg`
+            };
+        }).sort((a, b) => { return a.name - b.name });
         this.vm.selectedFlag = flags[0];
 
         this.vm.currentSelection = [{
@@ -212,7 +220,15 @@ class CharacterCreatorController {
 
     randomize() {
         this.soundService.tick.play();
-        this.vm.selectedFlag = flags[getRandomInteger(0, (flags.length - 1))];
+
+        if (chancePercentage(50)) {
+            this.vm.selectedFlag = this.vm.historicFlags[getRandomInteger(0, (this.vm.historicFlags.length - 1))];
+            this.vm.showHistoricFlags = true;
+        } else {
+            this.vm.selectedFlag = this.vm.countryFlags[getRandomInteger(0, (this.vm.countryFlags.length - 1))];
+            this.vm.showHistoricFlags = false;
+        }
+
         this.vm.currentSelection.forEach(part => {
             part.selection = Math.floor(Math.random() * part.maxChoices) + 1 ;
 
@@ -271,7 +287,7 @@ class CharacterCreatorController {
                 character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId;
                 character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId;
                 character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId;
-                character.flag = this.vm.selectedFlag;
+                character.flag = { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path };
             }
         })
         .then(() => {
@@ -281,10 +297,7 @@ class CharacterCreatorController {
         })
         .then(() => {
             stopGlobalLoading();
-            this.toastService.successToast(
-                'Character saved!',
-                ' '
-            );
+            this.toastService.successToast('Character saved!');
             this.vm.characters = userCharacters;
             setTimeout(() => {
                 this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
@@ -293,10 +306,7 @@ class CharacterCreatorController {
         })
         .catch(err => {
             stopGlobalLoading();
-            this.toastService.errorToast(
-                'Save failed',
-                ' '
-            );
+            this.toastService.errorToast('Save failed');
         });
     }
 
@@ -386,10 +396,7 @@ class CharacterCreatorController {
         })
         .then(() => {
             stopGlobalLoading();
-            this.toastService.successToast(
-                'Character deleted!',
-                ' '
-            );
+            this.toastService.successToast('Character deleted!');
             this.vm.characters = userCharacters;
             setTimeout(() => {
                 if (this.vm.characters.length > 0) {
@@ -403,10 +410,7 @@ class CharacterCreatorController {
         })
         .catch(err => {
             stopGlobalLoading();
-            this.toastService.errorToast(
-                'Deletion failed',
-                ' '
-            );
+            this.toastService.errorToast('Deletion failed');
         });
     }
 

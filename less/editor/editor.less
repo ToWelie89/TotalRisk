@@ -16,6 +16,36 @@
         }
 
         #editorControls {
+            .flagTypeTab {
+                float: left;
+                padding: 15px;
+                background: #314c80;
+                color: white;
+                padding-left: 20px;
+                padding-right: 20px;
+                position: relative;
+                bottom: -10px;
+                transition: all 0.5s;
+                cursor: pointer;
+                box-shadow: inset 0 0 5px #172c55;
+
+                &:first-child {
+                    margin-left: 30px;
+                    border-top-left-radius: 15px;
+                }
+
+                &:last-child {
+                    border-top-right-radius: 15px;
+                }
+
+                &--active {
+                    background: #496bab;
+                    bottom: 0px;
+                    border-top-left-radius: 15px;
+                    border-top-right-radius: 15px;
+                }
+            }
+
             #flagSelector {
                 width: 100%;
                 margin-top: 10px;
@@ -28,6 +58,9 @@
                 text-align: left;
                 padding-top: 8px;
                 padding-bottom: 8px;
+                background: #4e4848;
+                z-index: 500;
+                position: relative;
 
                 > div {
                     width: 50px;

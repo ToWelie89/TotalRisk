@@ -21,7 +21,7 @@
         </div>
         <div class="row" data-ng-show="characterCreator.showEditor">
             <div id="flagContainer">
-                <waving-flag flag-width="400" flag-height="200" flag-url="characterCreator.selectedFlag"></waving-flag>
+                <waving-flag flag-width="400" flag-height="200" flag-url="characterCreator.selectedFlag.path"></waving-flag>
             </div>
             <div class="col-xs-8" id="editorCustomCharacterMain" inject-svg src="assets/avatarSvg/custom.svg">
             </div>
@@ -48,10 +48,28 @@
                         </button>
                     </div>
                 </div>
-                <div id="flagSelector">
-                    <div data-ng-repeat="flag in characterCreator.flags"
-                         style="background-image: url({{flag}});"
-                         data-ng-class="{'selected': flag === characterCreator.selectedFlag}"
+                <div class="paddingTop paddingBottom floatLeft" style="color: white;">
+                    <strong>Selected flag:</strong> {{ characterCreator.selectedFlag.name }}
+                </div>
+                <div style="clear: both;">
+                    <div class="flagTypeTab" data-ng-click="characterCreator.showHistoricFlags = true" data-ng-class="{'flagTypeTab--active': characterCreator.showHistoricFlags}">
+                        Historic flags
+                    </div>
+                    <div class="flagTypeTab" data-ng-click="characterCreator.showHistoricFlags = false" data-ng-class="{'flagTypeTab--active': !characterCreator.showHistoricFlags}">
+                        Modern flags
+                    </div>
+                </div>
+                <div id="flagSelector" data-ng-show="characterCreator.showHistoricFlags">
+                    <div data-ng-repeat="flag in characterCreator.historicFlags"
+                         style="background-image: url({{flag.path}});"
+                         data-ng-class="{'selected': flag.path === characterCreator.selectedFlag.path}"
+                         data-ng-click="characterCreator.selectFlag(flag)">
+                    </div>
+                </div>
+                <div id="flagSelector" data-ng-show="!characterCreator.showHistoricFlags">
+                    <div data-ng-repeat="flag in characterCreator.countryFlags"
+                         style="background-image: url({{flag.path}});"
+                         data-ng-class="{'selected': flag.path === characterCreator.selectedFlag.path}"
                          data-ng-click="characterCreator.selectFlag(flag)">
                     </div>
                 </div>
