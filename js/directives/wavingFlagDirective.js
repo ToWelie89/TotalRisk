@@ -19,8 +19,11 @@ class WavingFlagDirective {
         flag.style.height = attr.flagHeight + 'px';
 
         scope.$watch(scope.flagUrl, (newVal, oldVal) => {
+            const flagAttribute = scope.flagUrl();
+            const flagUrl = (typeof flagAttribute === 'object') ? flagAttribute.path : flagAttribute;
+
             flag.querySelectorAll('.flag-element').forEach(x => {
-                x.style.backgroundImage = `url(${scope.flagUrl()})`;
+                x.style.backgroundImage = `url(${flagUrl})`;
             });
             /*if (newVal !== oldVal && !updateManually) {
                 setTimeout(() => {
@@ -36,7 +39,11 @@ class WavingFlagDirective {
                 fe.style.backgroundPosition = -i*flagElementW+'px 0';
                 fe.style.webkitAnimationDelay = i*delay+'ms';
                 fe.style.animationDelay = i * delay + 'ms';
-                fe.style.backgroundImage = `url(${scope.flagUrl()})`;
+
+                const flagAttribute = scope.flagUrl();
+                const flagUrl = (typeof flagAttribute === 'object') ? flagAttribute.path : flagAttribute;
+
+                fe.style.backgroundImage = `url(${flagUrl})`;
                 fe.style.backgroundSize = attr.flagWidth + 'px 100%';
                 flag.append(fe);
             }

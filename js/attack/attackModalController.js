@@ -23,6 +23,7 @@ class AttackModalController {
 
         // PUBLIC FUNCTIONS
         this.vm.fight = this.fight;
+        this.vm.blitzFight = this.blitzFight;
         this.vm.retreat = this.retreat;
         this.vm.moveTroops = this.moveTroops;
         this.vm.convertTroopAmountToTroopTypes = this.convertTroopAmountToTroopTypes;
@@ -139,6 +140,13 @@ class AttackModalController {
         });
     }
 
+    blitzFight() {
+        this.soundService.diceRoll.play();
+        this.vm.diceAreRolling = true;
+        this.vm.isBlitzFight = true;
+        this.fight();
+    }
+
     fight(preDeterminedAttackDice = null, preDeterminedDefendDice = null) {
         this.soundService.diceRoll.play();
         this.vm.diceAreRolling = true;
@@ -199,6 +207,8 @@ class AttackModalController {
         context.vm.diceAreRolling = false;
 
         if (context.vm.attacker.numberOfTroops === 0 || context.vm.defender.numberOfTroops === 0) {
+            context.vm.isBlitzFight = false;
+
             // the invasion failed
             context.vm.fightIsOver = true;
             if (context.vm.defender.numberOfTroops === 0) {
@@ -248,6 +258,9 @@ class AttackModalController {
                     icons.removeClass('shake shake-constant');
                     context.vm.disableButtons = false;
                     context.$scope.$apply();
+                    if (context.vm.isBlitzFight) {
+                        context.blitzFight();
+                    }
                 }, context.stopShakeAnimationDelay);
             }, context.startShakeAnimationDelay);
         }

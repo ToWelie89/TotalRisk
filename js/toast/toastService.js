@@ -10,7 +10,7 @@ class ToastService {
 		};
 	}
 
-	successToast(title, message, duration = 6000, id = null, onOpening = (() => {})) {
+	successToast(title, message = ' ', duration = 6000, id = null, onOpening = (() => {})) {
 		iziToast.success(
 			Object.assign(this.defaultToastSettings, {
 				id,
@@ -23,7 +23,7 @@ class ToastService {
 		);
 	}
 
-	errorToast(title, message, duration = 6000, id = null, onOpening = (() => {})) {
+	errorToast(title, message = ' ', duration = 6000, id = null, onOpening = (() => {})) {
 		iziToast.error(
 			Object.assign(this.defaultToastSettings, {
 				id,
@@ -36,7 +36,7 @@ class ToastService {
 		);
 	}
 
-	infoToast(title, message, duration = 6000, id = null, onOpening = (() => {})) {
+	infoToast(title, message = ' ', duration = 6000, id = null, onOpening = (() => {})) {
 		iziToast.info(
 			Object.assign(this.defaultToastSettings, {
 				id,
