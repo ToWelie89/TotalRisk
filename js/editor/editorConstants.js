@@ -5,7 +5,7 @@ const flags = [
 	},
 	{
 		name: 'Ayyubid dynasty',
-		path: './assets/flags/ayyubid.png'
+		path: './assets/flagsSvg/ayyubid.png'
 	},
 	{
 		name: 'Carthage',

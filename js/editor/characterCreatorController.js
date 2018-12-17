@@ -273,7 +273,7 @@ class CharacterCreatorController {
                     torso: this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId,
                     legs: this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId,
                     skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId,
-                    flag: this.vm.selectedFlag
+                    flag: { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path }
                 });
             } else {
                 const character = userCharacters.find(x => x.id === this.vm.selectedCharacterId);
