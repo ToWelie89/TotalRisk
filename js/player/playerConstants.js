@@ -192,7 +192,7 @@ const avatars = {
     'Saladin': {
         picture: './assets/img/saladin.png',
         selectSound: '',
-        flag: './assets/flags/ayyubid.png',
+        flag: './assets/flagsSvg/ayyubid.png',
         biography: 'Saladin who was of kurdish origin was the founder of the Ayyubid dynasty and the first sultan of Egypt and Syria. Under his command the Ayyubid army defeated the Crusaders at the decisive battle of Hattin, which became a turning point for conflicts between muslim and christan armies in the region during that time. He reconquered Jerusalem which had been captured by Crusader knights about a century before.'
     },
     'William the Conqueror': {

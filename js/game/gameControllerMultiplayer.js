@@ -29,8 +29,10 @@ class GameControllerMultiplayer extends GameController {
         this.vm.showLobbyChat = true;
         this.vm.timerWidth = 0;
 
-        this.$rootScope.$watch('currentLobbyId', () => {
-            this.vm.currentLobbyId = this.$rootScope.currentLobbyId;
+        this.$rootScope.currentLobby
+
+        this.$rootScope.$watch('currentLobby', () => {
+            this.vm.currentLobby = this.$rootScope.currentLobby;
         });
 
         this.globalChatColor = getRandomColor();
@@ -102,7 +104,7 @@ class GameControllerMultiplayer extends GameController {
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
 
-        this.socketService.gameSocket.emit('sendMessage', this.vm.currentLobbyId, {
+        this.socketService.gameSocket.emit('sendMessage', this.vm.currentLobby.id, {
             sender: userName,
             uid: user.uid,
             message: this.vm.lobbyChatMessage,
