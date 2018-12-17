@@ -345,7 +345,7 @@ io
       }
 
       if (turn.newPlayer) {
-        startTimer();
+        startTimer(game.id);
       }
 
       game.players.forEach(player => {
