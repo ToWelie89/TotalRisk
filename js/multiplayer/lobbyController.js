@@ -93,6 +93,11 @@ class LobbiesController {
         this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.startGameIsDisabled = this.startGameIsDisabled;
         this.vm.startGame = this.startGame;
+        this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
+    }
+
+    updateColorOfPlayer(player, color) {
+        this.socketService.gameSocket.emit('setPlayerColor', this.vm.room.id, player.userUid, color.name);
     }
 
     setGoal(goal) {
@@ -192,6 +197,13 @@ class LobbiesController {
     }
 
     addSocketListeners() {
+        this.socketService.gameSocket.on('updatedColorOfPlayer', (playerUid, playerColor) => {
+            const player = this.vm.players.find(p => p.userUid === playerUid);
+            if (player) {
+                player.color = playerColor;
+            }
+        });
+
         this.socketService.gameSocket.on('messagesUpdated', (messages) => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && this.vm.showLobbyChat) {
                 this.soundService.newMessage.play();

@@ -127,10 +127,9 @@
                 <div class="setupBoxAvatarsContainer">
                     <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
                         <div
-                            id="playerPortrait{{i}}"
+                            id="playerMultiplayerPortrait{{i}}"
                             player-portrait
                             avatar="lobby.players[i].avatar"
-                            id="setupPortrait{{i}}"
                             data-ng-if="lobby.players[i] && lobby.players[i].avatar"
                             class="box-shadow setupBoxAvatarsContainer__item__portrait"
                             data-ng-class="{'notMine': lobby.players[i].userUid !== lobby.myUid }"
@@ -153,6 +152,21 @@
                                 <span>{{ lobby.players[i].userName }}{{ (lobby.players[i].type !== 0) ? " (AI)" : "" }}</span>
                                 <span style="border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}}; border-right-color: transparent;"></span>
                             </div>
+                        </div>
+                        <div
+                            data-ng-if="lobby.players[i] && lobby.players[i].userUid === lobby.myUid"
+                            class="setupBoxAvatarsContainer__item__color box-shadow"
+                            style="background-color: {{lobby.players[i].color.mainColor}}; border-color: {{lobby.lightenDarkenColor(setup.players[i].color.mainColor, -50)}}"
+                            role="button"
+                            tabIndex="0"
+                            popover-placement="left"
+                            popover-title="Select a color"
+                            popover-trigger="'focus'"
+                            uib-popover-template="'src/multiplayerPopoverColorTemplate.html'"
+                            data-ng-controller="colorPopoverController as colorPopover"
+                            data-ng-init="colorPopover.init(lobby.players[i])"
+                        >
+                            <i class="fas fa-paint-brush"></i>
                         </div>
                         <div
                             data-ng-if="lobby.players[i] && lobby.userIsHost && lobby.players[i].userUid !== lobby.myUid"

@@ -2,9 +2,21 @@ const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
-const {hashString} = require('./../helpers');
-const {GAME_PHASES, CONSTANTS, MAPS} = require('./../gameConstants');
-const {normalizeTimeFromTimestamp, getRandomColor, startGlobalLoading, stopGlobalLoading} = require('./../helpers');
+const {
+    hashString
+} = require('./../helpers');
+const {
+    GAME_PHASES,
+    CONSTANTS,
+    MAPS
+} = require('./../gameConstants');
+const {
+    normalizeTimeFromTimestamp,
+    getRandomColor,
+    startGlobalLoading,
+    stopGlobalLoading
+} = require('./../helpers');
+const { playerCanJoinRoom } = require('./backendCalls');
 
 class LobbiesController {
     constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService, socketService) {
@@ -81,7 +93,7 @@ class LobbiesController {
         this.vm.charactersLeft = this.charactersLeft;
     }
 
-    charactersLeft () {
+    charactersLeft() {
         return (this.vm.chatMaxLengthMessage - this.vm.chatMessage.length);
     }
 
@@ -93,28 +105,39 @@ class LobbiesController {
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
         }
 
-        if (lobby.private) {
-            this.$uibModal.open({
-                templateUrl: 'src/modals/joinPrivateLobby.html',
-                backdrop: 'static',
-                windowClass: 'riskModal joinPrivateLobby',
-                controller: 'joinPrivateLobbyController',
-                controllerAs: 'joinPrivate',
-                keyboard: false
-            }).result.then((closeResponse) => {
-                if (closeResponse && closeResponse.password) {
-                    if (hashString(closeResponse.password) === lobby.password) {
-                        console.log('correct password');
-                        joinRoom();
-                    } else {
-                        console.log('incorrect password');
-                        this.toastService.errorToast('', 'Incorrect password');
-                    }
+        const user = firebase.auth().currentUser;
+
+        playerCanJoinRoom(user.uid, lobby.id, (res) => {
+            if (!res.userExistsInRoom) {
+                if (lobby.private) {
+                    this.$uibModal.open({
+                        templateUrl: 'src/modals/joinPrivateLobby.html',
+                        backdrop: 'static',
+                        windowClass: 'riskModal joinPrivateLobby',
+                        controller: 'joinPrivateLobbyController',
+                        controllerAs: 'joinPrivate',
+                        keyboard: false
+                    }).result.then((closeResponse) => {
+                        if (closeResponse && closeResponse.password) {
+                            if (hashString(closeResponse.password) === lobby.password) {
+                                console.log('correct password');
+                                joinRoom();
+                            } else {
+                                console.log('incorrect password');
+                                this.toastService.errorToast('', 'Incorrect password');
+                            }
+                        }
+                    });
+                } else {
+                    joinRoom();
                 }
-            });
-        } else {
-            joinRoom();
-        }
+            } else {
+                // Player already exists in room
+                this.toastService.errorToast('', 'Could not join room');
+            }
+        }, () => {
+            this.toastService.errorToast('', 'Could not join room');
+        });
     }
 
     hostNewGame() {
@@ -193,9 +216,9 @@ class LobbiesController {
         }
         this.vm.filteredLobbies = this.vm.lobbies.filter(
             x =>
-                x.roomName.toLowerCase().includes(this.vm.searchText.toLowerCase()) ||
-                x.creator.toLowerCase().includes(this.vm.searchText.toLowerCase())
-         );
+            x.roomName.toLowerCase().includes(this.vm.searchText.toLowerCase()) ||
+            x.creator.toLowerCase().includes(this.vm.searchText.toLowerCase())
+        );
     }
 
     sendChatMessage() {

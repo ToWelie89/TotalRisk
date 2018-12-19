@@ -132,10 +132,16 @@ const objectsAreEqual = (obj1, obj2) => {
         return false;
     }
 
+    if (typeof obj1 !== typeof obj2) {
+        return false;
+    }
+
     let returnValue = true;
 
     Object.keys(obj1).forEach(key => {
-        if (!(key in obj2) || obj1[key] !== obj2[key]) {
+        if (typeof obj1[key] === 'object') {
+            returnValue = (objectsAreEqual(obj1[key], obj2[key]))
+        } else if (!(key in obj2) || obj1[key] !== obj2[key]) {
             returnValue = false;
         }
     })

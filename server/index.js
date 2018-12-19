@@ -1,6 +1,8 @@
 'use strict';
 
+const bodyParser = require('body-parser');
 const express = require('express');
+const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
 
@@ -20,16 +22,36 @@ const states = {
   RESULT_SCREEN: 'RESULT_SCREEN'
 };
 
-const server = express()
-    .get('/', (req, res, next) => {
-        res.sendFile(INDEX)
-    })
-    .get('/lobbies', function (req, res, next) {
-        res.send({msg: 'test'})
-    })
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+var app = module.exports.app = express();
 
-const io = socketIO(server);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res, next) => {
+  res.sendFile(INDEX)
+});
+app.post('/lobbies/playerCanJoinRoom', (req, res, next) => {
+  const game = games.find(game => game.id === Number(req.body.lobbyId));
+  if (game) {
+    const player = game.players.find(player => player.userUid === req.body.userUid);
+    if (player) {
+      // User already exists in room
+      res.send({ userExistsInRoom: true });
+    } else {
+      res.send({ userExistsInRoom: false });
+    }
+  } else {
+    res.send({ userExistsInRoom: false });
+  }
+});
+
+const server = http.createServer(app);
+const io = socketIO.listen(server);  //pass a http.Server instance
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 let lobbiesSocketList = [];
 let games = [];
@@ -207,6 +229,18 @@ io
 
     socket.on('sendMessage', (roomId, msg) => {
       addNewMessage(roomId, msg);
+    });
+
+    socket.on('setPlayerColor', (roomId, userUid, colorName) => {
+      const game = games.find(game => game.id === roomId);
+      const player = game.players.find(player => player.userUid === userUid);
+
+      const playerWithColor = game.players.find(player => player.color.name === colorName);
+      if (!playerWithColor) {
+        // No player has the chosen color, it is available
+        player.color = Object.values(PLAYER_COLORS).find(x => x.name === colorName);
+        setPlayers(roomId);
+      }
     });
 
     socket.on('updateAvatar', (roomId, userUid, avatar) => {
