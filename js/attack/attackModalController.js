@@ -242,27 +242,31 @@ class AttackModalController {
             }
         } else {
             context.vm.disableButtons = true;
-            setTimeout(() => {
-                // Animate shake effect on side(s) affected by casualties
-                let icons;
-                if (context.defenderCasualties > context.attackerCasualties) {
-                    icons = $('#defenderTroops .troopIcon');
-                } else if (context.attackerCasualties > context.defenderCasualties) {
-                    icons = $('#attackerTroops .troopIcon');
-                } else if (context.attackerCasualties === context.defenderCasualties) {
-                    icons = $('.troopIcon');
-                }
-                icons.addClass('shake shake-constant');
-
+            if (context.vm.isBlitzFight) {
                 setTimeout(() => {
-                    icons.removeClass('shake shake-constant');
                     context.vm.disableButtons = false;
-                    context.$scope.$apply();
-                    if (context.vm.isBlitzFight) {
-                        context.blitzFight();
+                    context.blitzFight();
+                }, context.startShakeAnimationDelay);
+            } else {
+                setTimeout(() => {
+                    // Animate shake effect on side(s) affected by casualties
+                    let icons;
+                    if (context.defenderCasualties > context.attackerCasualties) {
+                        icons = $('#defenderTroops .troopIcon');
+                    } else if (context.attackerCasualties > context.defenderCasualties) {
+                        icons = $('#attackerTroops .troopIcon');
+                    } else if (context.attackerCasualties === context.defenderCasualties) {
+                        icons = $('.troopIcon');
                     }
-                }, context.stopShakeAnimationDelay);
-            }, context.startShakeAnimationDelay);
+                    icons.addClass('shake shake-constant');
+
+                    setTimeout(() => {
+                        icons.removeClass('shake shake-constant');
+                        context.vm.disableButtons = false;
+                        context.$scope.$apply();
+                    }, context.stopShakeAnimationDelay);
+                }, context.startShakeAnimationDelay);
+            }
         }
     }
 
