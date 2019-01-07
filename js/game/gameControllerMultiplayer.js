@@ -29,13 +29,13 @@ class GameControllerMultiplayer extends GameController {
         this.vm.showLobbyChat = true;
         this.vm.timerWidth = 0;
 
-        this.$rootScope.currentLobby
-
         this.$rootScope.$watch('currentLobby', () => {
             this.vm.currentLobby = this.$rootScope.currentLobby;
         });
 
         this.globalChatColor = getRandomColor();
+
+        this.vm.isMyTurn = this.isMyTurn;
 
         firebase.database().ref('globalChat').on('value', snapshot => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && !this.firstLoad && !this.vm.showLobbyChat) {
@@ -145,6 +145,50 @@ class GameControllerMultiplayer extends GameController {
         this.socketService.gameSocket.emit('nextTurn');
     }
 
+    isMyTurn() {
+        return this.gameEngine.turn.player.userUid === this.vm.myUid;
+    }
+
+    turnInCards() {
+        if (!this.isMyTurn()) {
+            return;
+        }
+
+        this.soundService.tick.play();
+
+        this.$uibModal.open({
+            templateUrl: 'src/modals/cardTurnInModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'cardTurnInModalController',
+            controllerAs: 'cardTurnIn',
+            resolve: {
+                data: () => {
+                    return {
+                        type: 'normal'
+                    }
+                }
+            }
+        }).result.then(closeResponse => {
+            if (closeResponse && closeResponse.newTroops) {
+                console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
+                $('.mainTroopIndicator').addClass('animated infinite bounce');
+                this.soundService.cardTurnIn.play();
+                this.gameEngine.troopsToDeploy += closeResponse.newTroops;
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                setTimeout(() => {
+                    this.$scope.$apply();
+                }, 100);
+                setTimeout(() => {
+                    $('.mainTroopIndicator').removeClass('animated infinite bounce');
+                }, 1000);
+
+                // Update stats
+                this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+            }
+        });
+    }
+
     engageAttackPhase(clickedTerritory) {
         this.$uibModal.open({
             templateUrl: 'src/modals/attackModal.html',
@@ -191,7 +235,7 @@ class GameControllerMultiplayer extends GameController {
     }
 
     clickCountry(evt) {
-        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN || this.gameEngine.turn.player.userUid !== this.vm.myUid) {
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN || !this.isMyTurn()) {
             return;
         }
 
@@ -249,7 +293,7 @@ class GameControllerMultiplayer extends GameController {
         if (!this.gameEngine.turn) {
             return;
         }
-        if (this.vm.gameEngine.turn.player.userUid !== this.vm.myUid) {
+        if (!this.isMyTurn()) {
             return true;
         }
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT && this.gameEngine.troopsToDeploy > 0) {

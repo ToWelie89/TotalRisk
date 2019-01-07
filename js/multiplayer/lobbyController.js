@@ -123,6 +123,7 @@ class LobbiesController {
             loadSvgIntoDiv('./assets/maps/worldMap/worldMap.svg', '#lobbyMapContainer');
 
             this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
+            this.vm.turnLengthSliderOptions.disabled = !this.vm.userIsHost;
             const userName = user.displayName ? user.displayName : user.email;
 
             if (!this.socketService.lobbiesSocket) {

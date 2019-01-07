@@ -16,7 +16,7 @@
                              id="cardButton"
                              class="floatLeft"
                              style="width: 30px;"
-                             data-ng-disabled="gameMultiplayer.turn.turnPhase !== 0"
+                             data-ng-disabled="gameMultiplayer.turn.turnPhase !== 0 || !gameMultiplayer.isMyTurn()"
                              data-ng-click="gameMultiplayer.turnInCards()"
                              data-ng-class="{'cardButton--disabled': gameMultiplayer.aiTurn}"
                              data-toggle="tooltip"

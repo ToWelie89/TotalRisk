@@ -6,7 +6,7 @@
   "main": "electron/main.js",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"npm run webserver\" \"npm run socket\"",
+    "start": "concurrently \"npm run server\" \"npm run webserver\"",
     "webserver": "http-server",
     "server": "node server/index.js",
     "electron": "electron .",
