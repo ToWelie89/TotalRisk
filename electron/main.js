@@ -52,7 +52,7 @@ proxyFromEnvironment = process.env.proxy ? process.env.proxy : proxyFromEnvironm
 
 let proxyToUse;
 
-if (proxyFromSettings) {
+if (proxyFromSettings && proxyFromSettings.host) {
   proxyToUse = proxyFromSettings;
 } else if (proxyFromEnvironment) {
   proxyToUse = getProxyDetails(proxyFromEnvironment);
@@ -60,6 +60,8 @@ if (proxyFromSettings) {
 
 const proxyExists = proxyToUse && proxyToUse.host && proxyToUse.username && proxyToUse.password;
 const proxySettings = proxyToUse;
+
+console.log('proxyToUse', proxyToUse)
 
 const sendStatusToWindow = (state, type = 'message', data = {}) => {
   log.info(state, data);

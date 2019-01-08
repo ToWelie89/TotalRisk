@@ -11,6 +11,12 @@ class SettingsController {
 
         this.vm.runningElectron = runningElectron();
 
+        this.vm.proxySettings = {
+            username: this.vm.settings.proxySettings && this.vm.settings.proxySettings.username ? this.vm.settings.proxySettings.username : '',
+            password: this.vm.settings.proxySettings && this.vm.settings.proxySettings.password ? this.vm.settings.proxySettings.password : '',
+            host: this.vm.settings.proxySettings && this.vm.settings.proxySettings.host ? this.vm.settings.proxySettings.host : ''
+        };
+
         // PUBLIC FIELDS
         this.vm.movementSliderOptions = {
             showTicks: true,
@@ -48,6 +54,12 @@ class SettingsController {
         this.vm.toggleSound = this.toggleSound;
         this.vm.toggleAnnouncer = this.toggleAnnouncer;
         this.vm.toggleFullScreen = this.toggleFullScreen;
+        this.vm.updateProxySettings = this.updateProxySettings;
+    }
+
+    updateProxySettings() {
+        this.vm.settings.proxySettings = this.vm.proxySettings;
+        this.vm.settings.saveSettings();
     }
 
     toggleSound() {

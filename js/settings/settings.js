@@ -15,7 +15,8 @@ class Settings {
                 defaults: ElectronSettings
             });
 
-            savedSettings = this.store.get('riskSettings');
+            savedSettings = this.store.get('');
+            this.proxySettings = this.store.get('proxySettings');
             console.log('Saved settings from JSON file: ', savedSettings);
         } else {
             savedSettings = localStorage.getItem('riskSettings');
@@ -56,6 +57,9 @@ class Settings {
 
         if (this.runningElectron) {
             this.store.set('riskSettings', settingsToSave);
+            if (this.proxySettings) {
+                this.store.set('proxySettings', this.proxySettings);
+            }
         } else {
             localStorage.setItem('riskSettings', JSON.stringify(settingsToSave));
         }

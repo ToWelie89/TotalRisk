@@ -17,6 +17,13 @@
             </strong>
         </div>
 
+        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+            <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
+                <div>
+                    <strong>Gameplay settings</strong>
+                </div>
+            </div>
+        </div>
         <div class="row" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
@@ -25,6 +32,30 @@
             </div>
             <div class="col-xs-8">
                 <rzslider rz-slider-model="settings.aiSpeed" rz-slider-options="settings.movementSliderOptions"></rzslider>
+            </div>
+        </div>
+        <div class="row" style="width: 600px; margin: 0 auto;">
+            <div class="col-xs-4">
+                <div>
+                    Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                     data-placement="bottom" title="If turned on each turn will be presented by a announcer." style="color: #f0f048;"></span>
+                </div>
+            </div>
+            <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                <div>
+                    <label class="switch" data-ng-click="settings.toggleAnnouncer()">
+                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.showAnnouncer">
+                        <span class="switch-label" data-on="On" data-off="Off"></span>
+                        <span class="switch-handle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+            <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
+                <div>
+                    <strong>Sound settings</strong>
+                </div>
             </div>
         </div>
         <div class="row" style="width: 600px; margin: 0 auto;">
@@ -63,23 +94,6 @@
                 <rzslider rz-slider-model="settings.sfxVolume" rz-slider-options="settings.sfxVolumeSliderOptions"></rzslider>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
-            <div class="col-xs-4">
-                <div>
-                    Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                     data-placement="bottom" title="If turned on each turn will be presented by a announcer." style="color: #f0f048;"></span>
-                </div>
-            </div>
-            <div class="col-xs-8 settingContainer" data-toggle="buttons">
-                <div>
-                    <label class="switch" data-ng-click="settings.toggleAnnouncer()">
-                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.showAnnouncer">
-                        <span class="switch-label" data-on="On" data-off="Off"></span>
-                        <span class="switch-handle"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
         <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
@@ -93,6 +107,45 @@
                         <span class="switch-label" data-on="On" data-off="Off"></span>
                         <span class="switch-handle"></span>
                     </label>
+                </div>
+            </div>
+        </div>
+        <div data-ng-show="settings.runningElectron">
+            <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+                <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
+                    <div>
+                        <strong>Proxy settings</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="width: 600px; margin: 0 auto;">
+                <div class="col-xs-4">
+                    <div>
+                        Host and port
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <input type="text" placeholder="Host:port" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.host" data-ng-change="settings.updateProxySettings()" />
+                </div>
+            </div>
+            <div class="row" style="width: 600px; margin: 0 auto;">
+                <div class="col-xs-4">
+                    <div>
+                        Proxy username
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <input type="text" placeholder="Username" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.username" data-ng-change="settings.updateProxySettings()" />
+                </div>
+            </div>
+            <div class="row" style="width: 600px; margin: 0 auto;">
+                <div class="col-xs-4">
+                    <div>
+                        Sound effects volume
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <input type="text" placeholder="Password" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.password" data-ng-change="settings.updateProxySettings()" />
                 </div>
             </div>
         </div>
