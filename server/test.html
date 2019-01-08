@@ -1,0 +1,169 @@
+<html>
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+            table thead {
+                background: gainsboro;
+            }
+            table tr td {
+                border: 1px solid black;
+                margin: 0px;
+                padding: 5px;
+                vertical-align: top;
+            }
+        </style>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="js/libs/socket.io.js"></script>
+        <script>
+            const normalizeTimeFromTimestamp = timestamp => {
+                const date = new Date(timestamp);
+                let hours = date.getHours();
+                let minutes = date.getMinutes();
+
+                if (hours < 10) {
+                    hours = `0${hours}`;
+                }
+                if (minutes < 10) {
+                    minutes = `0${minutes}`;
+                }
+
+                return `${hours}:${minutes}`;
+            }
+
+            const hashString = string => {
+                let hash = 0, i, chr;
+                if (string.length === 0) return hash;
+                    for (i = 0; i < string.length; i++) {
+                        chr   = string.charCodeAt(i);
+                        hash  = ((hash << 5) - hash) + chr;
+                        hash |= 0; // Convert to 32bit integer
+                }
+                return hash;
+            }
+
+            const lobbiesSocket = io('http://127.0.0.1:5000/lobbies');
+            lobbiesSocket.on('currentLobbies', lobbies => {
+                lobbies.map(lobby => {
+                    lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);
+                    lobby.private = lobby.password !== hashString('');
+                });
+
+                lobbies.sort((a, b) => {
+                    return b.creationTimestamp - a.creationTimestamp;
+                });
+
+                let htmlString = '';
+
+                lobbies.forEach(lobby => {
+                    let playersString = '';
+                    lobby.players.forEach(player => {
+                        playersString += `<b>${player.userName}</b><br>(${player.userUid})<br>`;
+                    });
+
+                    htmlString += `<tr><td>
+                        ${lobby.roomName}
+                    </td>
+                    <td>
+                        ${lobby.version}
+                    </td>
+                    <td>
+                        ${lobby.id}
+                    </td>
+                    <td>
+                        ${lobby.creator}
+                    </td>
+                    <td>
+                        ${lobby.creatorUid}
+                    </td>
+                    <td>
+                        ${lobby.maxNumberOfPlayer}
+                    </td>
+                    <td>
+                        ${playersString}
+                    </td>
+                    <td>
+                        ${lobby.private}
+                    </td>
+                    <td>
+                        ${lobby.map.name}
+                    </td>
+                    <td>
+                        ${lobby.creationTimestamp}
+                    </td>
+                    <td>
+                        ${lobby.normalizedTime}
+                    </td>
+                    <td>
+                        ${lobby.password}
+                    </td>
+                    <td>
+                        ${lobby.turnLength}
+                    </td>
+                    <td>
+                        ${lobby.chosenGoal.percentage}%
+                    </td></tr>`;
+                });
+
+                console.log(lobbies)
+
+                $('#lobbies tbody').html(htmlString);
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Active rooms</h1>
+        <div id="lobbies">
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            Room name
+                        </td>
+                        <td>
+                            Version
+                        </td>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Creator
+                        </td>
+                        <td>
+                            Creator UID
+                        </td>
+                        <td>
+                            Max players
+                        </td>
+                        <td>
+                            Players
+                        </td>
+                        <td>
+                            Private
+                        </td>
+                        <td>
+                            Map
+                        </td>
+                        <td>
+                            Timestamp
+                        </td>
+                        <td>
+                            Normalized time
+                        </td>
+                        <td>
+                            Password (hashed)
+                        </td>
+                        <td>
+                            Turn length
+                        </td>
+                        <td>
+                            Goal
+                        </td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </body>
+</html>

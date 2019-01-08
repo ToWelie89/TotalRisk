@@ -233,14 +233,14 @@ class LobbiesController {
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.errorToast('', 'You have been kicked from the lobby.');
-            this.socketService.gameSocket.disconnect();
+            this.socketService.disconnectGameSocket()
         });
 
         this.socketService.gameSocket.on('hostLeft', () => {
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.infoToast('', 'The host has left the game.');
-            this.socketService.gameSocket.disconnect();
+            this.socketService.disconnectGameSocket();
         });
 
         this.socketService.gameSocket.on('updatedPlayers', players => {
@@ -368,7 +368,7 @@ class LobbiesController {
 
         this.$rootScope.currentLobby = '';
         this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
-        this.socketService.gameSocket.disconnect();
+        this.socketService.disconnectGameSocket();
     }
 
     kickPlayer(player) {

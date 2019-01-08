@@ -6,9 +6,7 @@
   "main": "electron/main.js",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run webserver\"",
-    "webserver": "http-server",
-    "server": "node server/index.js",
+    "start": "node server/index.js",
     "electron": "electron .",
     "electron:dev": "cross-env NODE_ENV=dev electron .",
     "test": "jest --no-cache --config js/test/jest.conf.js --coverage",
@@ -83,7 +81,6 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-notify": "^0.4.5",
     "grunt-replace": "^1.0.1",
-    "http-server": "^0.9.0",
     "izitoast": "^1.4.0",
     "jquery": "^2.2.4",
     "socket.io": "^2.1.1"

@@ -14,7 +14,8 @@ const GameEngine = require('./../js/gameEngine');
 const Player = require('./../js/player/player');
 
 const PORT = process.env.PORT || 5000;
-const INDEX = path.join(__dirname, 'index.html');
+const MAIN_INDEX = path.join(__dirname, '../index.html');
+const TEST_INDEX = path.join(__dirname, 'test.html');
 
 const states = {
   LOBBY: 'LOBBY',
@@ -24,6 +25,16 @@ const states = {
 
 var app = module.exports.app = express();
 
+app.use('/js', express.static(path.join(__dirname, '../js')));
+app.use('/assetsDist', express.static(path.join(__dirname, '../assetsDist')));
+app.use('/node_modules/', express.static(path.join(__dirname, '../node_modules/')));
+app.use('/cssLibs/', express.static(path.join(__dirname, '../cssLibs/')));
+app.use('/src/', express.static(path.join(__dirname, '../src/')));
+app.use('/assets/', express.static(path.join(__dirname, '../assets/')));
+app.use('/audio/', express.static(path.join(__dirname, '../audio/')));
+app.use('/package.json', express.static(path.join(__dirname, '../package.json')));
+app.use('/icon.ico', express.static(path.join(__dirname, '../icon.ico')));
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -32,7 +43,10 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res, next) => {
-  res.sendFile(INDEX)
+  res.sendFile(MAIN_INDEX)
+});
+app.get('/debug', (req, res, next) => {
+  res.sendFile(TEST_INDEX)
 });
 app.post('/lobbies/playerCanJoinRoom', (req, res, next) => {
   const game = games.find(game => game.id === Number(req.body.lobbyId));
@@ -69,7 +83,9 @@ const updateLobbies = () => {
       version: game.version,
       map: game.map,
       state: game.state,
-      players: game.players.map(p => ({}))
+      players: game.players.map(p => ({ userName: p.userName, userUid: p.userUid })),
+      turnLength: game.turnLength,
+      chosenGoal: game.chosenGoal
     })));
   });
 }
@@ -287,6 +303,8 @@ io
       game.players.forEach(playerSocket => {
         playerSocket.emit('setGoalNotifier', game.chosenGoal);
       });
+
+      updateLobbies();
     });
 
     socket.on('setTurnLength', (roomId, turnLength) => {
@@ -296,6 +314,8 @@ io
       game.players.forEach(playerSocket => {
         playerSocket.emit('setTurnLengthNotifier', game.turnLength);
       });
+
+      updateLobbies();
     });
 
     socket.on('lockedSlots', (lockedSlots, roomId) => {

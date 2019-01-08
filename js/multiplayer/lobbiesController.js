@@ -3,9 +3,6 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {
-    hashString
-} = require('./../helpers');
-const {
     GAME_PHASES,
     CONSTANTS,
     MAPS
@@ -14,7 +11,8 @@ const {
     normalizeTimeFromTimestamp,
     getRandomColor,
     startGlobalLoading,
-    stopGlobalLoading
+    stopGlobalLoading,
+    hashString
 } = require('./../helpers');
 const { playerCanJoinRoom } = require('./backendCalls');
 
@@ -130,6 +128,7 @@ class LobbiesController {
                     });
                 } else {
                     joinRoom();
+                    this.$rootScope.$apply();
                 }
             } else {
                 // Player already exists in room
