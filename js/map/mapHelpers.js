@@ -51,6 +51,7 @@ const getAdjacentApplicableTerritories = (map, adjacentApplicableTerritories, fr
 };
 
 const getCurrentOwnershipStandings = (map, players) => {
+    const totalNumberOfTerritories = map.getAllTerritoriesAsList().length;
     const playersArray = Array.from(players.values());
     let standings = playersArray.map(x => {
         return {
@@ -75,6 +76,17 @@ const getCurrentOwnershipStandings = (map, players) => {
             player.totalTerritories++;
         });
     });
+    standings.forEach(x => {
+        x.percentageOwned = Math.floor((x.totalTerritories / totalNumberOfTerritories) * 100);
+    });
+
+    const sum = standings.map(x => x.percentageOwned).reduce((a, b) => a + b, 0);
+
+    if (sum !== 100) {
+        const diff = 100 - sum;
+        standings[0].percentageOwned = (standings[0].percentageOwned + diff);
+    }
+
     return standings;
 }
 

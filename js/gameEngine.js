@@ -3,7 +3,7 @@
  */
 
 const WorldMap = require('./map/worldMap');
-const { getTerritoryByName, getTerritoriesByOwner } = require('./map/mapHelpers');
+const { getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } = require('./map/mapHelpers');
 const { playerIterator, PLAYER_TYPES } = require('./player/playerConstants');
 const { TURN_PHASES, MAIN_MUSIC, IN_GAME_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } = require('./gameConstants');
 const { shuffle, randomIntFromInterval, randomDoubleFromInterval } = require('./helpers');
@@ -115,9 +115,16 @@ class GameEngine {
 
         this.aiTesting = aiTesting;
 
+        this.updateStandings();
+
         this.setMusic(this.turn.player.type === PLAYER_TYPES.HUMAN ? IN_GAME_MUSIC : AI_MUSIC);
 
         this.startGameTimestamp = Date.now();
+    }
+
+    updateStandings() {
+        this.standings = getCurrentOwnershipStandings(this.map, this.players);
+        console.log('Standings', this.standings);
     }
 
     nextTurn() {

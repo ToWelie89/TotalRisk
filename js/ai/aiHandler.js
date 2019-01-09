@@ -282,7 +282,7 @@ class AiHandler {
         return Promise.all(promises);
     }
 
-    attackTerritories() {
+    attackTerritories(callback = () => {}) {
         console.log('territoriesToDeploy', this.territoriesToDeploy);
         const battleHandler = new BattleHandler();
 
@@ -403,6 +403,8 @@ class AiHandler {
                         this.gameEngine.players.get(defender.owner).statistics.troopsKilled += battle.response.attackerCasualties;
                         this.gameEngine.players.get(attacker.owner).statistics.troopsLost += battle.response.defenderCasualties;
 
+                        callback();
+
                         resolve();
                     }, (this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex + 1)));
                 });
@@ -433,7 +435,7 @@ class AiHandler {
                             }
                         });
                         if (this.territoriesToDeploy.length) {
-                            return this.attackTerritories();
+                            return this.attackTerritories(callback);
                         }
                     });
         });

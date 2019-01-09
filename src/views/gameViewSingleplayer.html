@@ -1,6 +1,6 @@
 <div class="container mainContent" data-ng-controller="gameController as game"" id="singlePlayerContainer">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}" ng-cloak>
-        <div class="row" id="topBar">
+        <div class="row colorWhite" id="topBar">
             <div class="col-xs-4 textCenter paddingTop--double" style="padding-left:0px; overflow:hidden;">
                 <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="game.turn.player.avatar" target="mainTurnAvatarSingleplayer" small>
                     <div id="mainTurnAvatarSingleplayer">
@@ -18,14 +18,21 @@
                              data-ng-disabled="game.turn.turnPhase !== 0"
                              data-ng-click="game.turnInCards()"
                              data-ng-class="{'cardButton--disabled': game.aiTurn}"
-                             data-toggle="tooltip"
-                             data-placement="bottom"
-                             value="Open cards view" />
+                             uib-tooltip="Open cards view"
+                             tooltip-placement="bottom" />
                         <h4 class="floatLeft marginLeft" id="cardCounter">({{game.turn.player.cards.length}})</h4>
+                        <h4 class="floatLeft marginLeft" style="clear: left;" data-ng-show="game.currentOwnagePercentage">
+                            <span data-ng-show="game.chosenGoal !== 100">
+                                Currently controlling <strong>{{ game.currentOwnagePercentage }}/{{ game.chosenGoal }}%</strong>
+                            </span>
+                            <span data-ng-show="game.chosenGoal === 100">
+                                Currently controlling <strong>{{ game.currentOwnagePercentage }}%</strong>
+                            </span>
+                        </h4>
                     </div>
                 </div>
             </div>
-            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
+            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-4 textCenter" style="padding-right:0px;">
                 <div class="buttonGroup">
                     <button type="button" class="button button-blue" data-ng-class="{'filter-selected': game.filter === 'byOwner'}" id="showByOwner" data-ng-click="game.filterByOwner()">
                         <strong>Color by owner</strong>
@@ -44,7 +51,7 @@
                 </div>
                 <h4>Turn number <strong data-ng-bind="game.turn.turnNumber"></strong></h4>
             </div>
-            <div class="col-xs-3 paddingTop--double " id="turnInfo">
+            <div class="col-xs-4 paddingTop--double " id="turnInfo">
                 <div class="row">
                     <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                         <div>
@@ -86,7 +93,13 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="position: relative;">
+            <div id="ownageChartContainer" style="position: absolute; left: 20px; top: 300px; width: 100px; height: 100px; clip-path: circle(50% at center);" uib-tooltip-html="game.ownageChartTooltip" tooltip-placement="right">
+                <canvas id="ownageChart" width="100" height="100"></canvas>
+            </div>
+            <div id="troopChartContainer" style="position: absolute; left: 20px; top: 420px; width: 100px; height: 100px; clip-path: circle(50% at center);" uib-tooltip-html="game.troopChartTooltip" tooltip-placement="right">
+                <canvas id="troopChart" width="100" height="100"></canvas>
+            </div>
            <div id="map"
                 data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
                 inject-svg

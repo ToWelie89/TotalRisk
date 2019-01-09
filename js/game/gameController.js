@@ -13,9 +13,11 @@ const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConsta
 const {delay, loadSvgIntoDiv} = require('./../helpers');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 
+var Chart = require('chart.js');
+
 class GameController {
 
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
+    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -35,6 +37,7 @@ class GameController {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$sce = $sce;
         this.$uibModal = $uibModal;
         this.$timeout = $timeout;
         this.gameEngine = gameEngine;
@@ -123,12 +126,15 @@ class GameController {
         this.gameEngine.startGame(players, winningCondition, aiTesting);
         this.gameEngine.currentGameIsMultiplayer = false;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+        this.vm.chosenGoal = this.gameEngine.winningCondition.percentage;
 
         this.vm.turn = this.gameEngine.turn;
         this.vm.filter = this.gameEngine.filter;
         this.mapService.updateMap(this.gameEngine.filter);
 
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
+
+        this.setChartData();
 
         const callback = () => {
             if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
@@ -164,6 +170,94 @@ class GameController {
         } else {
             callback();
         }
+    }
+
+    setChartData() {
+        const options = {
+            segmentShowStroke: false,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                 enabled: false
+            },
+            hover: {
+                mode: null
+            }
+        };
+
+        // Init ownage percentage chart
+        const ownageChartCtx = document.getElementById('ownageChart');
+        this.ownageChart = new Chart(ownageChartCtx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: this.gameEngine.standings.map(x => x.percentageOwned),
+                    backgroundColor: this.gameEngine.standings.map(x => x.name).map(name => this.gameEngine.players.get(name).color.mainColor),
+                    borderWidth: 0
+                }]
+            },
+            options
+        });
+        // Init troop chart
+        const troopChartCtx = document.getElementById('troopChart');
+        this.troopChart = new Chart(troopChartCtx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: this.gameEngine.standings.map(x => x.totalTroops),
+                    backgroundColor: this.gameEngine.standings.map(x => x.name).map(name => this.gameEngine.players.get(name).color.mainColor),
+                    borderWidth: 0
+                }]
+            },
+            options
+        });
+
+        this.updateChartData();
+    }
+
+    updateChartData() {
+        this.gameEngine.updateStandings();
+
+        console.log(this.ownageChart.data.datasets);
+        console.log(this.troopChart.data.datasets);
+
+        this.ownageChart.data.datasets[0].data = this.gameEngine.standings.map(x => x.percentageOwned);
+        this.ownageChart.update();
+
+        this.troopChart.data.datasets[0].data = this.gameEngine.standings.map(x => x.totalTroops);
+        this.troopChart.update();
+
+        this.vm.currentOwnagePercentage = this.gameEngine.standings.find(x => x.name === this.gameEngine.turn.player.name).percentageOwned;
+
+        // Ownage percentage chart tooltip
+        let ownageHtml = '<div class="mapControlTooltip"><h3>Map control</h3>';
+
+        const percentageStandings = this.gameEngine.standings.sort((a, b) => b.percentageOwned - a.percentageOwned);
+        percentageStandings.forEach(standing => {
+            ownageHtml += `
+                <div class="textLeft">
+                    <div class="mapControlTooltip__colorBox" style="background-color: ${this.gameEngine.players.get(standing.name).color.mainColor}"></div>
+                    <div class="mapControlTooltip__nameBox">${standing.name} (${standing.percentageOwned}%)</div>
+                </div>
+            `;
+        });
+        ownageHtml += '</div>'
+        this.vm.ownageChartTooltip = this.$sce.trustAsHtml(ownageHtml);
+
+        // Troop chart tooltip
+        let troopHtml = '<div class="mapControlTooltip"><h3>Total troops</h3>';
+        const troopStandings = this.gameEngine.standings.sort((a, b) => b.totalTroops - a.totalTroops);
+        troopStandings.forEach(standing => {
+            troopHtml += `
+                <div class="textLeft">
+                    <div class="mapControlTooltip__colorBox" style="background-color: ${this.gameEngine.players.get(standing.name).color.mainColor}"></div>
+                    <div class="mapControlTooltip__nameBox">${standing.name} (${standing.totalTroops} troops)</div>
+                </div>
+            `;
+        });
+        troopHtml += '</div>'
+        this.vm.troopChartTooltip = this.$sce.trustAsHtml(troopHtml);
     }
 
     toArray(num) {
@@ -213,12 +307,15 @@ class GameController {
         .then(() => this.pauser())
         .then(() => this.aiHandler.deployTroops(() => {
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            this.updateChartData();
             this.$scope.$apply();
         }))
         .then(() => this.pauser())
         .then(() => this.nextTurnAI())
         .then(() => this.pauser())
-        .then(() => this.aiHandler.attackTerritories())
+        .then(() => this.aiHandler.attackTerritories(() => {
+            this.updateChartData();
+        }))
         .then(() => this.pauser())
         .then(() => this.nextTurnAI())
         .then(() => this.pauser())
@@ -524,6 +621,7 @@ class GameController {
             this.gameEngine.setMusic(IN_GAME_MUSIC);
             console.log('Battle is over ', closeResponse);
             this.updatePlayerDataAfterAttack(closeResponse);
+            this.updateChartData();
             this.gameEngine.checkIfPlayerWonTheGame();
         });
     }
@@ -596,6 +694,7 @@ class GameController {
                 this.soundService.denied.play();
             }
             this.gameEngine.addTroopToTerritory(country);
+            this.updateChartData();
             this.mapService.updateMap(this.gameEngine.filter);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
             this.$scope.$apply();
