@@ -12,15 +12,13 @@ class HostNewGameModalController {
 
         this.vm.gameName = '';
         this.vm.password = '';
-        this.vm.lanGame = false;
     }
 
     createLobby() {
         this.soundService.tick.play();
         this.$uibModalInstance.close({
             gameName: this.vm.gameName,
-            password: this.vm.password,
-            lanGame: this.vm.lanGame
+            password: this.vm.password
         });
     }
 

@@ -11,8 +11,8 @@
                                  padding-bottom: 40px;
                                  background: rgba(59, 59, 59, 0.788235294117647);
                                  border-radius: 30px;">
-        <div class="row paddingLeft--double paddingRight--double">
-            <strong style="color: white;" data-ng-show="!settings.runningElectron">
+        <div class="row paddingLeft--double paddingRight--double" data-ng-show="!settings.runningElectron">
+            <strong style="color: white;">
                 The settings that you configure here will be automatically saved to your browsers local storage so that you don't have to reset them everytime.
             </strong>
         </div>
@@ -45,6 +45,22 @@
                 <div>
                     <label class="switch" data-ng-click="settings.toggleAnnouncer()">
                         <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.showAnnouncer">
+                        <span class="switch-label" data-on="On" data-off="Off"></span>
+                        <span class="switch-handle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
+            <div class="col-xs-4">
+                <div>
+                    Full Screen
+                </div>
+            </div>
+            <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                <div>
+                    <label class="switch" data-ng-click="settings.toggleFullScreen()">
+                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.fullScreen">
                         <span class="switch-label" data-on="On" data-off="Off"></span>
                         <span class="switch-handle"></span>
                     </label>
@@ -94,22 +110,6 @@
                 <rzslider rz-slider-model="settings.sfxVolume" rz-slider-options="settings.sfxVolumeSliderOptions"></rzslider>
             </div>
         </div>
-        <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
-            <div class="col-xs-4">
-                <div>
-                    Full Screen
-                </div>
-            </div>
-            <div class="col-xs-8 settingContainer" data-toggle="buttons">
-                <div>
-                    <label class="switch" data-ng-click="settings.toggleFullScreen()">
-                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.fullScreen">
-                        <span class="switch-label" data-on="On" data-off="Off"></span>
-                        <span class="switch-handle"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
         <div data-ng-show="settings.runningElectron">
             <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
                 <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
@@ -120,7 +120,7 @@
             </div>
             <div class="row" style="width: 600px; margin: 0 auto;">
                 <div class="col-xs-4">
-                    <div>
+                    <div style="vertical-align: top; padding-top: 10px;">
                         Host and port
                     </div>
                 </div>
@@ -130,7 +130,7 @@
             </div>
             <div class="row" style="width: 600px; margin: 0 auto;">
                 <div class="col-xs-4">
-                    <div>
+                    <div style="vertical-align: top; padding-top: 10px;">
                         Proxy username
                     </div>
                 </div>
@@ -140,8 +140,8 @@
             </div>
             <div class="row" style="width: 600px; margin: 0 auto;">
                 <div class="col-xs-4">
-                    <div>
-                        Sound effects volume
+                    <div style="vertical-align: top; padding-top: 10px;">
+                        Proxy password
                     </div>
                 </div>
                 <div class="col-xs-8">
