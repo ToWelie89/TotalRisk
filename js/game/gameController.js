@@ -13,7 +13,7 @@ const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConsta
 const {delay, loadSvgIntoDiv} = require('./../helpers');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 
-var Chart = require('chart.js');
+const Chart = require('chart.js');
 
 class GameController {
 
@@ -173,6 +173,13 @@ class GameController {
     }
 
     setChartData() {
+        if (this.ownageChart) {
+            this.ownageChart.destroy();
+        }
+        if (this.troopChart) {
+            this.troopChart.destroy();
+        }
+
         const options = {
             segmentShowStroke: false,
             legend: {

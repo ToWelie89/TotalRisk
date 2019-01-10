@@ -40,6 +40,7 @@ describe('gameController', () => {
 
         gameController = new GameModalController(mockScope,
                                                  mockRootScope,
+                                                 {},
                                                  mockUibModal,
                                                  {},
                                                  mockGameEngine,
@@ -53,8 +54,8 @@ describe('gameController', () => {
     it('startGame with turn presenter turned on', () => {
         // Arrange
         const players = [
-            new Player('Julius Caesar', 'red', 'lol'),
-            new Player('Hannibal', 'blue', 'kek')
+            new Player('Julius Caesar', { name: 'Red', mainColor: 'red '}, 'lol'),
+            new Player('Hannibal', { name: 'Blue', mainColor: 'blue '}, 'kek')
         ];
         mockGameEngine.turn = {
             player: {
@@ -64,6 +65,15 @@ describe('gameController', () => {
             turnPhase: TURN_PHASES.DEPLOYMENT
         }
         mockGameEngine.troopsToDeploy = 16;
+        mockGameEngine.winningCondition = {
+            percentage: 100
+        };
+        mockGameEngine.standings = players.map(p => ({ name: p.name, percentageOwned: 20 }));
+        const playersMap = new Map();
+        players.forEach(player => {
+            playersMap.set(player.name, player);
+        });
+        mockGameEngine.players = playersMap;
         mockUibModal.open = (kek) => {
             return {
                 result: Promise.resolve()
@@ -81,8 +91,8 @@ describe('gameController', () => {
     it('startGame with turn presenter turned off', () => {
         // Arrange
         const players = [
-            new Player('Julius Caesar', 'red', 'lol'),
-            new Player('Hannibal', 'blue', 'kek')
+            new Player('Julius Caesar', { name: 'Red', mainColor: 'red '}, 'lol'),
+            new Player('Hannibal', { name: 'Blue', mainColor: 'blue '}, 'kek')
         ];
         document.querySelectorAll = () => [];
         mockGameEngine.turn = {
@@ -91,9 +101,18 @@ describe('gameController', () => {
                 type: PLAYER_TYPES.HUMAN,
                 cards: []
             }
-        }
+        };
+        mockGameEngine.winningCondition = {
+            percentage: 100
+        };
         mockGameEngine.troopsToDeploy = 16;
         mockSettings.showAnnouncer = false;
+        mockGameEngine.standings = players.map(p => ({ name: p.name, percentageOwned: 20 }));
+        const playersMap = new Map();
+        players.forEach(player => {
+            playersMap.set(player.name, player);
+        });
+        mockGameEngine.players = playersMap;
         // Act
         gameController.startGame(players, VICTORY_GOALS[0]);
         // Assert

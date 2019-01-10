@@ -222,33 +222,35 @@ class AiHandler {
                                                       .filter(x => x.owner === this.gameEngine.turn.player.name);
             playerControlledAdjacentTerritories.sort((a, b) => b.numberOfTroops - a.numberOfTroops);
 
-            const selectedAdjacentTerritory = playerControlledAdjacentTerritories[0];
-            const predictedAmountOfTroops = (selectedAdjacentTerritory.numberOfTroops + (selectedAdjacentTerritory.troopsToDeploy ? selectedAdjacentTerritory.troopsToDeploy : 0));
+            if (playerControlledAdjacentTerritories.length > 0) {
+                const selectedAdjacentTerritory = playerControlledAdjacentTerritories[0];
+                const predictedAmountOfTroops = (selectedAdjacentTerritory.numberOfTroops + (selectedAdjacentTerritory.troopsToDeploy ? selectedAdjacentTerritory.troopsToDeploy : 0));
 
-            if (predictedAmountOfTroops >= (currentTerritoryToAttack.numberOfTroops * 2)
-                && predictedAmountOfTroops > 3) {
+                if (predictedAmountOfTroops >= (currentTerritoryToAttack.numberOfTroops * 2)
+                    && predictedAmountOfTroops > 3) {
 
-                if (!territoriesToDeploy.includes(selectedAdjacentTerritory)) {
-                    selectedAdjacentTerritory.troopsToDeploy = 0;
-                    selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
-                    territoriesToDeploy.push(selectedAdjacentTerritory);
-                }
+                    if (!territoriesToDeploy.includes(selectedAdjacentTerritory)) {
+                        selectedAdjacentTerritory.troopsToDeploy = 0;
+                        selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
+                        territoriesToDeploy.push(selectedAdjacentTerritory);
+                    }
 
-                if (troopsToDeploy < 3 || lastOption) {
-                    territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy += troopsToDeploy;
-                    troopsToDeploy = 0;
+                    if (troopsToDeploy < 3 || lastOption) {
+                        territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy += troopsToDeploy;
+                        troopsToDeploy = 0;
+                    } else {
+                        territoryIndex++;
+                    }
                 } else {
-                    territoryIndex++;
+                    if (!territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name)) {
+                        selectedAdjacentTerritory.troopsToDeploy = 1;
+                        selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
+                        territoriesToDeploy.push(selectedAdjacentTerritory);
+                    } else {
+                        territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy++;
+                    }
+                    troopsToDeploy--;
                 }
-            } else {
-                if (!territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name)) {
-                    selectedAdjacentTerritory.troopsToDeploy = 1;
-                    selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
-                    territoriesToDeploy.push(selectedAdjacentTerritory);
-                } else {
-                    territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy++;
-                }
-                troopsToDeploy--;
             }
         }
 

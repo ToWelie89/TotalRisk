@@ -14,8 +14,8 @@ const { PLAYER_TYPES } = require('./../player/playerConstants');
 const GameController = require('./gameController');
 
 class GameControllerMultiplayer extends GameController {
-    constructor($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
-        super($scope, $rootScope, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
+    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
+        super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
 
         this.vm.lobbyChatMessage = '';
         this.vm.lobbyChatMessages = [];
