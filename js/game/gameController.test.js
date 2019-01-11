@@ -12,6 +12,10 @@ import Player from './../player/player';
 import {PLAYER_TYPES} from './../player/playerConstants';
 import {VICTORY_GOALS, TURN_PHASES} from './../gameConstants';
 
+import Chart from 'chart.js';
+
+jest.mock("chart.js");
+
 describe('gameController', () => {
     let gameController;
 
@@ -68,6 +72,7 @@ describe('gameController', () => {
         mockGameEngine.winningCondition = {
             percentage: 100
         };
+        mockGameEngine.updateStandings = jest.fn();
         mockGameEngine.standings = players.map(p => ({ name: p.name, percentageOwned: 20 }));
         const playersMap = new Map();
         players.forEach(player => {
@@ -77,6 +82,22 @@ describe('gameController', () => {
         mockUibModal.open = (kek) => {
             return {
                 result: Promise.resolve()
+            }
+        };
+        gameController.ownageChart = {
+            destroy: jest.fn(),
+            data: {
+                datasets: [{
+                    data: undefined
+                }]
+            }
+        };
+        gameController.troopChart = {
+            destroy: jest.fn(),
+            data: {
+                datasets: [{
+                    data: undefined
+                }]
             }
         };
         // Act
@@ -107,12 +128,29 @@ describe('gameController', () => {
         };
         mockGameEngine.troopsToDeploy = 16;
         mockSettings.showAnnouncer = false;
+        mockGameEngine.updateStandings = jest.fn();
         mockGameEngine.standings = players.map(p => ({ name: p.name, percentageOwned: 20 }));
         const playersMap = new Map();
         players.forEach(player => {
             playersMap.set(player.name, player);
         });
         mockGameEngine.players = playersMap;
+        gameController.ownageChart = {
+            destroy: jest.fn(),
+            data: {
+                datasets: [{
+                    data: undefined
+                }]
+            }
+        };
+        gameController.troopChart = {
+            destroy: jest.fn(),
+            data: {
+                datasets: [{
+                    data: undefined
+                }]
+            }
+        };
         // Act
         gameController.startGame(players, VICTORY_GOALS[0]);
         // Assert

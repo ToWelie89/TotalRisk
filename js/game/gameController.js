@@ -49,6 +49,11 @@ class GameController {
         this.tutorialService = tutorialService;
         this.socketService = socketService;
 
+        this.elementIds = {
+            ownageChart: 'ownageChartSingleplayer',
+            troopChart: 'troopChartSingleplayer'
+        };
+
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -194,7 +199,7 @@ class GameController {
         };
 
         // Init ownage percentage chart
-        const ownageChartCtx = document.getElementById('ownageChart');
+        const ownageChartCtx = document.getElementById(this.elementIds.ownageChart);
         this.ownageChart = new Chart(ownageChartCtx, {
             type: 'pie',
             data: {
@@ -207,7 +212,7 @@ class GameController {
             options
         });
         // Init troop chart
-        const troopChartCtx = document.getElementById('troopChart');
+        const troopChartCtx = document.getElementById(this.elementIds.troopChart);
         this.troopChart = new Chart(troopChartCtx, {
             type: 'pie',
             data: {
@@ -225,9 +230,6 @@ class GameController {
 
     updateChartData() {
         this.gameEngine.updateStandings();
-
-        console.log(this.ownageChart.data.datasets);
-        console.log(this.troopChart.data.datasets);
 
         this.ownageChart.data.datasets[0].data = this.gameEngine.standings.map(x => x.percentageOwned);
         this.ownageChart.update();
@@ -487,6 +489,8 @@ class GameController {
             if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
                 this.handleAi();
             }
+
+            this.vm.currentOwnagePercentage = this.gameEngine.standings.find(x => x.name === this.gameEngine.turn.player.name).percentageOwned;
         };
 
         this.soundService.tick.play();

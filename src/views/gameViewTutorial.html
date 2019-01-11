@@ -24,6 +24,14 @@
                              data-placement="bottom"
                              value="Open cards view" />
                         <h4 class="floatLeft marginLeft" id="cardCounter">({{gameTutorial.turn.player.cards.length}})</h4>
+                        <h4 class="floatLeft marginLeft" style="clear: left;" data-ng-show="gameTutorial.currentOwnagePercentage">
+                            <span data-ng-show="gameTutorial.chosenGoal !== 100">
+                                Currently controlling <strong>{{ gameTutorial.currentOwnagePercentage }}/{{ gameTutorial.chosenGoal }}%</strong>
+                            </span>
+                            <span data-ng-show="gameTutorial.chosenGoal === 100">
+                                Currently controlling <strong>{{ gameTutorial.currentOwnagePercentage }}%</strong>
+                            </span>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -88,7 +96,13 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="position: relative;">
+            <div class="ownageChartContainer" uib-tooltip-html="gameTutorial.ownageChartTooltip" tooltip-placement="right">
+                <canvas id="ownageChartTutorial" width="100" height="100"></canvas>
+            </div>
+            <div class="troopChartContainer" uib-tooltip-html="gameTutorial.troopChartTooltip" tooltip-placement="right">
+                <canvas id="troopChartTutorial" width="100" height="100"></canvas>
+            </div>
            <div id="tutorialMap"
              style="background: #5397d1;
                     border-radius: 30px;

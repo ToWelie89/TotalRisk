@@ -13,6 +13,11 @@ class GameControllerTutorial extends GameController {
 
     constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
         super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
+
+        this.elementIds = {
+            ownageChart: 'ownageChartTutorial',
+            troopChart: 'troopChartTutorial'
+        };
     }
 
     setListeners() {
@@ -26,6 +31,7 @@ class GameControllerTutorial extends GameController {
                 this.mapService.init('tutorialMap');
                 this.setListeners();
                 this.startTutorial();
+                this.setChartData();
             }
         });
     }

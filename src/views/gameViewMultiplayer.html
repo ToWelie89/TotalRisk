@@ -6,7 +6,7 @@
                     <div id="mainTurnAvatarMultiplayer">
                     </div>
                 </div>
-                <div class="col-xs-9">
+                <div class="col-xs-9" style="padding-left: 50px;">
                     <div class="col-xs-12" style="padding: 0px;">
                         <span style="float: left; color: white;">Current player:</span>
                         <strong id="playerName" class="floatLeft text-shadow" style="margin-bottom: 5px; clear: both; letter-spacing: -2px; line-height: 30px; color: {{ gameMultiplayer.getCurrentPlayerColor() }}"><span data-ng-bind="gameMultiplayer.turn.player.name"></span></strong>
@@ -23,6 +23,14 @@
                              data-placement="bottom"
                              value="Open cards view" />
                         <h4 class="floatLeft marginLeft" id="cardCounter">({{gameMultiplayer.turn.player.cards.length}})</h4>
+                        <h4 class="floatLeft marginLeft" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
+                            <span data-ng-show="gameMultiplayer.chosenGoal !== 100">
+                                Currently controlling <strong>{{ gameMultiplayer.currentOwnagePercentage }}/{{ gameMultiplayer.chosenGoal }}%</strong>
+                            </span>
+                            <span data-ng-show="gameMultiplayer.chosenGoal === 100">
+                                Currently controlling <strong>{{ gameMultiplayer.currentOwnagePercentage }}%</strong>
+                            </span>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -94,8 +102,16 @@
             <div id="timerBarInner" style="width: {{ gameMultiplayer.timerWidth }}px;">
             </div>
         </div>
-        <div class="row">
-           <div id="multiplayerMap" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN_MULTIPLAYER}" inject-svg src="assets/maps/worldMap/worldMap.svg">
+        <div class="row" style="position: relative;">
+            <div class="ownageChartContainer" uib-tooltip-html="gameMultiplayer.ownageChartTooltip" tooltip-placement="right">
+                <canvas id="ownageChartMultiplayer" width="100" height="100"></canvas>
+            </div>
+            <div class="troopChartContainer" uib-tooltip-html="gameMultiplayer.troopChartTooltip" tooltip-placement="right">
+                <canvas id="troopChartMultiplayer" width="100" height="100"></canvas>
+            </div>
+           <div id="multiplayerMap"
+                data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN_MULTIPLAYER}"
+                inject-svg src="assets/maps/worldMap/worldMap.svg">
            </div>
         </div>
         <div id="lobbyChatBoxes">

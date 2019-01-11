@@ -37,6 +37,11 @@ class GameControllerMultiplayer extends GameController {
 
         this.vm.isMyTurn = this.isMyTurn;
 
+        this.elementIds = {
+            ownageChart: 'ownageChartMultiplayer',
+            troopChart: 'troopChartMultiplayer'
+        };
+
         firebase.database().ref('globalChat').on('value', snapshot => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && !this.firstLoad && !this.vm.showLobbyChat) {
                 this.soundService.newMessage.play();
@@ -212,6 +217,7 @@ class GameControllerMultiplayer extends GameController {
             this.gameEngine.setMusic();
             console.log('Battle is over ', closeResponse);
             this.updatePlayerDataAfterAttack(closeResponse);
+            this.updateChartData();
             this.gameEngine.checkIfPlayerWonTheGame();
         });
     }
@@ -344,6 +350,8 @@ class GameControllerMultiplayer extends GameController {
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
             this.$scope.$apply();
 
+            this.updateChartData();
+
             this.soundService.addTroopSound.play();
             displayReinforcementNumbers(territoryName);
 
@@ -384,12 +392,14 @@ class GameControllerMultiplayer extends GameController {
                 }).result.then(closeResponse => {
                     this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
                     this.turnPresenterIsOpen = false;
+                    this.vm.currentOwnagePercentage = this.gameEngine.standings.find(x => x.name === this.gameEngine.turn.player.name).percentageOwned;
                     if (this.escapeWasPressed) {
                         this.openPauseModal();
                     }
                 });
             } else {
                 this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                this.vm.currentOwnagePercentage = this.gameEngine.standings.find(x => x.name === this.gameEngine.turn.player.name).percentageOwned;
             }
         });
 
@@ -408,6 +418,8 @@ class GameControllerMultiplayer extends GameController {
             }
 
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+
+            this.updateChartData();
         });
 
         this.socketService.gameSocket.on('updateOwnerAfterSuccessfulInvasionNotifier', (updateOwnerData) => {
@@ -417,6 +429,8 @@ class GameControllerMultiplayer extends GameController {
 
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
             this.soundService.movement.play();
+
+            this.updateChartData();
         });
 
         this.socketService.gameSocket.on('updateMovementNotifier', (map) => {
