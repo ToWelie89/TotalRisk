@@ -14,8 +14,11 @@ class AuthenticationController {
             LOGIN: 2,
             SIGNUP: 3,
             EDIT_PROFILE: 4,
-            RESET_PASSWORD: 5
+            RESET_PASSWORD: 5,
+            LOADING: 6
         }
+
+        this.vm.currentState = this.vm.states.LOADING;
 
         this.vm.loginData = {
             email: '',
@@ -34,6 +37,13 @@ class AuthenticationController {
                 this.vm.currentState = this.vm.states.LOGGED_IN;
                 this.setUser(user);
                 this.toastService.successToast('', 'You have been successfully logged in!');
+
+                firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+                    const user = snapshot.val();
+                    const chosenDefaultAvatar = user.characters[0];
+                    chosenDefaultAvatar.customCharacter = true;
+                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
+                });
             } else {
                 this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
             }

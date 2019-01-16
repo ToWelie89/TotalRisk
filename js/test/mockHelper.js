@@ -74,6 +74,12 @@ const createRootScope = () => {
     }
 };
 
+const createSce = () => {
+    return {
+        trustAsHtml: jest.fn()
+    }
+};
+
 const createGameEngine = () => {
     return {
         toggleSound: jest.fn(),
@@ -110,5 +116,6 @@ export {
     createRootScope,
     createSettings,
     createAiHandler,
-    createGameAnnouncerService
+    createGameAnnouncerService,
+    createSce
 };

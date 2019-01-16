@@ -7,13 +7,23 @@
                    main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES"
      data-ng-controller="authenticationController as auth"
      ng-cloak>
-    <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE">
-        <p>
-            Logged in as {{ auth.user.displayName ? auth.user.displayName : auth.user.email }}
-        </p>
-        <button type="button" class="button button-red marginLeft" data-ng-click="auth.logout()" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER">
-            Logout
-        </button>
+    <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" style="height: 100%;">
+        <div style="height: 100%; display: table;">
+            <div style="height: 100%; display: table-cell; vertical-align: middle;">
+                <div player-portrait id="authenticationBoxDefaultAvatar" avatar="auth.chosenDefaultAvatar" target="authenticationBoxDefaultAvatarSvg">
+                    <div id="authenticationBoxDefaultAvatarSvg" style="height: 125px; width: 125px; overflow: hidden; border: 1px solid white; border-radius: 50%; background: #949494;"></div>
+                </div>
+            </div>
+            <div style="height: 100%; display: table-cell; vertical-align: middle;">
+                <p>
+                    Logged in as {{ auth.user.displayName ? auth.user.displayName : auth.user.email }}
+                </p>
+                <button type="button" class="button button-red marginLeft floatRight" data-ng-click="auth.logout()" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER"
+                style="margin: 0; margin-top: 5px;">
+                    Logout
+                </button>
+            </div>
+        </div>
     </div>
     <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" id="editProfile">
         <p
@@ -93,5 +103,8 @@
                 </button>
             </div>
         </form>
+    </div>
+    <div data-ng-show="auth.currentState === auth.states.LOADING" id="loading">
+        <ng-include src="'src/views/loading.html'"></ng-include>
     </div>
 </div>
