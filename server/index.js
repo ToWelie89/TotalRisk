@@ -266,15 +266,16 @@ io
       setPlayers(roomId);
     });
 
-    socket.on('setUser', (userUid, userName, roomId, isHost) => {
+    socket.on('setUser', (userUid, userName, roomId, isHost, chosenAvatar) => {
+      const game = games.find(game => game.id === roomId);
+      const usedAvatars = game.players.map(socket => socket.avatar.id);
+
       socket.userUid = userUid;
       socket.userName = userName;
       socket.roomId = roomId;
       socket.isHost = isHost;
       socket.color = getRandomUnusedColor(roomId);
-      socket.avatar = getUnusedAvatar(roomId);
-
-      const game = games.find(game => game.id === roomId);
+      socket.avatar = (chosenAvatar && !usedAvatars.includes(chosenAvatar.id)) ? chosenAvatar : getUnusedAvatar(roomId);
 
       game.players.push(socket);
 

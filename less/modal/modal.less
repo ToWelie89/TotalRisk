@@ -67,6 +67,56 @@
     }
 }
 
+.attackModalWrapper {
+    > .modal-dialog {
+        width: 1000px;
+
+        > .modal-content {
+            box-shadow: none;
+            background-color: transparent;
+
+            #attackModal {
+                .turnAvatarContainer {
+                    position: fixed;
+                    height: 100%;
+                    margin-top: 70px;
+                    margin-left: 40px;
+                    display: table;
+
+                    &.right {
+                        right: 60px;
+                    }
+
+                    .turnAvatar {
+                        height: 180px;
+                        width: 180px;
+                        background-size: cover;
+                        background-position: center center;
+                        border-radius: 50%;
+                        border: 3px solid white;
+                    }
+                }
+                .modal-dialog {
+                    width: 100%;
+
+                    .modal-content {
+                        -webkit-clip-path: polygon(0% 0%, 0% 6%, 1% 9%, 1% 12%, 0% 15%, 1% 18%, 1% 19%, 0% 20%, 1% 24%, 0% 24%, 0% 26%, 2% 29%, 0% 29%, 1% 32%, 0% 33%, 0% 38%, 1% 39%, 0% 41%, 0% 44%, 2% 46%, 0% 47%, 1% 52%, 1% 54%, 0% 57%, 0% 57%, 2% 58%, 0% 60%, 0% 64%, 0% 68%, 0% 69%, 1% 72%, 2% 77%, 2% 80%, 1% 80%, 0% 84%, 1% 92%, 0% 93%, 1% 95%, 0% 97%, 0% 100%, 100% 100%, 100% 0%);
+                        clip-path: polygon(0% 0%, 0% 6%, 1% 9%, 1% 12%, 0% 15%, 1% 18%, 1% 19%, 0% 20%, 1% 24%, 0% 24%, 0% 26%, 2% 29%, 0% 29%, 1% 32%, 0% 33%, 0% 38%, 1% 39%, 0% 41%, 0% 44%, 2% 46%, 0% 47%, 1% 52%, 1% 54%, 0% 57%, 0% 57%, 2% 58%, 0% 60%, 0% 64%, 0% 68%, 0% 69%, 1% 72%, 2% 77%, 2% 80%, 1% 80%, 0% 84%, 1% 92%, 0% 93%, 1% 95%, 0% 97%, 0% 100%, 100% 100%, 100% 0%);
+                        background: url('../assets/modalBackground.png');
+                        background-size: 100% 100%;
+                        box-shadow: none;
+                        padding-bottom: 80px;
+
+                        #diceContainer {
+                            margin-top: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .riskModal {
     .modal-content {
         border-radius: 0px;
@@ -78,13 +128,7 @@
         padding-top: 18px;
     }
 
-    &#attackModal {
-        .modal-dialog {
-            margin: 70px auto;
-        }
-    }
-
-    &#turnPresentationModal, &#attackModal {
+    &#turnPresentationModal {
         .turnAvatarContainer {
             position: fixed;
             height: 100%;
@@ -106,20 +150,6 @@
     &#turnPresentationModal {
         .modal-content {
             margin-top: 200px;
-        }
-    }
-
-    &#attackModal {
-        .turnAvatarContainer {
-            margin-top: 70px;
-            margin-left: -120px;
-            &.right {
-                right: -110px;
-            }
-            .turnAvatar {
-                height: 180px;
-                width: 180px;
-            }
         }
     }
 

@@ -88,7 +88,14 @@
                             Bio
                         </strong>
                         <p>
-                            <textarea class="marginTop" style="width: 70%; height: 180px; outline: none; border: none; padding: 20px; font-size: 18px; resize: none;" maxlength="300"></textarea>
+                            <textarea
+                                class="marginTop"
+                                data-ng-change="editProfile.updateBio()"
+                                data-ng-model-options='{ debounce: 1000 }'
+                                data-ng-model="editProfile.user.bio"
+                                style="width: 70%; height: 180px; outline: none; border: none; padding: 20px; font-size: 18px; resize: none;"
+                                maxlength="300">
+                            </textarea>
                         </p>
                     </div>
                 </div>

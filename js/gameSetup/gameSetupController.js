@@ -3,6 +3,9 @@ const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConsta
 const {CONSTANTS, VICTORY_GOALS} = require('./../gameConstants');
 const {lightenDarkenColor} = require('./../helpers');
 
+const firebase = require('firebase/app');
+require('firebase/auth');
+
 class GameSetupController {
 
     constructor($scope, soundService, $uibModal) {
@@ -30,6 +33,31 @@ class GameSetupController {
         this.vm.lightenDarkenColor = this.lightenDarkenColor;
         this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
+
+        firebase.auth().onAuthStateChanged(authUser => {
+            if (authUser) {
+                firebase.database().ref('/users/' + authUser.uid).once('value').then(snapshot => {
+                    const user = snapshot.val();
+                    if (user && user.defaultAvatar) {
+                        if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
+                            const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = true;
+                            this.vm.defaultAvatar = chosenDefaultAvatar;
+                        } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
+                            const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = false;
+                            chosenDefaultAvatar.name = Object.entries(avatars).find(x => x[1].id === chosenDefaultAvatar.id)[0];
+                            this.vm.defaultAvatar = chosenDefaultAvatar;
+                        }
+
+                        if (this.vm.defaultAvatar) {
+                            this.vm.players[0].avatar = this.vm.defaultAvatar;
+                            this.vm.players[0].name = this.vm.defaultAvatar.name;
+                        }
+                    }
+                })
+            }
+        });
     }
 
     init() {
@@ -41,6 +69,11 @@ class GameSetupController {
                            Object.keys(avatars).map(key => avatars[key])[i],
                            PLAYER_TYPES.HUMAN)
         );
+
+        if (this.vm.defaultAvatar) {
+            this.vm.players[0].avatar = this.vm.defaultAvatar;
+            this.vm.players[0].name = this.vm.defaultAvatar.name;
+        }
 
         $(document).ready(function() {
             if ($('[data-toggle="tooltip"]').length) {

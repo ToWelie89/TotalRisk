@@ -22,8 +22,8 @@
                              data-toggle="tooltip"
                              data-placement="bottom"
                              value="Open cards view" />
-                        <h4 class="floatLeft marginLeft" id="cardCounter">({{gameMultiplayer.turn.player.cards.length}})</h4>
-                        <h4 class="floatLeft marginLeft" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
+                        <h4 class="floatLeft marginLeft colorWhite" id="cardCounter">({{gameMultiplayer.turn.player.cards.length}})</h4>
+                        <h4 class="floatLeft marginLeft colorWhite" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
                             <span data-ng-show="gameMultiplayer.chosenGoal !== 100">
                                 Currently controlling <strong>{{ gameMultiplayer.currentOwnagePercentage }}/{{ gameMultiplayer.chosenGoal }}%</strong>
                             </span>
@@ -51,9 +51,9 @@
                         MENU
                     </button>
                 </div>
-                <h4>Turn number <strong data-ng-bind="gameMultiplayer.turn.turnNumber"></strong></h4>
+                <h4 class="colorWhite">Turn number <strong data-ng-bind="gameMultiplayer.turn.turnNumber"></strong></h4>
             </div>
-            <div class="col-xs-3 paddingTop--double " id="turnInfo">
+            <div class="col-xs-3 paddingTop--double colorWhite" id="turnInfo">
                 <div class="row">
                     <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                         <div>

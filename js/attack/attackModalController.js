@@ -74,10 +74,10 @@ class AttackModalController {
 
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');
-            this.attacker_box = new dice_box(attackerCanvas, { w: 500, h: 300 }, {
+            this.attacker_box = new dice_box(attackerCanvas, { w: 440, h: 200 }, {
                 dice_color: '#6b0a05'
             });
-            this.defender_box = new dice_box(defenderCanvas, { w: 500, h: 300 }, {
+            this.defender_box = new dice_box(defenderCanvas, { w: 440, h: 200 }, {
                 dice_color: '#061a7f'
             });
 
@@ -86,7 +86,7 @@ class AttackModalController {
             }, 400);
 
             $('#diceContainer').animate({
-                height: '160px'
+                height: '202px'
             }, 400, () => {
                 $('#diceContainer').animate({
                     opacity: 1
@@ -244,6 +244,7 @@ class AttackModalController {
             context.vm.disableButtons = true;
             if (context.vm.isBlitzFight) {
                 setTimeout(() => {
+                    context.$scope.$apply();
                     context.vm.disableButtons = false;
                     context.blitzFight();
                 }, context.startShakeAnimationDelay);

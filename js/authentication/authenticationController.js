@@ -35,8 +35,8 @@ class AuthenticationController {
         this.vm.newDisplayNameData = '';
         this.vm.resetPasswordMail = '';
 
-        this.$scope.$on('updatedDefaultAvatar', function(args) {
-            this.getDefaultAvatar(user);
+        this.$rootScope.$on('updatedDefaultAvatar', () => {
+            setTimeout(this.getDefaultAvatar(this), 1000);
         });
 
         firebase.auth().onAuthStateChanged(user => {
@@ -59,24 +59,24 @@ class AuthenticationController {
         this.vm.resetPassword = this.resetPassword;
     }
 
-    getDefaultAvatar() {
-        const user = this.vm.user;
+    getDefaultAvatar(context = this) {
+        const user = context.vm.user;
         firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
             const user = snapshot.val();
             if (user && user.defaultAvatar) {
                 if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
                     const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
                     chosenDefaultAvatar.customCharacter = true;
-                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
+                    context.vm.chosenDefaultAvatar = chosenDefaultAvatar;
                 } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
                     const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
                     chosenDefaultAvatar.customCharacter = false;
-                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
+                    context.vm.chosenDefaultAvatar = chosenDefaultAvatar;
                 } else {
-                    this.vm.chosenDefaultAvatar = 'none';
+                    context.vm.chosenDefaultAvatar = 'none';
                 }
             } else {
-                this.vm.chosenDefaultAvatar = 'none';
+                context.vm.chosenDefaultAvatar = 'none';
             }
         });
     }

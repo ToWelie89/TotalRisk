@@ -135,12 +135,33 @@ class LobbiesController {
 
             this.addSocketListeners();
 
-            this.socketService.gameSocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost);
-            this.socketService.gameSocket.emit('sendMessage', this.vm.room.id, {
-                sender: 'SERVER',
-                uid: 'SERVER',
-                message: `${userName} connected to the room`,
-                timestamp: Date.now()
+            firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+                const userData = snapshot.val();
+                let chosenAvatar;
+
+                if (userData) {
+                    if (userData.defaultAvatar) {
+                        if (userData.characters && userData.characters.find(c => c.id === userData.defaultAvatar)) {
+                            const chosenDefaultAvatar = userData.characters.find(c => c.id === userData.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = true;
+
+                            chosenAvatar = chosenDefaultAvatar;
+                        } else if (Object.values(avatars).find(x => x.id === userData.defaultAvatar)) {
+                            const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === userData.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = false;
+
+                            chosenAvatar = chosenDefaultAvatar;
+                        }
+                    }
+                }
+
+                this.socketService.gameSocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost, chosenAvatar);
+                this.socketService.gameSocket.emit('sendMessage', this.vm.room.id, {
+                    sender: 'SERVER',
+                    uid: 'SERVER',
+                    message: `${userName} connected to the room`,
+                    timestamp: Date.now()
+                });
             });
         }
     }

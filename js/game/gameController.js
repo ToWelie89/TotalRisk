@@ -613,7 +613,7 @@ class GameController {
         this.$uibModal.open({
             templateUrl: 'src/modals/attackModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal attackModalWrapper',
             controller: 'attackModalController',
             controllerAs: 'attack',
             keyboard: false,

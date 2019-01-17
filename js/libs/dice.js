@@ -170,7 +170,7 @@ this.material_options = {
 this.label_color = '#aaaaaa';
 this.ambient_light_color = 0xf0f5fb;
 this.spot_light_color = 0xefdfd5;
-this.desk_color = 0x000000;
+this.desk_color = 0xb7b7b7;
 
 this.dice_face_range = {'d6': [1, 6]};
 this.dice_mass = {'d6': 300};
@@ -202,7 +202,7 @@ this.dice_box = function(container, dimentions, options) {
     container.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
-    this.renderer.setClearColor(0xffffff, 1);
+    this.renderer.setClearColor( 0xffffff, 0);
 
     this.reinit(container, dimentions);
 
@@ -263,7 +263,7 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
         this.h = this.ch;
     }
     this.aspect = Math.min(this.cw / this.w, this.ch / this.h);
-    that.scale = Math.sqrt(this.w * this.w + this.h * this.h) / 13;
+    that.scale = Math.sqrt(this.w * this.w + this.h * this.h) / 16;
 
     this.renderer.setSize(this.cw * 2, this.ch * 2);
 

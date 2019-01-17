@@ -3,6 +3,7 @@ require('firebase/auth');
 
 const {GAME_PHASES} = require('./../gameConstants');
 const {avatars} = require('./../player/playerConstants');
+const {debounce} = require('./../helpers');
 
 class EditProfileController {
 
@@ -15,6 +16,7 @@ class EditProfileController {
 
         this.vm.selectDefaultAvatar = this.selectDefaultAvatar;
         this.vm.setNewPassword = this.setNewPassword;
+        this.vm.updateBio = this.updateBio;
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.EDIT_PROFILE) {
@@ -36,7 +38,8 @@ class EditProfileController {
                 const normalizedUser = {
                     uid: authUser.uid,
                     name: authUser.displayName,
-                    email: authUser.email
+                    email: authUser.email,
+                    bio: ''
                 };
                 this.vm.user = normalizedUser;
 
@@ -44,6 +47,8 @@ class EditProfileController {
                     const user = snapshot.val();
 
                     if (user) {
+                        this.vm.user.bio = user.bio;
+
                         if (user.characters) {
                             this.vm.user.characters = user.characters;
                             this.vm.user.characters.forEach(c => {
@@ -51,16 +56,16 @@ class EditProfileController {
                             });
                         }
 
-                        if (this.vm.user.characters && this.vm.user.characters.find(c => c.id === user.defaultAvatar)) {
-                            const chosenDefaultAvatar = this.vm.user.characters.find(c => c.id === user.defaultAvatar);
-                            chosenDefaultAvatar.customCharacter = true;
-                            this.vm.user.defaultAvatar = chosenDefaultAvatar;
-                        } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
-                            const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
-                            chosenDefaultAvatar.customCharacter = false;
-                            this.vm.user.defaultAvatar = chosenDefaultAvatar;
-                        } else {
-                            // no chosen default avatar
+                        if (user.defaultAvatar) {
+                            if (this.vm.user.characters && this.vm.user.characters.find(c => c.id === user.defaultAvatar)) {
+                                const chosenDefaultAvatar = this.vm.user.characters.find(c => c.id === user.defaultAvatar);
+                                chosenDefaultAvatar.customCharacter = true;
+                                this.vm.user.defaultAvatar = chosenDefaultAvatar;
+                            } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
+                                const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
+                                chosenDefaultAvatar.customCharacter = false;
+                                this.vm.user.defaultAvatar = chosenDefaultAvatar;
+                            }
                         }
 
                         console.log('My user', this.vm.user);
@@ -86,6 +91,13 @@ class EditProfileController {
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
                 this.$rootScope.$apply();
             }
+        });
+    }
+
+    updateBio() {
+        firebase.database().ref('users/' + this.vm.user.uid + '/bio').set(this.vm.user.bio)
+        .then(() => {
+            this.toastService.successToast('', 'Updated bio');
         });
     }
 
@@ -156,16 +168,12 @@ class EditProfileController {
             $('.mainWrapper').css('filter', 'none');
             $('.mainWrapper').css('-webkit-filter', 'none');
 
-            console.log(closeResponse.avatar)
-
             this.vm.user.defaultAvatar = closeResponse.avatar;
 
-            return firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id);
-
-            this.$scope.$broadcast('updatedDefaultAvatar', {});
-
-            // save to firebase
-            //this.vm.user.avatar
+            firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id)
+            .then(() => {
+                this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+            });
         });
     }
 }
