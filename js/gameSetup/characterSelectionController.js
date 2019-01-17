@@ -34,7 +34,7 @@ class CharacterSelectionController {
         $('.mainWrapper').css('-webkit-filter', 'blur(5px)');
 
         setTimeout(() => {
-            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.svg) {
+            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.svg) {
                 loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.svg, '#selectedCharacterSvg');
             }
         }, 50);
@@ -102,7 +102,7 @@ class CharacterSelectionController {
 
     avatarIsSelected(avatar) {
         if (avatar.customCharacter) {
-            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.customCharacter) {
+            if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.customCharacter) {
                 return (this.vm.currentSelectedPlayer.avatar.id === avatar.id);
             } else {
                 return false;

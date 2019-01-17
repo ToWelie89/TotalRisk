@@ -1,0 +1,102 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.EDIT_PROFILE" class="textCenter mainMenuBox" data-ng-controller="editProfileController as editProfile" id="editProfile" style="position: relative;" ng-cloak>
+    <div id="mainDiv">
+        <div class="backButtonContainer">
+            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+
+        <div style="height: 200px; width: 100%; display: table" class="textCenter" data-ng-show="editProfile.loading">
+            <div style="vertical-align: middle; display: table-cell;">
+                <ng-include src="'src/views/loading.html'"></ng-include>
+            </div>
+        </div>
+
+        <div style="height: 200px; width: 100%; display: table" class="textCenter" data-ng-show="editProfile.error">
+            <div style="vertical-align: middle; display: table-cell;">
+                <h3>
+                    Could not fetch user profile
+                </h3>
+            </div>
+        </div>
+
+        <div data-ng-hide="editProfile.loading || editProfile.error" class="marginTop--double" style="padding-top: 30px; padding-bottom: 30px;">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="setupBoxAvatarsContainer">
+                        <div class="setupBoxAvatarsContainer__item">
+                            <div
+                                id="editProfileAvatar"
+                                player-portrait
+                                avatar="editProfile.user.defaultAvatar"
+                                class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                style="background-color: #b1b1b1;
+                                       border-color: #868686;">
+
+                                <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="!editProfile.user.defaultAvatar.customCharacter">
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="editProfile.user.defaultAvatar.customCharacter">
+                                </div>
+                                <div data-ng-show="!editProfile.user.defaultAvatar">
+                                    <span class="glyphicon glyphicon-user" style="color: white; font-size: 210px; margin-top: 36px;"></span>
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__inner"
+                                     data-ng-click="editProfile.selectDefaultAvatar()"
+                                     style="border-color: #868686;">
+                                    <h2>CHANGE DEFAULT AVATAR</h2>
+                                </div>
+                            </div>
+                            <div class="box-shadow setupBoxAvatarsContainer__item__name">
+                                <div style="background: #868686;" class="box-shadow" data-color="">
+                                    <span style="border-color: #5f5e5e; border-left-color: transparent;"></span>
+                                    <span>{{ editProfile.user.name }}</span>
+                                    <span style="border-color: #5f5e5e; border-right-color: transparent;"></span>
+                                </div>
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__flag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="editProfile.user.defaultAvatar.flag"></waving-flag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 textLeft marginTop--double">
+                    <div class="colorWhite">
+                        <strong style="font-size: 20px;">
+                            E-mail
+                        </strong>
+                        <p>
+                            {{ editProfile.user.email }}
+                        </p>
+                    </div>
+                    <div>
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Set new password
+                        </strong>
+                        <div class="marginTop">
+                            <input class="floatLeft" type="password" style="width: 70%; letter-spacing: 3px;" placeholder="Current password" data-ng-model="editProfile.currentPassword" />
+                            <input class="floatLeft marginTop" type="password" style="width: 70%; letter-spacing: 3px;" placeholder="New password" data-ng-model="editProfile.newPassword1" />
+                            <input class="floatLeft marginTop" style="clear: both; width: 70%; letter-spacing: 3px;" type="password" placeholder="Repeat new password" data-ng-model="editProfile.newPassword2" />
+                        </div>
+                        <div class="floatLeft" style="clear: both; margin-top: 10px;">
+                            <button type="button" class="button button-green" data-ng-click="editProfile.setNewPassword()" data-ng-disabled="!editProfile.newPassword1 || !editProfile.newPassword2 || !editProfile.currentPassword || editProfile.setNewPasswordLoading">
+                                Change password
+                            </button>
+                        </div>
+                    </div>
+                    <div style="clear: both;" class="paddingTop">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Bio
+                        </strong>
+                        <p>
+                            <textarea class="marginTop" style="width: 70%; height: 180px; outline: none; border: none; padding: 20px; font-size: 18px; resize: none;" maxlength="300"></textarea>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

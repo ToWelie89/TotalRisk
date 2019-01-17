@@ -291,9 +291,7 @@ class CharacterCreatorController {
             }
         })
         .then(() => {
-            return firebase.database().ref('users/' + user.uid).set({
-                characters: userCharacters
-            });
+            return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
         })
         .then(() => {
             stopGlobalLoading();
@@ -390,9 +388,7 @@ class CharacterCreatorController {
             userCharacters = userCharacters.filter(x => x.id !== this.vm.selectedCharacterId);
         })
         .then(() => {
-            return firebase.database().ref('users/' + user.uid).set({
-                characters: userCharacters
-            });
+            return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
         })
         .then(() => {
             stopGlobalLoading();

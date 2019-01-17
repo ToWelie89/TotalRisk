@@ -6,7 +6,8 @@ class PlayerPortraitDirective {
         this.scope = {
             avatar: '&avatar',
             target: '&target',
-            small: '&small'
+            small: '&small',
+            loading: '&loading'
         }
     }
 
@@ -21,6 +22,8 @@ class PlayerPortraitDirective {
             var portraitBox = elem[0];
             var avatar = scope.avatar();
             var small = portraitBox.attributes.getNamedItem('small');
+            var xsmall = portraitBox.attributes.getNamedItem('xsmall');
+            var loading = portraitBox.attributes.getNamedItem('loading');
             var target = portraitBox.attributes.getNamedItem('target');
             if (target) {
                 target = `#${target.value}`;
@@ -35,6 +38,11 @@ class PlayerPortraitDirective {
                 portraitBox.style.backgroundImage = '';
 
                 const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svgCustom`;
+
+                if (loading) {
+                    $(`#${loading.value}`).show();
+                    $(`${targetSelector}`).hide();
+                }
 
                 loadSvgIntoDiv('assets/avatarSvg/custom.svg', targetSelector, () => {
                     $(`${targetSelector} svg g[category="hat"] > g`).css('visibility', 'hidden');
@@ -62,19 +70,41 @@ class PlayerPortraitDirective {
                         $(`${targetSelector} svg`).css('margin-left', '-39px');
                         $(`${targetSelector} svg`).css('margin-top', '-40px');
                     }
+
+                    if (loading) {
+                        $(`#${loading.value}`).hide();
+                        $(`${targetSelector}`).show();
+                    }
                 });
             } else if (avatar.svg) {
+                if (loading) {
+                    $(`#${loading.value}`).show();
+                    $(`${targetSelector}`).hide();
+                }
                 portraitBox.style.backgroundImage = '';
 
                 const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svg`;
 
-                var attributes = small ? avatar.svgAttributesSmall : avatar.svgAttributesLarge;
+                let attributes;
+
+                if (small) {
+                    attributes = avatar.svgAttributesSmall;
+                } else if (xsmall) {
+                    attributes = avatar.svgAttributesXsmall;
+                } else {
+                    attributes = avatar.svgAttributesLarge;
+                }
 
                 loadSvgIntoDiv(avatar.svg, targetSelector, () => {
                     $(`${targetSelector} svg`).css('width', attributes && attributes.svgWidth ? attributes.svgWidth : '100%');
                     $(`${targetSelector} svg`).css('height', attributes && attributes.svgHeight ? attributes.svgHeight : '100%');
                     $(`${targetSelector} svg`).css('margin-left', attributes && attributes.svgMarginLeft ? attributes.svgMarginLeft : '0px');
                     $(`${targetSelector} svg`).css('margin-top', attributes && attributes.svgMarginTop ? attributes.svgMarginTop : '0px');
+
+                    if (loading) {
+                        $(`#${loading.value}`).hide();
+                        $(`${targetSelector}`).show();
+                    }
                 }, 10);
             } else {
                 $(`#${id} .setupBoxAvatarsContainer__item__portrait__svg svg`).remove();

@@ -4,21 +4,43 @@
                    main.currentGamePhase == main.gamePhases.PLAYER_SETUP ||
                    main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR ||
                    main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER ||
-                   main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES"
+                   main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES ||
+                   main.currentGamePhase === main.gamePhases.EDIT_PROFILE"
      data-ng-controller="authenticationController as auth"
      ng-cloak>
     <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" style="height: 100%;">
         <div style="height: 100%; display: table;">
             <div style="height: 100%; display: table-cell; vertical-align: middle;">
-                <div player-portrait id="authenticationBoxDefaultAvatar" avatar="auth.chosenDefaultAvatar" target="authenticationBoxDefaultAvatarSvg">
-                    <div id="authenticationBoxDefaultAvatarSvg" style="height: 125px; width: 125px; overflow: hidden; border: 1px solid white; border-radius: 50%; background: #949494;"></div>
+                <div player-portrait
+                     xsmall
+                     id="authenticationBoxDefaultAvatar"
+                     avatar="auth.chosenDefaultAvatar"
+                     target="authenticationBoxDefaultAvatarSvg"
+                     loading="authenticationBoxDefaultAvatarLoading">
+                    <div style="height: 85px; width: 85px; overflow: hidden; border: 1px solid white; border-radius: 50%; background: #949494; box-shadow: 0 0 15px #848383;">
+                        <div data-ng-show="auth.chosenDefaultAvatar === 'none'">
+                            <span class="glyphicon glyphicon-user" style="font-size: 75px; margin-left: 4px; margin-top: 9px;"></span>
+                        </div>
+                        <div id="authenticationBoxDefaultAvatarSvg"></div>
+                        <div id="authenticationBoxDefaultAvatarLoading" style="width: 100%; height: 100%;" data-ng-hide="auth.chosenDefaultAvatar === 'none'">
+                            <div style="height: 100%; display: table; width: 100%; text-align: center; margin-top: 3px; margin-left: 1px;">
+                                <div style="vertical-align: middle; display: table-cell;">
+                                    <ng-include src="'src/views/loading.html'"></ng-include>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style="height: 100%; display: table-cell; vertical-align: middle;">
+            <div style="height: 100%; display: table-cell; vertical-align: middle;" class="paddingLeft--double">
                 <p>
-                    Logged in as {{ auth.user.displayName ? auth.user.displayName : auth.user.email }}
+                    Logged in as <strong>{{ auth.user.displayName ? auth.user.displayName : auth.user.email }}</strong>
                 </p>
-                <button type="button" class="button button-red marginLeft floatRight" data-ng-click="auth.logout()" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER"
+                <button type="button" class="button button-blue marginLeft" data-ng-click="main.setGamePhase(main.gamePhases.EDIT_PROFILE)" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER"
+                style="margin: 0; margin-top: 5px;">
+                    Edit profile
+                </button>
+                <button type="button" class="button button-red marginLeft" data-ng-click="auth.logout()" data-ng-disabled="main.currentGamePhase === main.gamePhases.PLAYER_SETUP_MULTIPLAYER"
                 style="margin: 0; margin-top: 5px;">
                     Logout
                 </button>
@@ -104,7 +126,9 @@
             </div>
         </form>
     </div>
-    <div data-ng-show="auth.currentState === auth.states.LOADING" id="loading">
-        <ng-include src="'src/views/loading.html'"></ng-include>
+    <div data-ng-show="auth.currentState === auth.states.LOADING" id="loading" style="height: 100%;">
+        <div style="display: table-cell; vertical-align: middle;">
+            <ng-include src="'src/views/loading.html'"></ng-include>
+        </div>
     </div>
 </div>

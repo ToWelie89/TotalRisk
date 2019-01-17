@@ -1,10 +1,13 @@
 const firebase = require('firebase/app');
 require('firebase/auth');
 
+const {avatars} = require('./../player/playerConstants');
+
 class AuthenticationController {
-    constructor($scope, toastService, soundService) {
+    constructor($scope, $rootScope, toastService, soundService) {
         this.vm = this;
         this.$scope = $scope;
+        this.$rootScope = $rootScope;
         this.toastService = toastService;
         this.soundService = soundService;
 
@@ -32,18 +35,16 @@ class AuthenticationController {
         this.vm.newDisplayNameData = '';
         this.vm.resetPasswordMail = '';
 
+        this.$scope.$on('updatedDefaultAvatar', function(args) {
+            this.getDefaultAvatar(user);
+        });
+
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.vm.currentState = this.vm.states.LOGGED_IN;
                 this.setUser(user);
                 this.toastService.successToast('', 'You have been successfully logged in!');
-
-                firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
-                    const user = snapshot.val();
-                    const chosenDefaultAvatar = user.characters[0];
-                    chosenDefaultAvatar.customCharacter = true;
-                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
-                });
+                this.getDefaultAvatar();
             } else {
                 this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
             }
@@ -58,10 +59,33 @@ class AuthenticationController {
         this.vm.resetPassword = this.resetPassword;
     }
 
+    getDefaultAvatar() {
+        const user = this.vm.user;
+        firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+            const user = snapshot.val();
+            if (user && user.defaultAvatar) {
+                if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
+                    const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
+                    chosenDefaultAvatar.customCharacter = true;
+                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
+                } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
+                    const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
+                    chosenDefaultAvatar.customCharacter = false;
+                    this.vm.chosenDefaultAvatar = chosenDefaultAvatar;
+                } else {
+                    this.vm.chosenDefaultAvatar = 'none';
+                }
+            } else {
+                this.vm.chosenDefaultAvatar = 'none';
+            }
+        });
+    }
+
     setUser (user) {
         this.vm.user = {
             displayName: user.displayName,
-            email: user.email
+            email: user.email,
+            uid: user.uid
         };
         this.vm.newDisplayNameData = this.vm.user.displayName;
     }
@@ -155,9 +179,7 @@ class AuthenticationController {
                 displayName: this.vm.signupData.userName,
                 email: result.user.email
             };
-            return firebase.database().ref('users/' + result.user.uid).set({
-                userName: this.vm.signupData.userName
-            });
+            return firebase.database().ref('users/' + result.user.uid + '/userName').set(this.vm.signupData.userName);
         })
         .then(() => {
             const user = firebase.auth().currentUser;
