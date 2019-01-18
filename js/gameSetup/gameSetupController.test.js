@@ -1,16 +1,160 @@
 import GameSetupController from './gameSetupController';
 import {PLAYER_COLORS, avatars} from './../player/playerConstants';
 import {CONSTANTS} from './../gameConstants';
-import {createSoundService} from './../test/mockHelper';
+import {createSoundService, createUibModal} from './../test/mockHelper';
+
+jest.mock('firebase/app');
+import firebase from 'firebase/app';
 
 describe('gameSetupController', () => {
     let gameSetupController;
 
     let mockSoundService;
+    let mockUibModal;
 
     beforeEach(() => {
+        firebase.auth = () => {
+            return {
+                onAuthStateChanged: callback => {
+                    callback({ user: 'test' });
+                }
+            }
+        };
+        firebase.database = () => {
+            return {
+                ref: path => {
+                    return {
+                        once: val => {
+                            return Promise.resolve({
+                                val: () => ({ test: 1 })
+                            });
+                        }
+                    }
+                }
+            }
+        };
+
         mockSoundService = createSoundService();
-        gameSetupController = new GameSetupController({}, mockSoundService);
+        mockUibModal = createUibModal();
+        gameSetupController = new GameSetupController({}, mockSoundService, mockUibModal);
+    });
+
+    it('On construction default avatar should be fetched from firebase - avatar is Napoleon', async () => {
+        // Arrange
+        firebase.database = () => {
+            return {
+                ref: path => {
+                    return {
+                        once: val => {
+                            return Promise.resolve({
+                                val: () => ({
+                                    defaultAvatar: 'napoleon',
+                                    characters: []
+                                })
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        // Act
+        gameSetupController.init();
+        await gameSetupController.fetchDefaultAvatar();
+        // Assert
+        expect(gameSetupController.defaultAvatar).toEqual(avatars['Napoleon Bonaparte']);
+        expect(gameSetupController.players[0].name).toEqual('Napoleon Bonaparte');
+    });
+
+    it('On construction default avatar should be fetched from firebase - avatar is a custom character', async () => {
+        // Arrange
+        const characterChosen = {
+            id: 'abc123',
+            test: 123,
+            name: 'Kalle'
+        };
+        firebase.database = () => {
+            return {
+                ref: path => {
+                    return {
+                        once: val => {
+                            return Promise.resolve({
+                                val: () => ({
+                                    defaultAvatar: 'abc123',
+                                    characters: [characterChosen]
+                                })
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        // Act
+        gameSetupController.init();
+        await gameSetupController.fetchDefaultAvatar();
+        // Assert
+        expect(gameSetupController.defaultAvatar).toEqual(Object.assign(characterChosen, {
+            customCharacter: true
+        }));
+        expect(gameSetupController.players[0].name).toEqual('Kalle');
+    });
+
+    it('On construction default avatar should be fetched from firebase - no custom avatar set', async () => {
+        // Arrange
+        firebase.database = () => {
+            return {
+                ref: path => {
+                    return {
+                        once: val => {
+                            return Promise.resolve({
+                                val: () => ({
+                                    characters: []
+                                })
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        // Act
+        await gameSetupController.fetchDefaultAvatar();
+        // Assert
+        expect(gameSetupController.defaultAvatar).toEqual(undefined);
+    });
+
+    it('getEmptyPlayerSlots should return an array of the correct size', () => {
+        // Act
+        gameSetupController.init();
+        gameSetupController.players = [0, 0, 0];
+        // Assert
+        expect(gameSetupController.getEmptyPlayerSlots()).toEqual([0,0,0]);
+    });
+
+    it('On construction default avatar should be fetched from firebase - default avatar does not exist', async () => {
+        const character = {
+            id: 'abc123',
+            test: 123
+        };
+        // Arrange
+        firebase.database = () => {
+            return {
+                ref: path => {
+                    return {
+                        once: val => {
+                            return Promise.resolve({
+                                val: () => ({
+                                    defaultAvatar: 'leeeeeeeeeeeeeel',
+                                    characters: [character]
+                                })
+                            });
+                        }
+                    }
+                }
+            }
+        };
+        // Act
+        await gameSetupController.fetchDefaultAvatar();
+        // Assert
+        expect(gameSetupController.defaultAvatar).toEqual(undefined);
     });
 
     it('On construction min and max players should be set', () => {

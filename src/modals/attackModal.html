@@ -4,11 +4,15 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="turnAvatarContainer">
-                    <div class="turnAvatar" style="background-image: url({{ attack.attacker.avatar.picture }});">
+                    <div class="" id="attackModalAttackerPortrait" player-portrait avatar="attack.attacker.avatar" target="attackModalAttackerPortraitSvg" small>
+                        <div id="attackModalAttackerPortraitSvg">
+                        </div>
                     </div>
                 </div>
                 <div class="turnAvatarContainer right">
-                    <div class="turnAvatar" style="background-image: url({{ attack.defender.avatar.picture }});">
+                    <div class="" id="attackModalDefenderPortrait" player-portrait avatar="attack.defender.avatar" target="attackModalDefenderPortraitSvg" small>
+                        <div id="attackModalDefenderPortraitSvg">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-body">
@@ -24,7 +28,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row marginTop--double">
                             <div class="col-xs-6" id="attackerTroops">
                                 <span data-ng-repeat="troop in attack.getAsArray(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}" data-ng-show="attack.attacker.numberOfTroops <= 20">
                                     <span class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg" id="attackerTroopIcon{{ $index }}">

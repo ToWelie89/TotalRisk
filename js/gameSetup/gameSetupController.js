@@ -34,6 +34,10 @@ class GameSetupController {
         this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
 
+        this.fetchDefaultAvatar();
+    }
+
+    fetchDefaultAvatar() {
         firebase.auth().onAuthStateChanged(authUser => {
             if (authUser) {
                 firebase.database().ref('/users/' + authUser.uid).once('value').then(snapshot => {
@@ -42,20 +46,27 @@ class GameSetupController {
                         if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
                             const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
                             chosenDefaultAvatar.customCharacter = true;
-                            this.vm.defaultAvatar = chosenDefaultAvatar;
+                            this.defaultAvatar = chosenDefaultAvatar;
                         } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
                             const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
                             chosenDefaultAvatar.customCharacter = false;
                             chosenDefaultAvatar.name = Object.entries(avatars).find(x => x[1].id === chosenDefaultAvatar.id)[0];
-                            this.vm.defaultAvatar = chosenDefaultAvatar;
+                            this.defaultAvatar = chosenDefaultAvatar;
                         }
 
-                        if (this.vm.defaultAvatar) {
-                            this.vm.players[0].avatar = this.vm.defaultAvatar;
-                            this.vm.players[0].name = this.vm.defaultAvatar.name;
+                        if (this.defaultAvatar) {
+                            this.vm.players[0].avatar = this.defaultAvatar;
+                            this.vm.players[0].name = this.defaultAvatar.name;
                         }
+
+                        return Promise.resolve();
                     }
                 })
+                .catch(err => {
+                    return Promise.reject();
+                })
+            } else {
+                return Promise.resolve();
             }
         });
     }
@@ -70,9 +81,9 @@ class GameSetupController {
                            PLAYER_TYPES.HUMAN)
         );
 
-        if (this.vm.defaultAvatar) {
-            this.vm.players[0].avatar = this.vm.defaultAvatar;
-            this.vm.players[0].name = this.vm.defaultAvatar.name;
+        if (this.defaultAvatar) {
+            this.vm.players[0].avatar = this.defaultAvatar;
+            this.vm.players[0].name = this.defaultAvatar.name;
         }
 
         $(document).ready(function() {
