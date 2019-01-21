@@ -1,10 +1,10 @@
 import AttackModalController from './attackModalController';
-import {createUibModalInstance, createSoundService, createScope, createRootScope, createTutorialService} from './../test/mockHelper';
+import {createUibModalInstance, createSoundService, createScope, createRootScope, createTutorialService, createSocketService} from './../test/mockHelper';
 import Territory from './../map/territory';
 import { worldMap } from './../map/worldMapConfiguration';
 import Player from './../player/player';
 import {PLAYER_COLORS, avatars} from './../player/playerConstants';
-import {arraysEqual} from './../helpers';
+import {arraysEqual, delay} from './../helpers';
 
 describe('attackModalController', () => {
     let attackModalController;
@@ -18,6 +18,9 @@ describe('attackModalController', () => {
     let mockSoundService;
     let mockUibModalInstance;
     let mockTutorialService;
+    let mockSocketService;
+
+    let mockAttackData;
 
     beforeEach(() => {
         territory1 = new Territory(worldMap.regions[0].territories[0]); // North Africa
@@ -29,7 +32,7 @@ describe('attackModalController', () => {
         player1 = new Player('Pelle', PLAYER_COLORS.RED, avatars['Julius Caesar']);
         player2 = new Player('Kalle', PLAYER_COLORS.GREEN, avatars['Napoleon Bonaparte']);
 
-        let mockAttackData = {
+        mockAttackData = {
             territoryAttacked: territory1,
             attackFrom: territory2,
             attacker: 'Kalle',
@@ -41,8 +44,10 @@ describe('attackModalController', () => {
         mockScope = createScope();
         mockRootScope = createRootScope();
         mockTutorialService = createTutorialService();
+        mockSocketService = createSocketService();
 
-        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, {});
+        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, mockSocketService);
+        //attackModalController.runTutorial = jest.fn();
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;
@@ -50,18 +55,51 @@ describe('attackModalController', () => {
         attackModalController.closeModalDelay = 0;
         attackModalController.startShakeAnimationDelay = 0;
         attackModalController.stopShakeAnimationDelay = 0;
+        attackModalController.tutorialDelayAfterStartAttack = 0;
 
         // Mock dice boxes
-        const dice_box = function(container, dimentions) {
+        let dice_box = function(container, dimensions) {
         }
         dice_box.prototype.throw = function(diceRolls, after_roll, context) {
-            after_roll.call({}, [], context);
+            after_roll([], context);
         }
         attackModalController.attacker_box = new dice_box('container', { w: 500, h: 300 });
         attackModalController.defender_box = new dice_box('container', { w: 500, h: 300 });
+
+        window.$ = selector => {
+            return {
+                html: jest.fn(),
+                addClass: jest.fn(),
+                removeClass: jest.fn(),
+                animate: (stuff, delay, callback = undefined) => {
+                    if (callback) {
+                        callback();
+                    }
+                },
+                clone: () => {
+                    return {
+                        clone: jest.fn(),
+                        removeClass: jest.fn()
+                    }
+                }
+            }
+        };
+        document.getElementById = selector => {
+            return {
+                getBBox: () => {
+                    return {
+                        x: 1,
+                        y: 2,
+                        width: 3,
+                        height: 4
+                    }
+                },
+                setAttribute: jest.fn()
+            }
+        };
     });
 
-    it('On construction scope variables should be set correctly', () => {
+    it('On construction scope variables should be set correctly', async () => {
         // Assert
         expect(attackModalController.defender).toEqual(territory1);
         expect(attackModalController.attacker).toEqual(territory2);
@@ -73,6 +111,45 @@ describe('attackModalController', () => {
         expect(attackModalController.moveNumberOfTroops).toEqual(1);
         expect(attackModalController.movementSliderOptions).toEqual({});
         expect(attackModalController.countrySvg).toEqual('');
+
+        attackModalController.getCountrySvg = jest.fn();
+        window.dice_box = jest.fn();
+        window.dice_box.mockImplementation(function(canvas, dimensions, options) {
+            this.canvas = canvas;
+            this.dimensions = dimensions;
+            this.options = options;
+            return this;
+        });
+
+        document.getElementById = () => 'kek';
+
+        await delay(600);
+
+        expect(attackModalController.getCountrySvg).toHaveBeenCalledWith('North Africa');
+        expect(dice_box).toHaveBeenCalledWith('kek', { w: 440, h: 200 }, { dice_color: '#6b0a05' });
+        expect(dice_box).toHaveBeenCalledWith('kek', { w: 440, h: 200 }, { dice_color: '#061a7f' });
+    });
+
+    it('On construction tutorial mode should be run if the tutorial flag is true', async () => {
+        // Arrange
+        mockAttackData.tutorialMode = true;
+        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, {});
+        attackModalController.runTutorial = jest.fn();
+
+        attackModalController.getCountrySvg = jest.fn();
+        window.dice_box = jest.fn();
+        window.dice_box.mockImplementation(function(canvas, dimensions, options) {
+            this.canvas = canvas;
+            this.dimensions = dimensions;
+            this.options = options;
+            return this;
+        });
+
+        await delay(600);
+
+        // Assert
+        expect(attackModalController.runTutorial).toHaveBeenCalled();
+        expect(attackModalController.tutorial).toEqual(true);
     });
 
     it('closeModal should call close modal correctly', () => {
@@ -164,7 +241,7 @@ describe('attackModalController', () => {
         expect(mockScope.$apply).toHaveBeenCalled();
     });
 
-    it('fight where defender wins', () => {
+    it('fight where defender wins', async () => {
         // Arrange
         attackModalController.attacker.numberOfTroops = 2;
         attackModalController.defender.numberOfTroops = 3;
@@ -190,19 +267,17 @@ describe('attackModalController', () => {
         expect(attackModalController.fightIsOver).toEqual(true);
         expect(attackModalController.attacker.numberOfTroops).toEqual(0);
 
-        //jasmine.clock().tick(10); // Insert small delay to account for setTimeout (even though the delay is set to 0ms)
+        await delay(100);
 
-        setTimeout(() => {
-            expect(mockUibModalInstance.close).toHaveBeenCalledWith({
-                attackFrom: territory2,
-                attackTo: territory1,
-                battleWasWon: false,
-                previousOwner: undefined,
-                retreat: false,
-                attackerTotalCasualites: 2,
-                defenderTotalCasualites: 0
-            });
-        }, 100);
+        expect(mockUibModalInstance.close).toHaveBeenCalledWith({
+            attackFrom: territory2,
+            attackTo: territory1,
+            battleWasWon: false,
+            previousOwner: undefined,
+            retreat: false,
+            attackerTotalCasualites: 2,
+            defenderTotalCasualites: 0
+        });
     });
 
     it('fight where neither player wins just yet', () => {
@@ -259,5 +334,87 @@ describe('attackModalController', () => {
     it('getAsArray should return an array of empty objects with same lengt as input', () => {
         // Assert
         expect(attackModalController.getAsArray(5).length).toEqual(5);
+    });
+
+    it('runTutorial should run all steps in attack tutorial', async () => {
+        // Arrange
+        const attackData = { test: 'lol' };
+        attackModalController.fight = jest.fn();
+        attackModalController.attackData = attackData;
+        // Act
+        attackModalController.runTutorial();
+        // Assert
+        expect(mockTutorialService.initTutorialData).toHaveBeenCalled();
+        expect(mockTutorialService.attackModalExplanation).toHaveBeenCalled();
+        await delay(50);
+        expect(mockTutorialService.attackModalFightExplanation).toHaveBeenCalled();
+        expect(mockTutorialService.attackModalRetreatExplanation).toHaveBeenCalled();
+        expect(mockTutorialService.startAttack).toHaveBeenCalledWith(attackData);
+
+        //expect(mockTutorialService.afterAttack).toHaveBeenCalled();
+        //expect(mockTutorialService.afterAttack2).toHaveBeenCalled();
+        //expect(mockTutorialService.moveAfterAttackExplanation).toHaveBeenCalled();
+    });
+
+    it('battleFought will emit data about a battle to the backend via socketservice', () => {
+        // Arrange
+        attackModalController.multiplayerMode = true;
+        // Act
+        attackModalController.battleFought(2, 1, 10, 5);
+        // Assert
+        expect(mockSocketService.gameSocket.emit).toHaveBeenCalledWith('battleFought', {
+            attackerCasualties: 2,
+            defenderCasualties: 1,
+            attackerNumberOfTroops: 11,
+            defenderNumberOfTroops: 5,
+            defenderTerritory: 'North Africa',
+            attackerTerritory: 'Egypt'
+        });
+    });
+
+    it('blitzFight queue up several battles in succession', async () => {
+        // Arrange
+        attackModalController.startShakeAnimationDelay = 50;
+
+        const initAttackerTroops = 5;
+        const initDefenderTroops = 4;
+
+        attackModalController.attacker.numberOfTroops = initAttackerTroops;
+        attackModalController.defender.numberOfTroops = initDefenderTroops;
+
+        territory2.numberOfTroops = initAttackerTroops;
+        territory1.numberOfTroops = initDefenderTroops;
+
+        const attackerCasualties = 0;
+        const defenderCasualties = 2;
+
+        const attackHandled = jest.fn();
+
+        attackModalController.battleHandler.handleAttack = (x, y) => { // Mock handle attack result
+            attackHandled();
+
+            territory2.numberOfTroops = territory2.numberOfTroops - attackerCasualties;
+            territory1.numberOfTroops = territory1.numberOfTroops - defenderCasualties;
+
+            return {
+                attackDice: [6, 5, 4],
+                defendDice: [4, 3],
+                attacker: territory2,
+                defender: territory1,
+                defenderCasualties,
+                attackerCasualties
+            };
+        };
+        // Act
+        attackModalController.blitzFight();
+
+        // Assert
+        expect(attackModalController.isBlitzFight).toEqual(true);
+
+        await delay(500);
+
+        expect(attackHandled).toHaveBeenCalledTimes(2);
+        expect(attackModalController.isBlitzFight).toEqual(false);
+        expect(mockSoundService.diceRoll.play).toHaveBeenCalledTimes(2);
     });
 });

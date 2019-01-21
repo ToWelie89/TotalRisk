@@ -61,6 +61,7 @@ class AttackModalController {
         this.closeModalDelay = 2500;
         this.startShakeAnimationDelay = 100;
         this.stopShakeAnimationDelay = 500;
+        this.tutorialDelayAfterStartAttack = 2500;
 
         this.multiplayerMode = this.attackData.multiplayer;
 
@@ -120,7 +121,7 @@ class AttackModalController {
         .then(() => this.tutorialService.startAttack(this.attackData))
         .then(() => {
             this.fight([6, 4, 2], [3]);
-            return delay(2500);
+            return delay(this.tutorialDelayAfterStartAttack);
         })
         .then(() => this.tutorialService.afterAttack(this.attackData))
         .then(() => this.tutorialService.afterAttack2(this.attackData))
@@ -141,7 +142,6 @@ class AttackModalController {
     }
 
     blitzFight() {
-        this.soundService.diceRoll.play();
         this.vm.diceAreRolling = true;
         this.vm.isBlitzFight = true;
         this.fight();
