@@ -197,8 +197,8 @@ this.dice_box = function(container, dimentions, options) {
     this.world = new CANNON.World();
 
     this.renderer = window.WebGLRenderingContext
-        ? new THREE.WebGLRenderer({ antialias: true })
-        : new THREE.CanvasRenderer({ antialias: true });
+        ? new THREE.WebGLRenderer({ antialias: true, alpha: true })
+        : new THREE.CanvasRenderer({ antialias: true, alpha: true });
     container.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -274,7 +274,7 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
 
     var mw = Math.max(this.w, this.h);
     if (this.light) this.scene.remove(this.light);
-    this.light = new THREE.SpotLight(that.spot_light_color, 2.0);
+    this.light = new THREE.SpotLight(that.spot_light_color, 1.8);
     this.light.position.set(-mw / 2, mw / 2, mw * 2);
     this.light.target.position.set(0, 0, 0);
     this.light.distance = mw * 5;
@@ -283,13 +283,16 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
     this.light.shadow.camera.far = mw * 5;
     this.light.shadow.camera.fov = 50;
     this.light.shadow.bias = 0.001;
-    this.light.shadow.mapSize.width = 1024;
-    this.light.shadow.mapSize.height = 1024;
+    this.light.shadowDarkness = 0.8;
+    this.light.shadow.mapSize.width = 2048;
+    this.light.shadow.mapSize.height = 2048;
     this.scene.add(this.light);
+
+    var texture = new THREE.TextureLoader().load('https://i.imgur.com/IPcmVFn.jpg');
 
     if (this.desk) this.scene.remove(this.desk);
     this.desk = new THREE.Mesh(new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
-            new THREE.MeshBasicMaterial({ color: that.desk_color }));
+            new THREE.MeshPhongMaterial({ map: texture }));
     this.desk.receiveShadow = true;
     this.scene.add(this.desk);
 
