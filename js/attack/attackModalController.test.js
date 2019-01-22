@@ -213,6 +213,24 @@ describe('attackModalController', () => {
         });
     });
 
+    it('moveTroops will emit event to backend in multiplayer mode', () => {
+        // Arrange
+        attackModalController.attacker.numberOfTroops = 5;
+        attackModalController.defender.numberOfTroops = 0;
+        attackModalController.moveNumberOfTroops = 5;
+        attackModalController.multiplayerMode = true;
+        // Act
+        attackModalController.moveTroops();
+        // Assert
+        expect(mockSocketService.gameSocket.emit).toHaveBeenCalledWith('updateOwnerAfterSuccessfulInvasion', {
+            attackerTerritory: 'Egypt',
+            defenderTerritory: 'North Africa',
+            attackerTerritoryNumberOfTroops: 1,
+            defenderTerritoryNumberOfTroops: 5,
+            owner: 'Kalle'
+        });
+    });
+
     it('fight where attacker wins and is issued to move troops', () => {
         // Arrange
         attackModalController.attacker.numberOfTroops = 5;

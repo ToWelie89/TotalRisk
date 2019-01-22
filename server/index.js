@@ -7,10 +7,11 @@ const socketIO = require('socket.io');
 const path = require('path');
 
 const { PLAYER_COLORS, PLAYER_TYPES, avatars } = require('./../js/player/playerConstants');
-const { getRandomInteger } = require('./../js/helpers');
+const { getRandomInteger, randomIntFromInterval } = require('./../js/helpers');
 const { getTerritoryByName } = require('./../js/map/mapHelpers');
 const { VICTORY_GOALS, TURN_PHASES, TURN_LENGTHS } = require('./../js/gameConstants');
 const GameEngine = require('./../js/gameEngine');
+const AiHandler = require('./../js/ai/aiHandler');
 const Player = require('./../js/player/player');
 
 const PORT = process.env.PORT || 5000;
@@ -88,7 +89,7 @@ const updateLobbies = () => {
       chosenGoal: game.chosenGoal
     })));
   });
-}
+};
 
 const getRandomUnusedColor = roomId => {
   const game = games.find(game => game.id === roomId);
@@ -99,17 +100,17 @@ const getRandomUnusedColor = roomId => {
 
   const colorToReturn = availableColors[getRandomInteger(0, (availableColors.length - 1))];
   return colorToReturn;
-}
+};
 
 const getUnusedAvatar = roomId => {
   const game = games.find(game => game.id === roomId);
   const usedAvatars = game.players.map(socket => socket.avatar);
-  const allAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
-  const availableAvatars = allAvatars.filter(avatar => !usedAvatars.includes(avatar));
+  const allAvatars = Array.from(Object.keys(avatars).map((key, index) => ({ name: key, avatar: avatars[key] })));
+  const availableAvatars = allAvatars.filter(avatar => !usedAvatars.includes(avatar.avatar));
 
   const avatarToReturn = availableAvatars[getRandomInteger(0, (availableAvatars.length - 1))];
   return avatarToReturn;
-}
+};
 
 const addNewMessage = (roomId, msg) => {
   const game = games.find(game => game.id === roomId);
@@ -122,7 +123,7 @@ const addNewMessage = (roomId, msg) => {
   game.players.forEach(playerSocket => {
     playerSocket.emit('messagesUpdated', game.messages);
   })
-}
+};
 
 const setPlayers = (roomId) => {
   const game = games.find(game => game.id === roomId);
@@ -134,11 +135,12 @@ const setPlayers = (roomId) => {
         userName: p.userName,
         isHost: p.isHost,
         color: p.color,
-        avatar: p.avatar
+        avatar: p.avatar,
+        ai: p.ai
       })));
     });
   }
-}
+};
 
 const startTimer = roomId => {
   const game = games.find(game => game.id === roomId);
@@ -153,7 +155,7 @@ const startTimer = roomId => {
       }
   };
   game.timer.turnTimer = setInterval(game.timer.turnTimerFunction, 1000);
-}
+};
 
 const skipToNextPlayer = roomId => {
   console.log('Skipping to next player due to time being up');
@@ -171,7 +173,87 @@ const skipToNextPlayer = roomId => {
 
   game.timer.turnTimerSeconds = game.turnLength + 2;
   game.timer.turnTimer = setInterval(game.timer.turnTimerFunction, 1000);
-}
+};
+
+const nextTurn = roomId => {
+  const game = games.find(game => game.id === roomId);
+
+  const turn = game.gameEngine.nextTurn();
+  let reinforcements = 0;
+  if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+    reinforcements = game.gameEngine.troopsToDeploy;
+  }
+
+  if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
+    startTimer(game.id);
+  }
+
+  game.players.forEach(player => {
+    player.emit('nextTurnNotifier', turn, reinforcements);
+  });
+
+  if (turn.player.type === PLAYER_TYPES.AI) {
+    game.aiHandler = new AiHandler(game.gameEngine, {}, {
+      updateMap: filter => {
+        //updateMapState(roomId);
+      }
+    }, {});
+    game.aiHandler.multiplayerMode = true;
+
+    clearInterval(game.timer.turnTimer);
+    game.aiHandler.updateCallback = () => {
+        // do something
+    };
+
+    game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 400;
+    game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = 400;
+    game.aiHandler.DELAY_BEFORE_MOVE = 400;
+
+    Promise.resolve()
+    .then(() => game.aiHandler.turnInCards())
+    .then(() => game.aiHandler.contemplateAlternativesForAttack())
+    .then(() => game.aiHandler.deployTroops((territoryName) => {
+        game.players.forEach(player => {
+          player.emit('troopAddedToTerritoryNotifier', territoryName);
+        });
+    }))
+    .then(() => {
+      game.gameEngine.nextTurn();
+    })
+    .then(() => game.aiHandler.attackTerritories((battleData) => {
+        game.players.forEach(player => {
+          player.emit('battleFoughtNotifier', battleData);
+        });
+    }))
+    .then(() => {
+      game.gameEngine.nextTurn();
+    })
+    .then(() => game.aiHandler.movementPhase())
+    .then(() => {
+        updateMapState(roomId);
+        nextTurn(roomId);
+        //game.$scope.$apply();
+    })
+    .catch((reason) => {
+        if (reason === 'playerWon') {
+            console.log('GAME OVER!');
+        } else {
+            console.log('AI error', reason);
+        }
+    });
+  }
+};
+
+const updateMapState = roomId => {
+  const game = games.find(game => game.id === roomId);
+  game.players.forEach(player => {
+    player.emit('updateMapState', game.gameEngine.map.getAllTerritoriesAsList());
+  });
+};
+
+const nextTurnAI = () => {
+  // notify players
+};
 
 io
 .of('lobbies')
@@ -274,8 +356,9 @@ io
       socket.userName = userName;
       socket.roomId = roomId;
       socket.isHost = isHost;
+      socket.ai = false;
       socket.color = getRandomUnusedColor(roomId);
-      socket.avatar = (chosenAvatar && !usedAvatars.includes(chosenAvatar.id)) ? chosenAvatar : getUnusedAvatar(roomId);
+      socket.avatar = (chosenAvatar && !usedAvatars.includes(chosenAvatar.id)) ? chosenAvatar : getUnusedAvatar(roomId).avatar;
 
       game.players.push(socket);
 
@@ -344,6 +427,24 @@ io
       updateLobbies(roomId);
     });
 
+    socket.on('addAiPlayer', (roomId) => {
+      const game = games.find(game => game.id === roomId);
+
+      const avatar = getUnusedAvatar(roomId);
+
+      game.players.push({
+        userName: avatar.name,
+        avatar: avatar.avatar,
+        color: getRandomUnusedColor(roomId),
+        ai: true,
+        emit: () => {},
+        userUid: randomIntFromInterval(10000000000000, 99999999999999)
+      });
+
+      setPlayers(roomId);
+      updateLobbies(roomId);
+    });
+
     // GAME EVENTS
 
     socket.on('startGame', (roomId) => {
@@ -359,7 +460,7 @@ io
         x.userName,
         x.color,
         x.avatar,
-        PLAYER_TYPES.HUMAN,
+        x.ai ? PLAYER_TYPES.AI : PLAYER_TYPES.HUMAN,
         x.userUid,
         x.isHost
       ));
@@ -391,21 +492,7 @@ io
     });
 
     socket.on('nextTurn', () => {
-      const game = games.find(game => game.id === socket.roomId);
-
-      const turn = game.gameEngine.nextTurn();
-      let reinforcements = 0;
-      if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-        reinforcements = game.gameEngine.troopsToDeploy;
-      }
-
-      if (turn.newPlayer) {
-        startTimer(game.id);
-      }
-
-      game.players.forEach(player => {
-        player.emit('nextTurnNotifier', turn, reinforcements);
-      });
+      nextTurn(socket.roomId);
     });
 
     socket.on('battleFought', (battleData) => {

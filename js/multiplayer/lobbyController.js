@@ -94,6 +94,16 @@ class LobbiesController {
         this.vm.startGameIsDisabled = this.startGameIsDisabled;
         this.vm.startGame = this.startGame;
         this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
+        this.vm.addAi = this.addAi;
+        this.vm.addAiDisabled = this.addAiDisabled;
+    }
+
+    addAi() {
+        this.socketService.gameSocket.emit('addAiPlayer', this.vm.room.id);
+    }
+
+    addAiDisabled() {
+
     }
 
     updateColorOfPlayer(player, color) {

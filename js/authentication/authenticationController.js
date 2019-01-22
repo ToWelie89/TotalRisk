@@ -2,6 +2,7 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 
 const {avatars} = require('./../player/playerConstants');
+const {getUserCountry} = require('./../multiplayer/backendCalls');
 
 class AuthenticationController {
     constructor($scope, $rootScope, toastService, soundService) {
@@ -36,7 +37,7 @@ class AuthenticationController {
         this.vm.resetPasswordMail = '';
 
         this.$rootScope.$on('updatedDefaultAvatar', () => {
-            setTimeout(this.getDefaultAvatar(this), 1000);
+            setTimeout(this.getDefaultAvatar(this), 200);
         });
 
         firebase.auth().onAuthStateChanged(user => {
@@ -45,6 +46,13 @@ class AuthenticationController {
                 this.setUser(user);
                 this.toastService.successToast('', 'You have been successfully logged in!');
                 this.getDefaultAvatar();
+
+                getUserCountry()
+                .then(res => {
+                    if (res && res.country_code) {
+                        firebase.database().ref('users/' + user.uid + '/countryCode').set(res.country_code);
+                    }
+                });
             } else {
                 this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
             }

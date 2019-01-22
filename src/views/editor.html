@@ -84,6 +84,9 @@
                         <span data-ng-show="!characterCreator.selectedCharacterId" data-ng-disabled="characterCreator.characters.length === 5">Save</span>
                         <span data-ng-show="characterCreator.selectedCharacterId">Update</span>
                     </button>
+                    <button type="button" class="button button-purple" data-ng-click="characterCreator.makeDefaultCharacter()" data-ng-disabled="characterCreator.name.length === 0" uib-tooltip="Make this character your default character" tooltip-placement="top">
+                        <span>Make default</span>
+                    </button>
                 </div>
             </div>
         </div>

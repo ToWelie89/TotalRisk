@@ -4,6 +4,7 @@ require('firebase/auth');
 const {GAME_PHASES} = require('./../gameConstants');
 const {avatars} = require('./../player/playerConstants');
 const {debounce} = require('./../helpers');
+const CountryCodes = require('./../editor/countryCodes');
 
 class EditProfileController {
 
@@ -48,6 +49,10 @@ class EditProfileController {
 
                     if (user) {
                         this.vm.user.bio = user.bio;
+
+                        if (user.countryCode && CountryCodes[user.countryCode]) {
+                            this.vm.user.flag = `./assets/flagsSvg/countries/${user.countryCode.toLowerCase()}.svg`;
+                        }
 
                         if (user.characters) {
                             this.vm.user.characters = user.characters;

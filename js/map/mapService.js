@@ -1,4 +1,4 @@
-const { getTerritoryByName, getAdjacentApplicableTerritories } = require('./mapHelpers');
+const { getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesForMovement } = require('./mapHelpers');
 const { TURN_PHASES } = require('./../gameConstants');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
 
@@ -103,7 +103,7 @@ class MapService {
                     });
                 });
 
-                const adjacentApplicableTerritories = this.getTerritoriesForMovement(territory);
+                const adjacentApplicableTerritories = getTerritoriesForMovement(territory, this.gameEngine.map);
                 console.log('Territories for movement ', adjacentApplicableTerritories);
 
                 if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
@@ -116,19 +116,6 @@ class MapService {
                 }
             }
         }
-    }
-
-    getTerritoriesForMovement(territory) {
-        let adjacentApplicableTerritories = territory.adjacentTerritories.filter(currentTerritory => getTerritoryByName(this.gameEngine.map, currentTerritory).owner === territory.owner);
-        while (getAdjacentApplicableTerritories(this.gameEngine.map, adjacentApplicableTerritories, territory).length > 0) {
-            adjacentApplicableTerritories = adjacentApplicableTerritories.concat(getAdjacentApplicableTerritories(this.gameEngine.map, adjacentApplicableTerritories, territory));
-        }
-        const indexOfTerritory = adjacentApplicableTerritories.indexOf(territory.name);
-        if (indexOfTerritory > -1) {
-            adjacentApplicableTerritories.splice(indexOfTerritory, 1);
-        }
-
-        return adjacentApplicableTerritories;
     }
 
     updateColorOfTerritory(territory, color) {

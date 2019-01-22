@@ -17,6 +17,16 @@ const playerCanJoinRoom = (userUid, lobbyId, successCallback, failCallback) => {
     }).fail(() => {
         failCallback();
     });
+};
+
+const getUserCountry = () => {
+    return new Promise((resolve, reject) => {
+        $.get('https://api.ipdata.co?api-key=test').done(response => {
+            resolve(response);
+        }).fail(() => {
+            reject();
+        })
+    });
 }
 
-module.exports = { playerCanJoinRoom };
+module.exports = { playerCanJoinRoom, getUserCountry };

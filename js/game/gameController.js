@@ -7,7 +7,7 @@ const {
     ATTACK_MUSIC,
     PAUSE_MODES
 } = require('./../gameConstants');
-const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
+const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = require('./../map/mapHelpers');
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
 const {delay, loadSvgIntoDiv} = require('./../helpers');
@@ -340,7 +340,7 @@ class GameController {
             } else {
                 console.log('AI error', reason);
             }
-        })
+        });
     }
 
     openMenu() {
@@ -731,7 +731,7 @@ class GameController {
                        clickedTerritory.owner === this.gameEngine.turn.player.name &&
                        this.gameEngine.selectedTerritory.numberOfTroops > 1 &&
                        clickedTerritory.name !== this.gameEngine.selectedTerritory.name &&
-                       this.mapService.getTerritoriesForMovement(this.gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
+                       getTerritoriesForMovement(this.gameEngine.selectedTerritory, this.gameEngine.map).includes(clickedTerritory.name)) {
                 // move troops
                 this.engageMovementPhase(clickedTerritory);
             } else {

@@ -60,7 +60,10 @@
                     </div>
                 </div>
                 <div class="col-xs-6 textLeft marginTop--double">
-                    <div class="colorWhite">
+                    <div data-ng-show="editProfile.user.flag" class="floatLeft">
+                        <waving-flag flag-width="90" flag-height="50" flag-url="editProfile.user.flag"></waving-flag>
+                    </div>
+                    <div class="colorWhite paddingTop" style="clear: both;">
                         <strong style="font-size: 20px;">
                             E-mail
                         </strong>

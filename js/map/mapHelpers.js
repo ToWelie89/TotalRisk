@@ -88,6 +88,19 @@ const getCurrentOwnershipStandings = (map, players) => {
     }
 
     return standings;
+};
+
+const getTerritoriesForMovement = (territory, map) => {
+    let adjacentApplicableTerritories = territory.adjacentTerritories.filter(currentTerritory => getTerritoryByName(map, currentTerritory).owner === territory.owner);
+    while (getAdjacentApplicableTerritories(map, adjacentApplicableTerritories, territory).length > 0) {
+        adjacentApplicableTerritories = adjacentApplicableTerritories.concat(getAdjacentApplicableTerritories(map, adjacentApplicableTerritories, territory));
+    }
+    const indexOfTerritory = adjacentApplicableTerritories.indexOf(territory.name);
+    if (indexOfTerritory > -1) {
+        adjacentApplicableTerritories.splice(indexOfTerritory, 1);
+    }
+
+    return adjacentApplicableTerritories;
 }
 
-module.exports = {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings};
+module.exports = {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings, getTerritoriesForMovement};

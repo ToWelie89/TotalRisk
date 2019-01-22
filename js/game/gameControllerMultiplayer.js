@@ -8,7 +8,7 @@ const {
 } = require('./../gameConstants');
 const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
 const { displayReinforcementNumbers, displayDamageNumbers } = require('./../animations/animations');
-const { getTerritoryByName } = require('./../map/mapHelpers');
+const { getTerritoryByName, getTerritoriesForMovement } = require('./../map/mapHelpers');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
 
 const GameController = require('./gameController');
@@ -282,7 +282,7 @@ class GameControllerMultiplayer extends GameController {
                        clickedTerritory.owner === this.gameEngine.turn.player.name &&
                        this.gameEngine.selectedTerritory.numberOfTroops > 1 &&
                        clickedTerritory.name !== this.gameEngine.selectedTerritory.name &&
-                       this.mapService.getTerritoriesForMovement(this.gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
+                       getTerritoriesForMovement(this.gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
                 // move troops
                 this.engageMovementPhase(clickedTerritory);
             } else {
@@ -345,6 +345,16 @@ class GameControllerMultiplayer extends GameController {
 
         });
 
+        this.socketService.gameSocket.on('updateMapState', territories => {
+            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                const territoryFromServer = territories.find(x => x.name === t.name);
+                t.owner = territoryFromServer.owner;
+                t.numberOfTroops = territoryFromServer.numberOfTroops;
+            });
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.$scope.$apply();
+        });
+
         this.socketService.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName) => {
             this.gameEngine.addTroopToTerritory(territoryName);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
@@ -359,8 +369,10 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcements) => {
-            if (turn.newPlayer) {
+            if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.initiateTimer();
+            } else {
+                clearInterval(this.turnTimer);
             }
 
             this.gameEngine.turn = turn;

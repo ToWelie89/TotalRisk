@@ -129,6 +129,7 @@ class CharacterCreatorController {
         this.vm.saveCharacter = this.saveCharacter;
         this.vm.createNewCharacter = this.createNewCharacter;
         this.vm.selectFlag = this.selectFlag;
+        this.vm.makeDefaultCharacter = this.makeDefaultCharacter;
     }
 
     selectFlag(flag) {
@@ -244,7 +245,19 @@ class CharacterCreatorController {
         this.adjustSvgOffset();
     }
 
-    saveCharacter() {
+    makeDefaultCharacter() {
+        this.saveCharacter(false)
+        .then(() => {
+            const user = firebase.auth().currentUser;
+            return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set(this.vm.selectedCharacterId);
+        })
+        .then(() => {
+            this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+            this.toastService.successToast('', 'Set character as default');
+        });
+    }
+
+    saveCharacter(showSavedToeast = true) {
         this.soundService.tick.play();
 
         let userCharacters;
@@ -253,7 +266,7 @@ class CharacterCreatorController {
 
         startGlobalLoading();
 
-        firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+        return firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
             const user = snapshot.val();
             userCharacters = user && user.characters ? user.characters : [];
         })
@@ -295,7 +308,9 @@ class CharacterCreatorController {
         })
         .then(() => {
             stopGlobalLoading();
-            this.toastService.successToast('Character saved!');
+            if (showSavedToeast) {
+                this.toastService.successToast('', 'Character saved!');
+            }
             this.vm.characters = userCharacters;
             setTimeout(() => {
                 this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
@@ -382,13 +397,26 @@ class CharacterCreatorController {
 
         const user = firebase.auth().currentUser;
 
+        let defaultAvatar;
+
         firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
             const user = snapshot.val();
+            defaultAvatar = user.defaultAvatar;
             userCharacters = user && user.characters ? user.characters : [];
             userCharacters = userCharacters.filter(x => x.id !== this.vm.selectedCharacterId);
         })
         .then(() => {
             return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
+        })
+        .then(() => {
+            if (defaultAvatar === this.vm.selectedCharacterId) {
+                return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set('')
+                    .then(() => {
+                        this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+                    });
+            } else {
+                return;
+            }
         })
         .then(() => {
             stopGlobalLoading();

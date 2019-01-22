@@ -123,6 +123,9 @@
                     <button type="button" class="button button-green large" data-ng-disabled="lobby.startGameIsDisabled()" data-ng-click="lobby.startGame()" data-ng-show="lobby.userIsHost">
                         <strong>Start</strong>
                     </button>
+                    <button type="button" class="button button-purple large" data-ng-disabled="lobby.addAiDisabled()" data-ng-click="lobby.addAi()" data-ng-show="lobby.userIsHost">
+                        <strong>Add AI</strong>
+                    </button>
                 </div>
                 <div class="setupBoxAvatarsContainer">
                     <div data-ng-repeat="i in [0,1,2,3,4,5] track by $index" class="setupBoxAvatarsContainer__item">
@@ -190,6 +193,14 @@
                         >
                             <div class="setupBoxAvatarsContainer__item__host__inner box-shadow">
                                 HOST
+                            </div>
+                        </div>
+                        <div
+                            data-ng-if="lobby.players[i] && lobby.players[i].ai"
+                            class="setupBoxAvatarsContainer__item__ai"
+                        >
+                            <div class="setupBoxAvatarsContainer__item__ai__inner box-shadow">
+                                AI
                             </div>
                         </div>
                         <div
