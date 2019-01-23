@@ -184,7 +184,7 @@ class AiHandler {
                 possibleTerritoriesToAttack = bestOptions.concat(worstOptions);
             }
 
-            console.log('Possible attack alternatives for AI', possibleTerritoriesToAttack);
+            // console.log('Possible attack alternatives for AI', possibleTerritoriesToAttack);
             this.possibleTerritoriesToAttack = possibleTerritoriesToAttack;
             resolve();
         });
@@ -248,7 +248,7 @@ class AiHandler {
 
                     if (!territoriesToDeploy.includes(selectedAdjacentTerritory)) {
                         selectedAdjacentTerritory.troopsToDeploy = 0;
-                        selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
+                        selectedAdjacentTerritory.territoryToAttack = Object.assign({}, this.possibleTerritoriesToAttack[territoryIndex].territory);
                         territoriesToDeploy.push(selectedAdjacentTerritory);
                     }
 
@@ -261,13 +261,15 @@ class AiHandler {
                 } else {
                     if (!territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name)) {
                         selectedAdjacentTerritory.troopsToDeploy = 1;
-                        selectedAdjacentTerritory.territoryToAttack = this.possibleTerritoriesToAttack[territoryIndex].territory;
+                        selectedAdjacentTerritory.territoryToAttack = Object.assign({}, this.possibleTerritoriesToAttack[territoryIndex].territory);
                         territoriesToDeploy.push(selectedAdjacentTerritory);
                     } else {
                         territoriesToDeploy.find(x => x.name === selectedAdjacentTerritory.name).troopsToDeploy++;
                     }
                     troopsToDeploy--;
                 }
+            } else {
+                territoryIndex = 0;
             }
         }
 
@@ -442,8 +444,8 @@ class AiHandler {
                                 defenderTerritory: defender.name,
                                 attackerCasualties: battle.response.attackerCasualties,
                                 defenderCasualties: battle.response.defenderCasualties,
-                                attackerNumberOfTroops: attackingTroops,
-                                defenderTerritoryNumberOfTroops: defendingTroops,
+                                attackerNumberOfTroops: battle.attackingTroops,
+                                defenderNumberOfTroops: battle.defendingTroops,
                             });
                         } else {
                             callback();
@@ -604,8 +606,6 @@ class AiHandler {
             });
 
             applicableMovements.sort((a, b) => b.importance - a.importance);
-            console.log('applicableMovements', applicableMovements);
-
             let movementIndex = 0;
 
             /*if(this.gameEngine.turn.player.type === PLAYER_TYPES.AI_NORMAL) {

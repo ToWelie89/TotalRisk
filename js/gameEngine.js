@@ -264,7 +264,7 @@ class GameEngine {
     }
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
-        if (this.settings.playSound) {
+        if (!this.currentGameIsMultiplayer && this.settings.playSound) {
             this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
                 if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
                     this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);

@@ -193,61 +193,91 @@ const nextTurn = roomId => {
   });
 
   if (turn.player.type === PLAYER_TYPES.AI) {
-    game.aiHandler = new AiHandler(game.gameEngine, {}, {
-      updateMap: filter => {
-        //updateMapState(roomId);
-      }
-    }, {});
-    game.aiHandler.multiplayerMode = true;
-
-    clearInterval(game.timer.turnTimer);
-    game.aiHandler.updateCallback = () => {
-        // do something
-    };
-
-    game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 400;
-    game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = 400;
-    game.aiHandler.DELAY_BEFORE_MOVE = 400;
-
-    Promise.resolve()
-    .then(() => game.aiHandler.turnInCards())
-    .then(() => game.aiHandler.contemplateAlternativesForAttack())
-    .then(() => game.aiHandler.deployTroops((territoryName) => {
-        game.players.forEach(player => {
-          player.emit('troopAddedToTerritoryNotifier', territoryName);
-        });
-    }))
-    .then(() => {
-      game.gameEngine.nextTurn();
-    })
-    .then(() => game.aiHandler.attackTerritories((battleData) => {
-        game.players.forEach(player => {
-          player.emit('battleFoughtNotifier', battleData);
-        });
-    }))
-    .then(() => {
-      game.gameEngine.nextTurn();
-    })
-    .then(() => game.aiHandler.movementPhase())
-    .then(() => {
-        updateMapState(roomId);
-        nextTurn(roomId);
-        //game.$scope.$apply();
-    })
-    .catch((reason) => {
-        if (reason === 'playerWon') {
-            console.log('GAME OVER!');
-        } else {
-            console.log('AI error', reason);
-        }
-    });
+    handleAi(game);
   }
 };
+
+const handleAi = game => {
+  game.aiHandler = new AiHandler(game.gameEngine, {}, {
+    updateMap: filter => {
+      console.log('update map in multiplayer ai handler')
+      updateMapState(game.id);
+    }
+  }, {});
+  game.aiHandler.multiplayerMode = true;
+
+  clearInterval(game.timer.turnTimer);
+  game.aiHandler.updateCallback = () => {
+      // do something
+  };
+
+  game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 100;
+  game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = 100;
+  game.aiHandler.DELAY_BEFORE_MOVE = 100;
+
+  Promise.resolve()
+  .then(() => game.aiHandler.turnInCards())
+  .then(() => game.aiHandler.contemplateAlternativesForAttack())
+  .then(() => game.aiHandler.deployTroops((territoryName) => {
+      game.players.forEach(player => {
+        try {
+          player.emit('troopAddedToTerritoryNotifier', territoryName);
+        } catch(e) {
+          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+          console.log('emit error 2', e)
+          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        }
+      });
+  }))
+  .then(() => {
+    game.gameEngine.nextTurn();
+  })
+  .then(() => game.aiHandler.attackTerritories((battleData) => {
+      game.players.forEach(player => {
+        try {
+          player.emit('battleFoughtNotifier', battleData);
+        } catch(e) {
+          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+          console.log('emit error 1', e)
+          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        }
+      });
+  }))
+  .then(() => {
+    game.gameEngine.nextTurn();
+  })
+  .then(() => game.aiHandler.movementPhase())
+  .then(() => {
+      updateMapState(game.id);
+      nextTurn(game.id);
+  })
+  .catch((reason) => {
+      if (reason === 'playerWon') {
+          console.log('GAME OVER!');
+      } else {
+          console.log('AI error', reason);
+      }
+  });
+}
 
 const updateMapState = roomId => {
   const game = games.find(game => game.id === roomId);
   game.players.forEach(player => {
-    player.emit('updateMapState', game.gameEngine.map.getAllTerritoriesAsList());
+    try {
+      const territories = [];
+      game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+        territories.push({
+          name: t.name,
+          owner: t.owner,
+          numberOfTroops: t.numberOfTroops
+        });
+      });
+      player.emit('updateMapState', territories);
+    } catch(e) {
+      console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+      console.log('emit error 3', e)
+      console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    }
   });
 };
 
@@ -479,6 +509,10 @@ io
         message: `GAME STARTED!`,
         timestamp: Date.now()
       });
+
+      if (game.gameEngine.turn.player.type === PLAYER_TYPES.AI) {
+        handleAi(game);
+      }
     });
 
     socket.on('troopAddedToTerritory', (territoryName) => {

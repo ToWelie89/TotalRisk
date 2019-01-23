@@ -103,7 +103,7 @@ class LobbiesController {
     }
 
     addAiDisabled() {
-
+        return this.vm.players.filter(x => x !== undefined).length === CONSTANTS.MAX_NUMBER_OF_PLAYERS;
     }
 
     updateColorOfPlayer(player, color) {

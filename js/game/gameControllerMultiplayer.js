@@ -198,7 +198,7 @@ class GameControllerMultiplayer extends GameController {
         this.$uibModal.open({
             templateUrl: 'src/modals/attackModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal attackModalWrapper',
             controller: 'attackModalController',
             controllerAs: 'attack',
             keyboard: false,
@@ -282,7 +282,7 @@ class GameControllerMultiplayer extends GameController {
                        clickedTerritory.owner === this.gameEngine.turn.player.name &&
                        this.gameEngine.selectedTerritory.numberOfTroops > 1 &&
                        clickedTerritory.name !== this.gameEngine.selectedTerritory.name &&
-                       getTerritoriesForMovement(this.gameEngine.selectedTerritory).includes(clickedTerritory.name)) {
+                       getTerritoriesForMovement(this.gameEngine.selectedTerritory, this.gameEngine.map).includes(clickedTerritory.name)) {
                 // move troops
                 this.engageMovementPhase(clickedTerritory);
             } else {
@@ -416,6 +416,8 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.gameSocket.on('battleFoughtNotifier', (battleData) => {
+            console.log('battleData',battleData);
+
             getTerritoryByName(this.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
 

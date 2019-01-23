@@ -119,6 +119,7 @@ class MapService {
     }
 
     updateColorOfTerritory(territory, color) {
+        console.log('updateColorOfTerritory', territory, color);
         const country = this.svg.getElementById(territory.name);
         if (country) {
             country.setAttribute('country-color', color.name.toUpperCase());
