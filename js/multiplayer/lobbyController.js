@@ -33,6 +33,14 @@ class LobbiesController {
             }
         };
 
+        this.vm.aiSpeedSliderOptions = {
+            showTicks: true,
+            stepsArray: ['Slow', 'Medium', 'Fast'],
+            onChange: () => {
+                this.socketService.gameSocket.emit('setAiSpeed', this.vm.room.id, this.vm.aiSpeed);
+            }
+        };
+
         this.vm.players = [];
 
         this.vm.lobbyChatMessage = '';
@@ -134,6 +142,7 @@ class LobbiesController {
 
             this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
             this.vm.turnLengthSliderOptions.disabled = !this.vm.userIsHost;
+            this.vm.aiSpeedSliderOptions.disabled = !this.vm.userIsHost;
             const userName = user.displayName ? user.displayName : user.email;
 
             if (!this.socketService.lobbiesSocket) {
@@ -288,6 +297,12 @@ class LobbiesController {
         this.socketService.gameSocket.on('setTurnLengthNotifier', turnLength => {
             this.vm.turnLength = turnLength;
             this.$rootScope.turnLength = turnLength;
+            this.$scope.$apply();
+            window.dispatchEvent(new Event('resize'));
+        });
+
+        this.socketService.gameSocket.on('setAiSpeedNotifier', aiSpeed => {
+            this.vm.aiSpeed = aiSpeed;
             this.$scope.$apply();
             window.dispatchEvent(new Event('resize'));
         });

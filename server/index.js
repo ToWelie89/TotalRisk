@@ -86,6 +86,7 @@ const updateLobbies = () => {
       state: game.state,
       players: game.players.map(p => ({ userName: p.userName, userUid: p.userUid })),
       turnLength: game.turnLength,
+      aiSpeed: game.aiSpeed,
       chosenGoal: game.chosenGoal
     })));
   });
@@ -211,9 +212,19 @@ const handleAi = game => {
       // do something
   };
 
-  game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = 100;
-  game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = 100;
-  game.aiHandler.DELAY_BEFORE_MOVE = 100;
+  let speed;
+
+  if (game.aiSpeed === 'Fast') {
+    speed = 100;
+  } else if (game.aiSpeed === 'Medium') {
+    speed = 400;
+  } else {
+    speed = 800;
+  }
+
+  game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = speed;
+  game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = speed;
+  game.aiHandler.DELAY_BEFORE_MOVE = speed;
 
   Promise.resolve()
   .then(() => game.aiHandler.turnInCards())
@@ -300,6 +311,7 @@ io
       newRoom.timer = {};
       newRoom.state = states.LOBBY;
       newRoom.turnLength = TURN_LENGTHS[1];
+      newRoom.aiSpeed = 'Fast';
       games.push(newRoom);
       updateLobbies();
       socket.emit('createNewRoomResponse', newRoom);
@@ -405,6 +417,7 @@ io
 
         player.emit('setGoalNotifier', game.chosenGoal);
         player.emit('setTurnLengthNotifier', game.turnLength);
+        player.emit('setAiSpeedNotifier', game.aiSpeed);
       });
 
       updateLobbies(roomId);
@@ -427,6 +440,17 @@ io
 
       game.players.forEach(playerSocket => {
         playerSocket.emit('setTurnLengthNotifier', game.turnLength);
+      });
+
+      updateLobbies();
+    });
+
+    socket.on('setAiSpeed', (roomId, aiSpeed) => {
+      const game = games.find(game => game.id === roomId);
+      game.aiSpeed = aiSpeed;
+
+      game.players.forEach(playerSocket => {
+        playerSocket.emit('setAiSpeedNotifier', game.aiSpeed);
       });
 
       updateLobbies();
