@@ -172,8 +172,11 @@ const skipToNextPlayer = roomId => {
     player.emit('nextTurnNotifier', turn, game.gameEngine.troopsToDeploy);
   });
 
-  game.timer.turnTimerSeconds = game.turnLength + 2;
-  game.timer.turnTimer = setInterval(game.timer.turnTimerFunction, 1000);
+  if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
+    startTimer(game.id);
+  } else {
+    handleAi(game);
+  }
 };
 
 const nextTurn = roomId => {
@@ -273,16 +276,18 @@ const handleAi = game => {
 
 const updateMapState = roomId => {
   const game = games.find(game => game.id === roomId);
+
+  const territories = [];
+  game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+    territories.push({
+      name: t.name,
+      owner: t.owner,
+      numberOfTroops: t.numberOfTroops
+    });
+  });
+
   game.players.forEach(player => {
     try {
-      const territories = [];
-      game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
-        territories.push({
-          name: t.name,
-          owner: t.owner,
-          numberOfTroops: t.numberOfTroops
-        });
-      });
       player.emit('updateMapState', territories);
     } catch(e) {
       console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
@@ -310,7 +315,7 @@ io
       newRoom.currentLockedSlots = [];
       newRoom.timer = {};
       newRoom.state = states.LOBBY;
-      newRoom.turnLength = TURN_LENGTHS[1];
+      newRoom.turnLength = 1//TURN_LENGTHS[1];
       newRoom.aiSpeed = 'Fast';
       games.push(newRoom);
       updateLobbies();
@@ -508,7 +513,9 @@ io
 
       updateLobbies();
 
-      game.gameEngine = new GameEngine({}, {});
+      game.gameEngine = new GameEngine({}, {}, {
+        playSound: false
+      });
 
       const playerList = game.players.map(x => new Player(
         x.userName,
@@ -523,8 +530,17 @@ io
 
       startTimer(game.id);
 
+      const territories = [];
+      game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+        territories.push({
+          name: t.name,
+          owner: t.owner,
+          numberOfTroops: t.numberOfTroops
+        });
+      });
+
       game.players.forEach(player => {
-        player.emit('gameStarted', playerList, game.chosenGoal, game.gameEngine.map.getAllTerritoriesAsList(), game.gameEngine.turn, game.gameEngine.troopsToDeploy);
+        player.emit('gameStarted', playerList, game.chosenGoal, territories, game.gameEngine.turn, game.gameEngine.troopsToDeploy);
       });
 
       addNewMessage(socket.roomId, {
@@ -589,8 +605,17 @@ io
       getTerritoryByName(game.gameEngine.map, movementFromTerritoryName).numberOfTroops = movementFromTerritoryNumberOfTroops;
       getTerritoryByName(game.gameEngine.map, movementToTerritoryName).numberOfTroops = movementToTerritoryNumberOfTroops;
 
+      const territories = [];
+      game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+        territories.push({
+          name: t.name,
+          owner: t.owner,
+          numberOfTroops: t.numberOfTroops
+        });
+      });
+
       game.players.forEach(player => {
-        player.emit('updateMovementNotifier', game.gameEngine.map.getAllTerritoriesAsList());
+        player.emit('updateMovementNotifier', territories);
       });
     });
 });

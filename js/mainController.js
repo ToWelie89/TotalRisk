@@ -72,13 +72,6 @@ class MainController {
             });
         }
 
-        fetch('https://api.ipify.org/?format=json')
-        .then((resp) => resp.json())
-        .then((json) => {
-            this.vm.myIp = json.ip;
-            this.$rootScope.myIp = json.ip;
-        });
-
         console.log('Initialization of mainController');
     }
 

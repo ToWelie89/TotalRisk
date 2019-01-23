@@ -99,7 +99,7 @@
             <p data-ng-show="gameMultiplayer.secondsLeft">
                 {{ gameMultiplayer.secondsLeft }}
             </p>
-            <div id="timerBarInner" style="width: {{ gameMultiplayer.timerWidth }}px;">
+            <div id="timerBarInner" style="width: {{ gameMultiplayer.turn.player.type === 0 ? gameMultiplayer.timerWidth + 'px' : '100%' }}">
             </div>
         </div>
         <div class="row" style="position: relative;">
