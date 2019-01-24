@@ -171,6 +171,25 @@ class AuthenticationController {
 
     signup() {
         this.soundService.tick.play();
+
+        const reservedNames = Object.keys(avatars);
+
+        if (reservedNames.includes(this.vm.signupData.userName)) {
+            this.toastService.errorToast(
+                'Signup error!',
+                'That email is already registered'
+            );
+            return;
+        }
+
+        if (/^[a-z0-9]+$/i.test(this.vm.signupData.userName)) {
+            this.toastService.errorToast(
+                'Signup error!',
+                'Invalid username. Username can only contain letters (a-z) and numbers.'
+            );
+            return;
+        }
+
         firebase.database().ref('/users/').once('value').then(snapshot => {
             let users = snapshot.val();
             users = users ? users : [];

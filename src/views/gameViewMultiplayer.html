@@ -1,7 +1,7 @@
 <div class="container mainContent" id="multiplayerContainer" data-ng-controller="gameControllerMultiplayer as gameMultiplayer"">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
         <div class="row" id="topBar">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px; overflow: hidden;">
+            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
                 <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="gameMultiplayer.turn.player.avatar" target="mainTurnAvatarMultiplayer" small>
                     <div id="mainTurnAvatarMultiplayer">
                     </div>
@@ -78,12 +78,12 @@
                                 <div>Deployment phase</div>
                                 <div data-ng-if="gameMultiplayer.troopsToDeploy <= 9">
                                     <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in gameMultiplayer.toArray(gameMultiplayer.troopsToDeploy) track by $index">
-                                        <div id="reinforcementTroopIconMultiplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                        <div id="reinforcementTroopIconMultiplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                     </div>
                                 </div>
                                 <div data-ng-if="gameMultiplayer.troopsToDeploy > 9">
                                     <div class="floatLeft">
-                                        <div id="reinforcementTroopIconMultiplayer-static" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                        <div id="reinforcementTroopIconMultiplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                     </div>
                                     <span class="floatLeft paddingLeft">x{{ gameMultiplayer.troopsToDeploy }}</span>
                                 </div>
@@ -119,7 +119,7 @@
             <div id="timerBarInner" style="width: {{ gameMultiplayer.turn.player.type === 0 ? gameMultiplayer.timerWidth + 'px' : '100%' }}">
             </div>
         </div>
-        <div class="row" style="position: relative;">
+        <div class="row" style="position: relative; padding-top: 21px;">
             <div class="ownageChartContainer" uib-tooltip-html="gameMultiplayer.ownageChartTooltip" tooltip-placement="right">
                 <canvas id="ownageChartMultiplayer" width="100" height="100"></canvas>
             </div>
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <div>
-                    <button type="button" class="button marginBottom" data-ng-click="gameMultiplayer.muteChat = !gameMultiplayer.muteChat" data-ng-class="{'button-green': gameMultiplayer.muteChat, 'button-red': !gameMultiplayer.muteChat}">
+                    <button type="button" class="button marginBottom" data-ng-click="gameMultiplayer.muteChat = !gameMultiplayer.muteChat" data-ng-class="{'button-green': gameMultiplayer.muteChat, 'button-red': !gameMultiplayer.muteChat}" style="position: relative;">
                         <span data-ng-show="gameMultiplayer.muteChat">Unmute chat</span>
                         <span class="glyphicon glyphicon-volume-up" data-ng-show="gameMultiplayer.muteChat"></span>
                         <span data-ng-show="!gameMultiplayer.muteChat">Mute chat</span>

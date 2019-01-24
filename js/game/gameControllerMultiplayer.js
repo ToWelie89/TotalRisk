@@ -10,6 +10,7 @@ const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
 const { displayReinforcementNumbers, displayDamageNumbers } = require('./../animations/animations');
 const { getTerritoryByName, getTerritoriesForMovement } = require('./../map/mapHelpers');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
+const Card = require('./../card/card');
 
 const GameController = require('./gameController');
 
@@ -155,7 +156,7 @@ class GameControllerMultiplayer extends GameController {
     }
 
     turnInCards() {
-        if (!this.isMyTurn()) {
+        if (!this.isMyTurn() || this.gameEngine.turn.turnPhase !== TURN_PHASES.DEPLOYMENT) {
             return;
         }
 
@@ -176,20 +177,11 @@ class GameControllerMultiplayer extends GameController {
             }
         }).result.then(closeResponse => {
             if (closeResponse && closeResponse.newTroops) {
-                console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
-                $('.mainTroopIndicator').addClass('animated infinite bounce');
-                this.soundService.cardTurnIn.play();
-                this.gameEngine.troopsToDeploy += closeResponse.newTroops;
-                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-                setTimeout(() => {
-                    this.$scope.$apply();
-                }, 100);
-                setTimeout(() => {
-                    $('.mainTroopIndicator').removeClass('animated infinite bounce');
-                }, 1000);
-
-                // Update stats
-                this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+                this.socketService.gameSocket.emit('cardTurnIn', closeResponse.newTroops, closeResponse.newHand.map(c => ({
+                    territoryName: c.territoryName,
+                    cardType: c.cardType,
+                    regionName: c.regionName
+                })));
             }
         });
     }
@@ -216,9 +208,7 @@ class GameControllerMultiplayer extends GameController {
         }).result.then(closeResponse => {
             this.gameEngine.setMusic();
             console.log('Battle is over ', closeResponse);
-            this.updatePlayerDataAfterAttack(closeResponse);
             this.updateChartData();
-            this.gameEngine.checkIfPlayerWonTheGame();
         });
     }
 
@@ -345,6 +335,29 @@ class GameControllerMultiplayer extends GameController {
 
         });
 
+        this.socketService.gameSocket.on('newReinforcements', newTroops => {
+            this.gameEngine.troopsToDeploy += newTroops;
+            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            this.$scope.$apply();
+            // DO AN ANIMATION
+        });
+
+        this.socketService.gameSocket.on('updatedCardsForPlayer', (ownerUid, cards) => {
+            this.soundService.cardSelect.play();
+            const playerName = Array.from(this.gameEngine.players.values()).find(x => x.userUid === ownerUid).name;
+
+            const newCards = [];
+
+            cards.forEach(c => {
+                newCards.push(new Card(c.territoryName, c.cardType, c.regionName));
+            });
+
+            this.gameEngine.players.get(playerName).cards = newCards;
+
+            this.gameEngine.turn.player.cards = newCards;
+            this.vm.turn = this.gameEngine.turn;
+        });
+
         this.socketService.gameSocket.on('updateMapState', territories => {
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = territories.find(x => x.name === t.name);
@@ -371,7 +384,7 @@ class GameControllerMultiplayer extends GameController {
         this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcements) => {
             if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.initiateTimer();
-            } else {
+            } else if (turn.newPlayer && turn.player.type === PLAYER_TYPES.AI) {
                 clearInterval(this.turnTimer);
             }
 

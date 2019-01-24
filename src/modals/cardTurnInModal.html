@@ -12,6 +12,9 @@
                             <h4 data-ng-show="cardTurnIn.cards.length === 0">
                                 You have no cards on hand.
                             </h4>
+                            <h4 data-ng-show="cardTurnIn.noAvailableCombination">
+                                No valid card combination on hand
+                            </h4>
                             <h4 data-ng-show="!cardTurnIn.phaseIsDeployment()">
                                 You can only turn in cards in deployment phase.
                             </h4>

@@ -3,7 +3,7 @@ const {delay} = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
 
 class AttackModalController {
-    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine) {
         this.vm = this;
 
         // PUBLIC FIELDS
@@ -36,6 +36,7 @@ class AttackModalController {
         this.attackData = attackData;
         this.tutorialService = tutorialService;
         this.socketService = socketService;
+        this.gameEngine = gameEngine;
 
         this.vm.battleHandler = new BattleHandler();
 
@@ -67,6 +68,10 @@ class AttackModalController {
 
         if (this.multiplayerMode) {
             // display territories in battle for other players
+
+            this.socketService.gameSocket.on('skipToNextPlayer', () => {
+                this.retreat();
+            });
         }
 
         const defendingNationName = this.vm.defender.name;
@@ -272,15 +277,21 @@ class AttackModalController {
     }
 
     closeModal(battleWasWon, retreat = false) {
-        this.$uibModalInstance.close({
-            attackFrom: this.vm.attacker,
-            attackTo: this.vm.defender,
+        const response = {
+            attackFrom: Object.assign({}, this.vm.attacker),
+            attackTo: Object.assign({}, this.vm.defender),
             battleWasWon,
             previousOwner: this.vm.previousOwner,
             retreat,
             attackerTotalCasualites: this.vm.attackerTotalCasualites,
             defenderTotalCasualites: this.vm.defenderTotalCasualites
-        });
+        };
+
+        if (this.multiplayerMode) {
+            this.socketService.gameSocket.emit('updateStatisticAfterInvasion', response);
+        }
+
+        this.$uibModalInstance.close(response);
     }
 
     moveTroops() {
@@ -295,7 +306,9 @@ class AttackModalController {
                 defenderTerritory: this.vm.defender.name,
                 attackerTerritoryNumberOfTroops: this.vm.attacker.numberOfTroops,
                 defenderTerritoryNumberOfTroops: this.vm.defender.numberOfTroops,
-                owner: this.vm.attacker.owner
+                owner: this.vm.attacker.owner,
+                previousOwner: this.vm.previousOwner,
+                ownerUid: this.gameEngine.players.get(this.vm.attacker.owner).userUid
             });
         }
 

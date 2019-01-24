@@ -13,6 +13,7 @@ const { VICTORY_GOALS, TURN_PHASES, TURN_LENGTHS } = require('./../js/gameConsta
 const GameEngine = require('./../js/gameEngine');
 const AiHandler = require('./../js/ai/aiHandler');
 const Player = require('./../js/player/player');
+const Card = require('./../js/card/card');
 
 const PORT = process.env.PORT || 5000;
 const MAIN_INDEX = path.join(__dirname, '../index.html');
@@ -170,6 +171,7 @@ const skipToNextPlayer = roomId => {
 
   game.players.forEach(player => {
     player.emit('nextTurnNotifier', turn, game.gameEngine.troopsToDeploy);
+    player.emit('skipToNextPlayer');
   });
 
   if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
@@ -230,35 +232,38 @@ const handleAi = game => {
   game.aiHandler.DELAY_BEFORE_MOVE = speed;
 
   Promise.resolve()
-  .then(() => game.aiHandler.turnInCards())
+  .then(() => game.aiHandler.turnInCards((userUid, newHand, newTroops) => {
+    game.players.forEach(player => {
+      player.emit('updatedCardsForPlayer', userUid, newHand);
+      player.emit('newReinforcements', newTroops);
+    });
+  }))
   .then(() => game.aiHandler.contemplateAlternativesForAttack())
   .then(() => game.aiHandler.deployTroops((territoryName) => {
       game.players.forEach(player => {
-        try {
-          player.emit('troopAddedToTerritoryNotifier', territoryName);
-        } catch(e) {
-          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-          console.log('emit error 2', e)
-          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-        }
+        player.emit('troopAddedToTerritoryNotifier', territoryName);
       });
   }))
   .then(() => {
     game.gameEngine.nextTurn();
+    game.players.forEach(player => {
+      player.emit('nextTurnNotifier', game.gameEngine.turn);
+    });
   })
   .then(() => game.aiHandler.attackTerritories((battleData) => {
       game.players.forEach(player => {
-        try {
-          player.emit('battleFoughtNotifier', battleData);
-        } catch(e) {
-          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-          console.log('emit error 1', e)
-          console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-        }
+        player.emit('battleFoughtNotifier', battleData);
       });
+  }, (userUid, newHand) => {
+    game.players.forEach(player => {
+      player.emit('updatedCardsForPlayer', userUid, newHand);
+    });
   }))
   .then(() => {
     game.gameEngine.nextTurn();
+    game.players.forEach(player => {
+      player.emit('nextTurnNotifier', game.gameEngine.turn);
+    });
   })
   .then(() => game.aiHandler.movementPhase())
   .then(() => {
@@ -268,6 +273,9 @@ const handleAi = game => {
   .catch((reason) => {
       if (reason === 'playerWon') {
           console.log('GAME OVER!');
+          game.players.forEach(player => {
+            player.emit('playerWonNotifier');
+          });
       } else {
           console.log('AI error', reason);
       }
@@ -287,18 +295,8 @@ const updateMapState = roomId => {
   });
 
   game.players.forEach(player => {
-    try {
-      player.emit('updateMapState', territories);
-    } catch(e) {
-      console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-      console.log('emit error 3', e)
-      console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-    }
+    player.emit('updateMapState', territories);
   });
-};
-
-const nextTurnAI = () => {
-  // notify players
 };
 
 io
@@ -555,6 +553,44 @@ io
       }
     });
 
+    socket.on('cardTurnIn', (newTroops, newHand) => {
+      const game = games.find(game => game.id === socket.roomId);
+      game.gameEngine.troopsToDeploy += newTroops;
+
+      game.gameEngine.players(game.gameEngine.turn.player.name).cards = newHand.map(c => new Card(c.territoryName, c.cardType, c.regionName));
+
+      game.gameEngine.troopsToDeploy += newTroops;
+
+      game.gameEngine.players.get(game.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+
+      game.players.forEach(player => {
+        player.emit('updatedCardsForPlayer', game.gameEngine.turn.player.userUid, newHand);
+        player.emit('newReinforcements', newTroops);
+      });
+    });
+
+    socket.on('updateStatisticAfterInvasion', invasionData => {
+      const game = games.find(game => game.id === socket.roomId);
+
+      const attacker = invasionData.attackFrom.owner;
+      const defender = invasionData.battleWasWon ? invasionData.previousOwner : invasionData.attackTo.owner;
+
+      if (invasionData.battleWasWon) {
+        game.gameEngine.players.get(attacker).statistics.battlesWon += 1;
+        game.gameEngine.players.get(defender).statistics.battlesLost += 1;
+      } else if (invasionData.retreat) {
+        game.gameEngine.players.get(attacker).statistics.retreats += 1;
+      } else {
+        game.gameEngine.players.get(attacker).statistics.battlesLost += 1;
+        game.gameEngine.players.get(defender).statistics.battlesWon += 1;
+      }
+
+      game.gameEngine.players.get(attacker).statistics.troopsKilled += invasionData.defenderTotalCasualites;
+      game.gameEngine.players.get(attacker).statistics.troopsLost += invasionData.attackerTotalCasualites;
+      game.gameEngine.players.get(defender).statistics.troopsKilled += invasionData.attackerTotalCasualites;
+      game.gameEngine.players.get(defender).statistics.troopsLost += invasionData.defenderTotalCasualites;
+    });
+
     socket.on('troopAddedToTerritory', (territoryName) => {
       const game = games.find(game => game.id === socket.roomId);
 
@@ -590,6 +626,21 @@ io
       game.players.forEach(player => {
         player.emit('updateOwnerAfterSuccessfulInvasionNotifier', updateOwnerData);
       });
+
+      if (!game.gameEngine.turn.playerHasWonAnAttackThisTurn) {
+        game.gameEngine.takeCard(updateOwnerData.owner);
+        const cards = [];
+        game.gameEngine.players.get(updateOwnerData.owner).cards.forEach(c => {
+          cards.push({
+            territoryName: c.territoryName,
+            cardType: c.cardType,
+            regionName: c.regionName
+          });
+        });
+        game.players.forEach(player => {
+          player.emit('updatedCardsForPlayer', updateOwnerData.ownerUid, cards);
+        });
+      }
 
       const response = game.gameEngine.checkIfPlayerWonTheGame();
       if (response.playerWon) {

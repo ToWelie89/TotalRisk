@@ -77,12 +77,12 @@
                                 <div>Deployment phase</div>
                                 <div data-ng-if="game.troopsToDeploy <= 9">
                                     <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in game.toArray(game.troopsToDeploy) track by $index">
-                                        <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                        <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                     </div>
                                 </div>
                                 <div data-ng-if="game.troopsToDeploy > 9">
                                     <div class="floatLeft">
-                                        <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier.svg"></div>
+                                        <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                     </div>
                                     <span class="floatLeft paddingLeft">x{{ game.troopsToDeploy }}</span>
                                 </div>

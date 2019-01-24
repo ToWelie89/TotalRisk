@@ -26,7 +26,7 @@ class AiHandler {
         }
     }
 
-    turnInCards() {
+    turnInCards(callback = () => {}) {
         return new Promise((resolve, reject) => {
             const bestCombo = getBestPossibleCombination(this.gameEngine.turn.player.cards);
             if (bestCombo) {
@@ -60,6 +60,17 @@ class AiHandler {
                     this.gameEngine.troopsToDeploy += bestCombo.value;
 
                     this.updateCallback();
+
+                    if (this.multiplayerMode) {
+                        callback(
+                            this.gameEngine.turn.player.userUid,
+                            this.gameEngine.turn.player.cards.map(c => ({
+                                territoryName: c.territoryName,
+                                cardType: c.cardType,
+                                regionName: c.regionName})),
+                            bestCombo.value
+                        );
+                    }
 
                     setTimeout(() => {
                         resolve();
@@ -307,7 +318,7 @@ class AiHandler {
         return Promise.all(promises);
     }
 
-    attackTerritories(callback = () => {}) {
+    attackTerritories(callback = () => {}, takeCardCallback = () => {}) {
         console.log('territoriesToDeploy', this.territoriesToDeploy);
         const battleHandler = new BattleHandler();
 
@@ -382,10 +393,22 @@ class AiHandler {
                             defender.numberOfTroops = battle.attackingTroops;
                             attacker.numberOfTroops = 1; // as of now, always move all troops
 
-                            if (!this.gameEngine.turn.playerHasWonAnAttackThisTurn && !this.multiplayerMode) {
-                                this.soundService.cardSelect.play();
+                            if (!this.gameEngine.turn.playerHasWonAnAttackThisTurn) {
+                                this.gameEngine.takeCard(attacker.owner);
+
+                                if (!this.multiplayerMode) {
+                                    this.soundService.cardSelect.play();
+                                } else {
+                                    takeCardCallback(
+                                        this.gameEngine.players.get(this.gameEngine.turn.player.name).userUid,
+                                        this.gameEngine.players.get(this.gameEngine.turn.player.name).cards.map(c => ({
+                                            territoryName: c.territoryName,
+                                            cardType: c.cardType,
+                                            regionName: c.regionName
+                                        }))
+                                    );
+                                }
                             }
-                            this.gameEngine.takeCard(attacker.owner);
                             this.updateCallback();
 
                             if (!this.multiplayerMode) {

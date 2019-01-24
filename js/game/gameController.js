@@ -456,6 +456,9 @@ class GameController {
         }).result.then(closeResponse => {
             if (closeResponse && closeResponse.newTroops) {
                 console.log(`Cards turned in for ${closeResponse.newTroops} new troops`);
+
+                this.gameEngine.turn.player.cards = closeResponse.newHand;
+
                 $('.mainTroopIndicator').addClass('animated infinite bounce');
                 this.soundService.cardTurnIn.play();
                 this.gameEngine.troopsToDeploy += closeResponse.newTroops;
@@ -468,7 +471,9 @@ class GameController {
                 }, 1000);
 
                 // Update stats
-                this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+                if (!this.gameEngine.currentGameIsMultiplayer) {
+                    this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+                }
             }
         });
     }
@@ -667,24 +672,26 @@ class GameController {
             }
         }
 
-        // Update statistics
-        const attacker = closeResponse.attackFrom.owner;
-        const defender = closeResponse.battleWasWon ? closeResponse.previousOwner : closeResponse.attackTo.owner;
+        if (!this.gameEngine.currentGameIsMultiplayer) {
+            // Update statistics
+            const attacker = closeResponse.attackFrom.owner;
+            const defender = closeResponse.battleWasWon ? closeResponse.previousOwner : closeResponse.attackTo.owner;
 
-        if (closeResponse.battleWasWon) {
-            this.gameEngine.players.get(attacker).statistics.battlesWon += 1;
-            this.gameEngine.players.get(defender).statistics.battlesLost += 1;
-        } else if (closeResponse.retreat) {
-            this.gameEngine.players.get(attacker).statistics.retreats += 1;
-        } else {
-            this.gameEngine.players.get(attacker).statistics.battlesLost += 1;
-            this.gameEngine.players.get(defender).statistics.battlesWon += 1;
+            if (closeResponse.battleWasWon) {
+                this.gameEngine.players.get(attacker).statistics.battlesWon += 1;
+                this.gameEngine.players.get(defender).statistics.battlesLost += 1;
+            } else if (closeResponse.retreat) {
+                this.gameEngine.players.get(attacker).statistics.retreats += 1;
+            } else {
+                this.gameEngine.players.get(attacker).statistics.battlesLost += 1;
+                this.gameEngine.players.get(defender).statistics.battlesWon += 1;
+            }
+
+            this.gameEngine.players.get(attacker).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
+            this.gameEngine.players.get(attacker).statistics.troopsLost += closeResponse.attackerTotalCasualites;
+            this.gameEngine.players.get(defender).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
+            this.gameEngine.players.get(defender).statistics.troopsLost += closeResponse.defenderTotalCasualites;
         }
-
-        this.gameEngine.players.get(attacker).statistics.troopsKilled += closeResponse.defenderTotalCasualites;
-        this.gameEngine.players.get(attacker).statistics.troopsLost += closeResponse.attackerTotalCasualites;
-        this.gameEngine.players.get(defender).statistics.troopsKilled += closeResponse.attackerTotalCasualites;
-        this.gameEngine.players.get(defender).statistics.troopsLost += closeResponse.defenderTotalCasualites;
 
         this.mapService.updateMap(this.vm.filter);
     }

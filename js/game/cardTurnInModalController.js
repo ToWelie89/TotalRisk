@@ -11,6 +11,7 @@ class CardTurnInModalController {
         // PUBLIC FIELDS
         this.vm.playerMustTurnIn = false;
         this.vm.cards = [];
+        this.vm.noAvailableCombination = false;
 
         // PRIVATE FIELDS
         this.maxNumberOfSelectedCards = 3;
@@ -88,6 +89,8 @@ class CardTurnInModalController {
             return;
         }
 
+        this.vm.noAvailableCombination = false;
+
         if (card.isSelected || this.vm.cards.filter(x => x.isSelected).length < this.maxNumberOfSelectedCards) {
             this.soundService.cardSelect.play();
             card.isSelected = !card.isSelected;
@@ -101,12 +104,14 @@ class CardTurnInModalController {
             return;
         }
 
+        this.vm.noAvailableCombination = false;
+
         this.soundService.tick.play();
         const newHand = this.vm.cards.filter(card => !card.isSelected);
-        this.gameEngine.turn.player.cards = newHand;
 
         this.$uibModalInstance.close({
-            newTroops: this.getCardCombination().value
+            newTroops: this.getCardCombination().value,
+            newHand
         });
     }
 
@@ -119,6 +124,7 @@ class CardTurnInModalController {
     }
 
     autoSelect() {
+        this.vm.noAvailableCombination = false;
         if (this.tutorial) {
             return;
         }
@@ -139,6 +145,8 @@ class CardTurnInModalController {
             });
 
             this.turnIn();
+        } else {
+            this.vm.noAvailableCombination = true;
         }
     }
 }
