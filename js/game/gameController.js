@@ -11,6 +11,7 @@ const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = r
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
 const {delay, loadSvgIntoDiv} = require('./../helpers');
+const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 
 const Chart = require('chart.js');
@@ -32,6 +33,8 @@ class GameController {
         this.vm.pause = this.pause;
         this.vm.openMenu = this.openMenu;
         this.vm.toArray = this.toArray;
+        this.vm.CARD_TYPE = CARD_TYPE;
+        this.vm.PLAYER_TYPES = PLAYER_TYPES;
 
         this.vm.turn = {};
 
@@ -154,7 +157,7 @@ class GameController {
             this.$uibModal.open({
                 templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
-                windowClass: 'riskModal',
+                windowClass: 'riskModal turnPresentationModalWrapper',
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,
@@ -431,7 +434,7 @@ class GameController {
     }
 
     turnInCards() {
-        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN) {
+        if (this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN || this.gameEngine.turn.turnPhase !== TURN_PHASES.DEPLOYMENT) {
             return;
         }
 
@@ -440,7 +443,7 @@ class GameController {
         this.$uibModal.open({
             templateUrl: 'src/modals/cardTurnInModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal cardTurnInModalWrapper',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn',
             resolve: {
@@ -502,7 +505,7 @@ class GameController {
             this.$uibModal.open({
                 templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
-                windowClass: 'riskModal',
+                windowClass: 'riskModal turnPresentationModalWrapper',
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,
@@ -533,7 +536,7 @@ class GameController {
                 return this.$uibModal.open({
                     templateUrl: 'src/modals/turnPresentationModal.html',
                     backdrop: 'static',
-                    windowClass: 'riskModal',
+                    windowClass: 'riskModal turnPresentationModalWrapper',
                     controller: 'turnPresentationController',
                     controllerAs: 'turnPresentation',
                     keyboard: false,

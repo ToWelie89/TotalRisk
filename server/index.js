@@ -315,7 +315,7 @@ io
       newRoom.currentLockedSlots = [];
       newRoom.timer = {};
       newRoom.state = states.LOBBY;
-      newRoom.turnLength = 1//TURN_LENGTHS[1];
+      newRoom.turnLength = TURN_LENGTHS[1];
       newRoom.aiSpeed = 'Fast';
       games.push(newRoom);
       updateLobbies();

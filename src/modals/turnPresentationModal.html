@@ -2,8 +2,8 @@
     <div id="turnPresentationModal" class="riskModal" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="turnAvatarContainer" data-ng-hide="turnPresentation.tutorial">
-                    <div class="turnAvatar" style="background-image: url({{ turnPresentation.turn.player.avatar.picture }});">
+                <div id="turnPresenterAvatar" player-portrait avatar="turnPresentation.turn.player.avatar" target="turnPresenterAvatarTarget" small data-ng-hide="turnPresentation.tutorial">
+                    <div id="turnPresenterAvatarTarget">
                     </div>
                 </div>
 
@@ -15,7 +15,7 @@
                         </div>
                         <div id="troops" class="textCenter paddingBottom">
                             <span data-ng-repeat="troop in turnPresentation.troopsToDeploy track by $index" class="troop_{{ turnPresentation.turn.player.color.name }}">
-                                <span class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg" id="presentationModalTroopIcon{{ $index }}">
+                                <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="presentationModalTroopIcon{{ $index }}">
                                 </span>
                             </span>
                         </div>
@@ -35,14 +35,16 @@
                         </div>
                     </div>
 
-                    <h4 class="marginTop paddingLeft paddingRight paddingBottom" data-ng-repeat="message in turnPresentation.messages" data-ng-show="turnPresentation.tutorial" data-ng-bind-html="message.markup ? message.markup : message.message">
-                    </h4>
-                    <h4 class="marginTop--double textCenter">
-                        Press <strong>SPACE</strong> to skip forward
-                    </h4>
-                    <h4 class="marginTop paddingLeft paddingRight paddingBottom textCenter" data-ng-show="turnPresentation.tutorial">
-                        Press <strong>ESCAPE</strong> to cancel tutorial.
-                    </h4>
+                    <div style="padding-bottom: 20px;">
+                        <h4 class="marginTop paddingLeft paddingRight paddingBottom" data-ng-repeat="message in turnPresentation.messages" data-ng-show="turnPresentation.tutorial" data-ng-bind-html="message.markup ? message.markup : message.message">
+                        </h4>
+                        <h4 class="marginTop--double textCenter">
+                            Press <strong>SPACE</strong> to skip forward
+                        </h4>
+                        <h4 class="marginTop paddingLeft paddingRight paddingBottom textCenter" data-ng-show="turnPresentation.tutorial">
+                            Press <strong>ESCAPE</strong> to cancel tutorial.
+                        </h4>
+                    </div>
                 </div>
             </div>
         </div>

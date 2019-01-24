@@ -340,7 +340,7 @@ class TutorialService {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/cardTurnInModal.html',
                 backdrop: 'static',
-                windowClass: 'riskModal',
+                windowClass: 'riskModal cardTurnInModalWrapper',
                 controller: 'cardTurnInModalController',
                 controllerAs: 'cardTurnIn',
                 keyboard: false,
@@ -504,7 +504,7 @@ class TutorialService {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',
-                windowClass: 'riskModal',
+                windowClass: 'riskModal turnPresentationModalWrapper',
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,

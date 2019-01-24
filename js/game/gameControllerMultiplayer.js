@@ -151,7 +151,7 @@ class GameControllerMultiplayer extends GameController {
     }
 
     isMyTurn() {
-        return this.gameEngine.turn.player.userUid === this.vm.myUid;
+        return this.gameEngine.turn && this.gameEngine.turn.player.userUid === this.vm.myUid;
     }
 
     turnInCards() {
@@ -164,7 +164,7 @@ class GameControllerMultiplayer extends GameController {
         this.$uibModal.open({
             templateUrl: 'src/modals/cardTurnInModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal cardTurnInModalWrapper',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn',
             resolve: {
@@ -390,7 +390,7 @@ class GameControllerMultiplayer extends GameController {
                 this.$uibModal.open({
                     templateUrl: 'src/modals/turnPresentationModal.html',
                     backdrop: 'static',
-                    windowClass: 'riskModal',
+                    windowClass: 'riskModal turnPresentationModalWrapper',
                     controller: 'turnPresentationController',
                     controllerAs: 'turnPresentation',
                     keyboard: false,

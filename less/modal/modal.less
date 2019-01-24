@@ -2,8 +2,10 @@
     > .modal-dialog {
         width: 900px;
 
-        .modal-content {
+        > .modal-content {
             border-radius: 30px;
+            background-color: transparent;
+            box-shadow: none;
         }
     }
 
@@ -14,8 +16,11 @@
 
             .modal-content {
                 border-radius: 30px;
-                background: #908484;
                 min-height: 580px;
+                background: url(../assets/modalBackground.png);
+                background-size: 100% 100%;
+                box-shadow: none;
+                padding-bottom: 40px;
 
                 #patcherMainLoading {
                     svg {
@@ -119,6 +124,26 @@
     }
 }
 
+.cardTurnInModalWrapper {
+    > .modal-dialog {
+        > .modal-content {
+            background: url(../assets/modalBackground.png);
+            background-size: 100% 100%;
+            box-shadow: none;
+        }
+    }
+}
+
+.turnPresentationModalWrapper {
+    > .modal-dialog {
+        > .modal-content {
+            background: url(../assets/modalBackground.png);
+            background-size: 100% 100%;
+            box-shadow: none;
+        }
+    }
+}
+
 .riskModal {
     .modal-content {
         border-radius: 0px;
@@ -131,31 +156,39 @@
     }
 
     &#turnPresentationModal {
-        .turnAvatarContainer {
-            position: fixed;
-            height: 100%;
-            margin-top: -10px;
-            margin-left: -30px;
-            display: table;
+        .modal-content {
+            background-color: transparent;
+            box-shadow: none;
+        }
 
-            .turnAvatar {
-                height: 100px;
-                width: 100px;
-                background-size: cover;
-                background-position: center center;
-                border-radius: 50%;
-                border: 3px solid white;
-            }
+        #turnPresenterAvatarTarget {
+            height: 300px;
+            width: 100px;
+            position: absolute;
+            left: -70px;
+            top: -10px;
         }
     }
 
     &#turnPresentationModal {
         .modal-content {
             margin-top: 200px;
+
+            .troops {
+                width: 80%;
+                margin: 0 auto;
+            }
         }
     }
 
     &#cardTurnInModal {
+        > .modal-dialog {
+            > .modal-content {
+                background-color: transparent;
+                box-shadow: none;
+            }
+        }
+
         .cardTurnInCombinations {
             svg {
                 height: 25px;

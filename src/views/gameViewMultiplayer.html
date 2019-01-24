@@ -6,24 +6,41 @@
                     <div id="mainTurnAvatarMultiplayer">
                     </div>
                 </div>
-                <div class="col-xs-9" style="padding-left: 50px;">
+                <div class="col-xs-9" style="padding-left: 50px; padding-right: 0px;">
                     <div class="col-xs-12" style="padding: 0px;">
                         <span style="float: left; color: white;">Current player:</span>
                         <strong id="playerName" class="floatLeft text-shadow" style="margin-bottom: 5px; clear: both; letter-spacing: -2px; line-height: 30px; color: {{ gameMultiplayer.getCurrentPlayerColor() }}"><span data-ng-bind="gameMultiplayer.turn.player.name"></span></strong>
                     </div>
                     <div class="col-xs-12" style="padding: 0px;">
-                        <img src="assets/img/cards.png"
-                             id="cardButton"
-                             class="floatLeft"
-                             style="width: 30px;"
-                             data-ng-disabled="gameMultiplayer.turn.turnPhase !== 0 || !gameMultiplayer.isMyTurn()"
-                             data-ng-click="gameMultiplayer.turnInCards()"
-                             data-ng-class="{'cardButton--disabled': gameMultiplayer.aiTurn}"
-                             data-toggle="tooltip"
-                             data-placement="bottom"
-                             value="Open cards view" />
-                        <h4 class="floatLeft marginLeft colorWhite" id="cardCounter">({{gameMultiplayer.turn.player.cards.length}})</h4>
-                        <h4 class="floatLeft marginLeft colorWhite" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
+                        <div
+                            class="floatLeft cardContainer"
+                            data-ng-disabled="gameMultiplayer.turn.turnPhase !== 0"
+                            data-ng-click="gameMultiplayer.turnInCards()"
+                            data-ng-show="gameMultiplayer.turn.player.cards.length > 0"
+                            data-ng-class="{'fakeLink': gameMultiplayer.turn.turnPhase === 0, 'notMyTurn': !gameMultiplayer.isMyTurn() }"
+                            uib-tooltip="These are the cards you currently have on hand. Click to turn in if in deployment phase."
+                            tooltip-placement="bottom"
+                        >
+                            <div class="marginLeft" style="pointer-events: none; pointer-events: none; height: 40px;">
+                                <div class="card small"
+                                data-ng-repeat="card in gameMultiplayer.turn.player.cards track by $index"
+                                data-territory-name="{{card.name}}"
+                                data-region-name="{{card.regionName}}">
+                                    <span data-ng-show="gameMultiplayer.turn.player.type === gameMultiplayer.PLAYER_TYPES.HUMAN">
+                                        <span id="cardTroopIconCannon{{ $index }}" data-ng-show="card.cardType === gameMultiplayer.CARD_TYPE.CANNON" class="troopIcon cannon" inject-svg src="assets/troopIcons/cannon.svg">
+                                        </span>
+                                        <span id="cardTroopIconHorse{{ $index }}" data-ng-show="card.cardType === gameMultiplayer.CARD_TYPE.HORSE" class="troopIcon horse" inject-svg src="assets/troopIcons/horse.svg">
+                                        </span>
+                                        <span id="cardTroopIconSoldier{{ $index }}" data-ng-show="card.cardType === gameMultiplayer.CARD_TYPE.TROOP" class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg">
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ng-show="gameMultiplayer.turn.player.cards.length === 0" class="floatLeft marginTop">
+                            No cards on hand
+                        </div>
+                        <h4 class="floatLeft colorWhite" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
                             <span data-ng-show="gameMultiplayer.chosenGoal !== 100">
                                 Currently controlling <strong>{{ gameMultiplayer.currentOwnagePercentage }}/{{ gameMultiplayer.chosenGoal }}%</strong>
                             </span>
