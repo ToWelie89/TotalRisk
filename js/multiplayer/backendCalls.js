@@ -21,7 +21,7 @@ const playerCanJoinRoom = (userUid, lobbyId, successCallback, failCallback) => {
 
 const getUserCountry = () => {
     return new Promise((resolve, reject) => {
-        $.get('https://api.ipdata.co?api-key=test').done(response => {
+        $.get('http://ip-api.com/json/').done(response => {
             resolve(response);
         }).fail(() => {
             reject();

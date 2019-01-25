@@ -5,7 +5,8 @@ require('firebase/database');
 const { hashString } = require('./../helpers');
 const { GAME_PHASES, CONSTANTS, VICTORY_GOALS, TURN_LENGTHS } = require('./../gameConstants');
 const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv } = require('./../helpers');
-const { avatars, PLAYER_COLORS } = require('./../player/playerConstants');
+const { avatars, PLAYER_COLORS, PLAYER_TYPES } = require('./../player/playerConstants');
+const CountryCodes = require('./../editor/countryCodes');
 
 class LobbiesController {
     constructor($scope, $rootScope, $sce, $compile, $timeout, $uibModal, soundService, toastService, gameEngine, socketService) {
@@ -54,6 +55,7 @@ class LobbiesController {
         this.vm.chatMaxLengthMessage = 150;
         this.vm.muteChat = false;
         this.firstLoad = true;
+        this.vm.playerTooltips = {};
 
         this.globalChatColor = getRandomColor();
 
@@ -153,21 +155,6 @@ class LobbiesController {
             if (!this.socketService.gameSocket) {
                 this.socketService.createGameSocket();
             }
-
-            var kek = this.$compile('<waving-flag flag-width="90" flag-height="50" flag-url="\'./assets/flagsSvg/france.svg\'"></waving-flag>')(this.$scope);
-            setTimeout(() => {
-                console.log(kek)
-                this.vm.playerTooltips = {
-                    'lz5o6pGtxcT4dMX9P11T3rJPaym2': this.$sce.trustAsHtml(`
-                        <div class="playerTooltip">
-                            ${kek[0].innerHTML}
-                            <p>
-                                This is my bio
-                            </p>
-                        </div>
-                    `)
-                };
-            }, 2000);
 
             this.addSocketListeners();
 
@@ -363,11 +350,55 @@ class LobbiesController {
 
         this.vm.players.forEach(player => {
             if (player) {
-                player.type = 0;
+                player.type = player.ai ? PLAYER_TYPES.AI : PLAYER_TYPES.HUMAN;
+
+                if (!player.ai) {
+                    this.fetchTooltipForPlayer(player);
+                }
             }
         });
 
         this.$scope.$apply();
+    }
+
+    fetchTooltipForPlayer(player) {
+        if (this.vm.playerTooltips[player.userUid]) {
+            return;
+        }
+
+        this.vm.playerTooltips[player.userUid] = this.$sce.trustAsHtml(`
+            <div class="playerTooltip">
+                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        `);
+        this.$scope.$apply();
+
+        firebase.database().ref('/users/' + player.userUid).once('value').then(snapshot => {
+            const userData = snapshot.val();
+            if (userData) {
+                if (userData.bio || userData.countryCode) {
+                    let url;
+                    if (userData.countryCode && CountryCodes[userData.countryCode]) {
+                        url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
+                    }
+
+                    let bio = userData.bio ? userData.bio : '<i>Bio not available</i>';
+
+                    var wavingFlag = this.$compile(`<waving-flag flag-width="90" flag-height="50" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+                    setTimeout(() => {
+                        this.vm.playerTooltips[player.userUid] = this.$sce.trustAsHtml(`
+                            <div class="playerTooltip">
+                                ${wavingFlag[0].innerHTML}
+                                <p>
+                                    ${bio}
+                                </p>
+                            </div>
+                        `);
+                        this.$scope.$apply();
+                    }, 2000);
+                }
+            }
+        });
     }
 
     lightenDarkenColor(colorCode, amount) {

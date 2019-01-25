@@ -409,15 +409,9 @@ io
 
       socket.emit('updatedLockedSlots', game.currentLockedSlots);
 
-      game.players.forEach(player => {
-        player.emit('updatedPlayers', game.players.map(p => ({
-          userUid: p.userUid,
-          userName: p.userName,
-          isHost: p.isHost,
-          color: p.color,
-          avatar: p.avatar
-        })));
+      setPlayers(game);
 
+      game.players.forEach(player => {
         player.emit('setGoalNotifier', game.chosenGoal);
         player.emit('setTurnLengthNotifier', game.turnLength);
         player.emit('setAiSpeedNotifier', game.aiSpeed);

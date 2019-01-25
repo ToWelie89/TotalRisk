@@ -49,8 +49,8 @@ class AuthenticationController {
 
                 getUserCountry()
                 .then(res => {
-                    if (res && res.country_code) {
-                        firebase.database().ref('users/' + user.uid + '/countryCode').set(res.country_code);
+                    if (res && res.countryCode) {
+                        firebase.database().ref('users/' + user.uid + '/countryCode').set(res.countryCode);
                     }
                 });
             } else {
