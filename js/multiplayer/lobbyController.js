@@ -8,10 +8,12 @@ const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsA
 const { avatars, PLAYER_COLORS } = require('./../player/playerConstants');
 
 class LobbiesController {
-    constructor($scope, $rootScope, $timeout, $uibModal, soundService, toastService, gameEngine, socketService) {
+    constructor($scope, $rootScope, $sce, $compile, $timeout, $uibModal, soundService, toastService, gameEngine, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$sce = $sce;
+        this.$compile = $compile;
         this.$timeout = $timeout;
         this.soundService = soundService;
         this.toastService = toastService;
@@ -151,6 +153,21 @@ class LobbiesController {
             if (!this.socketService.gameSocket) {
                 this.socketService.createGameSocket();
             }
+
+            var kek = this.$compile('<waving-flag flag-width="90" flag-height="50" flag-url="\'./assets/flagsSvg/france.svg\'"></waving-flag>')(this.$scope);
+            setTimeout(() => {
+                console.log(kek)
+                this.vm.playerTooltips = {
+                    'lz5o6pGtxcT4dMX9P11T3rJPaym2': this.$sce.trustAsHtml(`
+                        <div class="playerTooltip">
+                            ${kek[0].innerHTML}
+                            <p>
+                                This is my bio
+                            </p>
+                        </div>
+                    `)
+                };
+            }, 2000);
 
             this.addSocketListeners();
 

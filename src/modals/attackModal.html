@@ -30,11 +30,11 @@
                         </div>
                         <div class="row marginTop--double">
                             <div class="col-xs-6" id="attackerTroops">
-                                <span data-ng-repeat="troop in attack.getAsArray(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}" data-ng-show="attack.attacker.numberOfTroops <= 20">
+                                <span data-ng-repeat="troop in attack.getAsArray(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}" data-ng-show="attack.attacker.numberOfTroops <= 18">
                                     <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="attackerTroopIcon{{ $index }}">
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.attacker.numberOfTroops > 20" class="troop_{{ attack.attacker.color.name }}">
+                                <span data-ng-show="attack.attacker.numberOfTroops > 18" class="troop_{{ attack.attacker.color.name }}">
                                     <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="attackerTroopIcon-static">
                                     </span>
                                     <span>x{{attack.attacker.numberOfTroops}}</span>
@@ -44,11 +44,11 @@
                                 </div>
                             </div>
                             <div class="col-xs-6" id="defenderTroops">
-                                <span data-ng-repeat="troop in attack.getAsArray(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}" data-ng-show="attack.defender.numberOfTroops <= 20">
+                                <span data-ng-repeat="troop in attack.getAsArray(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}" data-ng-show="attack.defender.numberOfTroops <= 18">
                                     <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="defenderTroopIcon{{ $index }}">
                                     </span>
                                 </span>
-                                <span data-ng-show="attack.defender.numberOfTroops > 20" class="troop_{{ attack.defender.color.name }}">
+                                <span data-ng-show="attack.defender.numberOfTroops > 18" class="troop_{{ attack.defender.color.name }}">
                                     <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="defenderTroopIcon-static">
                                     </span>
                                     <span>x{{attack.defender.numberOfTroops}}</span>

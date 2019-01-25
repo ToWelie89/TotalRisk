@@ -7,7 +7,7 @@ const socketIO = require('socket.io');
 const path = require('path');
 
 const { PLAYER_COLORS, PLAYER_TYPES, avatars } = require('./../js/player/playerConstants');
-const { getRandomInteger, randomIntFromInterval } = require('./../js/helpers');
+const { getRandomInteger, randomIntFromInterval, delay } = require('./../js/helpers');
 const { getTerritoryByName } = require('./../js/map/mapHelpers');
 const { VICTORY_GOALS, TURN_PHASES, TURN_LENGTHS } = require('./../js/gameConstants');
 const GameEngine = require('./../js/gameEngine');
@@ -231,7 +231,7 @@ const handleAi = game => {
   game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = speed;
   game.aiHandler.DELAY_BEFORE_MOVE = speed;
 
-  Promise.resolve()
+  delay(1500)
   .then(() => game.aiHandler.turnInCards((userUid, newHand, newTroops) => {
     game.players.forEach(player => {
       player.emit('updatedCardsForPlayer', userUid, newHand);
@@ -557,7 +557,7 @@ io
       const game = games.find(game => game.id === socket.roomId);
       game.gameEngine.troopsToDeploy += newTroops;
 
-      game.gameEngine.players(game.gameEngine.turn.player.name).cards = newHand.map(c => new Card(c.territoryName, c.cardType, c.regionName));
+      game.gameEngine.players.get(game.gameEngine.turn.player.name).cards = newHand.map(c => new Card(c.territoryName, c.cardType, c.regionName));
 
       game.gameEngine.troopsToDeploy += newTroops;
 

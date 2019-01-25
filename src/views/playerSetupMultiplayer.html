@@ -158,7 +158,7 @@
                             </div>
                         </div>
                         <div data-ng-if="lobby.players[i]" class="box-shadow setupBoxAvatarsContainer__item__name">
-                            <div style="background: {{lobby.players[i].color.mainColor}};" class="box-shadow" data-color="{{lobby.players[i].color.mainColor}}">
+                            <div style="background: {{lobby.players[i].color.mainColor}};" class="box-shadow" data-color="{{lobby.players[i].color.mainColor}}" tooltip-trigger="'click'" uib-tooltip-html="lobby.playerTooltips[lobby.players[i].userUid]" tooltip-placement="left">
                                 <span style="border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}}; border-left-color: transparent;"></span>
                                 <span>{{ lobby.players[i].userName }}{{ (lobby.players[i].type !== 0) ? " (AI)" : "" }}</span>
                                 <span style="border-color: {{lobby.lightenDarkenColor(lobby.players[i].color.mainColor, -30)}}; border-right-color: transparent;"></span>
