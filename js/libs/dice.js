@@ -288,7 +288,7 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
     this.light.shadow.mapSize.height = 2048;
     this.scene.add(this.light);
 
-    var texture = new THREE.TextureLoader().load('https://i.imgur.com/IPcmVFn.jpg');
+    var texture = new THREE.TextureLoader().load('https://blueblots.com/wp-content/uploads/2011/12/35-seamless-wood-texture.jpg');
 
     if (this.desk) this.scene.remove(this.desk);
     this.desk = new THREE.Mesh(new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),

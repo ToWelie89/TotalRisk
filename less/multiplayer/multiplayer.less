@@ -28,9 +28,9 @@
 	}
 
 	#cardButton {
-	    cursor: pointer;
+	    cursor: url(../assets/cursors/new/pointer.png), auto;
 	    &.cardButton--disabled {
-	        cursor: not-allowed;
+	        cursor: url(../assets/cursors/new/notAllowed.png), auto;
 	    }
 	}
 
@@ -101,10 +101,12 @@
 				}
 
 				&::-webkit-scrollbar-track {
+					cursor: url(../assets/cursors/new/default.png), auto;
 				    border-top-right-radius: 0px;
 				}
 
 				&::-webkit-scrollbar {
+					cursor: url(../assets/cursors/new/default.png), auto;
 				    border-top-right-radius: 0px;
 				}
 			}

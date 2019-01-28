@@ -409,7 +409,7 @@ io
 
       socket.emit('updatedLockedSlots', game.currentLockedSlots);
 
-      setPlayers(game);
+      setPlayers(roomId);
 
       game.players.forEach(player => {
         player.emit('setGoalNotifier', game.chosenGoal);

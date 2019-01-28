@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes moveArrow {
+        0% { transform: translate(0px, 0px); }
+        50% { transform: translate(-120px, -40px); }
+        100% { transform: translate(0px, 0px); }
+    }
+    #arrow {
+        animation: moveArrow 1s linear infinite;
+        transform: translate(0px, 0px);
+        transform-origin: 50% 50%;
+    }
+  </style>
+  <defs>
+    <linearGradient id="gradient-0" gradientUnits="userSpaceOnUse" x1="162.196" y1="94.153" x2="162.196" y2="452.068" gradientTransform="matrix(0.921516, 0.068858, -0.062836, 0.84092, 14.209476, 41.467639)">
+      <stop offset="0" style="stop-color: rgba(199, 86, 55, 1)"/>
+      <stop offset="1" style="stop-color: rgb(139, 70, 51);"/>
+    </linearGradient>
+    <linearGradient id="gradient-1" gradientUnits="userSpaceOnUse" x1="213.295" y1="288.853" x2="213.295" y2="310.327" gradientTransform="matrix(0.895219, 0.229166, -0.240662, 0.940129, 81.964818, -26.829629)">
+      <stop offset="0" style="stop-color: rgb(255, 194, 96);"/>
+      <stop offset="1" style="stop-color: rgb(207, 138, 26);"/>
+    </linearGradient>
+    <linearGradient id="gradient-2" gradientUnits="userSpaceOnUse" x1="174.801" y1="26.612" x2="174.801" y2="383.688" gradientTransform="matrix(0.916172, -0.120683, 0.107734, 0.817869, 1.460209, 60.804049)">
+      <stop offset="0" style="stop-color: rgb(95, 95, 95);"/>
+      <stop offset="1" style="stop-color: rgb(50, 50, 50);"/>
+    </linearGradient>
+  </defs>
+  <polygon style="fill: url(#gradient-2);" points="81.306 379.523 250.895 313.421 250.353 49.554 81.847 113.489"/>
+  <polyline style="fill: none; stroke-width: 11px; stroke: rgb(113, 54, 38);" points="81.947 382.728 81.947 110.864 252.605 46.702 252.605 317.243"/>
+  <polyline style="fill: none; stroke-width: 11px; stroke: rgb(113, 54, 38);" points="82.077 377.865 81.938 108.084 252.597 43.922 252.597 314.464" transform="matrix(-1, 0, 0, -1, 334.535004, 421.786995)"/>
+  <g transform="matrix(0.924085, 0, 0, 0.924085, -5.956413, 24.362352)" style="" id="arrow">
+    <polygon style="fill: rgb(136, 3, 3);" points="294.416 273.173 293.918 289.628 314.2 348.075 324.665 330.843 425.422 393.381 475.373 309.306 475.281 297.25"/>
+    <polygon style="fill: rgb(136, 3, 3);" points="367.313 257.329 367.251 265.813 358.761 280.688 349.573 278.769"/>
+    <polygon style="fill: rgb(207, 34, 34);" points="314.583 333.397 294.333 273.263 367.353 257.309 356.922 275.104 475.349 297.194 425.033 381.259 324.4 319.898"/>
+  </g>
+  <polyline style="fill: url(#gradient-0);" points="79.468 111.968 228.368 172.828 228.368 442.712 80.536 381.478"/>
+  <circle style="fill: url(#gradient-1);" cx="201.672" cy="301.809" r="9.922"/>
+  <polygon style="fill: rgb(224, 224, 224);" points="79.598 149.759 79.423 158.68 88.518 162.527 91.492 161.828 92.191 155.182 90.442 152.908 79.947 148.535" transform="matrix(0.999025, -0.044154, 0.044154, 0.999025, -6.783631, 3.940406)"/>
+  <circle style="fill: rgb(154, 154, 154);" cx="83.074" cy="132.493" r="2.379" transform="matrix(0.999025, -0.044154, 0.044154, 0.999025, -1.116607, 28.67617)"/>
+  <polygon style="fill: rgb(224, 224, 224);" points="80.317 338.229 80.142 347.149 89.237 350.997 92.211 350.298 92.91 343.652 91.161 341.378 80.666 337.005" transform="matrix(0.999236, -0.039079, 0.039079, 0.999236, -13.377121, 3.644124)"/>
+  <circle style="fill: rgb(154, 154, 154);" cx="83.793" cy="320.962" r="2.379" transform="matrix(0.999236, -0.039079, 0.039079, 0.999236, -7.835989, 28.408419)"/>
+</svg>

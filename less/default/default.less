@@ -2,10 +2,19 @@
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+ */
+
+    cursor: url(../assets/cursors/new/default.png), auto;
+
+    ::selection {
+      background: #c0ff74; /* WebKit/Blink Browsers */
+    }
+    ::-moz-selection {
+      background: #c0ff74; /* Gecko Browsers */
+    }
 }
 
 p, span, h1, h2, h3, h4, strong, i {
-    cursor: default;
+    cursor: url(../assets/cursors/new/default.png), auto;
 }
 
 html {
@@ -13,16 +22,19 @@ html {
 }
 
 body::-webkit-scrollbar-track {
+    cursor: url(../assets/cursors/new/default.png), auto;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
     background-color: #F5F5F5;
 }
 
 body::-webkit-scrollbar {
+    cursor: url(../assets/cursors/new/default.png), auto;
     width: 12px;
 }
 
 body::-webkit-scrollbar-thumb {
+    cursor: url(../assets/cursors/new/default.png), auto;
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
@@ -84,6 +96,7 @@ body {
 a {
     color: #03A9F4;
     text-decoration: none;
+    cursor: url(../assets/cursors/new/pointer.png), auto;
     &:focus {
         underline: none !important;
     }
@@ -102,7 +115,7 @@ input[type="text"], input[type="password"] {
 }
 
 .fakeLink {
-    cursor: pointer;
+    cursor: url(../assets/cursors/new/pointer.png), auto;
     &:hover {
         text-decoration: underline;
     }
@@ -152,9 +165,9 @@ span.rz-bubble.rz-limit.rz-floor {
 }
 
 #cardButton {
-    cursor: pointer;
+    cursor: url(../assets/cursors/new/pointer.png), auto;
     &.cardButton--disabled {
-        cursor: not-allowed;
+        cursor: url(../assets/cursors/new/notAllowed.png), auto;
     }
 }
 

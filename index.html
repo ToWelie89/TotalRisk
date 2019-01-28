@@ -10,6 +10,14 @@
 
     <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js'></script> -->
     <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script>
+    // Disable tabbing of elements
+    document.onkeydown = function(){
+        if(window.event && window.event.keyCode == 9) {
+            return false;
+        }
+    }
+    </script>
     <script src="js/libs/socket.io.js"></script>
     <script>
         let electron;
@@ -18,7 +26,6 @@
         if (!!(window && window.process && window.process.type)) { // If running Electron
             electron = require('electron');
             ipcRenderer = require('electron').ipcRenderer;
-            //io = require('socket.io-client');
         }
     </script>
     <script src='js/libs/responsivevoice.js'></script>

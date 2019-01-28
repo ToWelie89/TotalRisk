@@ -263,7 +263,7 @@
                             border: 3px solid white;
                             border-bottom: 3px solid #949494;
                             border-right: 3px solid #949494;
-                            cursor: pointer;
+                            cursor: url(../assets/cursors/new/pointer.png), auto;
                             box-shadow: 1px 1px 3px black;
                             transition: all 0.2s;
                             overflow: hidden;
@@ -274,7 +274,7 @@
                             }
 
                             * {
-                                cursor: pointer;
+                                cursor: url(../assets/cursors/new/pointer.png), auto;
                             }
 
                             &:hover {
@@ -294,7 +294,7 @@
 
                         &--selected {
                             border: 3px solid #be2bd5 !important;
-                            cursor: default !important;
+                            cursor: url(../assets/cursors/new/default.png), auto !important;
 
                             &:active {
                                 transform: translate(0px, 0px) !important;
@@ -304,14 +304,14 @@
                         }
 
                         &--taken {
-                            cursor: not-allowed !important;
+                            cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
                             -webkit-filter: grayscale(100%);
                             filter: grayscale(100%);
                             border-color: grey !important;
                             opacity: 0.6;
 
                             * {
-                                cursor: not-allowed !important;
+                                cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
                             }
                         }
 
