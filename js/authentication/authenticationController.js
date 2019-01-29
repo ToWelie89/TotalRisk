@@ -182,13 +182,15 @@ class AuthenticationController {
             return;
         }
 
-        if (/^[a-z0-9]+$/i.test(this.vm.signupData.userName)) {
+        if (!/([a-zA-Z0-9]+)$/.test(this.vm.signupData.userName)) {
             this.toastService.errorToast(
                 'Signup error!',
                 'Invalid username. Username can only contain letters (a-z) and numbers.'
             );
             return;
         }
+
+        let uid;
 
         firebase.database().ref('/users/').once('value').then(snapshot => {
             let users = snapshot.val();
@@ -206,7 +208,16 @@ class AuthenticationController {
                 displayName: this.vm.signupData.userName,
                 email: result.user.email
             };
-            return firebase.database().ref('users/' + result.user.uid + '/userName').set(this.vm.signupData.userName);
+            uid = result.user.uid;
+            return firebase.database().ref('users/' + uid + '/userName').set(this.vm.signupData.userName);
+        })
+        .then(() => {
+            // Create new rating
+            const rating = {
+                mu: 25,
+                sigma: 8.333333333333334
+            };
+            return firebase.database().ref('users/' + uid + '/rating').set(rating);
         })
         .then(() => {
             const user = firebase.auth().currentUser;
