@@ -331,8 +331,8 @@ class GameControllerMultiplayer extends GameController {
     }
 
     setSocketListeners() {
-        this.socketService.gameSocket.on('playerWonNotifier', () => {
-
+        this.socketService.gameSocket.on('playerWonNotifier', (stats) => {
+            console.log('A player won', stats);
         });
 
         this.socketService.gameSocket.on('newReinforcements', newTroops => {

@@ -273,8 +273,15 @@ const handleAi = game => {
   .catch((reason) => {
       if (reason === 'playerWon') {
           console.log('GAME OVER!');
+
+          const stats = game.players.map(player => ({
+            name: player.name,
+            uid: player.userUid,
+            statistics: game.gameEngine.players.get(player.name).statistics
+          }));
+
           game.players.forEach(player => {
-            player.emit('playerWonNotifier');
+            player.emit('playerWonNotifier', stats);
           });
       } else {
           console.log('AI error', reason);
@@ -313,7 +320,7 @@ io
       newRoom.currentLockedSlots = [];
       newRoom.timer = {};
       newRoom.state = states.LOBBY;
-      newRoom.turnLength = TURN_LENGTHS[1];
+      newRoom.turnLength = TURN_LENGTHS[2];
       newRoom.aiSpeed = 'Fast';
       games.push(newRoom);
       updateLobbies();
@@ -556,6 +563,7 @@ io
       game.gameEngine.troopsToDeploy += newTroops;
 
       game.gameEngine.players.get(game.gameEngine.turn.player.name).statistics.cardCombinationsUsed += 1;
+      game.gameEngine.players.get(game.gameEngine.turn.player.name).statistics.totalReinforcements += newTroops;
 
       game.players.forEach(player => {
         player.emit('updatedCardsForPlayer', game.gameEngine.turn.player.userUid, newHand);
@@ -638,8 +646,15 @@ io
 
       const response = game.gameEngine.checkIfPlayerWonTheGame();
       if (response.playerWon) {
+
+        const stats = game.players.map(player => ({
+          name: player.name,
+          uid: player.userUid,
+          statistics: game.gameEngine.players.get(player.name).statistics
+        }));
+
         game.players.forEach(player => {
-          player.emit('playerWonNotifier');
+          player.emit('playerWonNotifier', stats);
         });
       }
     });
