@@ -287,10 +287,6 @@ class AttackModalController {
             defenderTotalCasualites: this.vm.defenderTotalCasualites
         };
 
-        if (this.multiplayerMode) {
-            this.socketService.gameSocket.emit('updateStatisticAfterInvasion', response);
-        }
-
         this.$uibModalInstance.close(response);
     }
 
@@ -300,7 +296,19 @@ class AttackModalController {
         this.vm.attacker.numberOfTroops = this.vm.attacker.numberOfTroops - this.vm.moveNumberOfTroops + 1;
         this.vm.defender.numberOfTroops = this.vm.moveNumberOfTroops;
 
+        const response = {
+            attackFrom: Object.assign({}, this.vm.attacker),
+            attackTo: Object.assign({}, this.vm.defender),
+            battleWasWon: true,
+            previousOwner: this.vm.previousOwner,
+            retreat: false,
+            attackerTotalCasualites: this.vm.attackerTotalCasualites,
+            defenderTotalCasualites: this.vm.defenderTotalCasualites
+        };
+
         if (this.multiplayerMode) {
+            this.socketService.gameSocket.emit('updateStatisticAfterInvasion', response);
+
             this.socketService.gameSocket.emit('updateOwnerAfterSuccessfulInvasion', {
                 attackerTerritory: this.vm.attacker.name,
                 defenderTerritory: this.vm.defender.name,
@@ -312,7 +320,7 @@ class AttackModalController {
             });
         }
 
-        this.closeModal(true);
+        this.$uibModalInstance.close(response);
     }
 
     retreat() {

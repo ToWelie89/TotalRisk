@@ -9,18 +9,21 @@ class EndScreenTableController {
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
-                console.log(this.gameEngine.players);
                 this.calculateRankings();
+            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN_MULTIPLAYER) {
+                this.calculateRankings(this.$rootScope.endScreenData.winner);
             }
         });
     }
 
-    calculateRankings() {
+    calculateRankings(winner = undefined) {
         this.players = Array.from(this.gameEngine.players.values());
         const ownership = getCurrentOwnershipStandings(this.gameEngine.map, this.gameEngine.players);
 
+        const playerWhoWon = winner ? winner : this.gameEngine.playerWhoWon;
+
         this.players.sort((a, b) => {
-            if (a.name === this.gameEngine.playerWhoWon) {
+            if (a.name === playerWhoWon) {
                 return -1;
             } else if (a.dead && b.dead) {
                 return a.deadTurn > b.deadTurn ? -1 : 1;

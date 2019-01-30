@@ -1,5 +1,14 @@
 'use strict';
 
+const firebaseAdmin = require('firebase-admin');
+
+var serviceAccount = require('./firebaseCredentials.json');
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(serviceAccount),
+  databaseURL: 'https://totalrisk-e2899.firebaseio.com'
+});
+
 const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
@@ -272,21 +281,39 @@ const handleAi = game => {
   })
   .catch((reason) => {
       if (reason === 'playerWon') {
-          console.log('GAME OVER!');
-
-          const stats = game.players.map(player => ({
-            name: player.name,
-            uid: player.userUid,
-            statistics: game.gameEngine.players.get(player.name).statistics
-          }));
-
-          game.players.forEach(player => {
-            player.emit('playerWonNotifier', stats);
-          });
+          handleGameOver(game);
       } else {
           console.log('AI error', reason);
       }
   });
+}
+
+const handleGameOver = game => {
+  console.log('GAME OVER!');
+
+  clearInterval(game.timer.turnTimer);
+
+  updateMapState(game.id);
+
+  const playersAsList = Array.from(game.gameEngine.players.values());
+
+  const stats = game.players.map(player => ({
+    name: player.userName,
+    uid: player.userUid,
+    statistics: game.gameEngine.players.get(player.userName).statistics
+  }));
+
+  game.players.forEach(player => {
+    player.emit('playerWonNotifier', {
+      stats,
+      winner: game.gameEngine.turn.player.name
+    });
+  });
+
+  // Update ratings
+
+  games = games.filter(g => g.id !== game.id);
+  updateLobbies();
 }
 
 const updateMapState = roomId => {
@@ -577,6 +604,8 @@ io
       const attacker = invasionData.attackFrom.owner;
       const defender = invasionData.battleWasWon ? invasionData.previousOwner : invasionData.attackTo.owner;
 
+      console.log('updateStatisticAfterInvasion')
+
       if (invasionData.battleWasWon) {
         game.gameEngine.players.get(attacker).statistics.battlesWon += 1;
         game.gameEngine.players.get(defender).statistics.battlesLost += 1;
@@ -646,16 +675,7 @@ io
 
       const response = game.gameEngine.checkIfPlayerWonTheGame();
       if (response.playerWon) {
-
-        const stats = game.players.map(player => ({
-          name: player.name,
-          uid: player.userUid,
-          statistics: game.gameEngine.players.get(player.name).statistics
-        }));
-
-        game.players.forEach(player => {
-          player.emit('playerWonNotifier', stats);
-        });
+        handleGameOver(game);
       }
     });
 

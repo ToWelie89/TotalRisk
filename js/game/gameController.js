@@ -10,7 +10,7 @@ const {
 const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = require('./../map/mapHelpers');
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
-const {delay, loadSvgIntoDiv} = require('./../helpers');
+const {delay, loadSvgIntoDiv, lightenDarkenColor} = require('./../helpers');
 const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 
@@ -33,6 +33,7 @@ class GameController {
         this.vm.pause = this.pause;
         this.vm.openMenu = this.openMenu;
         this.vm.toArray = this.toArray;
+        this.vm.lightenDarkenColor = this.lightenDarkenColor;
         this.vm.CARD_TYPE = CARD_TYPE;
         this.vm.PLAYER_TYPES = PLAYER_TYPES;
 
@@ -81,6 +82,10 @@ class GameController {
         this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
 
         console.log('Initialization of gameController');
+    }
+
+    lightenDarkenColor(colorCode, amount) {
+        return lightenDarkenColor(colorCode, amount);
     }
 
     setListeners() {
@@ -279,14 +284,14 @@ class GameController {
     handleVictory() {
         this.vm.playerWhoWon = this.gameEngine.players.get(this.gameEngine.playerWhoWon);
         if (this.vm.playerWhoWon.avatar.svg) {
-            loadSvgIntoDiv(this.vm.playerWhoWon.avatar.svg, '.victoryPortrait');
+            loadSvgIntoDiv(this.vm.playerWhoWon.avatar.svg, '#victoryPortraitSinglePlayer');
         }
 
         var flagW = 250;
         var flagElementW = 2;
         var len = flagW/flagElementW;
         var delay = 10;
-        var flag = document.getElementById('victoryFlag');
+        var flag = document.getElementById('victoryFlagSingleplayer');
         flag.innerHTML = '';
         for(var i = 0; i < len; i++){
             var fe = document.createElement('div');
@@ -298,7 +303,7 @@ class GameController {
             fe.style.webkitAnimationDelay = i*delay+'ms';
             flag.appendChild(fe);
         }
-        $('.flag-element').css('background-image', `url(${this.vm.playerWhoWon.avatar.flag})`);
+        $('#victoryFlagSingleplayer .flag-element').css('background-image', `url(${this.vm.playerWhoWon.avatar.flag})`);
     }
 
     handleAi() {

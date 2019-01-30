@@ -2,8 +2,26 @@
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING || main.currentGamePhase == main.gamePhases.END_SCREEN" data-ng-class="{'gameScreenDuringVictory': main.currentGamePhase == main.gamePhases.END_SCREEN}" ng-cloak>
         <div class="row colorWhite" id="topBar">
             <div class="col-xs-4 textCenter paddingTop--double" style="padding-left:0px;">
-                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="game.turn.player.avatar" target="mainTurnAvatarSingleplayer" small>
-                    <div id="mainTurnAvatarSingleplayer">
+                <div class="col-xs-3">
+                    <div style="position: absolute; z-index: 1000; top: -91px; left: -110px; transform: scale(0.5);">
+                        <div class="setupBoxAvatarsContainer__item" style="margin-top: 0px;">
+                            <div
+                                id="currentPlayerPortraitSingleplayer"
+                                player-portrait
+                                avatar="game.turn.player.avatar"
+                                class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                style="background-color: {{ game.lightenDarkenColor(game.turn.player.color.mainColor, -70)  }};
+                                       border-color: {{ game.turn.player.color.mainColor }};">
+
+                                <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="!game.turn.player.avatar.customCharacter">
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="game.turn.player.avatar.customCharacter">
+                                </div>
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__flag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="game.turn.player.avatar.flag"></waving-flag>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-9">

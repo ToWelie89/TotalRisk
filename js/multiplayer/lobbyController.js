@@ -55,9 +55,15 @@ class LobbiesController {
         this.vm.chatMaxLengthMessage = 150;
         this.vm.muteChat = false;
         this.firstLoad = true;
-        this.vm.playerTooltips = {};
 
         this.globalChatColor = getRandomColor();
+
+        this.$rootScope.$watch('currentGamePhase', () => {
+            this.vm.currentGamePhase = this.$rootScope.currentGamePhase;
+            if (this.vm.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER) {
+                this.vm.playerTooltips = {};
+            }
+        });
 
         firebase.database().ref('globalChat').on('value', snapshot => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && !this.firstLoad && !this.vm.showLobbyChat) {

@@ -1,13 +1,13 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" class="victoryScreen" ng-cloak>
+<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN_MULTIPLAYER" class="victoryScreen" ng-cloak>
     <div class="victoryScreen__inner">
         <div class="textCenter">
             <h1>VICTORY</h1>
-            <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
-                {{ game.playerWhoWon.name }}
+            <h3 class="text-shadow" style="color: {{ gameMultiplayer.playerWhoWon.color.mainColor }}">
+                {{ gameMultiplayer.playerWhoWon.name }}
             </h3>
-            <div class="victoryPortrait" id="victoryPortraitSinglePlayer"></div>
+            <div class="victoryPortrait" id="victoryPortraitMultiPlayer"></div>
             <div class="flagContainer">
-                <div id="victoryFlagSingleplayer"></div>
+                <div id="victoryFlagMultiplayer"></div>
             </div>
             <div data-ng-controller="endScreenTableController as endScreenTable">
                 <table id="endScreenTable">

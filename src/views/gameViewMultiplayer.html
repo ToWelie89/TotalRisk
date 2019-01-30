@@ -2,8 +2,26 @@
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
         <div class="row" id="topBar">
             <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
-                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="gameMultiplayer.turn.player.avatar" target="mainTurnAvatarMultiplayer" small>
-                    <div id="mainTurnAvatarMultiplayer">
+                <div class="col-xs-3">
+                    <div style="position: absolute; z-index: 1000; top: -91px; left: -110px; transform: scale(0.5);">
+                        <div class="setupBoxAvatarsContainer__item" style="margin-top: 0px;">
+                            <div
+                                id="currentPlayerPortraitMultiplayer"
+                                player-portrait
+                                avatar="gameMultiplayer.turn.player.avatar"
+                                class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                style="background-color: {{ gameMultiplayer.turn.player.color.borderColor  }};
+                                       border-color: {{ gameMultiplayer.turn.player.color.mainColor }};">
+
+                                <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="!gameMultiplayer.turn.player.avatar.customCharacter">
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="gameMultiplayer.turn.player.avatar.customCharacter">
+                                </div>
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__flag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="gameMultiplayer.turn.player.avatar.flag"></waving-flag>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-9" style="padding-left: 50px; padding-right: 0px;">

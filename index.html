@@ -68,7 +68,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 </head>
 
-<body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}">
+<body ng-app="risk" data-ng-controller="mainController as main" data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN || main.currentGamePhase === main.gamePhases.END_SCREEN_MULTIPLAYER}">
     <div id="backgroundImage"></div>
     <div id="backgroundSmoke"></div>
 
@@ -97,6 +97,7 @@
         <ng-include src="'src/views/gameViewTutorial.html'"></ng-include>
         <ng-include src="'src/views/gameViewMultiplayer.html'"></ng-include>
         <ng-include src="'src/views/endScreen.html'"></ng-include>
+        <ng-include src="'src/views/endScreenMultiplayer.html'"></ng-include>
     </div>
 </body>
 </html>
