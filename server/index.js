@@ -1,13 +1,14 @@
 'use strict';
 
 const firebaseAdmin = require('firebase-admin');
-
-var serviceAccount = require('./firebaseCredentials.json');
+const serviceAccount = require('./firebaseCredentials.json');
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(serviceAccount),
   databaseURL: 'https://totalrisk-e2899.firebaseio.com'
 });
+
+const BEHIND_PROXY = process.env.BEHIND_PROXY;
 
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -17,12 +18,13 @@ const path = require('path');
 
 const { PLAYER_COLORS, PLAYER_TYPES, avatars } = require('./../js/player/playerConstants');
 const { getRandomInteger, randomIntFromInterval, delay } = require('./../js/helpers');
-const { getTerritoryByName } = require('./../js/map/mapHelpers');
+const { getTerritoryByName, getCurrentOwnershipStandings } = require('./../js/map/mapHelpers');
 const { VICTORY_GOALS, TURN_PHASES, TURN_LENGTHS } = require('./../js/gameConstants');
 const GameEngine = require('./../js/gameEngine');
 const AiHandler = require('./../js/ai/aiHandler');
 const Player = require('./../js/player/player');
 const Card = require('./../js/card/card');
+const { playMatch, getNewRating } = require('./trueSkill');
 
 const PORT = process.env.PORT || 5000;
 const MAIN_INDEX = path.join(__dirname, '../index.html');
@@ -30,8 +32,7 @@ const TEST_INDEX = path.join(__dirname, 'test.html');
 
 const states = {
   LOBBY: 'LOBBY',
-  IN_GAME: 'IN_GAME',
-  RESULT_SCREEN: 'RESULT_SCREEN'
+  IN_GAME: 'IN_GAME'
 };
 
 var app = module.exports.app = express();
@@ -303,15 +304,147 @@ const handleGameOver = game => {
     statistics: game.gameEngine.players.get(player.userName).statistics
   }));
 
-  game.players.forEach(player => {
-    player.emit('playerWonNotifier', {
-      stats,
-      winner: game.gameEngine.turn.player.name
-    });
+  const ownership = getCurrentOwnershipStandings(game.gameEngine.map, game.gameEngine.players);
+
+  const playerWhoWon = game.gameEngine.playerWhoWon;
+
+  playersAsList.sort((a, b) => {
+      if (a.name === playerWhoWon) {
+          return -1;
+      } else if (a.dead && b.dead) {
+          return a.deadTurn > b.deadTurn ? -1 : 1;
+      } else if (a.dead) {
+          return 1;
+      } else if (b.dead) {
+          return -1;
+      } else {
+          let aTotal = ownership.find(x => x.name === a.name).totalTerritories;
+          let bTotal = ownership.find(x => x.name === b.name).totalTerritories;
+
+          if (aTotal > bTotal) {
+              return -1;
+          } else if (aTotal < bTotal) {
+              return 1;
+          } else if (aTotal === bTotal) {
+              aTotal = ownership.find(x => x.name === a.name).totalTroops;
+              bTotal = ownership.find(x => x.name === b.name).totalTroops;
+
+              if (aTotal > bTotal) {
+                  return -1;
+              } else if (aTotal < bTotal) {
+                  return 1;
+              } else {
+                  return 0;
+              }
+          }
+      }
+  });
+
+  playersAsList.map(x => {
+      x.rank = (playersAsList.indexOf(x) + 1);
   });
 
   // Update ratings
+  if (!BEHIND_PROXY) {
+    // Get all users and pick out the ones that are in this game
+    // Fetch the current rating and old ratings
+    firebaseAdmin.database().ref('users').once('value').then(snapshot => {
+      const users = snapshot.val();
 
+      game.players.forEach(player => {
+        const p = playersAsList.find(x => x.name === player.userName);
+        if (p.type === PLAYER_TYPES.HUMAN) {
+          const userFromDatabase = users[player.userUid];
+
+          p.oldRating = userFromDatabase.rating ? userFromDatabase.rating : getNewRating();
+          p.oldRatings = userFromDatabase.oldRatings ? userFromDatabase.oldRatings : [];
+
+          p.totalWins = userFromDatabase.totalWins ? userFromDatabase.totalWins : 0;
+          p.totalDefeats = userFromDatabase.totalDefeats ? userFromDatabase.totalDefeats : 0;
+          // TODO: handle disconnects
+          // p.totalDisconnects = userFromDatabase.totalDisconnects ? userFromDatabase.totalDisconnects : 0;
+
+          p.recentGames = userFromDatabase.recentGames ? userFromDatabase.recentGames : [];
+        } else {
+          p.oldRating = getNewRating();
+        }
+      });
+    })
+    .then(() => {
+      // Use trueskill to play the match and get new ratings
+      const result = playMatch(
+        playersAsList.map(p => ({
+          name: p.name,
+          rating: p.oldRating
+        })),
+        playersAsList.map(p => p.rank)
+      );
+      // Set new rating for each player from the result object
+      playersAsList.forEach((p, i) => {
+        p.newRating = result.newRatings[i];
+      });
+    })
+    .then(() => {
+      // Update new rating for all players and store the old rating in the old ratings history
+      const promises = [];
+      playersAsList.filter(p => p.type === PLAYER_TYPES.HUMAN).forEach(p => {
+        const promise = firebase.database().ref('users/' + p.userUid + '/rating').set(p.newRating).then(() => {
+          const oldRatings = [...p.oldRatings, Object.assign({ timestamp: Date.now() }, p.oldRating)];
+          return firebase.database().ref('users/' + p.userUid + '/oldRatings').set(oldRatings);
+        });
+        promises.push(promise);
+      });
+      Promise.all(promises);
+    })
+    .then(() => {
+      // Update new rating for all players and store the old rating in the old ratings history
+      const promises = [];
+      playersAsList.filter(p => p.type === PLAYER_TYPES.HUMAN).forEach(p => {
+        if (p.name === playerWhoWon) {
+          const promise = firebase.database().ref('users/' + p.userUid + '/totalWins').set(p.totalWins + 1);
+          promises.push(promise);
+        } else {
+          const promise = firebase.database().ref('users/' + p.userUid + '/totalDefeats').set(p.totalDefeats + 1);
+          promises.push(promise);
+        }
+
+        const newRecentGames = [...p.recentGames, {
+          timestamp: Date.now(),
+          nrOfPlayers: game.players.length,
+          placing: p.rank,
+          wasKilled: p.dead,
+          // TODO: handle this
+          disconnected: false
+          eloBeforeGame: p.oldRating,
+          eloAfterGame: p.newRating,
+          nrOfTurns: game.gameEngine.turn.turnNumber
+        }];
+
+        const promise = firebase.database().ref('users/' + p.userUid + '/recentGames').set(newRecentGames);
+        promises.push(promise);
+      });
+      Promise.all(promises);
+    })
+    .then(() => {
+      game.players.forEach(player => {
+        player.emit('playerWonNotifier', {
+          playersAsList,
+          stats,
+          winner: playerWhoWon
+        });
+      });
+    })
+  } else {
+    game.players.forEach(player => {
+      player.emit('playerWonNotifier', {
+        playersAsList,
+        stats,
+        winner: playerWhoWon
+      });
+    });
+  }
+
+  // Remove game
   games = games.filter(g => g.id !== game.id);
   updateLobbies();
 }

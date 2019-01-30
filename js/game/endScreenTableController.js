@@ -10,8 +10,6 @@ class EndScreenTableController {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
                 this.calculateRankings();
-            } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN_MULTIPLAYER) {
-                this.calculateRankings(this.$rootScope.endScreenData.winner);
             }
         });
     }

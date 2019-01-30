@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server/index.js",
+    "start:proxy": "cross-env BEHIND_PROXY=true node server/index.js",
     "electron": "electron .",
     "electron:dev": "cross-env NODE_ENV=dev electron .",
     "test": "jest --no-cache --config js/test/jest.conf.js --coverage",

@@ -8,18 +8,22 @@ const playMatch = (players, results) => {
 	};
 };
 
+const getNewRating = () => {
+	return trueSkill.createRating();
+};
+
 const players = [{
 	name: 'alice',
-	rating: trueSkill.createRating()
+	rating: getNewRating()
 }, {
 	name: 'bob',
-	rating: trueSkill.createRating()
+	rating: getNewRating()
 }, {
 	name: 'chris',
-	rating: trueSkill.createRating()
+	rating: getNewRating()
 }, {
 	name: 'darren',
-	rating: trueSkill.createRating()
+	rating: getNewRating()
 }];
 
 // INITIAL
@@ -38,5 +42,6 @@ players.forEach((p, i) => {
 console.log(players.map(p => p.rating))
 
 module.exports = {
-    playMatch
+    playMatch,
+    getNewRating
 };
