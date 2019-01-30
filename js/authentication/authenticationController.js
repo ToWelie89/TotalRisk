@@ -2,6 +2,7 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 
 const {avatars} = require('./../player/playerConstants');
+const {GAME_PHASES} = require('./../gameConstants');
 const {getUserCountry} = require('./../multiplayer/backendCalls');
 
 class AuthenticationController {
@@ -65,6 +66,11 @@ class AuthenticationController {
         this.vm.updateProfile = this.updateProfile;
         this.vm.cancelUpdate = this.cancelUpdate;
         this.vm.resetPassword = this.resetPassword;
+        this.vm.goToProfile = this.goToProfile;
+    }
+
+    goToProfile() {
+        this.$rootScope.currentGamePhase = GAME_PHASES.PROFILE;
     }
 
     getDefaultAvatar(context = this) {

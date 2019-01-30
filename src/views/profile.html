@@ -1,0 +1,166 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.PROFILE" class="textCenter mainMenuBox" data-ng-controller="profileController as profile" id="profile" style="position: relative;" ng-cloak>
+    <div id="mainDiv">
+        <div class="backButtonContainer">
+            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+
+        <div style="height: 200px; width: 100%; display: table" class="textCenter" data-ng-show="profile.loading">
+            <div style="vertical-align: middle; display: table-cell;">
+                <ng-include src="'src/views/loading.html'"></ng-include>
+            </div>
+        </div>
+
+        <div style="height: 200px; width: 100%; display: table" class="textCenter" data-ng-show="profile.error">
+            <div style="vertical-align: middle; display: table-cell;">
+                <h3>
+                    Could not fetch user profile
+                </h3>
+            </div>
+        </div>
+
+        <div data-ng-hide="profile.loading || profile.error" class="marginTop--double" style="padding-top: 30px; padding-bottom: 30px;">
+            <div class="row" style="width: 80%; margin: 0 auto;" data-ng-show="profile.myUid === profile.user.uid">
+                <div class="col-xs-12 textCenter">
+                    <button type="button" class="button button-blue large" data-ng-click="profile.editProfile()">
+                        Edit profile
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="width: 80%; margin: 0 auto;">
+                <div class="col-xs-5 textRight">
+                    <div class="setupBoxAvatarsContainer" style="width: auto;">
+                        <div class="setupBoxAvatarsContainer__item">
+                            <div
+                                id="personalProfileAvatar"
+                                player-portrait
+                                avatar="profile.user.defaultAvatar"
+                                class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                style="background-color: #b1b1b1;
+                                       border-color: #868686;
+                                       pointer-events: none;">
+
+                                <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="!profile.user.defaultAvatar.customCharacter">
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="profile.user.defaultAvatar.customCharacter">
+                                </div>
+                                <div data-ng-show="!profile.user.defaultAvatar">
+                                    <span class="glyphicon glyphicon-user" style="color: white; font-size: 210px; margin-top: 36px;"></span>
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__inner" style="border-color: #868686;">
+                                </div>
+                            </div>
+                            <div class="box-shadow setupBoxAvatarsContainer__item__name">
+                                <div style="background: #868686;" class="box-shadow textCenter" data-color="">
+                                    <span style="border-color: #5f5e5e; border-left-color: transparent;"></span>
+                                    <span>{{ profile.user.name }}</span>
+                                    <span style="border-color: #5f5e5e; border-right-color: transparent;"></span>
+                                </div>
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__flag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="profile.user.defaultAvatar.flag"></waving-flag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-7 textLeft marginTop--double">
+                    <div style="clear: both;" class="paddingTop">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Rating
+                        </strong>
+                        <p class="colorWhite">
+                            {{ profile.user.rating.normalized }}
+                        </p>
+                    </div>
+                    <div data-ng-show="profile.user.flag" class="floatLeft">
+                        <strong style="font-size: 20px;" class="colorWhite floatLeft">
+                            From
+                        </strong>
+                        <div class="floatLeft marginLeft" uib-tooltip="{{ profile.user.countryName }}" tooltip-placement="right">
+                            <waving-flag flag-width="45" flag-height="25" flag-url="profile.user.flag"></waving-flag>
+                        </div>
+                    </div>
+                    <div style="clear: both;" class="paddingTop">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Bio
+                        </strong>
+                        <p class="colorWhite">
+                            {{ profile.user.bio }}
+                        </p>
+                    </div>
+                    <div style="display: table; width: 100%;" class="paddingTop colorWhite">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell;">
+                                Total wins
+                            </div>
+                            <div style="display: table-cell;">
+                                Total defeats
+                            </div>
+                            <div style="display: table-cell;">
+                                Win rate
+                            </div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell;">
+                                {{ profile.user.totalWins }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ profile.user.totalWins }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ profile.user.winRate }}%
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: table; width: 100%;" class="paddingTop colorWhite">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Recent games
+                        </strong>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell;">
+                                Rank
+                            </div>
+                            <div style="display: table-cell;">
+                                Nr of players
+                            </div>
+                            <div style="display: table-cell;">
+                                Was killed
+                            </div>
+                            <div style="display: table-cell;">
+                                Rating before game
+                            </div>
+                            <div style="display: table-cell;">
+                                Rating after game
+                            </div>
+                        </div>
+                        <div data-ng-repeat="game in profile.user.recentGames" style="display: table-row;">
+                            <div style="display: table-cell;">
+                                {{ game.placing }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ game.nrOfPlayers }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ game.wasKilled }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ game.ratingBeforeGame.normalized }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ game.ratingAfterGame.normalized }} <span style="color: #56e756;" data-ng-show="game.ratingAfterGame.diff > 0">(+{{ game.ratingAfterGame.diff }})</span><span style="color: #ff4343;" data-ng-show="game.ratingAfterGame.diff < 0">(-{{ game.ratingAfterGame.diff }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="width: 80%; margin: 0 auto;">
+                <div class="col-xs-12">
+                    <div style="height: 300px; width: 500px;">
+                        <canvas id="profileGamesChart" width="500" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

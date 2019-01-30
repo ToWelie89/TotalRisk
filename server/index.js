@@ -372,25 +372,32 @@ const handleGameOver = game => {
     })
     .then(() => {
       // Use trueskill to play the match and get new ratings
-      const result = playMatch(
-        playersAsList.map(p => ({
-          name: p.name,
-          rating: p.oldRating
-        })),
-        playersAsList.map(p => p.rank)
-      );
+
+      const arg1 = playersAsList.map(p => ({
+        name: p.name,
+        rating: p.oldRating
+      }));
+      const arg2 = playersAsList.map(p => p.rank);
+
+      console.log('arg1', arg1)
+      console.log('arg2', arg2)
+
+      const result = playMatch(arg1, arg2);
       // Set new rating for each player from the result object
+      console.log(result);
+      console.log(result.newRatings);
       playersAsList.forEach((p, i) => {
-        p.newRating = result.newRatings[i];
+        p.newRating = result.newRatings[i][0];
       });
     })
     .then(() => {
       // Update new rating for all players and store the old rating in the old ratings history
       const promises = [];
       playersAsList.filter(p => p.type === PLAYER_TYPES.HUMAN).forEach(p => {
-        const promise = firebase.database().ref('users/' + p.userUid + '/rating').set(p.newRating).then(() => {
+        console.log(p.newRating)
+        const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/rating').set(p.newRating).then(() => {
           const oldRatings = [...p.oldRatings, Object.assign({ timestamp: Date.now() }, p.oldRating)];
-          return firebase.database().ref('users/' + p.userUid + '/oldRatings').set(oldRatings);
+          return firebaseAdmin.database().ref('users/' + p.userUid + '/oldRatings').set(oldRatings);
         });
         promises.push(promise);
       });
@@ -401,10 +408,10 @@ const handleGameOver = game => {
       const promises = [];
       playersAsList.filter(p => p.type === PLAYER_TYPES.HUMAN).forEach(p => {
         if (p.name === playerWhoWon) {
-          const promise = firebase.database().ref('users/' + p.userUid + '/totalWins').set(p.totalWins + 1);
+          const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/totalWins').set(p.totalWins + 1);
           promises.push(promise);
         } else {
-          const promise = firebase.database().ref('users/' + p.userUid + '/totalDefeats').set(p.totalDefeats + 1);
+          const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/totalDefeats').set(p.totalDefeats + 1);
           promises.push(promise);
         }
 
@@ -414,13 +421,13 @@ const handleGameOver = game => {
           placing: p.rank,
           wasKilled: p.dead,
           // TODO: handle this
-          disconnected: false
-          eloBeforeGame: p.oldRating,
-          eloAfterGame: p.newRating,
+          disconnected: false,
+          ratingBeforeGame: p.oldRating,
+          ratingAfterGame: p.newRating,
           nrOfTurns: game.gameEngine.turn.turnNumber
         }];
 
-        const promise = firebase.database().ref('users/' + p.userUid + '/recentGames').set(newRecentGames);
+        const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/recentGames').set(newRecentGames);
         promises.push(promise);
       });
       Promise.all(promises);

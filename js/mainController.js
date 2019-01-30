@@ -168,7 +168,7 @@ class MainController {
     }
 
     goBackToMenu() {
-        this.vm.currentGamePhase = GAME_PHASES.PLAYER_SETUP;
+        this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
         $(".flag-element").remove();
         this.gameEngine.setMusic();
     }

@@ -12,6 +12,13 @@ const getNewRating = () => {
 	return trueSkill.createRating();
 };
 
+module.exports = {
+    playMatch,
+    getNewRating
+};
+
+/*
+
 const players = [{
 	name: 'alice',
 	rating: getNewRating()
@@ -41,7 +48,5 @@ players.forEach((p, i) => {
 });
 console.log(players.map(p => p.rating))
 
-module.exports = {
-    playMatch,
-    getNewRating
-};
+
+*/
