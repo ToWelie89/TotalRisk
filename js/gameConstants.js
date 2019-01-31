@@ -1,3 +1,4 @@
+const { worldMap } = require('./map/worldMapConfiguration');
 const { CARD_TYPE } = require('./card/cardConstants');
 
 const TURN_PHASES = {
@@ -32,8 +33,9 @@ const GAME_PHASES = {
 const MAPS = {
     WORLD_MAP: {
         mainMap: './assets/maps/worldMap/worldMap.svg',
-        previewMap: './assets/maps/worldMap/worldMapPreview.svg',
-        name: 'Classic world map'
+        name: 'Classic world map',
+        regions: worldMap.regions.length,
+        territories: worldMap.regions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.territories), []).length
     }
 };
 

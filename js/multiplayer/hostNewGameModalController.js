@@ -1,3 +1,5 @@
+const { MAPS } = require('./../gameConstants');
+
 class HostNewGameModalController {
 
     constructor($scope, $uibModalInstance, soundService) {
@@ -12,13 +14,18 @@ class HostNewGameModalController {
 
         this.vm.gameName = '';
         this.vm.password = '';
+
+        this.vm.maps = MAPS;
+        this.vm.mapKeys = Object.keys(MAPS);
+        this.vm.currentlySelectedMap = this.vm.mapKeys[0];
     }
 
     createLobby() {
         this.soundService.tick.play();
         this.$uibModalInstance.close({
             gameName: this.vm.gameName,
-            password: this.vm.password
+            password: this.vm.password,
+            map: this.vm.currentlySelectedMap
         });
     }
 

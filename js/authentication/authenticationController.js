@@ -70,6 +70,10 @@ class AuthenticationController {
     }
 
     goToProfile() {
+        if (this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER) {
+            return;
+        }
+
         this.$rootScope.currentGamePhase = GAME_PHASES.PROFILE;
     }
 

@@ -38,9 +38,11 @@ class LobbiesController {
 
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
+                this.setUser(user.displayName);
                 this.vm.isAuthenticated = true;
                 this.$scope.$apply();
             } else {
+                this.setUser();
                 this.vm.isAuthenticated = false;
                 this.$scope.$apply();
             }
@@ -163,15 +165,31 @@ class LobbiesController {
                     creatorUid: user.uid,
                     maxNumberOfPlayer: CONSTANTS.MAX_NUMBER_OF_PLAYERS,
                     version: this.$rootScope.appVersion,
-                    map: MAPS.WORLD_MAP
+                    map: MAPS[closeResponse.map]
                 };
                 this.socketService.lobbiesSocket.emit('createNewRoom', newRoom);
             }
         });
     }
 
+    setUser(userName = undefined) {
+        if (!this.socketService) {
+            this.socketService.createLobbiesSocket();
+        }
+        if (userName) {
+            this.socketService.lobbiesSocket.emit('setUser', userName);
+        } else {
+            this.socketService.lobbiesSocket.emit('removeUser');
+        }
+    }
+
     setupSocket() {
         this.socketService.createLobbiesSocket();
+
+        this.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
+            this.vm.onlineUsers = onlineUsers;
+            console.log('Players online: ', onlineUsers);
+        });
 
         this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
             this.vm.lobbies = [];

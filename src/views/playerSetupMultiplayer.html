@@ -9,7 +9,7 @@
             <div id="lobbyLeftPanel">
                 <div id="lobbyDescription">
                     <h2>
-                        {{ lobby.room.roomName }} <span class="glyphicon glyphicon-lock" data-ng-show="lobby.room.private"></span>
+                        {{ lobby.room.roomName }} <span class="glyphicon glyphicon-lock" data-ng-show="lobby.room.password"></span>
                     </h2>
                     <p id="playersInLobby">
                         {{ lobby.existingPlayers().length }} / {{ lobby.room.maxNumberOfPlayer }} players in lobby

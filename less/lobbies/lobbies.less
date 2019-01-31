@@ -27,6 +27,109 @@
 	    }
 	}
 
+	#lobbiesChatContainer {
+		width: 80%;
+		margin: 0 auto;
+	    height: 400px;
+
+		#onlineUsersList {
+			width: 20%;
+			float: left;
+			height: 100%;
+			background: #404040;
+			box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.42);
+			border-top-left-radius: 30px;
+			border-bottom-left-radius: 30px;
+			color: white;
+			max-height: 400px;
+		    overflow-y: auto;
+
+		    &::-webkit-scrollbar-track {
+		    	cursor: url(../assets/cursors/new/default.png), auto;
+		        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		        background-color: #F5F5F5;
+		        border-top-right-radius: 10px;
+		    }
+
+		    &::-webkit-scrollbar {
+		    	cursor: url(../assets/cursors/new/default.png), auto;
+		        width: 20px;
+		        background-color: #F5F5F5;
+		        border-top-right-radius: 10px;
+		    }
+
+		    &::-webkit-scrollbar-thumb {
+		    	cursor: url(../assets/cursors/new/default.png), auto;
+		        border-radius: 10px;
+		        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+		        background-color: #555;
+
+		        &:hover {
+		        	background-color: #222;
+		        }
+		    }
+
+			.onlineUserItem {
+				padding-top: 5px;
+				padding-bottom: 5px;
+				text-align: left;
+				padding-left: 25px;
+				height: 40px;
+				display: table;
+				width: 100%;
+
+		    	&:nth-child(even) {
+				    background: #525252;
+		    	}
+
+		    	&:nth-child(odd) {
+				    background: #313131;
+		    	}
+
+				&__iconContainer {
+					display: table-cell;
+					vertical-align: middle;
+					padding-right: 5px;
+
+					&__icon {
+						width: 10px;
+						height: 10px;
+						background: green;
+						border-radius: 50%;
+					}
+				}
+
+				&__name {
+					display: table-cell;
+					vertical-align: middle;
+				}
+			}
+		}
+
+		.chatBox {
+			height: 400px;
+			width: 80%;
+			float: left;
+			border-top-left-radius: 0px;
+			border-bottom-left-radius: 0px;
+
+			.chatMessagesContainer {
+				resize: none;
+				padding: 0px;
+				padding-left: 10px;
+				border-left: 2px solid #909090;
+				height: 358px;
+
+				.topShadowOverlay {
+					margin-top: 0px;
+					margin-left: -14px;
+					border-top-left-radius: 0px;
+				    width: 100%;
+				}
+			}
+		}
+	}
+
 	#lobbyList {
 		width: 80%;
 	    margin: 0 auto;
@@ -49,6 +152,7 @@
 			overflow-y: auto;
 			border-bottom-left-radius: 30px;
 			border-bottom-right-radius: 30px;
+			font-size: 12px;
 
 			&::-webkit-scrollbar-track
 			{
@@ -107,12 +211,12 @@
 	    		display: table-cell;
 	    		height: 40px;
 	    		vertical-align: middle;
-	    		width: 14%;
+	    		width: 12%;
 
 	    		&:nth-child(1) {
 	    			width: 5%;
 	    		}
-	    		&:nth-child(8) {
+	    		&:nth-child(9) {
 	    			width: 11%;
 	    		}
 	    	}

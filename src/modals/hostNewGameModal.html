@@ -6,8 +6,29 @@
                 <div class="modal-body">
                     <div class="modal-body textCenter">
                         <div class="row">
+                            <div class="col-xs-12 textCenter marginTop--double marginBottom--double paddingBottom">
+                                <div data-ng-repeat="mapKey in hostNewGame.mapKeys track by $index">
+                                    <p data-ng-bind="hostNewGame.maps[mapKey].name" style="font-size: 20px;"></p>
+                                    <p>
+                                        <strong>Regions:</strong> {{hostNewGame.maps[mapKey].regions}}
+                                    </p>
+                                    <p class="paddingBottom">
+                                        <strong>Territories:</strong> {{hostNewGame.maps[mapKey].territories}}
+                                    </p>
+                                    <div
+                                        id="hostNewGameMapPreview{{ $index }}"
+                                        class="mapPreview"
+                                        inject-svg
+                                        src="{{ hostNewGame.maps[mapKey].mainMap }}"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-4">
-                                Game name
+                                <p>
+                                    <strong>Game name</strong>
+                                </p>
                             </div>
                             <div class="col-xs-8">
                                 <input type="text" maxlength="15" data-ng-model="hostNewGame.gameName" />
@@ -15,7 +36,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-4">
-                                Password (optional)
+                                <p>
+                                    <strong>Password (optional)</strong>
+                                </p>
                             </div>
                             <div class="col-xs-8">
                                 <input type="text" data-ng-model="hostNewGame.password" />
@@ -23,10 +46,17 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
+                                <p class="colorWhite" data-ng-show="hostNewGame.gameName.length < 5 && hostNewGame.gameName.length > 0">
+                                    Game name must be at least 5 characters long
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 marginBottom--double paddingBottom--double">
                                 <button type="button" class="button button-red large" data-ng-click="hostNewGame.cancel()">
                                     Cancel
                                 </button>
-                                <button type="submit" class="button button-blue large" data-ng-click="hostNewGame.createLobby()" data-ng-disabled="hostNewGame.gameName.length === 0">
+                                <button type="submit" class="button button-blue large" data-ng-click="hostNewGame.createLobby()" data-ng-disabled="hostNewGame.gameName.length < 5">
                                     Create lobby
                                 </button>
                             </div>

@@ -144,6 +144,98 @@
     }
 }
 
+.hostNewGameModal {
+    > .modal-dialog {
+        > .modal-content {
+            background: transparent;
+            box-shadow: none;
+
+            #hostNewGameModal {
+                .modal-dialog {
+                    width: 800px;
+                    .modal-content {
+                        background: url(../assets/modalBackground.png);
+                        background-size: 100% 100%;
+                        box-shadow: none;
+
+                        .row {
+                            padding-left: 30px;
+                            padding-right: 30px;
+                            margin-top: 10px;
+
+                            .mapPreview {
+                                background-color: #5397d1;
+                                width: 50%;
+                                margin: 0 auto;
+                                padding: 20px;
+                                box-shadow: 0 0 30px rgba(0, 0, 0, 0.46);
+
+                                svg {
+                                    pointer-events: none;
+                                    .troopCounter, .troopCounterText, text {
+                                        display: none;
+                                    }
+                                    text {
+                                        display: none;
+                                    }
+                                }
+                            }
+
+                            .col-xs-4, .col-xs-8 {
+                                height: 42px;
+                            }
+
+                            .col-xs-4 {
+                                display: table;
+                                text-align: right;
+
+                                p {
+                                    display: table-cell;
+                                    vertical-align: middle;
+                                }
+                            }
+
+                            input {
+                                float: left;
+                                width: 80%;
+                                height: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.joinPrivateLobby {
+    > .modal-dialog {
+        > .modal-content {
+            background: transparent;
+            box-shadow: none;
+            #joinPrivateLobby {
+                .modal-dialog {
+                    .modal-content {
+                        background: url(../assets/modalBackground.png);
+                        background-size: 100% 100%;
+                        box-shadow: none;
+
+                        p {
+                            font-size: 20px;
+                            padding-top: 10px;
+                            padding-bottom: 10px;
+                        }
+
+                        input {
+                            width: 80%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .riskModal {
     .modal-content {
         border-radius: 0px;

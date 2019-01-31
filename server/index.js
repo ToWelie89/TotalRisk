@@ -309,39 +309,39 @@ const handleGameOver = game => {
   const playerWhoWon = game.gameEngine.playerWhoWon;
 
   playersAsList.sort((a, b) => {
-      if (a.name === playerWhoWon) {
+    if (a.name === playerWhoWon) {
+      return -1;
+    } else if (a.dead && b.dead) {
+      return a.deadTurn > b.deadTurn ? -1 : 1;
+    } else if (a.dead) {
+      return 1;
+    } else if (b.dead) {
+      return -1;
+    } else {
+      let aTotal = ownership.find(x => x.name === a.name).totalTerritories;
+      let bTotal = ownership.find(x => x.name === b.name).totalTerritories;
+
+      if (aTotal > bTotal) {
+        return -1;
+      } else if (aTotal < bTotal) {
+        return 1;
+      } else if (aTotal === bTotal) {
+        aTotal = ownership.find(x => x.name === a.name).totalTroops;
+        bTotal = ownership.find(x => x.name === b.name).totalTroops;
+
+        if (aTotal > bTotal) {
           return -1;
-      } else if (a.dead && b.dead) {
-          return a.deadTurn > b.deadTurn ? -1 : 1;
-      } else if (a.dead) {
+        } else if (aTotal < bTotal) {
           return 1;
-      } else if (b.dead) {
-          return -1;
-      } else {
-          let aTotal = ownership.find(x => x.name === a.name).totalTerritories;
-          let bTotal = ownership.find(x => x.name === b.name).totalTerritories;
-
-          if (aTotal > bTotal) {
-              return -1;
-          } else if (aTotal < bTotal) {
-              return 1;
-          } else if (aTotal === bTotal) {
-              aTotal = ownership.find(x => x.name === a.name).totalTroops;
-              bTotal = ownership.find(x => x.name === b.name).totalTroops;
-
-              if (aTotal > bTotal) {
-                  return -1;
-              } else if (aTotal < bTotal) {
-                  return 1;
-              } else {
-                  return 0;
-              }
-          }
+        } else {
+          return 0;
+        }
       }
+    }
   });
 
   playersAsList.map(x => {
-      x.rank = (playersAsList.indexOf(x) + 1);
+    x.rank = (playersAsList.indexOf(x) + 1);
   });
 
   // Update ratings
@@ -372,15 +372,11 @@ const handleGameOver = game => {
     })
     .then(() => {
       // Use trueskill to play the match and get new ratings
-
       const arg1 = playersAsList.map(p => ({
         name: p.name,
         rating: p.oldRating
       }));
       const arg2 = playersAsList.map(p => p.rank);
-
-      console.log('arg1', arg1)
-      console.log('arg2', arg2)
 
       const result = playMatch(arg1, arg2);
       // Set new rating for each player from the result object
@@ -473,31 +469,59 @@ const updateMapState = roomId => {
   });
 };
 
+const updateOnlineUsers = () => {
+  const onlineUsers = lobbiesSocketList.map(x => x.userName).filter(x => x !== null && x !== undefined);
+  lobbiesSocketList.forEach(s => {
+    s.emit('onlineUsers', onlineUsers);
+  });
+};
+
 io
 .of('lobbies')
 .on('connection', (socket) => {
-    lobbiesSocketList.push(socket);
+  socket.id = Math.random().toString(36).substr(2, 9);
+  lobbiesSocketList.push(socket);
+  updateOnlineUsers();
 
+  updateLobbies();
+
+  socket.on('setUser', userName => {
+    if (lobbiesSocketList.find(x => x.id === socket.id) === undefined) {
+      lobbiesSocketList.push(socket);
+    }
+
+    lobbiesSocketList.find(x => x.id === socket.id).userName = userName;
+    updateOnlineUsers();
+  });
+
+  socket.on('removeUser', () => {
+    lobbiesSocketList = lobbiesSocketList.filter(s => s.id !== socket.id);
+    updateOnlineUsers();
+  });
+
+  socket.on('disconnect', reason => {
+    lobbiesSocketList = lobbiesSocketList.filter(s => s.id !== socket.id);
+    updateOnlineUsers();
+  });
+
+  socket.on('createNewRoom', newRoom => {
+    newRoom.chosenGoal = VICTORY_GOALS[VICTORY_GOALS.length - 1];
+    newRoom.players = [];
+    newRoom.messages = [];
+    newRoom.currentLockedSlots = [];
+    newRoom.timer = {};
+    newRoom.state = states.LOBBY;
+    newRoom.turnLength = TURN_LENGTHS[2];
+    newRoom.aiSpeed = 'Fast';
+    games.push(newRoom);
     updateLobbies();
+    socket.emit('createNewRoomResponse', newRoom);
+  });
 
-    socket.on('createNewRoom', newRoom => {
-      newRoom.chosenGoal = VICTORY_GOALS[VICTORY_GOALS.length - 1];
-      newRoom.players = [];
-      newRoom.messages = [];
-      newRoom.currentLockedSlots = [];
-      newRoom.timer = {};
-      newRoom.state = states.LOBBY;
-      newRoom.turnLength = TURN_LENGTHS[2];
-      newRoom.aiSpeed = 'Fast';
-      games.push(newRoom);
-      updateLobbies();
-      socket.emit('createNewRoomResponse', newRoom);
-    });
-
-    socket.on('setMaxNumberOfPlayers', (maxAmount, roomId) => {
-      games.find(game => game.id === roomId).maxNumberOfPlayer = maxAmount;
-      updateLobbies();
-    });
+  socket.on('setMaxNumberOfPlayers', (maxAmount, roomId) => {
+    games.find(game => game.id === roomId).maxNumberOfPlayer = maxAmount;
+    updateLobbies();
+  });
 });
 
 io
