@@ -13,6 +13,10 @@ Technologies used:
 - **less** (CSS preprocessor)
 - **Bootstrap** (HTML & CSS framework)
 - **Electron** (Used for creating exe-installer dists of the game so that it can be intalled and ran as a desktop application)
+- **Node.js** For running the server that is used for online gameplay
+- **Express.js** Backend server framework
+- **Socket.IO** Websocket client for updating clients with new data from the server
+- **Firebase** Database and authentication handling
 
 ## Getting started
 
@@ -44,7 +48,7 @@ grunt
 ```
 npm start
 ```
-Open http://127.0.0.1:8080 in your browser.
+Open http://127.0.0.1:5000 in your browser.
 
 ## How to run locally (Electron version)
 
@@ -103,6 +107,20 @@ grunt bump:[major/minor/patch]
 ```
 
 This will automatically push your commit to the repo, bump the version in package.json and creating a tag.
+
+## Bumping version
+
+To see how many lines of code the project consists of simply run:
+
+```
+npm run lines
+```
+
+This requires the package known as "cloc". You can install it globally by running:
+
+```
+npm install -g cloc
+```
 
 ## Troubleshooting
 

@@ -16,7 +16,8 @@
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "publish": "electron-builder -p always"
+    "publish": "electron-builder -p always",
+    "lines": "cloc ./js ./electron ./server ./src ./less ./index.html ./Gruntfile.js --exclude-dir=libs"
   },
   "keywords": [
     "angular",

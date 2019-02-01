@@ -15,13 +15,17 @@ const {
     hashString
 } = require('./../helpers');
 const { playerCanJoinRoom } = require('./backendCalls');
+const CountryCodes = require('./../editor/countryCodes');
+const { getPlayerTooltipMarkup } = require('./../tooltips/tooltipHelpers');
 
 class LobbiesController {
-    constructor($scope, $rootScope, $uibModal, $timeout, toastService, soundService, socketService) {
+    constructor($scope, $rootScope, $uibModal, $sce, $compile, $timeout, toastService, soundService, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$uibModal = $uibModal;
+        this.$sce = $sce;
+        this.$compile = $compile;
         this.$timeout = $timeout;
         this.toastService = toastService;
         this.soundService = soundService;
@@ -38,7 +42,7 @@ class LobbiesController {
 
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                this.setUser(user.displayName);
+                this.setUser(user.displayName, user.uid);
                 this.vm.isAuthenticated = true;
                 this.$scope.$apply();
             } else {
@@ -172,12 +176,12 @@ class LobbiesController {
         });
     }
 
-    setUser(userName = undefined) {
+    setUser(userName = undefined, userUid = undefined) {
         if (!this.socketService) {
             this.socketService.createLobbiesSocket();
         }
-        if (userName) {
-            this.socketService.lobbiesSocket.emit('setUser', userName);
+        if (userName && userUid) {
+            this.socketService.lobbiesSocket.emit('setUser', userName, userUid);
         } else {
             this.socketService.lobbiesSocket.emit('removeUser');
         }
@@ -189,6 +193,41 @@ class LobbiesController {
         this.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
             this.vm.onlineUsers = onlineUsers;
             console.log('Players online: ', onlineUsers);
+
+            this.vm.onlineUsers.forEach(u => {
+                u.tooltip = this.$sce.trustAsHtml(`
+                    <div class="playerTooltip">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                `);
+            });
+            this.$scope.$apply();
+
+            const promises = [];
+
+            this.vm.onlineUsers.forEach(u => {
+                const promise = firebase.database().ref('/users/' + u.userUid).once('value').then(snapshot => {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        if (userData.bio || userData.countryCode) {
+                            let url;
+                            if (userData.countryCode && CountryCodes[userData.countryCode]) {
+                                url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
+                            }
+                            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+
+                            setTimeout(() => {
+                                const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);
+                                u.tooltip = this.$sce.trustAsHtml(markup);
+                                this.$scope.$apply();
+                            }, 1000);
+                        }
+                    }
+                });
+                promises.push(promise);
+            });
+
+            Promise.all(promises);
         });
 
         this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {

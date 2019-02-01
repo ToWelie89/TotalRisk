@@ -82,11 +82,16 @@
             </div>
             <div id="lobbiesChatContainer">
                 <div id="onlineUsersList">
-                    <div data-ng-repeat="user in lobbies.onlineUsers track by $index" class="onlineUserItem textLeft">
+                    <div
+                        data-ng-repeat="user in lobbies.onlineUsers track by $index"
+                        class="onlineUserItem textLeft"
+                        uib-tooltip-html="user.tooltip"
+                        tooltip-placement="right"
+                    >
                         <div class="onlineUserItem__iconContainer">
                             <div class="onlineUserItem__iconContainer__icon"></div>
                         </div>
-                        <div class="onlineUserItem__name">{{ user }}</div>
+                        <div class="onlineUserItem__name">{{ user.userName }}</div>
                     </div>
                 </div>
                 <div class="chatBox">

@@ -7,6 +7,7 @@ const { GAME_PHASES, CONSTANTS, VICTORY_GOALS, TURN_LENGTHS } = require('./../ga
 const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv } = require('./../helpers');
 const { avatars, PLAYER_COLORS, PLAYER_TYPES } = require('./../player/playerConstants');
 const CountryCodes = require('./../editor/countryCodes');
+const { getPlayerTooltipMarkup } = require('./../tooltips/tooltipHelpers');
 
 class LobbiesController {
     constructor($scope, $rootScope, $sce, $compile, $timeout, $uibModal, soundService, toastService, gameEngine, socketService) {
@@ -382,27 +383,18 @@ class LobbiesController {
         firebase.database().ref('/users/' + player.userUid).once('value').then(snapshot => {
             const userData = snapshot.val();
             if (userData) {
-                if (userData.bio || userData.countryCode) {
-                    let url;
-                    if (userData.countryCode && CountryCodes[userData.countryCode]) {
-                        url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
-                    }
-
-                    let bio = userData.bio ? userData.bio : '<i>Bio not available</i>';
-
-                    var wavingFlag = this.$compile(`<waving-flag flag-width="90" flag-height="50" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
-                    setTimeout(() => {
-                        this.vm.playerTooltips[player.userUid] = this.$sce.trustAsHtml(`
-                            <div class="playerTooltip">
-                                ${wavingFlag[0].innerHTML}
-                                <p>
-                                    ${bio}
-                                </p>
-                            </div>
-                        `);
-                        this.$scope.$apply();
-                    }, 2000);
+                let url;
+                if (userData.countryCode && CountryCodes[userData.countryCode]) {
+                    url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
                 }
+
+                var wavingFlag = this.$compile(`<waving-flag flag-width="90" flag-height="50" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+
+                setTimeout(() => {
+                    const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);
+                    this.vm.playerTooltips[player.userUid] = this.$sce.trustAsHtml(markup);
+                    this.$scope.$apply();
+                }, 1000);
             }
         });
     }

@@ -470,7 +470,16 @@ const updateMapState = roomId => {
 };
 
 const updateOnlineUsers = () => {
-  const onlineUsers = lobbiesSocketList.map(x => x.userName).filter(x => x !== null && x !== undefined);
+  const onlineUsers = lobbiesSocketList
+                        .map(x => ({
+                          userName: x.userName,
+                          userUid: x.userUid
+                        }))
+                        .filter(x => x.userName !== null &&
+                                     x.userName !== undefined &&
+                                     x.userUid !== null &&
+                                     x.userUid !== undefined
+                        );
   lobbiesSocketList.forEach(s => {
     s.emit('onlineUsers', onlineUsers);
   });
@@ -479,28 +488,26 @@ const updateOnlineUsers = () => {
 io
 .of('lobbies')
 .on('connection', (socket) => {
-  socket.id = Math.random().toString(36).substr(2, 9);
-  lobbiesSocketList.push(socket);
   updateOnlineUsers();
-
   updateLobbies();
 
-  socket.on('setUser', userName => {
-    if (lobbiesSocketList.find(x => x.id === socket.id) === undefined) {
+  socket.on('setUser', (userName, userUid) => {
+    if (lobbiesSocketList.find(x => x.userUid === socket.userUid) === undefined) {
       lobbiesSocketList.push(socket);
     }
 
-    lobbiesSocketList.find(x => x.id === socket.id).userName = userName;
+    socket.userName = userName;
+    socket.userUid = userUid;
     updateOnlineUsers();
   });
 
   socket.on('removeUser', () => {
-    lobbiesSocketList = lobbiesSocketList.filter(s => s.id !== socket.id);
+    lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
     updateOnlineUsers();
   });
 
   socket.on('disconnect', reason => {
-    lobbiesSocketList = lobbiesSocketList.filter(s => s.id !== socket.id);
+    lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
     updateOnlineUsers();
   });
 
