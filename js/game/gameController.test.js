@@ -222,6 +222,6 @@ describe('gameController', () => {
         gameController.handleVictory();
         // Assert
         expect(cssCall).toHaveBeenCalledWith('background-image', `url(${players[0].avatar.flag})`);
-        expect(loadSvgIntoDiv).toHaveBeenCalledWith('test.svg', '.victoryPortrait');
+        expect(loadSvgIntoDiv).toHaveBeenCalledWith('test.svg', '#victoryPortraitSinglePlayer');
     });
 });

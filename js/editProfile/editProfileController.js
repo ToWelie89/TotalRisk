@@ -8,12 +8,13 @@ const CountryCodes = require('./../editor/countryCodes');
 
 class EditProfileController {
 
-    constructor($scope, $rootScope, $uibModal, toastService) {
+    constructor($scope, $rootScope, $uibModal, toastService, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$uibModal = $uibModal;
         this.toastService = toastService;
+        this.socketService = socketService;
 
         this.vm.selectDefaultAvatar = this.selectDefaultAvatar;
         this.vm.setNewPassword = this.setNewPassword;
@@ -103,6 +104,7 @@ class EditProfileController {
         firebase.database().ref('users/' + this.vm.user.uid + '/bio').set(this.vm.user.bio)
         .then(() => {
             this.toastService.successToast('', 'Updated bio');
+            this.socketService.lobbiesSocket.emit('updatedBioOfUser', this.vm.user.uid);
         });
     }
 

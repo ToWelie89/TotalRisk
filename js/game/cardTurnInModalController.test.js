@@ -149,6 +149,7 @@ describe('cardTurnInModalController', () => {
         // Assert
         expect(cardTurnInModalController.gameEngine.turn.player.cards.length).toEqual(0);
         expect(mockUibModalInstance.close).toHaveBeenCalledWith({
+            newHand: [],
             newTroops: cardTurnInModalController.getCardCombination().value
         });
     });

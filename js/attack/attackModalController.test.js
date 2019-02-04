@@ -19,6 +19,7 @@ describe('attackModalController', () => {
     let mockUibModalInstance;
     let mockTutorialService;
     let mockSocketService;
+    let mockGameEngine;
 
     let mockAttackData;
 
@@ -45,9 +46,17 @@ describe('attackModalController', () => {
         mockRootScope = createRootScope();
         mockTutorialService = createTutorialService();
         mockSocketService = createSocketService();
+        mockGameEngine = {
+            players: {
+                get: () => {
+                    return {
+                        userUid: 'testUID'
+                    }
+                }
+            }
+        };
 
-        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, mockSocketService);
-        //attackModalController.runTutorial = jest.fn();
+        attackModalController = new AttackModalController(mockScope, mockRootScope, mockUibModalInstance, mockSoundService, mockTutorialService, mockAttackData, mockSocketService, mockGameEngine);
 
         // Remove delays so that tests run faster
         attackModalController.getCountrySvgDelay = 0;
@@ -216,6 +225,7 @@ describe('attackModalController', () => {
     it('moveTroops will emit event to backend in multiplayer mode', () => {
         // Arrange
         attackModalController.attacker.numberOfTroops = 5;
+        attackModalController.attacker.owner = mockAttackData.attacker;
         attackModalController.defender.numberOfTroops = 0;
         attackModalController.moveNumberOfTroops = 5;
         attackModalController.multiplayerMode = true;
@@ -227,7 +237,9 @@ describe('attackModalController', () => {
             defenderTerritory: 'North Africa',
             attackerTerritoryNumberOfTroops: 1,
             defenderTerritoryNumberOfTroops: 5,
-            owner: 'Kalle'
+            owner: 'Kalle',
+            ownerUid: 'testUID',
+            previousOwner: 'Pelle'
         });
     });
 

@@ -190,6 +190,31 @@ class LobbiesController {
     setupSocket() {
         this.socketService.createLobbiesSocket();
 
+        this.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', uid => {
+            const user = this.vm.onlineUsers.find(x => x.userUid === uid);
+
+            if (user) {
+                firebase.database().ref('/users/' + uid).once('value').then(snapshot => {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        if (userData.bio || userData.countryCode) {
+                            let url;
+                            if (userData.countryCode && CountryCodes[userData.countryCode]) {
+                                url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
+                            }
+                            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+
+                            setTimeout(() => {
+                                const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);
+                                user.tooltip = this.$sce.trustAsHtml(markup);
+                                this.$scope.$apply();
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+
         this.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
             this.vm.onlineUsers = onlineUsers;
             console.log('Players online: ', onlineUsers);

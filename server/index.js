@@ -511,6 +511,15 @@ io
     updateOnlineUsers();
   });
 
+  socket.on('updatedBioOfUser', uid => {
+    if (!uid) {
+      return;
+    }
+    lobbiesSocketList.forEach(s => {
+      s.emit('updatedBioOfUserNotifier', uid);
+    });
+  });
+
   socket.on('createNewRoom', newRoom => {
     newRoom.chosenGoal = VICTORY_GOALS[VICTORY_GOALS.length - 1];
     newRoom.players = [];
