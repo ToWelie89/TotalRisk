@@ -247,6 +247,7 @@ const handleAi = game => {
       player.emit('updatedCardsForPlayer', userUid, newHand);
       player.emit('newReinforcements', newTroops);
     });
+    return delay(50 * newTroops);
   }))
   .then(() => game.aiHandler.contemplateAlternativesForAttack())
   .then(() => game.aiHandler.deployTroops((territoryName) => {
@@ -469,11 +470,12 @@ const updateMapState = roomId => {
   });
 };
 
-const updateOnlineUsers = () => {
+const updateOnlineUsers = (callback = () => {}) => {
   const onlineUsers = lobbiesSocketList
                         .map(x => ({
                           userName: x.userName,
-                          userUid: x.userUid
+                          userUid: x.userUid,
+                          tooltipInfo: x.tooltipInfo
                         }))
                         .filter(x => x.userName !== null &&
                                      x.userName !== undefined &&
@@ -483,6 +485,7 @@ const updateOnlineUsers = () => {
   lobbiesSocketList.forEach(s => {
     s.emit('onlineUsers', onlineUsers);
   });
+  callback();
 };
 
 io
@@ -498,7 +501,53 @@ io
 
     socket.userName = userName;
     socket.userUid = userUid;
-    updateOnlineUsers();
+
+    updateOnlineUsers(() => {
+      if (!BEHIND_PROXY) {
+        firebaseAdmin.database().ref('users/' + userUid).once('value').then(snapshot => {
+          const user = snapshot.val();
+          socket.tooltipInfo = {
+            countryCode: user.countryCode ? user.countryCode : '',
+            bio: user.bio ? user.bio : '',
+            rating: user.rating ? user.rating : undefined,
+            uid: userUid
+          };
+
+          lobbiesSocketList.forEach(s => {
+            s.emit('updatedBioOfUserNotifier', socket.tooltipInfo);
+          });
+        });
+      } else {
+        socket.tooltipInfo = {
+          countryCode: 'SE',
+          bio: 'test bio',
+          rating: { mu: 25, sigma: 5 },
+          uid: userUid
+        };
+        lobbiesSocketList.forEach(s => {
+          s.emit('updatedBioOfUserNotifier', socket.tooltipInfo);
+        });
+      }
+    });
+  });
+
+  socket.on('signOutUser', uid => {
+    const onlineUsers = lobbiesSocketList
+                          .map(x => ({
+                            userName: x.userName,
+                            userUid: x.userUid,
+                            tooltipInfo: x.tooltipInfo
+                          }))
+                          .filter(x => x.userName !== null &&
+                                       x.userName !== undefined &&
+                                       x.userUid !== null &&
+                                       x.userUid !== undefined &&
+                                       x.userUid !== socket.userUid
+                          );
+    lobbiesSocketList.forEach(s => {
+      s.emit('onlineUsers', onlineUsers);
+    });
+    lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
   });
 
   socket.on('removeUser', () => {
@@ -515,9 +564,35 @@ io
     if (!uid) {
       return;
     }
-    lobbiesSocketList.forEach(s => {
-      s.emit('updatedBioOfUserNotifier', uid);
-    });
+    const u = lobbiesSocketList.find(x => x.userUid === uid);
+    if (!BEHIND_PROXY) {
+      firebaseAdmin.database().ref('users/' + uid).once('value').then(snapshot => {
+        const user = snapshot.val();
+
+        if (u) {
+          u.tooltipInfo = {
+            countryCode: user.countryCode ? user.countryCode : '',
+            bio: user.bio ? user.bio : '',
+            rating: user.rating ? user.rating : undefined,
+            uid
+          };
+
+          lobbiesSocketList.forEach(s => {
+            s.emit('updatedBioOfUserNotifier', u.tooltipInfo);
+          });
+        }
+      });
+    } else {
+      u.tooltipInfo = {
+        countryCode: 'SE',
+        bio: 'UPDATED test bio',
+        rating: { mu: 25, sigma: 5 },
+        uid
+      };
+      lobbiesSocketList.forEach(s => {
+        s.emit('updatedBioOfUserNotifier', u.tooltipInfo);
+      });
+    }
   });
 
   socket.on('createNewRoom', newRoom => {
@@ -551,37 +626,44 @@ io
         clearInterval(game.timer.turnTimer);
       }
 
-      if (reason === 'transport close') {
-        // User was disconnected by closing game/refrehsing window
+      if (game.state === states.IN_GAME) {
+        const player = game.gameEngine.players.get(socket.userName);
+
+        player.type === PLAYER_TYPES.AI;
+        game.players.find(p => p.userUid === socket.userUid).ai = true;
+        game.players.find(p => p.userUid === socket.userUid).emit = () => {};
+
+        skipToNextPlayer(socket.roomId);
+
         addNewMessage(socket.roomId, {
           sender: 'SERVER',
           uid: 'SERVER',
-          message: `${socket.userName} left the room`,
+          message: `${socket.userName} left the game. Player will be replaced by AI`,
           timestamp: Date.now()
         });
-      }
-
-      if (game) {
+      } else if (game.state === states.LOBBY) {
+        const userWasHost = game.players.find(player => player.userUid === socket.userUid).isHost;
         game.players = game.players.filter(player => player.userUid !== socket.userUid);
+
+        if (userWasHost) {
+          game.players.forEach(playerSocket => {
+            playerSocket.emit('hostLeft');
+          });
+          games = games.filter(game => game.id !== socket.roomId);
+        } else if (game.players.length === 0) {
+          games = games.filter(game => game.id !== socket.roomId);
+        } else {
+          addNewMessage(socket.roomId, {
+            sender: 'SERVER',
+            uid: 'SERVER',
+            message: `${socket.userName} left the room`,
+            timestamp: Date.now()
+          });
+        }
+
+        updateLobbies();
+        setPlayers(socket.roomId);
       }
-
-      if (game && game.players.length === 0) {
-        clearInterval(game.timer.turnTimer);
-        games = games.filter(game => game.id !== socket.roomId);
-      }
-
-      if (game && (game.players.length === 0 || game.players.find(player => player.isHost) === undefined)) {
-        // Host left
-        clearInterval(game.timer.turnTimer);
-        game.players.forEach(playerSocket => {
-          playerSocket.emit('hostLeft');
-        });
-        games = games.filter(game => game.id !== socket.roomId);
-      }
-
-      updateLobbies();
-
-      setPlayers(socket.roomId);
     });
 
     socket.on('sendMessage', (roomId, msg) => {

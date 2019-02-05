@@ -379,7 +379,7 @@ class GameControllerMultiplayer extends GameController {
             var delay = 10;
             var flag = document.getElementById('victoryFlagMultiplayer');
             flag.innerHTML = '';
-            for(var i = 0; i < len; i++){
+            for (var i = 0; i < len; i++){
                 var fe = document.createElement('div');
                 fe.className = 'flag-element';
                 fe.style.backgroundSize = 250 + 'px 100%';
@@ -393,10 +393,13 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.gameSocket.on('newReinforcements', newTroops => {
-            this.gameEngine.troopsToDeploy += newTroops;
-            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-            this.$scope.$apply();
-            // DO AN ANIMATION
+            for (let i = 0; i < newTroops; i++) {
+                setTimeout(() => {
+                    this.gameEngine.troopsToDeploy++;
+                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                    this.$scope.$apply();
+                }, (i * 50));
+            }
         });
 
         this.socketService.gameSocket.on('updatedCardsForPlayer', (ownerUid, cards) => {

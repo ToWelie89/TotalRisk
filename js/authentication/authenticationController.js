@@ -6,12 +6,13 @@ const {GAME_PHASES} = require('./../gameConstants');
 const {getUserCountry} = require('./../multiplayer/backendCalls');
 
 class AuthenticationController {
-    constructor($scope, $rootScope, toastService, soundService) {
+    constructor($scope, $rootScope, toastService, soundService, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.toastService = toastService;
         this.soundService = soundService;
+        this.socketService = socketService;
 
         this.vm.states = {
             LOGGED_IN: 0,
@@ -269,6 +270,7 @@ class AuthenticationController {
 
     logout() {
         this.soundService.tick.play();
+        const currentUser = firebase.auth().currentUser;
         firebase.auth().signOut()
         .then(() => {
             this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
@@ -286,7 +288,11 @@ class AuthenticationController {
                 userName: ''
             };
             this.$scope.$apply();
-        }).catch(err => {
+        })
+        .then(() => {
+            this.socketService.lobbiesSocket.emit('signOutUser', currentUser.uid);
+        })
+        .catch(err => {
             console.log('Logout error', err),
             this.toastService.errorToast(
                 'Logout error',

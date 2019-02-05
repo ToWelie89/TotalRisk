@@ -187,32 +187,28 @@ class LobbiesController {
         }
     }
 
+    setTooltipOfOnlineUser(uid, tooltipData) {
+        const user = this.vm.onlineUsers.find(x => x.userUid === uid);
+        if (user) {
+            let url;
+            if (tooltipData.countryCode && CountryCodes[tooltipData.countryCode]) {
+                url = `./assets/flagsSvg/countries/${tooltipData.countryCode.toLowerCase()}.svg`;
+            }
+            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+
+            setTimeout(() => {
+                const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, tooltipData);
+                user.tooltip = this.$sce.trustAsHtml(markup);
+                this.$scope.$apply();
+            }, 1000);
+        }
+    }
+
     setupSocket() {
         this.socketService.createLobbiesSocket();
 
-        this.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', uid => {
-            const user = this.vm.onlineUsers.find(x => x.userUid === uid);
-
-            if (user) {
-                firebase.database().ref('/users/' + uid).once('value').then(snapshot => {
-                    const userData = snapshot.val();
-                    if (userData) {
-                        if (userData.bio || userData.countryCode) {
-                            let url;
-                            if (userData.countryCode && CountryCodes[userData.countryCode]) {
-                                url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
-                            }
-                            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
-
-                            setTimeout(() => {
-                                const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);
-                                user.tooltip = this.$sce.trustAsHtml(markup);
-                                this.$scope.$apply();
-                            }, 1000);
-                        }
-                    }
-                });
-            }
+        this.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', response => {
+            this.setTooltipOfOnlineUser(response.uid, response);
         });
 
         this.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
@@ -228,31 +224,11 @@ class LobbiesController {
             });
             this.$scope.$apply();
 
-            const promises = [];
-
             this.vm.onlineUsers.forEach(u => {
-                const promise = firebase.database().ref('/users/' + u.userUid).once('value').then(snapshot => {
-                    const userData = snapshot.val();
-                    if (userData) {
-                        if (userData.bio || userData.countryCode) {
-                            let url;
-                            if (userData.countryCode && CountryCodes[userData.countryCode]) {
-                                url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
-                            }
-                            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
-
-                            setTimeout(() => {
-                                const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);
-                                u.tooltip = this.$sce.trustAsHtml(markup);
-                                this.$scope.$apply();
-                            }, 1000);
-                        }
-                    }
-                });
-                promises.push(promise);
+                if (u.tooltipInfo) {
+                    this.setTooltipOfOnlineUser(u.userUid, u.tooltipInfo);
+                }
             });
-
-            Promise.all(promises);
         });
 
         this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
