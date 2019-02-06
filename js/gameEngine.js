@@ -60,6 +60,11 @@ class GameEngine {
         }
     }
 
+    setPlayerType(playerName, type) {
+        this.players.get(playerName).type = type;
+        this.iterator.updatePlayerType(playerName, type);
+    }
+
     setMusic(music = MAIN_MUSIC) {
         if (this.thisIsBackendGameEngine) return;
 

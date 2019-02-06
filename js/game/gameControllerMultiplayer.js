@@ -393,6 +393,7 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.gameSocket.on('newReinforcements', newTroops => {
+            this.soundService.cardTurnIn.play();
             for (let i = 0; i < newTroops; i++) {
                 setTimeout(() => {
                     this.gameEngine.troopsToDeploy++;

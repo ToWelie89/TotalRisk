@@ -49,6 +49,7 @@ class ProfileController {
                         this.vm.user.rating = user.rating;
                         this.vm.user.totalDefeats = user.totalDefeats ? user.totalDefeats : 0;
                         this.vm.user.totalWins = user.totalWins ? user.totalWins : 0;
+                        this.vm.user.totalDisconnects = user.totalDisconnects ? user.totalDisconnects : 0;
                         this.vm.user.recentGames = user.recentGames ? user.recentGames : [];
                         this.vm.user.oldRatings = user.oldRatings ? user.oldRatings : [];
 
