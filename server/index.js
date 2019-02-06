@@ -528,6 +528,8 @@ io
           s.emit('updatedBioOfUserNotifier', socket.tooltipInfo);
         });
       }
+
+      updateLobbies();
     });
   });
 
@@ -626,43 +628,45 @@ io
         clearInterval(game.timer.turnTimer);
       }
 
-      if (game.state === states.IN_GAME) {
-        const player = game.gameEngine.players.get(socket.userName);
+      if (game) {
+        if (game.state === states.IN_GAME) {
+          const player = game.gameEngine.players.get(socket.userName);
 
-        player.type === PLAYER_TYPES.AI;
-        game.players.find(p => p.userUid === socket.userUid).ai = true;
-        game.players.find(p => p.userUid === socket.userUid).emit = () => {};
+          player.type === PLAYER_TYPES.AI;
+          game.players.find(p => p.userUid === socket.userUid).ai = true;
+          game.players.find(p => p.userUid === socket.userUid).emit = () => {};
 
-        skipToNextPlayer(socket.roomId);
+          skipToNextPlayer(socket.roomId);
 
-        addNewMessage(socket.roomId, {
-          sender: 'SERVER',
-          uid: 'SERVER',
-          message: `${socket.userName} left the game. Player will be replaced by AI`,
-          timestamp: Date.now()
-        });
-      } else if (game.state === states.LOBBY) {
-        const userWasHost = game.players.find(player => player.userUid === socket.userUid).isHost;
-        game.players = game.players.filter(player => player.userUid !== socket.userUid);
-
-        if (userWasHost) {
-          game.players.forEach(playerSocket => {
-            playerSocket.emit('hostLeft');
-          });
-          games = games.filter(game => game.id !== socket.roomId);
-        } else if (game.players.length === 0) {
-          games = games.filter(game => game.id !== socket.roomId);
-        } else {
           addNewMessage(socket.roomId, {
             sender: 'SERVER',
             uid: 'SERVER',
-            message: `${socket.userName} left the room`,
+            message: `${socket.userName} left the game. Player will be replaced by AI`,
             timestamp: Date.now()
           });
-        }
+        } else if (game.state === states.LOBBY) {
+          const userWasHost = game.players.find(player => player.userUid === socket.userUid).isHost;
+          game.players = game.players.filter(player => player.userUid !== socket.userUid);
 
-        updateLobbies();
-        setPlayers(socket.roomId);
+          if (userWasHost) {
+            game.players.forEach(playerSocket => {
+              playerSocket.emit('hostLeft');
+            });
+            games = games.filter(game => game.id !== socket.roomId);
+          } else if (game.players.length === 0) {
+            games = games.filter(game => game.id !== socket.roomId);
+          } else {
+            addNewMessage(socket.roomId, {
+              sender: 'SERVER',
+              uid: 'SERVER',
+              message: `${socket.userName} left the room`,
+              timestamp: Date.now()
+            });
+          }
+
+          updateLobbies();
+          setPlayers(socket.roomId);
+        }
       }
     });
 

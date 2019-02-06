@@ -1,3 +1,7 @@
+.tooltip {
+    opacity: 1 !important;
+}
+
 .tooltip-inner {
     max-width: 350px !important;
     font-size: 16px;
@@ -22,6 +26,24 @@
     &__nameBox {
         font-size: 15px;
         display: inline-block;
+    }
+}
+
+.mapTooltipSvgContainer {
+    background-color: #5397d1;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.46);
+    border-radius: 10px;
+
+    svg {
+        pointer-events: none;
+        .troopCounter, .troopCounterText, text {
+            display: none;
+        }
+        text {
+            display: none;
+        }
     }
 }
 

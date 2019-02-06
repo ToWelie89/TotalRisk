@@ -40,6 +40,8 @@ class LobbiesController {
 
         this.userChatColor = getRandomColor();
 
+        this.setMapTooltips();
+
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setUser(user.displayName, user.uid);
@@ -95,6 +97,44 @@ class LobbiesController {
         this.vm.filterRooms = this.filterRooms;
         this.vm.sendChatMessage = this.sendChatMessage;
         this.vm.charactersLeft = this.charactersLeft;
+    }
+
+    setMapTooltips() {
+        const maps = Object.entries(MAPS).map(x => {
+            return Object.assign(x[1], { key: x[0] })
+        });
+
+        this.vm.mapTooltips = {};
+
+        maps.forEach(m => {
+            this.vm.mapTooltips[m.key] = this.$sce.trustAsHtml(`
+                <div class="playerTooltip">
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>
+            `);
+        });
+        //this.$scope.$apply();
+
+        maps.forEach(m => {
+            let markup;
+
+            $.get(m.mainMap, (svg) => {
+                svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
+                svg = svg.replace(/filter-/g, 'filter-' + Math.floor((Math.random() * 100000000000) + 1));
+
+                markup = this.$compile(svg)(this.$scope);
+            }, 'text');
+
+            setTimeout(() => {
+                console.log('markup', markup)
+                this.vm.mapTooltips[m.key] = this.$sce.trustAsHtml(`
+                    <div class="mapTooltipSvgContainer">
+                        ${markup[2].outerHTML}
+                    </div>
+                `);
+                this.$scope.$apply();
+            }, 2000);
+        });
     }
 
     charactersLeft() {

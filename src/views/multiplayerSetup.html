@@ -15,7 +15,12 @@
                 <div style="position: absolute; left: 0; color: white; bottom: 0;">
                     {{ lobbies.onlineUsers.length }} players online
                 </div>
-                <button type="button" class="button button-blue large" data-ng-click="lobbies.hostNewGame()" data-ng-disabled="!lobbies.isAuthenticated">
+                <button
+                    type="button"
+                    class="button button-blue large"
+                    data-ng-click="lobbies.hostNewGame()"
+                    data-ng-disabled="!lobbies.isAuthenticated"
+                >
                     Host new game
                 </button>
                 <input id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" ng-change="lobbies.filterRooms()" />
@@ -47,7 +52,12 @@
                                 <span class="glyphicon glyphicon-lock" data-ng-show="lobby.private"></span>
                             </div>
                             <div class="lobbyCell" data-ng-bind="lobby.roomName"></div>
-                            <div class="lobbyCell" data-ng-bind="lobby.map.name"></div>
+                            <div
+                                class="lobbyCell"
+                                data-ng-bind="lobby.map.name"
+                                uib-tooltip-html="lobbies.mapTooltips[lobby.map.key]"
+                                tooltip-placement="right"
+                            ></div>
                             <div class="lobbyCell" data-ng-bind="lobby.version"></div>
                             <div class="lobbyCell" data-ng-bind="lobby.creator"></div>
                             <div class="lobbyCell">
