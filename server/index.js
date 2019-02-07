@@ -180,7 +180,7 @@ const skipToNextPlayer = roomId => {
   }
 
   game.players.forEach(player => {
-    player.emit('nextTurnNotifier', turn, game.gameEngine.troopsToDeploy);
+    player.emit('nextTurnNotifier', turn, game.gameEngine.reinforcementData);
     player.emit('skipToNextPlayer');
   });
 
@@ -195,9 +195,9 @@ const nextTurn = roomId => {
   const game = games.find(game => game.id === roomId);
 
   const turn = game.gameEngine.nextTurn();
-  let reinforcements = 0;
+  let reinforcementData = {};
   if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-    reinforcements = game.gameEngine.troopsToDeploy;
+    reinforcementData = game.gameEngine.reinforcementData;
   }
 
   if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
@@ -205,7 +205,7 @@ const nextTurn = roomId => {
   }
 
   game.players.forEach(player => {
-    player.emit('nextTurnNotifier', turn, reinforcements);
+    player.emit('nextTurnNotifier', turn, reinforcementData);
   });
 
   if (turn.player.type === PLAYER_TYPES.AI) {

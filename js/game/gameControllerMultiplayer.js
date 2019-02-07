@@ -330,6 +330,31 @@ class GameControllerMultiplayer extends GameController {
         this.turnTimer = setInterval(this.turnTimerFunction, 100);
     }
 
+    openPauseModal() {
+        this.startMenuIsOpen = true;
+        if (this.aiTurn && this.vm.gamePaused !== PAUSE_MODES.PAUSED) {
+            this.vm.gamePaused = PAUSE_MODES.PAUSED;
+        }
+
+        this.$uibModal.open({
+            templateUrl: 'src/modals/pauseMenuModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'pauseMenuModalController',
+            controllerAs: 'pauseMenu',
+            keyboard: false,
+            resolve: {
+                multiplayer: () => true
+            }
+        }).result.then(closeResponse => {
+            if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
+                this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
+            }
+            this.startMenuIsOpen = false;
+            this.escapeWasPressed = false;
+        });
+    }
+
     setSocketListeners() {
         this.socketService.gameSocket.on('playerWonNotifier', (endScreenData) => {
             console.log('A player won', endScreenData);
@@ -442,7 +467,7 @@ class GameControllerMultiplayer extends GameController {
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
         });
 
-        this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcements) => {
+        this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcementData) => {
             if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.initiateTimer();
             } else if (turn.newPlayer && turn.player.type === PLAYER_TYPES.AI) {
@@ -451,9 +476,9 @@ class GameControllerMultiplayer extends GameController {
 
             this.gameEngine.turn = turn;
             this.vm.turn = this.gameEngine.turn;
-            if (reinforcements) {
-                this.gameEngine.troopsToDeploy = reinforcements;
-                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+            if (reinforcementData) {
+                this.gameEngine.reinforcementData = reinforcementData;
+                this.vm.troopsToDeploy = this.gameEngine.reinforcementData.totalReinforcements;
             }
             this.$scope.$apply();
 

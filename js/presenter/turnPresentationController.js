@@ -68,7 +68,13 @@ class TurnPresentationController {
     init() {
         if (this.data.type === 'startGame') {
             this.vm.turn = this.gameEngine.turn;
-            this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
+
+            this.vm.reinforcementData = this.gameEngine.reinforcementData;
+
+            this.vm.reinforcementData.reinforcementsFromTerritoriesAsList = new Array(this.vm.reinforcementData.reinforcementsFromTerritories);
+            this.vm.reinforcementData.regionBonuses.forEach(r => {
+                r.bonusTroopsAsList = new Array(r.bonusTroops);
+            });
 
             if (this.settings.playSound) {
                 this.gameAnnouncerService.speak('Game started', () => {
@@ -91,7 +97,12 @@ class TurnPresentationController {
         } else if (this.data.type === 'newTurn') {
             this.vm.turn = this.gameEngine.turn;
             if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-                this.vm.troopsToDeploy = new Array(this.gameEngine.troopsToDeploy);
+                this.vm.reinforcementData = this.gameEngine.reinforcementData;
+
+                this.vm.reinforcementData.reinforcementsFromTerritoriesAsList = new Array(this.vm.reinforcementData.reinforcementsFromTerritories);
+                this.vm.reinforcementData.regionBonuses.forEach(r => {
+                    r.bonusTroopsAsList = new Array(r.bonusTroops);
+                });
             }
 
             if (this.settings.playSound) {

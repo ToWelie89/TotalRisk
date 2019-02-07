@@ -126,7 +126,6 @@ class LobbiesController {
             }, 'text');
 
             setTimeout(() => {
-                console.log('markup', markup)
                 this.vm.mapTooltips[m.key] = this.$sce.trustAsHtml(`
                     <div class="mapTooltipSvgContainer">
                         ${markup[2].outerHTML}

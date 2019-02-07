@@ -42,7 +42,6 @@ class WorldMap {
     calculateRegionBonusesForPlayer(owner) {
         const regionBonuses = [];
         this.regions.forEach(region => {
-            // if (Array.from(region.territories.values()).filter(territory => (territory.owner === owner)).length === region.territories.length) {
             if (this.allTerritoriesOwnedByPlayer(owner, region.territories)) {
                 regionBonuses.push(region);
             }

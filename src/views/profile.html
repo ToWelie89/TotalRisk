@@ -77,7 +77,12 @@
                         <strong style="font-size: 20px;" class="colorWhite floatLeft">
                             From
                         </strong>
-                        <div class="floatLeft marginLeft" uib-tooltip="{{ profile.user.countryName }}" tooltip-placement="right">
+                        <div
+                            class="floatLeft marginLeft"
+                            uib-tooltip="{{ profile.user.countryName }}"
+                            tooltip-placement="right"
+                            tooltip-class="standardTooltip"
+                        >
                             <waving-flag flag-width="45" flag-height="25" flag-url="profile.user.flag"></waving-flag>
                         </div>
                     </div>

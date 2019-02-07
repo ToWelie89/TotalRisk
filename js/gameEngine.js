@@ -142,7 +142,8 @@ class GameEngine {
 
     handleTurnPhase() {
         if (this.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-            this.troopsToDeploy = this.deploymentHandler.calculateReinforcements(this.players, this.map, this.turn);
+            this.reinforcementData = this.deploymentHandler.calculateReinforcements(this.players, this.map, this.turn);
+            this.troopsToDeploy = this.reinforcementData.totalReinforcements;
             // Update stats
             this.players.get(this.turn.player.name).statistics.totalReinforcements += this.troopsToDeploy;
         }

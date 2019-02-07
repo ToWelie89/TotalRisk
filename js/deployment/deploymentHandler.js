@@ -2,22 +2,28 @@ const { CONSTANTS } = require('./../gameConstants');
 
 class DeploymentHandler {
     calculateReinforcements(players, map, turn) {
-        let numberOfReinforcements = 0;
+        let reinforcementsFromTerritories = 0;
         const currentPlayer = players.get(turn.player.name);
         const numberOfTerritories = map.getNumberOfTerritoriesByOwner(currentPlayer.name);
         console.log(`${numberOfTerritories} territories owned by ${currentPlayer.name}`);
-        numberOfReinforcements += Math.floor(numberOfTerritories / 3);
-        numberOfReinforcements = numberOfReinforcements < 3 ? 3 : numberOfReinforcements;
+        reinforcementsFromTerritories += Math.floor(numberOfTerritories / 3);
+        reinforcementsFromTerritories = reinforcementsFromTerritories < CONSTANTS.MIN_REINFORCEMENTS ? CONSTANTS.MIN_REINFORCEMENTS : reinforcementsFromTerritories;
+
+        let totalReinforcements = reinforcementsFromTerritories;
 
         const regionBonuses = map.calculateRegionBonusesForPlayer(currentPlayer.name);
         console.log('Region bonuses: ', regionBonuses);
 
         regionBonuses.forEach(region => {
-            numberOfReinforcements += region.bonusTroops;
+            totalReinforcements += region.bonusTroops;
         });
 
-        console.log(`Total number of reinforcements: ${numberOfReinforcements}`);
-        return (numberOfReinforcements > CONSTANTS.MIN_REINFORCEMENTS) ? numberOfReinforcements : CONSTANTS.MIN_REINFORCEMENTS;
+        console.log(`Total number of reinforcements: ${totalReinforcements}`);
+        return {
+            reinforcementsFromTerritories,
+            totalReinforcements,
+            regionBonuses
+        }
     }
 }
 

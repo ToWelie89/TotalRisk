@@ -394,7 +394,7 @@ class GameController {
             controllerAs: 'pauseMenu',
             keyboard: false,
             resolve: {
-                multiplayer: () => true
+                multiplayer: () => false
             }
         }).result.then(closeResponse => {
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
