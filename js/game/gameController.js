@@ -392,7 +392,10 @@ class GameController {
             windowClass: 'riskModal',
             controller: 'pauseMenuModalController',
             controllerAs: 'pauseMenu',
-            keyboard: false
+            keyboard: false,
+            resolve: {
+                multiplayer: () => true
+            }
         }).result.then(closeResponse => {
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
                 this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;

@@ -22,7 +22,16 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <button type="button" class="button button-blue mainMenuButton" data-ng-click="pauseMenu.exitToMenu()">
+                            <button
+                                type="button"
+                                class="button button-blue mainMenuButton"
+                                data-ng-click="pauseMenu.exitToMenu()"
+                                data-ng-class="{'warningCursor': pauseMenu.multiplayer}"
+                                uib-tooltip-html="pauseMenu.exitTooltip"
+                                tooltip-enable="pauseMenu.multiplayer"
+                                tooltip-placement="bottom"
+                                tooltip-class="warningTooltipTop"
+                            >
                                 <strong>Exit to main menu</strong>
                             </button>
                         </div>

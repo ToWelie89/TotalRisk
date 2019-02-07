@@ -354,7 +354,7 @@ const handleGameOver = game => {
 
       game.players.forEach(player => {
         const p = playersAsList.find(x => x.name === player.userName);
-        if (p.type === PLAYER_TYPES.HUMAN) {
+        if (p.type === PLAYER_TYPES.HUMAN || p.disconnected) {
           const userFromDatabase = users[player.userUid];
 
           p.oldRating = userFromDatabase.rating ? userFromDatabase.rating : getNewRating();
@@ -363,7 +363,7 @@ const handleGameOver = game => {
           p.totalWins = userFromDatabase.totalWins ? userFromDatabase.totalWins : 0;
           p.totalDefeats = userFromDatabase.totalDefeats ? userFromDatabase.totalDefeats : 0;
           // TODO: handle disconnects
-          // p.totalDisconnects = userFromDatabase.totalDisconnects ? userFromDatabase.totalDisconnects : 0;
+          p.totalDisconnects = userFromDatabase.totalDisconnects ? userFromDatabase.totalDisconnects : 0;
 
           p.recentGames = userFromDatabase.recentGames ? userFromDatabase.recentGames : [];
         } else {
@@ -412,13 +412,17 @@ const handleGameOver = game => {
           promises.push(promise);
         }
 
+        if (p.disconnected) {
+          const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/totalDisconnects').set(p.totalDisconnects + 1);
+          promises.push(promise);
+        }
+
         const newRecentGames = [...p.recentGames, {
           timestamp: Date.now(),
           nrOfPlayers: game.players.length,
           placing: p.rank,
           wasKilled: p.dead,
-          // TODO: handle this
-          disconnected: false,
+          disconnected: p.disconnected ? p.disconnected : false,
           ratingBeforeGame: p.oldRating,
           ratingAfterGame: p.newRating,
           nrOfTurns: game.gameEngine.turn.turnNumber
@@ -457,17 +461,20 @@ const updateMapState = roomId => {
   const game = games.find(game => game.id === roomId);
 
   const territories = [];
-  game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
-    territories.push({
-      name: t.name,
-      owner: t.owner,
-      numberOfTroops: t.numberOfTroops
-    });
-  });
 
-  game.players.forEach(player => {
-    player.emit('updateMapState', territories);
-  });
+  if (game) {
+    game.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+      territories.push({
+        name: t.name,
+        owner: t.owner,
+        numberOfTroops: t.numberOfTroops
+      });
+    });
+
+    game.players.forEach(player => {
+      player.emit('updateMapState', territories);
+    });
+  }
 };
 
 const updateOnlineUsers = (callback = () => {}) => {
@@ -627,15 +634,14 @@ io
       if (game && game.timer && game.timer.turnTimer) {
         clearInterval(game.timer.turnTimer);
       }
+      if (game && game.state === states.IN_GAME) {
+        game.gameEngine.setPlayerType(socket.userName, PLAYER_TYPES.AI)
+        game.gameEngine.players.get(socket.userName).disconnected = true;
+        game.players.find(p => p.userUid === socket.userUid).ai = true;
+        game.players.find(p => p.userUid === socket.userUid).emit = () => {};
 
-      if (game) {
-        if (game.state === states.IN_GAME) {
-          const player = game.gameEngine.players.get(socket.userName);
-
-          player.type === PLAYER_TYPES.AI;
-          game.players.find(p => p.userUid === socket.userUid).ai = true;
-          game.players.find(p => p.userUid === socket.userUid).emit = () => {};
-
+        if (game.players.some(x => !x.ai)) {
+          // There are still human players left
           skipToNextPlayer(socket.roomId);
 
           addNewMessage(socket.roomId, {
@@ -644,29 +650,49 @@ io
             message: `${socket.userName} left the game. Player will be replaced by AI`,
             timestamp: Date.now()
           });
-        } else if (game.state === states.LOBBY) {
-          const userWasHost = game.players.find(player => player.userUid === socket.userUid).isHost;
-          game.players = game.players.filter(player => player.userUid !== socket.userUid);
+        } else {
+          // No humans left, end game
+          clearInterval(game.timer.turnTimer);
+          const promises = [];
+          game.players.forEach(p => {
+            if (p.disconnected) {
+              const promise = firebaseAdmin.database().ref('users/' + p.userUid).once('value').then(snapshot => {
+                const user = snapshot.val();
+                const totalDisconnects = user.totalDisconnects ? user.totalDisconnects : 0;
+                return firebaseAdmin.database().ref('users/' + p.userUid + '/totalDisconnects').set(totalDisconnects + 1);
+              });
+              promises.push(promise);
+            }
+          });
 
-          if (userWasHost) {
-            game.players.forEach(playerSocket => {
-              playerSocket.emit('hostLeft');
-            });
+          Promise.all(promises)
+          .then(() => {
             games = games.filter(game => game.id !== socket.roomId);
-          } else if (game.players.length === 0) {
-            games = games.filter(game => game.id !== socket.roomId);
-          } else {
-            addNewMessage(socket.roomId, {
-              sender: 'SERVER',
-              uid: 'SERVER',
-              message: `${socket.userName} left the room`,
-              timestamp: Date.now()
-            });
-          }
-
-          updateLobbies();
-          setPlayers(socket.roomId);
+            updateLobbies();
+          });
         }
+      } else if (game && game.state === states.LOBBY) {
+        const userWasHost = game.players.find(player => player.userUid === socket.userUid).isHost;
+        game.players = game.players.filter(player => player.userUid !== socket.userUid);
+
+        if (userWasHost) {
+          game.players.forEach(playerSocket => {
+            playerSocket.emit('hostLeft');
+          });
+          games = games.filter(game => game.id !== socket.roomId);
+        } else if (game.players.length === 0) {
+          games = games.filter(game => game.id !== socket.roomId);
+        } else {
+          addNewMessage(socket.roomId, {
+            sender: 'SERVER',
+            uid: 'SERVER',
+            message: `${socket.userName} left the room`,
+            timestamp: Date.now()
+          });
+        }
+
+        updateLobbies();
+        setPlayers(socket.roomId);
       }
     });
 

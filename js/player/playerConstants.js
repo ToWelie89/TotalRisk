@@ -367,10 +367,16 @@ const playerIterator = (playerMap, turnPhases) => {
                 turnNumber
             };
         },
-        handleDefeatedPlayer: (defeatedPlayer) => {
+        handleDefeatedPlayer: defeatedPlayer => {
             const player = playerMap.map(x => x[1]).find(x => x.name === defeatedPlayer);
             if (player) {
                 player.dead = true;
+            }
+        },
+        updatePlayerType: (playerName, type) => {
+            const player = playerMap.map(x => x[1]).find(x => x.name === playerName);
+            if (player) {
+                player.type = type;
             }
         }
     };

@@ -2,9 +2,11 @@ const { GAME_PHASES, MAIN_MUSIC } = require('./../gameConstants');
 
 class PauseMenuModalController {
 
-    constructor($scope, $rootScope, $uibModalInstance, socketService, soundService, gameEngine) {
+    constructor($scope, $rootScope, $sce, $uibModalInstance, socketService, soundService, gameEngine, multiplayer) {
         this.vm = this;
+        this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$sce = $sce;
         this.soundService = soundService;
         this.gameEngine = gameEngine;
         this.socketService = socketService;
@@ -22,6 +24,16 @@ class PauseMenuModalController {
             SETTINGS: 1
         }
         this.vm.currentState = this.vm.states.MAIN_MENU;
+
+        this.vm.multiplayer = multiplayer ? multiplayer : false;
+
+        this.vm.exitTooltip = this.$sce.trustAsHtml(`
+            <div class="warningTooltip">
+                <p>
+                    <strong>BE WARNED!</strong> If you quit a multiplayer game before it's over you will suffer a penalty.
+                </p>
+            </div>
+        `);
     }
 
     continue() {

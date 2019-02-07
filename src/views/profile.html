@@ -98,6 +98,9 @@
                                 Total defeats
                             </div>
                             <div style="display: table-cell;">
+                                Total disconnects
+                            </div>
+                            <div style="display: table-cell;">
                                 Win rate
                             </div>
                         </div>
@@ -106,7 +109,10 @@
                                 {{ profile.user.totalWins }}
                             </div>
                             <div style="display: table-cell;">
-                                {{ profile.user.totalWins }}
+                                {{ profile.user.totalDefeats }}
+                            </div>
+                            <div style="display: table-cell;">
+                                {{ profile.user.totalDisconnects }}
                             </div>
                             <div style="display: table-cell;">
                                 {{ profile.user.winRate }}%
