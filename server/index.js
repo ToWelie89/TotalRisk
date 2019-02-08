@@ -498,14 +498,12 @@ const updateOnlineUsers = (callback = () => {}) => {
 io
 .of('lobbies')
 .on('connection', (socket) => {
+  lobbiesSocketList.push(socket);
+
   updateOnlineUsers();
   updateLobbies();
 
   socket.on('setUser', (userName, userUid) => {
-    if (lobbiesSocketList.find(x => x.userUid === socket.userUid) === undefined) {
-      lobbiesSocketList.push(socket);
-    }
-
     socket.userName = userName;
     socket.userUid = userUid;
 

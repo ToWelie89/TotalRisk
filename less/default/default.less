@@ -112,6 +112,10 @@ input[type="text"], input[type="password"] {
     border-radius: 10px;
     box-shadow: inset 0 0 5px #555;
     padding: 10px;
+
+    &[disabled] {
+        cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
+    }
 }
 
 .fakeLink {

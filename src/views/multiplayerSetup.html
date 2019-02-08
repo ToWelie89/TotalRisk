@@ -23,7 +23,9 @@
                 >
                     Host new game
                 </button>
-                <input id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" ng-change="lobbies.filterRooms()" />
+                <form autocomplete="off">
+                    <input autocomplete="nope" id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" ng-change="lobbies.filterRooms()" />
+                </form>
             </div>
             <div id="lobbyList">
                 <div id="theadContainer">
@@ -114,11 +116,11 @@
                     </div>
                     <div class="senderBar">
                         <form action="" onsubmit="return false;">
-                            <input type="text" data-ng-model="lobbies.chatMessage" placeholder="Type a message . . ." maxlength="{{ lobbies.chatMaxLengthMessage }}" ng-trim="false" style="border-bottom-left-radius: 0px;" />
+                            <input type="text" data-ng-disabled="!lobbies.isAuthenticated" data-ng-model="lobbies.chatMessage" placeholder="Type a message . . ." maxlength="{{ lobbies.chatMaxLengthMessage }}" ng-trim="false" style="border-bottom-left-radius: 0px;" />
                             <p class="charactersLeft">
                                 {{ lobbies.charactersLeft() }}
                             </p>
-                            <button type="submit" class="button button-blue" data-ng-click="lobbies.sendChatMessage()" data-ng-disabled="lobbies.chatMessage.length === 0 || lobbies.disableSendButton">
+                            <button type="submit" class="button button-blue" data-ng-click="lobbies.sendChatMessage()" data-ng-disabled="lobbies.chatMessage.length === 0 || lobbies.disableSendButton || !lobbies.isAuthenticated">
                                 <strong>
                                     Send
                                 </strong>
