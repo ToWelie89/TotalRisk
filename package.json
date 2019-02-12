@@ -18,7 +18,7 @@
     "dist": "electron-builder",
     "publish": "electron-builder -p always",
     "lines": "cloc ./js ./electron ./server ./src ./less ./index.html ./Gruntfile.js --exclude-dir=libs",
-    "eslint": "node .\\node_modules\\eslint\\bin\\eslint.js js"
+    "eslint": "node .\\node_modules\\eslint\\bin\\eslint.js js server electron"
   },
   "keywords": [
     "angular",
