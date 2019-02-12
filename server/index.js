@@ -75,10 +75,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.get('/', (req, res, next) => {
-    res.sendFile(MAIN_INDEX)
+    res.sendFile(MAIN_INDEX);
 });
 app.get('/debug', (req, res, next) => {
-    res.sendFile(TEST_INDEX)
+    res.sendFile(TEST_INDEX);
 });
 app.post('/lobbies/playerCanJoinRoom', (req, res, next) => {
     const game = games.find(game => game.id === Number(req.body.lobbyId));
@@ -423,7 +423,6 @@ const handleGameOver = game => {
             // Update new rating for all players and store the old rating in the old ratings history
             const promises = [];
             playersAsList.filter(p => p.type === PLAYER_TYPES.HUMAN).forEach(p => {
-                console.log(p.newRating)
                 const promise = firebaseAdmin.database().ref('users/' + p.userUid + '/rating').set(p.newRating).then(() => {
                     const oldRatings = [...p.oldRatings, Object.assign({
                         timestamp: Date.now()

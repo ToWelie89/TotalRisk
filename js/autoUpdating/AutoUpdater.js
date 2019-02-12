@@ -1,4 +1,10 @@
 const { MESSAGE_TYPES, ERROR_TYPES } = require('./updaterConstants');
+const { runningElectron } = require('./../helpers');
+let ipcRenderer;
+
+if (runningElectron()) {
+    ipcRenderer = require('electron').ipcRenderer;
+}
 
 class AutoUpdater {
     constructor() {
@@ -19,7 +25,7 @@ class AutoUpdater {
             }
         };
 
-        if (ipcRenderer) {
+        if (runningElectron() && ipcRenderer) {
             ipcRenderer.on('message', function(event, { state, data }) {
                 if (state === MESSAGE_TYPES.CHECKING_FOR_UPDATES) {
                     console.log('Checking for updates');

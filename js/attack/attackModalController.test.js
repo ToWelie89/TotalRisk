@@ -97,7 +97,6 @@ describe('attackModalController', () => {
             };
         };
         document.getElementById = selector => {
-            this.selector = selector;
             return {
                 getBBox: () => {
                     return {

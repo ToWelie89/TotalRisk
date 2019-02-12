@@ -34,7 +34,7 @@ describe('DeploymentHandler', () => {
         });
 
         const response = deploymentHandler.calculateReinforcements(players, map, turn);
-        expect(response).toEqual(points);
+        expect(response.totalReinforcements).toEqual(points);
     });
 
     it('calculateReinforcements - Africa and Europe controlled by player', () => {
@@ -65,7 +65,7 @@ describe('DeploymentHandler', () => {
         points += europe.bonusTroops;
 
         const response = deploymentHandler.calculateReinforcements(players, map, turn);
-        expect(response).toEqual(points);
+        expect(response.totalReinforcements).toEqual(points);
     });
 
     it('calculateReinforcements - Asia controlled by player', () => {
@@ -94,7 +94,7 @@ describe('DeploymentHandler', () => {
         points += asia.bonusTroops;
 
         const response = deploymentHandler.calculateReinforcements(players, map, turn);
-        expect(response).toEqual(points);
+        expect(response.totalReinforcements).toEqual(points);
     });
 
     it('calculateReinforcements - Only one territory controlled by player', () => {
@@ -112,6 +112,6 @@ describe('DeploymentHandler', () => {
         map.getAllTerritoriesAsList()[0].owner = 'Caesar';
 
         const response = deploymentHandler.calculateReinforcements(players, map, turn);
-        expect(response).toEqual(CONSTANTS.MIN_REINFORCEMENTS);
+        expect(response.totalReinforcements).toEqual(CONSTANTS.MIN_REINFORCEMENTS);
     });
 });
