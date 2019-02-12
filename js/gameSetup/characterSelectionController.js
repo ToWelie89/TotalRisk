@@ -130,7 +130,7 @@ class CharacterSelectionController {
             this.vm.currentSelectedPlayer = {
                 avatar,
                 name: Object.entries(avatars).find(x => x[1] === avatar)[0]
-            }
+            };
         } else {
             if (!this.vm.currentSelectedPlayer.userName) {
                 this.vm.currentSelectedPlayer.name = Object.entries(avatars).find(x => x[1] === avatar)[0];
@@ -144,29 +144,29 @@ class CharacterSelectionController {
             loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', () => {
                 const character = Object.values(this.vm.avatars).find(x => x.id === this.vm.currentSelectedPlayer.avatar.id);
 
-                $(`#selectedCharacterSvg svg g[category="hat"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="head"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="eyes"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="nose"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="mouth"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="torso"] > g`).css('visibility', 'hidden');
-                $(`#selectedCharacterSvg svg g[category="legs"] > g`).css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="hat"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="head"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="eyes"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="eyebrows"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="nose"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="mouth"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="torso"] > g').css('visibility', 'hidden');
+                $('#selectedCharacterSvg svg g[category="legs"] > g').css('visibility', 'hidden');
 
-                $(`#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]').css('visibility', 'visible');
+                $('#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]').css('visibility', 'visible');
 
-                $(`#selectedCharacterSvg svg .skinTone`).css('fill', character.skinTone);
+                $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
             });
         }
 
-        $('#characterSelectionFlag .flag-element').css('background-image', `url("${this.vm.currentSelectedPlayer.avatar.flag}")`)
+        $('#characterSelectionFlag .flag-element').css('background-image', `url("${this.vm.currentSelectedPlayer.avatar.flag}")`);
     }
 
     selectAvatarAndClose(avatar) {

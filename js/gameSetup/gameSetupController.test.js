@@ -18,7 +18,7 @@ describe('gameSetupController', () => {
                 onAuthStateChanged: callback => {
                     callback({ user: 'test' });
                 }
-            }
+            };
         };
         firebase.database = () => {
             return {
@@ -29,9 +29,9 @@ describe('gameSetupController', () => {
                                 val: () => ({ test: 1 })
                             });
                         }
-                    }
+                    };
                 }
-            }
+            };
         };
 
         mockSoundService = createSoundService();
@@ -53,9 +53,9 @@ describe('gameSetupController', () => {
                                 })
                             });
                         }
-                    }
+                    };
                 }
-            }
+            };
         };
         // Act
         gameSetupController.init();
@@ -84,9 +84,9 @@ describe('gameSetupController', () => {
                                 })
                             });
                         }
-                    }
+                    };
                 }
-            }
+            };
         };
         // Act
         gameSetupController.init();
@@ -111,9 +111,9 @@ describe('gameSetupController', () => {
                                 })
                             });
                         }
-                    }
+                    };
                 }
-            }
+            };
         };
         // Act
         await gameSetupController.fetchDefaultAvatar();
@@ -147,9 +147,9 @@ describe('gameSetupController', () => {
                                 })
                             });
                         }
-                    }
+                    };
                 }
-            }
+            };
         };
         // Act
         await gameSetupController.fetchDefaultAvatar();
@@ -254,8 +254,7 @@ describe('gameSetupController', () => {
         gameSetupController.init();
         gameSetupController.players[0].avatar = Object.keys(avatars).map(key => avatars[key])[0];
         gameSetupController.players[1].avatar = Object.keys(avatars).map(key => avatars[key])[2];
-        const usedAvatars = [Object.keys(avatars).map(key => avatars[key])[0],
-                            Object.keys(avatars).map(key => avatars[key])[2]];
+        const usedAvatars = [Object.keys(avatars).map(key => avatars[key])[0], Object.keys(avatars).map(key => avatars[key])[2]];
         // Act
         const unusedAvatar = gameSetupController.getUnusedAvatar();
         // Assert
@@ -267,8 +266,7 @@ describe('gameSetupController', () => {
         gameSetupController.init();
         gameSetupController.players[0].name = Object.keys(avatars).map(key => key)[0];
         gameSetupController.players[1].name = Object.keys(avatars).map(key => key)[3];
-        const usedNames = [Object.keys(avatars).map(key => avatars[key])[0],
-                           Object.keys(avatars).map(key => avatars[key])[3]];
+        const usedNames = [Object.keys(avatars).map(key => avatars[key])[0], Object.keys(avatars).map(key => avatars[key])[3]];
         // Act
         const unusedNames = gameSetupController.getFirstUnusedName();
         // Assert

@@ -10,12 +10,12 @@ const displayText = (territory, textElement) => {
     document.getElementById('mainGameWrapper').appendChild(textElement);
 
     $(`#${textElement.id}`).animate({
-      opacity: 0,
-      top: "-=15"
+        opacity: 0,
+        top: '-=15'
     }, 800, function() {
-      $(`#${textElement.id}`).remove();
+        $(`#${textElement.id}`).remove();
     });
-}
+};
 
 const displayDamageNumbers = (territoryName, damageValue) => {
     const territories = document.querySelectorAll(`.troopCounter[for="${territoryName}"]`);

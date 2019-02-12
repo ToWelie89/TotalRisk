@@ -23,7 +23,7 @@ class DeploymentHandler {
             reinforcementsFromTerritories,
             totalReinforcements,
             regionBonuses
-        }
+        };
     }
 }
 

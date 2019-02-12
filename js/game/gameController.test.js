@@ -1,14 +1,16 @@
 import GameModalController from './gameController.js';
-import {createUibModal,
-        createSoundService,
-        createScope,
-        createSce,
-        createGameEngine,
-        createMapService,
-        createRootScope,
-        createTutorialService,
-        createAiHandler,
-        createSettings} from './../test/mockHelper';
+import {
+    createUibModal,
+    createSoundService,
+    createScope,
+    createSce,
+    createGameEngine,
+    createMapService,
+    createRootScope,
+    createTutorialService,
+    createAiHandler,
+    createSettings
+} from './../test/mockHelper';
 import Player from './../player/player';
 import {PLAYER_TYPES} from './../player/playerConstants';
 import {VICTORY_GOALS, TURN_PHASES} from './../gameConstants';
@@ -46,7 +48,7 @@ describe('gameController', () => {
     let players = [];
 
     beforeEach(() => {
-        HTMLCanvasElement.prototype.getContext = jest.fn()
+        HTMLCanvasElement.prototype.getContext = jest.fn();
 
         document.querySelectorAll = () => [];
 
@@ -61,17 +63,19 @@ describe('gameController', () => {
         mockSettings = createSettings();
         mockAiHandler = createAiHandler();
 
-        gameController = new GameModalController(mockScope,
-                                                 mockRootScope,
-                                                 mockSce,
-                                                 mockUibModal,
-                                                 {},
-                                                 mockGameEngine,
-                                                 mockSoundService,
-                                                 mockMapService,
-                                                 mockTutorialService,
-                                                 mockAiHandler,
-                                                 mockSettings);
+        gameController = new GameModalController(
+            mockScope,
+            mockRootScope,
+            mockSce,
+            mockUibModal,
+            {},
+            mockGameEngine,
+            mockSoundService,
+            mockMapService,
+            mockTutorialService,
+            mockAiHandler,
+            mockSettings
+        );
     });
 
     const initData = () => {
@@ -119,7 +123,7 @@ describe('gameController', () => {
         mockUibModal.open = (kek) => {
             return {
                 result: Promise.resolve()
-            }
+            };
         };
         // Act
         gameController.startGame(players, VICTORY_GOALS[0]);
@@ -212,9 +216,9 @@ describe('gameController', () => {
         window.$ = selector => {
             return  {
                 css: (attribute, value) => {
-                    cssCall(attribute, value)
+                    cssCall(attribute, value);
                 }
-            }
+            };
         };
         initData();
         mockGameEngine.playerWhoWon = players[0].name;

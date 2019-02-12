@@ -101,6 +101,6 @@ const getTerritoriesForMovement = (territory, map) => {
     }
 
     return adjacentApplicableTerritories;
-}
+};
 
 module.exports = {getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesByOwner, getTerritoriesInRegionByOwner, getCurrentOwnershipStandings, getTerritoriesForMovement};

@@ -1,24 +1,11 @@
 import {
     shuffle,
     arraysEqual,
-    delay,
     allValuesInArrayAreEqual,
     removeDuplicates,
-    chancePercentage,
-    randomIntFromInterval,
-    randomDoubleFromInterval,
-    runningElectron,
-    electronDevVersion,
-    hashString,
     normalizeTimeFromTimestamp,
-    getRandomColor,
-    getRandomInteger,
-    lightenDarkenColor,
     objectsAreEqual,
     arrayIncludesObject,
-    loadSvgIntoDiv,
-    startGlobalLoading,
-    stopGlobalLoading
 } from './helpers';
 
 describe('Helpers', () => {

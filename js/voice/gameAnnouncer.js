@@ -17,7 +17,7 @@ class GameAnnouncer {
     }
 
     speakAsPromise(text, onstartCallback, onendCallback) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             responsiveVoice.speak(text, this.announcerType, {
                 pitch: this.pitch,
                 volume: (this.settings.musicVolume / 100),

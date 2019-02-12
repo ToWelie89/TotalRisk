@@ -17,7 +17,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "publish": "electron-builder -p always",
-    "lines": "cloc ./js ./electron ./server ./src ./less ./index.html ./Gruntfile.js --exclude-dir=libs"
+    "lines": "cloc ./js ./electron ./server ./src ./less ./index.html ./Gruntfile.js --exclude-dir=libs",
+    "eslint": "node .\\node_modules\\eslint\\bin\\eslint.js js"
   },
   "keywords": [
     "angular",
@@ -98,6 +99,7 @@
     "electron": "^3.0.2",
     "electron-builder": "^20.28.4",
     "electron-rebuild": "^1.8.2",
+    "eslint": "^5.13.0",
     "grunt-cli": "^1.2.0",
     "jasmine-core": "^2.4.1",
     "jest": "^23.6.0",

@@ -27,8 +27,8 @@ const getUserCountry = () => {
             resolve(response);
         }).fail(() => {
             reject();
-        })
+        });
     });
-}
+};
 
 module.exports = { playerCanJoinRoom, getUserCountry };

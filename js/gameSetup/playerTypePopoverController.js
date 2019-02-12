@@ -1,7 +1,7 @@
 const {PLAYER_TYPES} = require('./../player/playerConstants');
 
 class PlayerTypePopoverController {
-    constructor($scope) {
+    constructor() {
         this.vm = this;
         this.vm.init = this.init;
         this.vm.getTypeName = this.getTypeName;
@@ -13,12 +13,12 @@ class PlayerTypePopoverController {
     }
 
     getTypeName(type) {
-    	switch(type) {
-    		case PLAYER_TYPES.HUMAN:
-    			return 'Human';
-			case PLAYER_TYPES.AI:
-				return 'AI';
-    	}
+        switch(type) {
+        case PLAYER_TYPES.HUMAN:
+            return 'Human';
+        case PLAYER_TYPES.AI:
+            return 'AI';
+        }
     }
 }
 

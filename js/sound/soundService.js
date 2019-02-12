@@ -31,7 +31,7 @@ class SoundService {
                 const sound = new Sound(fullPath, this.settings);
                 sound.play();
             }
-        }
+        };
     }
 }
 

@@ -25,12 +25,12 @@ describe('DeploymentHandler', () => {
         };
 
         map.getAllTerritoriesAsList().forEach(territory => {
-            territory.owner = 'Caesar'
+            territory.owner = 'Caesar';
         });
 
         let points = Math.floor(map.getAllTerritoriesAsList().length / 3);
         map.regions.forEach(region => {
-            points += region.bonusTroops
+            points += region.bonusTroops;
         });
 
         const response = deploymentHandler.calculateReinforcements(players, map, turn);
@@ -52,8 +52,8 @@ describe('DeploymentHandler', () => {
         map.regions.forEach(region => {
             if (region.name === 'Africa' || region.name === 'Europe') {
                 region.territories.forEach(territory => {
-                    territory.owner = 'Caesar'
-                })
+                    territory.owner = 'Caesar';
+                });
             }
         });
 
@@ -83,8 +83,8 @@ describe('DeploymentHandler', () => {
         map.regions.forEach(region => {
             if (region.name === 'Asia') {
                 region.territories.forEach(territory => {
-                    territory.owner = 'Caesar'
-                })
+                    territory.owner = 'Caesar';
+                });
             }
         });
 

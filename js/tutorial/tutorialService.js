@@ -1,5 +1,5 @@
 const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
-const {MUSIC_VOLUME_DURING_TUTORIAL, GAME_PHASES} = require('./../gameConstants');
+const {MUSIC_VOLUME_DURING_TUTORIAL} = require('./../gameConstants');
 
 class TutorialService {
     constructor(gameEngine, $uibModal, soundService, $rootScope) {
@@ -12,7 +12,7 @@ class TutorialService {
     initTutorialData() {
         this.currentPlayerName = this.gameEngine.turn.player.name;
         this.currentPlayerPronunciation = this.gameEngine.turn.player.avatar.pronounciation ? this.gameEngine.turn.player.avatar.pronounciation : this.gameEngine.turn.player.name;
-        this.currentPlayerColor = this.gameEngine.turn.player.color.mainColor
+        this.currentPlayerColor = this.gameEngine.turn.player.color.mainColor;
 
         const territories = getTerritoriesByOwner(this.gameEngine.map, this.gameEngine.turn.player.name);
         const territory = territories.find(terr => {
@@ -104,7 +104,7 @@ class TutorialService {
                 message: `${this.currentPlayerPronunciation} have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`,
                 markup: `<strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have ${this.gameEngine.troopsToDeploy} reinforcing troops to deploy.`
             },{
-                message: `The amount of reinforcements is determined by how many territories the player controls. Also, if a player has control over an entire region then he will gain additional troops as a region bonus.`
+                message: 'The amount of reinforcements is determined by how many territories the player controls. Also, if a player has control over an entire region then he will gain additional troops as a region bonus.'
             }]
         );
     }
@@ -112,8 +112,8 @@ class TutorialService {
     regionFilterExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `By changing the filter to region you can switch the colors of the map to color by regions. This way you can more easily determine which territories make up each region.`,
-                markup: `By changing the filter to <strong>region</strong> you can switch the colors of the map to color by regions. This way you can more easily determine which <strong>territories</strong> make up each <strong>region</strong>.`,
+                message: 'By changing the filter to region you can switch the colors of the map to color by regions. This way you can more easily determine which territories make up each region.',
+                markup: 'By changing the filter to <strong>region</strong> you can switch the colors of the map to color by regions. This way you can more easily determine which <strong>territories</strong> make up each <strong>region</strong>.',
             }],
             () => {
                 $('#tutorialContainer #showByRegion').addClass('blink_me');
@@ -128,7 +128,7 @@ class TutorialService {
     ownerFilterExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `To view the map by territorial ownership again just press this button.`
+                message: 'To view the map by territorial ownership again just press this button.'
             }],
             () => {
                 $('#tutorialContainer #showByOwner').addClass('blink_me');
@@ -176,7 +176,7 @@ class TutorialService {
     attackPhaseExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `This is the attack phase. In this phase you can invade and try to take over other territories to expand your empire.`
+                message: 'This is the attack phase. In this phase you can invade and try to take over other territories to expand your empire.'
             }]
         );
     }
@@ -210,7 +210,7 @@ class TutorialService {
     }
 
     attackModalStart() {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/attackModal.html',
                 backdrop: 'static',
@@ -226,7 +226,7 @@ class TutorialService {
                             attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
                             defender: this.gameEngine.players.get(this.territoryToAttack.owner),
                             tutorialMode: true
-                        }
+                        };
                     }
                 }
             }).result.then(closeResponse => {
@@ -241,7 +241,7 @@ class TutorialService {
     attackModalExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `This is the attack screen. Here you can see both players involved in the invasion, the attacker and the defender. An invasion is determined by one or more battles.`
+                message: 'This is the attack screen. Here you can see both players involved in the invasion, the attacker and the defender. An invasion is determined by one or more battles.'
             }]
         );
     }
@@ -249,7 +249,7 @@ class TutorialService {
     attackModalFightExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `To fight a battle simply click this button so that both players rolls their dies.`
+                message: 'To fight a battle simply click this button so that both players rolls their dies.'
             }],
             () => {
                 $('#fightButton').addClass('blink_me');
@@ -263,7 +263,7 @@ class TutorialService {
     attackModalRetreatExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `Remember, if an invasion isn't going your way you can always retreat back with your remaining forces by pressing this button.`
+                message: 'Remember, if an invasion isn\'t going your way you can always retreat back with your remaining forces by pressing this button.'
             }],
             () => {
                 $('#retreatButton').addClass('blink_me');
@@ -325,8 +325,8 @@ class TutorialService {
     cardExplanation2() {
         return this.openTutorialPresenter(
             [{
-                message: `If a player wins an invasion in his turn he will always gain a card. The cards can be used in the deployment phase to turn in for extra troops. However a player can only obtain a maximum of one card per turn regardless of how many territories he's conquered. Let's look at the card screen shall we?`,
-                markup: `If a player wins an invasion in his turn he will always gain a card. The cards can be used in the <strong>Deployment</strong> phase to turn in for extra troops. However a player can only obtain a maximum of one card per turn regardless of how many territories he's conquered. Let's look at the card screen shall we?`
+                message: 'If a player wins an invasion in his turn he will always gain a card. The cards can be used in the deployment phase to turn in for extra troops. However a player can only obtain a maximum of one card per turn regardless of how many territories he\'s conquered. Let\'s look at the card screen shall we?',
+                markup: 'If a player wins an invasion in his turn he will always gain a card. The cards can be used in the <strong>Deployment</strong> phase to turn in for extra troops. However a player can only obtain a maximum of one card per turn regardless of how many territories he\'s conquered. Let\'s look at the card screen shall we?'
             }],
             () => {},
             () => {
@@ -336,7 +336,7 @@ class TutorialService {
     }
 
     openCardModal() {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/cardTurnInModal.html',
                 backdrop: 'static',
@@ -348,7 +348,7 @@ class TutorialService {
                     data: () => {
                         return {
                             type: 'tutorial'
-                        }
+                        };
                     }
                 }
             }).result.then(closeResponse => {
@@ -373,7 +373,7 @@ class TutorialService {
     cardModalOpenExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `In this screen we can see all the cards that the player has on hand at the moment. Since he won the previous invasion he now has one card.`
+                message: 'In this screen we can see all the cards that the player has on hand at the moment. Since he won the previous invasion he now has one card.'
             }]
         );
     }
@@ -381,7 +381,7 @@ class TutorialService {
     cardModalOpenExplanation2() {
         return this.openTutorialPresenter(
             [{
-                message: `Down here you can see the available combinations that you can turn in. Also remember that there are wild cards which can be used as a replacement as any other card type. Since our current player only has one card and since this isn't the deployment phase, he cannot do anything at the moment. Therefore we close the card screen instead.`
+                message: 'Down here you can see the available combinations that you can turn in. Also remember that there are wild cards which can be used as a replacement as any other card type. Since our current player only has one card and since this isn\'t the deployment phase, he cannot do anything at the moment. Therefore we close the card screen instead.'
             }],
             () => {
                 $('.cardTurnInCombinations').addClass('blink_me');
@@ -411,7 +411,7 @@ class TutorialService {
     startOfMovementPhase() {
         return this.openTutorialPresenter(
             [{
-                message: `This is the last phase of a players turn, the movement phase. In this phase the players get to make one strategic movement of troops from one territory to another. Both territories must be connected but not necessarily directly adjacent.`
+                message: 'This is the last phase of a players turn, the movement phase. In this phase the players get to make one strategic movement of troops from one territory to another. Both territories must be connected but not necessarily directly adjacent.'
             }]
         );
     }
@@ -439,7 +439,7 @@ class TutorialService {
     }
 
     openMovementModal() {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/movementModal.html',
                 backdrop: 'static',
@@ -475,8 +475,8 @@ class TutorialService {
     movementModalExplanation2() {
         return this.openTutorialPresenter(
             [{
-                message: `When you are done simply click the move button to perform the move.`,
-                markup: `When you are done simply click the <strong>MOVE</strong>-button to perform the move.`,
+                message: 'When you are done simply click the move button to perform the move.',
+                markup: 'When you are done simply click the <strong>MOVE</strong>-button to perform the move.',
             }],
             () => {
                 $('#moveButton').addClass('blink_me');
@@ -491,7 +491,7 @@ class TutorialService {
     endOfTurnExplanation() {
         return this.openTutorialPresenter(
             [{
-                message: `Now that the movement phase is complete this is the end of the players turn. After this it would be the next players turn. The game will go on until one player meets the terms for victory.`
+                message: 'Now that the movement phase is complete this is the end of the players turn. After this it would be the next players turn. The game will go on until one player meets the terms for victory.'
             }]
         );
     }
@@ -500,7 +500,7 @@ class TutorialService {
         if (!this.gameEngine.isTutorialMode) {
             throw new Error('tutorial cancelled');
         }
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/turnPresentationModal.html',
                 backdrop: 'static',

@@ -1,19 +1,19 @@
 const createUibModalInstance = () => {
     return {
         close: jest.fn()
-    }
+    };
 };
 
 const createUibModal = () => {
     return {
         open: jest.fn()
-    }
+    };
 };
 
 const createGameAnnouncerService = () => {
     return {
         mute: jest.fn()
-    }
+    };
 };
 
 const createSocketService = () => {
@@ -21,7 +21,7 @@ const createSocketService = () => {
         gameSocket: {
             emit: jest.fn()
         }
-    }
+    };
 };
 
 const createTutorialService = () => {
@@ -34,7 +34,7 @@ const createTutorialService = () => {
         afterAttack: jest.fn().mockImplementation(attackData => Promise.resolve()),
         afterAttack2: jest.fn().mockImplementation(attackData => Promise.resolve()),
         moveAfterAttackExplanation: jest.fn().mockImplementation(attackData => Promise.resolve())
-    }
+    };
 };
 
 const createSoundService = () => {
@@ -75,51 +75,51 @@ const createSoundService = () => {
         tick: {
             play: jest.fn()
         }
-    }
+    };
 };
 
 const createScope = () => {
     return {
         $apply: jest.fn(),
         $watch: jest.fn()
-    }
+    };
 };
 
 const createRootScope = () => {
     return {
         $watch: jest.fn()
-    }
+    };
 };
 
 const createSce = () => {
     return {
         trustAsHtml: jest.fn()
-    }
+    };
 };
 
 const createGameEngine = () => {
     return {
         toggleSound: jest.fn(),
         startGame: jest.fn()
-    }
+    };
 };
 
 const createMapService = () => {
     return {
         updateMap: jest.fn()
-    }
+    };
 };
 
 const createSettings = () => {
     return {
         showAnnouncer: jest.fn()
-    }
+    };
 };
 
 const createAiHandler = () => {
     return {
         update: jest.fn()
-    }
+    };
 };
 
 export {

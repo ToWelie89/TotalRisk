@@ -8,8 +8,7 @@ const {
     PAUSE_MODES
 } = require('./../gameConstants');
 const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = require('./../map/mapHelpers');
-const Player = require('./../player/player');
-const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
+const {PLAYER_TYPES} = require('./../player/playerConstants');
 const {delay, loadSvgIntoDiv, lightenDarkenColor} = require('./../helpers');
 const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
@@ -199,7 +198,7 @@ class GameController {
                 display: false
             },
             tooltips: {
-                 enabled: false
+                enabled: false
             },
             hover: {
                 mode: null
@@ -259,7 +258,7 @@ class GameController {
                 </div>
             `;
         });
-        ownageHtml += '</div>'
+        ownageHtml += '</div>';
         this.vm.ownageChartTooltip = this.$sce.trustAsHtml(ownageHtml);
 
         // Troop chart tooltip
@@ -273,7 +272,7 @@ class GameController {
                 </div>
             `;
         });
-        troopHtml += '</div>'
+        troopHtml += '</div>';
         this.vm.troopChartTooltip = this.$sce.trustAsHtml(troopHtml);
     }
 
@@ -317,38 +316,38 @@ class GameController {
         };
 
         Promise.resolve()
-        .then(() => this.pauser())
-        .then(() => this.aiHandler.turnInCards())
-        .then(() => this.pauser())
-        .then(() => this.aiHandler.contemplateAlternativesForAttack())
-        .then(() => this.pauser())
-        .then(() => this.aiHandler.deployTroops(() => {
-            this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-            this.updateChartData();
-            this.$scope.$apply();
-        }))
-        .then(() => this.pauser())
-        .then(() => this.nextTurnAI())
-        .then(() => this.pauser())
-        .then(() => this.aiHandler.attackTerritories(() => {
-            this.updateChartData();
-        }))
-        .then(() => this.pauser())
-        .then(() => this.nextTurnAI())
-        .then(() => this.pauser())
-        .then(() => this.aiHandler.movementPhase())
-        .then(() => this.pauser())
-        .then(() => {
-            this.nextTurn();
-            this.$scope.$apply();
-        })
-        .catch((reason) => {
-            if (reason === 'playerWon') {
-                console.log('GAME OVER!');
-            } else {
-                console.log('AI error', reason);
-            }
-        });
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.turnInCards())
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.contemplateAlternativesForAttack())
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.deployTroops(() => {
+                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                this.updateChartData();
+                this.$scope.$apply();
+            }))
+            .then(() => this.pauser())
+            .then(() => this.nextTurnAI())
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.attackTerritories(() => {
+                this.updateChartData();
+            }))
+            .then(() => this.pauser())
+            .then(() => this.nextTurnAI())
+            .then(() => this.pauser())
+            .then(() => this.aiHandler.movementPhase())
+            .then(() => this.pauser())
+            .then(() => {
+                this.nextTurn();
+                this.$scope.$apply();
+            })
+            .catch((reason) => {
+                if (reason === 'playerWon') {
+                    console.log('GAME OVER!');
+                } else {
+                    console.log('AI error', reason);
+                }
+            });
     }
 
     openMenu() {
@@ -458,7 +457,7 @@ class GameController {
                 data: () => {
                     return {
                         type: 'normal'
-                    }
+                    };
                 }
             }
         }).result.then(closeResponse => {
@@ -544,7 +543,7 @@ class GameController {
     nextTurnAI () {
         this.vm.turn = this.gameEngine.nextTurn();
         if (this.settings.showAnnouncer) {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 this.turnPresenterIsOpen = true;
                 return this.$uibModal.open({
                     templateUrl: 'src/modals/turnPresentationModal.html',
@@ -570,7 +569,7 @@ class GameController {
                 });
             });
         } else {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 this.mapService.updateMap(this.gameEngine.filter);
                 resolve();
             });
@@ -606,8 +605,9 @@ class GameController {
             return;
         }
 
-        return this.gameEngine.players && this.gameEngine.players.get(this.vm.turn.player.name) ?
-                        this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor : '';
+        return this.gameEngine.players && this.gameEngine.players.get(this.vm.turn.player.name)
+            ? this.gameEngine.players.get(this.vm.turn.player.name).color.mainColor
+            : '';
     }
 
     testAttackPhase(players) {
@@ -641,7 +641,7 @@ class GameController {
                         attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
                         defender: this.gameEngine.players.get(clickedTerritory.owner),
                         multiplayer: false
-                    }
+                    };
                 }
             }
         }).result.then(closeResponse => {

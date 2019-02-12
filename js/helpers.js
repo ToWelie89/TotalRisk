@@ -19,9 +19,9 @@ const arraysEqual = (a, b) => {
         if (a[i] !== b[i]) return false;
     }
     return true;
-}
+};
 
-const delay = ms => new Promise((resolve, reject) => {
+const delay = ms => new Promise(resolve => {
     setTimeout(resolve, ms);
 });
 
@@ -38,12 +38,12 @@ const removeDuplicates = (array) => {
         return false;
     });
     return arr;
-}
+};
 
 const chancePercentage = (x) => {
     const perc = Math.floor((Math.random() * 100) + 1);
     return x <= perc;
-}
+};
 
 const randomIntFromInterval = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
 
@@ -59,13 +59,13 @@ const electronDevVersion = () => runningElectron() && window.process.env.NODE_EN
 const hashString = string => {
     let hash = 0, i, chr;
     if (string.length === 0) return hash;
-        for (i = 0; i < string.length; i++) {
-            chr   = string.charCodeAt(i);
-            hash  = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
+    for (i = 0; i < string.length; i++) {
+        chr   = string.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
     }
     return hash;
-}
+};
 
 const normalizeTimeFromTimestamp = timestamp => {
     const date = new Date(timestamp);
@@ -80,7 +80,7 @@ const normalizeTimeFromTimestamp = timestamp => {
     }
 
     return `${hours}:${minutes}`;
-}
+};
 
 const getRandomColor = () => {
     const h = getRandomInteger(0, 359);
@@ -89,11 +89,11 @@ const getRandomColor = () => {
     const a = 1;
 
     return `hsla(${h}, ${s}%, ${l}%, ${a})`;
-}
+};
 
 const getRandomInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min) ) + min;
-}
+};
 
 const lightenDarkenColor = (colorCode, amount) => {
     if (!colorCode) {
@@ -125,7 +125,7 @@ const lightenDarkenColor = (colorCode, amount) => {
         g = 0;
     }
     return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
-}
+};
 
 const objectsAreEqual = (obj1, obj2) => {
     if (!obj1 || !obj2) {
@@ -140,23 +140,23 @@ const objectsAreEqual = (obj1, obj2) => {
 
     Object.keys(obj1).forEach(key => {
         if (typeof obj1[key] === 'object') {
-            returnValue = (objectsAreEqual(obj1[key], obj2[key]))
+            returnValue = (objectsAreEqual(obj1[key], obj2[key]));
         } else if (!(key in obj2) || obj1[key] !== obj2[key]) {
             returnValue = false;
         }
-    })
+    });
 
     if (Object.keys(obj1).length !== Object.keys(obj2).length) {
         returnValue = false;
     }
 
     return returnValue;
-}
+};
 
 const arrayIncludesObject = (array, object) => {
     const o = array.find(x => objectsAreEqual(x, object));
     return o !== undefined;
-}
+};
 
 const loadSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
     $.get(svgPath, (svg) => {
@@ -170,7 +170,7 @@ const loadSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
             }, callbackTimer);
         }
     }, 'text');
-}
+};
 
 const startGlobalLoading = () => {
     $('#backgroundImage').css('filter', 'blur(5px)');
@@ -183,7 +183,7 @@ const startGlobalLoading = () => {
     $('#authenticationBox').css('-webkit-filter', 'blur(5px)');
 
     $('#globalLoading').css('opacity', '1');
-}
+};
 
 const stopGlobalLoading = () => {
     $('#backgroundImage').css('filter', '');
@@ -196,7 +196,7 @@ const stopGlobalLoading = () => {
     $('#authenticationBox').css('-webkit-filter', '');
 
     $('#globalLoading').css('opacity', '0');
-}
+};
 
 module.exports = {
     shuffle,

@@ -100,7 +100,7 @@ class AttackModalController {
                     this.vm.loading = false;
                     this.$scope.$apply();
                     if (attackData.tutorialMode) {
-                        this.tutorial = this.attackData.tutorialMode
+                        this.tutorial = this.attackData.tutorialMode;
                         this.runTutorial();
                     }
                 });
@@ -121,29 +121,29 @@ class AttackModalController {
     runTutorial() {
         this.tutorialService.initTutorialData();
         this.tutorialService.attackModalExplanation()
-        .then(() => this.tutorialService.attackModalFightExplanation())
-        .then(() => this.tutorialService.attackModalRetreatExplanation())
-        .then(() => this.tutorialService.startAttack(this.attackData))
-        .then(() => {
-            this.fight([6, 4, 2], [3]);
-            return delay(this.tutorialDelayAfterStartAttack);
-        })
-        .then(() => this.tutorialService.afterAttack(this.attackData))
-        .then(() => this.tutorialService.afterAttack2(this.attackData))
-        .then(() => this.tutorialService.moveAfterAttackExplanation(this.attackData))
-        .then(() => {
-            return new Promise((resolve, reject) => {
-                this.vm.moveNumberOfTroops = this.vm.attacker.numberOfTroops;
-                this.$scope.$apply();
-                resolve();
+            .then(() => this.tutorialService.attackModalFightExplanation())
+            .then(() => this.tutorialService.attackModalRetreatExplanation())
+            .then(() => this.tutorialService.startAttack(this.attackData))
+            .then(() => {
+                this.fight([6, 4, 2], [3]);
+                return delay(this.tutorialDelayAfterStartAttack);
+            })
+            .then(() => this.tutorialService.afterAttack(this.attackData))
+            .then(() => this.tutorialService.afterAttack2(this.attackData))
+            .then(() => this.tutorialService.moveAfterAttackExplanation(this.attackData))
+            .then(() => {
+                return new Promise(resolve => {
+                    this.vm.moveNumberOfTroops = this.vm.attacker.numberOfTroops;
+                    this.$scope.$apply();
+                    resolve();
+                });
+            })
+            .then(() => {
+                this.moveTroops();
+            })
+            .catch((error) => {
+                console.log('Attack modal error', error);
             });
-        })
-        .then(() => {
-            this.moveTroops();
-        })
-        .catch((error) => {
-            console.log('Attack modal error', error);
-        });
     }
 
     blitzFight() {
@@ -207,7 +207,7 @@ class AttackModalController {
             context.battleHandlerResponse.defenderCasualties,
             context.vm.attacker.numberOfTroops,
             context.vm.defender.numberOfTroops
-        )
+        );
 
         context.vm.diceAreRolling = false;
 

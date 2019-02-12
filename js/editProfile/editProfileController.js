@@ -3,7 +3,6 @@ require('firebase/auth');
 
 const {GAME_PHASES} = require('./../gameConstants');
 const {avatars} = require('./../player/playerConstants');
-const {debounce} = require('./../helpers');
 const CountryCodes = require('./../editor/countryCodes');
 
 class EditProfileController {
@@ -81,9 +80,8 @@ class EditProfileController {
                         this.vm.loading = false;
                         this.$scope.$apply();
                     }
-                })
-                .catch(err => {
-                    console.log(err)
+                }).catch(err => {
+                    console.log(err);
                     this.toastService.errorToast(
                         '',
                         err.code
@@ -101,8 +99,7 @@ class EditProfileController {
     }
 
     updateBio() {
-        firebase.database().ref('users/' + this.vm.user.uid + '/bio').set(this.vm.user.bio)
-        .then(() => {
+        firebase.database().ref('users/' + this.vm.user.uid + '/bio').set(this.vm.user.bio).then(() => {
             this.toastService.successToast('', 'Updated bio');
             this.socketService.lobbiesSocket.emit('updatedBioOfUser', this.vm.user.uid);
         });
@@ -132,19 +129,16 @@ class EditProfileController {
         );
 
         const user = firebase.auth().currentUser;
-        user.reauthenticateAndRetrieveDataWithCredential(credential)
-        .then(() => {
+        user.reauthenticateAndRetrieveDataWithCredential(credential).then(() => {
             return user.updatePassword(this.vm.newPassword1);
-        })
-        .then(() => {
+        }).then(() => {
             this.toastService.successToast('', 'Your password has been changed successfully!');
             this.vm.currentPassword = '';
             this.vm.newPassword1 = '';
             this.vm.newPassword2 = '';
             this.vm.setNewPasswordLoading = false;
             this.$scope.$apply();
-        })
-        .catch(error => {
+        }).catch(error => {
             this.vm.setNewPasswordLoading = false;
             this.$scope.$apply();
 
@@ -177,8 +171,7 @@ class EditProfileController {
 
             this.vm.user.defaultAvatar = closeResponse.avatar;
 
-            firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id)
-            .then(() => {
+            firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id).then(() => {
                 this.$rootScope.$broadcast('updatedDefaultAvatar', {});
             });
         });

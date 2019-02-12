@@ -40,7 +40,7 @@ class GameEngine {
         }
     }
 
-    toggleSound(playSound) {
+    toggleSound() {
         if (this.thisIsBackendGameEngine) return;
         if (this.settings.playSound) {
             let music;
@@ -269,7 +269,7 @@ class GameEngine {
         }
     }
 
-    handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim, playVoice = true) {
+    handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim) {
         if (!this.currentGameIsMultiplayer && this.settings.playSound) {
             this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
                 if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {

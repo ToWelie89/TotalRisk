@@ -14,7 +14,7 @@ describe('cardHelpers', () => {
         cards.forEach(card => {
             card.isSelected = true;
         });
-    }
+    };
 
     it('getBestPossibleCombination return the best possible combination on the hand', () => {
         // Arrange

@@ -1,4 +1,3 @@
-const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -101,7 +100,7 @@ class LobbiesController {
 
     setMapTooltips() {
         const maps = Object.entries(MAPS).map(x => {
-            return Object.assign(x[1], { key: x[0] })
+            return Object.assign(x[1], { key: x[0] });
         });
 
         this.vm.mapTooltips = {};
@@ -146,7 +145,7 @@ class LobbiesController {
         const joinRoom = () => {
             this.$rootScope.currentLobby = lobby;
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
-        }
+        };
 
         const user = firebase.auth().currentUser;
 
@@ -195,7 +194,7 @@ class LobbiesController {
             keyboard: false
         }).result.then((closeResponse) => {
             if (closeResponse && closeResponse.gameName) {
-                startGlobalLoading()
+                startGlobalLoading();
                 const id = Math.floor((Math.random() * 1000000000) + 1);
                 const user = firebase.auth().currentUser;
                 const creator = user.displayName ? user.displayName : user.email;
@@ -272,7 +271,6 @@ class LobbiesController {
 
         this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
             this.vm.lobbies = [];
-            console.log(lobbies)
             lobbies.forEach(lobby => {
                 this.vm.lobbies.push(lobby);
             });
@@ -312,8 +310,8 @@ class LobbiesController {
         }
         this.vm.filteredLobbies = this.vm.lobbies.filter(
             x =>
-            x.roomName.toLowerCase().includes(this.vm.searchText.toLowerCase()) ||
-            x.creator.toLowerCase().includes(this.vm.searchText.toLowerCase())
+                x.roomName.toLowerCase().includes(this.vm.searchText.toLowerCase()) ||
+                x.creator.toLowerCase().includes(this.vm.searchText.toLowerCase())
         );
     }
 

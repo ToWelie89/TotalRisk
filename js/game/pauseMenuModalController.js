@@ -22,7 +22,7 @@ class PauseMenuModalController {
         this.vm.states = {
             MAIN_MENU: 0,
             SETTINGS: 1
-        }
+        };
         this.vm.currentState = this.vm.states.MAIN_MENU;
 
         this.vm.multiplayer = multiplayer ? multiplayer : false;

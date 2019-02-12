@@ -51,18 +51,18 @@ class MovementModalController {
     runTutorial() {
         this.tutorialService.initTutorialData();
         this.tutorialService.movementModalExplanation()
-        .then(() => delay(1500))
-        .then(() => this.tutorialService.movementModalExplanation2())
-        .then(() => {
-            // Move troops
-            this.vm.moveFrom.numberOfTroops -= this.vm.moveNumberOfTroops;
-            this.vm.moveTo.numberOfTroops = this.vm.moveNumberOfTroops + this.vm.moveTo.numberOfTroops;
+            .then(() => delay(1500))
+            .then(() => this.tutorialService.movementModalExplanation2())
+            .then(() => {
+                // Move troops
+                this.vm.moveFrom.numberOfTroops -= this.vm.moveNumberOfTroops;
+                this.vm.moveTo.numberOfTroops = this.vm.moveNumberOfTroops + this.vm.moveTo.numberOfTroops;
 
-            this.$uibModalInstance.close({
-                from: this.vm.moveFrom,
-                to: this.vm.moveTo
+                this.$uibModalInstance.close({
+                    from: this.vm.moveFrom,
+                    to: this.vm.moveTo
+                });
             });
-        })
     }
 
     getCountrySvg() {

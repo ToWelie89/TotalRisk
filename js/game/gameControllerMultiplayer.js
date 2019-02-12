@@ -2,6 +2,7 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {
+    PAUSE_MODES,
     GAME_PHASES,
     TURN_PHASES,
     ATTACK_MUSIC
@@ -94,8 +95,9 @@ class GameControllerMultiplayer extends GameController {
     }
 
     charactersLeft () {
-        return this.vm.showLobbyChat ? (this.vm.chatMaxLengthMessage - this.vm.lobbyChatMessage.length)
-                                     : (this.vm.chatMaxLengthMessage - this.vm.globalChatMessage.length);
+        return this.vm.showLobbyChat
+            ? (this.vm.chatMaxLengthMessage - this.vm.lobbyChatMessage.length)
+            : (this.vm.chatMaxLengthMessage - this.vm.globalChatMessage.length);
     }
 
     sendMessageLobby() {
@@ -172,7 +174,7 @@ class GameControllerMultiplayer extends GameController {
                 data: () => {
                     return {
                         type: 'normal'
-                    }
+                    };
                 }
             }
         }).result.then(closeResponse => {
@@ -202,7 +204,7 @@ class GameControllerMultiplayer extends GameController {
                         attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
                         defender: this.gameEngine.players.get(clickedTerritory.owner),
                         multiplayer: true
-                    }
+                    };
                 }
             }
         }).result.then(closeResponse => {
@@ -246,7 +248,7 @@ class GameControllerMultiplayer extends GameController {
                 // this.soundService.addTroopSound.play();
                 displayReinforcementNumbers(clickedTerritory.name);
 
-                this.socketService.gameSocket.emit('troopAddedToTerritory', clickedTerritory.name)
+                this.socketService.gameSocket.emit('troopAddedToTerritory', clickedTerritory.name);
             } else {
                 this.soundService.denied.play();
             }
@@ -317,14 +319,14 @@ class GameControllerMultiplayer extends GameController {
         this.turnTimerSeconds = turnLengthMs;
         this.turnTimerFunction = () => {
             this.turnTimerSeconds -= 100;
-            const totalWidth = $("#timerBar").width();
+            const totalWidth = $('#timerBar').width();
             const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((turnLengthMs - this.turnTimerSeconds) / turnLengthMs);
             this.vm.timerWidth = Math.floor(widthPercentage * totalWidth);
             this.vm.secondsLeft = Math.floor(this.turnTimerSeconds / 1000);
 
             this.$scope.$apply();
             if (this.turnTimerSeconds <= 0) {
-              clearInterval(this.turnTimer);
+                clearInterval(this.turnTimer);
             }
         };
         this.turnTimer = setInterval(this.turnTimerFunction, 100);
@@ -374,25 +376,25 @@ class GameControllerMultiplayer extends GameController {
                 loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#victoryPortraitMultiPlayer', () => {
                     const character = this.vm.playerWhoWon.avatar;
 
-                    $(`#victoryPortraitMultiPlayer svg g[category="hat"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="head"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="eyes"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="nose"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="mouth"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="torso"] > g`).css('visibility', 'hidden');
-                    $(`#victoryPortraitMultiPlayer svg g[category="legs"] > g`).css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="hat"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="head"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="eyes"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="nose"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="mouth"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="torso"] > g').css('visibility', 'hidden');
+                    $('#victoryPortraitMultiPlayer svg g[category="legs"] > g').css('visibility', 'hidden');
 
-                    $(`#victoryPortraitMultiPlayer svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                    $(`#victoryPortraitMultiPlayer svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="hat"] > g[name="${character.hat}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="head"] > g[name="${character.head}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g[name="${character.eyebrows}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="eyes"] > g[name="${character.eyes}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="nose"] > g[name="${character.nose}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="mouth"] > g[name="${character.mouth}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="torso"] > g[name="${character.torso}"]').css('visibility', 'visible');
+                    $('#victoryPortraitMultiPlayer svg g[category="legs"] > g[name="${character.legs}"]').css('visibility', 'visible');
 
-                    $(`#victoryPortraitMultiPlayer svg .skinTone`).css('fill', character.skinTone);
+                    $('#victoryPortraitMultiPlayer svg .skinTone').css('fill', character.skinTone);
                 });
             }
 

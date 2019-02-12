@@ -30,7 +30,7 @@ describe('GameEngine', () => {
     });
 
     it('toggleSound - toggles sound to on, start playing background music', () => {
-        gameEngine.setMusic = jest.fn()
+        gameEngine.setMusic = jest.fn();
         gameEngine.toggleSound(true);
         expect(gameEngine.setMusic).toHaveBeenCalled();
     });

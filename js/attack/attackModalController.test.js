@@ -38,7 +38,7 @@ describe('attackModalController', () => {
             attackFrom: territory2,
             attacker: 'Kalle',
             defender: 'Pelle'
-        }
+        };
 
         mockSoundService = createSoundService();
         mockUibModalInstance = createUibModalInstance();
@@ -51,7 +51,7 @@ describe('attackModalController', () => {
                 get: () => {
                     return {
                         userUid: 'testUID'
-                    }
+                    };
                 }
             }
         };
@@ -68,15 +68,18 @@ describe('attackModalController', () => {
 
         // Mock dice boxes
         let dice_box = function(container, dimensions) {
-        }
+            this.container = container;
+            this.dimensions = dimensions;
+        };
         dice_box.prototype.throw = function(diceRolls, after_roll, context) {
             after_roll([], context);
-        }
+        };
         attackModalController.attacker_box = new dice_box('container', { w: 500, h: 300 });
         attackModalController.defender_box = new dice_box('container', { w: 500, h: 300 });
 
         window.$ = selector => {
             return {
+                selector,
                 html: jest.fn(),
                 addClass: jest.fn(),
                 removeClass: jest.fn(),
@@ -89,11 +92,12 @@ describe('attackModalController', () => {
                     return {
                         clone: jest.fn(),
                         removeClass: jest.fn()
-                    }
+                    };
                 }
-            }
+            };
         };
         document.getElementById = selector => {
+            this.selector = selector;
             return {
                 getBBox: () => {
                     return {
@@ -101,10 +105,10 @@ describe('attackModalController', () => {
                         y: 2,
                         width: 3,
                         height: 4
-                    }
+                    };
                 },
                 setAttribute: jest.fn()
-            }
+            };
         };
     });
 
@@ -259,7 +263,7 @@ describe('attackModalController', () => {
                 defender: territory1,
                 defenderCasualties: 2,
                 attackerCasualties: 0
-            }
+            };
         };
         // Act
         attackModalController.fight();
@@ -287,7 +291,7 @@ describe('attackModalController', () => {
                 defender: territory1,
                 defenderCasualties: 0,
                 attackerCasualties: 2
-            }
+            };
         };
         // Act
         attackModalController.fight();
@@ -326,7 +330,7 @@ describe('attackModalController', () => {
                 defender: territory1,
                 defenderCasualties: 1,
                 attackerCasualties: 1
-            }
+            };
         };
         // Act
         attackModalController.fight();

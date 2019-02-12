@@ -8,10 +8,10 @@ class PlayerPortraitDirective {
             target: '&target',
             small: '&small',
             loading: '&loading'
-        }
+        };
     }
 
-    link(scope, elem, attr) {
+    link(scope, elem) {
         scope.$watch(scope.avatar, (newVal, oldVal) => {
             if (!objectsAreEqual(newVal, oldVal)) {
                 setPortrait();
@@ -116,7 +116,7 @@ class PlayerPortraitDirective {
                     }, 10);
                 });
             }
-        }
+        };
 
         setTimeout(() => {
             setPortrait();

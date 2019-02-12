@@ -1,4 +1,4 @@
-const { getTerritoryByName, getAdjacentApplicableTerritories, getTerritoriesForMovement } = require('./mapHelpers');
+const { getTerritoryByName, getTerritoriesForMovement } = require('./mapHelpers');
 const { TURN_PHASES } = require('./../gameConstants');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
 

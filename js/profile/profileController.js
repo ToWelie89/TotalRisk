@@ -92,9 +92,7 @@ class ProfileController {
                         this.vm.loading = false;
                         this.$scope.$apply();
                     }
-                })
-                .catch(err => {
-                    console.log(err)
+                }).catch(err => {
                     this.toastService.errorToast(
                         '',
                         err.code

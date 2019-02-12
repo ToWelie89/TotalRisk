@@ -1,4 +1,3 @@
-const {CARD_TYPE} = require('./cardConstants');
 const {POSSIBLE_CARD_COMBINATIONS} = require('./../gameConstants');
 
 const getBestPossibleCombination = (cards) => {
@@ -27,6 +26,6 @@ const getBestPossibleCombination = (cards) => {
     }
 
     return null;
-}
+};
 
 module.exports = { getBestPossibleCombination };

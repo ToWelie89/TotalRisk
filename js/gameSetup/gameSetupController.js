@@ -61,10 +61,10 @@ class GameSetupController {
 
                         return Promise.resolve();
                     }
-                })
-                .catch(err => {
+                }).catch(err => {
+                    console.error(err);
                     return Promise.reject();
-                })
+                });
             } else {
                 return Promise.resolve();
             }
@@ -75,10 +75,12 @@ class GameSetupController {
         console.log('Initialize game setup controller');
         this.vm.players = Array.from(
             new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
-                new Player(Object.keys(avatars)[i],
-                           Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
-                           Object.keys(avatars).map(key => avatars[key])[i],
-                           PLAYER_TYPES.HUMAN)
+                new Player(
+                    Object.keys(avatars)[i],
+                    Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                    Object.keys(avatars).map(key => avatars[key])[i],
+                    PLAYER_TYPES.HUMAN
+                )
         );
 
         if (this.defaultAvatar) {
@@ -158,10 +160,14 @@ class GameSetupController {
             $('.mainWrapper').css('-webkit-filter', 'none');
 
             if (newPlayer) {
-                this.vm.players.push(new Player(closeResponse.name,
-                                                this.getUnusedColor(),
-                                                closeResponse.avatar,
-                                                PLAYER_TYPES.HUMAN));
+                this.vm.players.push(
+                    new Player(
+                        closeResponse.name,
+                        this.getUnusedColor(),
+                        closeResponse.avatar,
+                        PLAYER_TYPES.HUMAN
+                    )
+                );
             } else {
                 const player = this.vm.players.find((currentPlayer) => currentPlayer.name === oldName);
                 player.name = closeResponse.name;

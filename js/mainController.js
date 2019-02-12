@@ -2,7 +2,7 @@ const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
 const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
-const {MESSAGE_TYPES, ERROR_TYPES} = require('./autoUpdating/updaterConstants');
+const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
 
 class MainController {
 
@@ -64,12 +64,12 @@ class MainController {
             this.$rootScope.appVersion = this.vm.appVersion;
         } else {
             fetch('./package.json')
-            .then((resp) => resp.json())
-            .then((data) => {
-                this.vm.appVersion = data.version;
-                this.$rootScope.appVersion = this.vm.appVersion;
-                $scope.$apply();
-            });
+                .then((resp) => resp.json())
+                .then((data) => {
+                    this.vm.appVersion = data.version;
+                    this.$rootScope.appVersion = this.vm.appVersion;
+                    $scope.$apply();
+                });
         }
 
         console.log('Initialization of mainController');
@@ -123,10 +123,12 @@ class MainController {
 
         const players = Array.from(
             new Array(2), (x, i) =>
-                new Player(Object.keys(avatars).map(key => key)[i],
-                           Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
-                           Object.keys(avatars).map(key => avatars[key])[i],
-                           PLAYER_TYPES.AI_EXPERT)
+                new Player(
+                    Object.keys(avatars).map(key => key)[i],
+                    Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                    Object.keys(avatars).map(key => avatars[key])[i],
+                    PLAYER_TYPES.AI_EXPERT
+                )
         );
 
         players[1].aiValues = {
@@ -169,7 +171,7 @@ class MainController {
 
     goBackToMenu() {
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
-        $(".flag-element").remove();
+        $('.flag-element').remove();
         this.gameEngine.setMusic();
     }
 

@@ -144,7 +144,7 @@ class TurnPresentationController {
                 }
                 setTimeout(() => {
                     this.close();
-                }, this.data.delayAfter ? this.data.delayAfter : 0)
+                }, this.data.delayAfter ? this.data.delayAfter : 0);
             } else {
                 this.currentMessageIndex++;
                 this.speakTutorialMessages();

@@ -22,7 +22,7 @@ class AuthenticationController {
             EDIT_PROFILE: 4,
             RESET_PASSWORD: 5,
             LOADING: 6
-        }
+        };
 
         this.vm.currentState = this.vm.states.LOADING;
 
@@ -50,11 +50,11 @@ class AuthenticationController {
                 this.getDefaultAvatar();
 
                 getUserCountry()
-                .then(res => {
-                    if (res && res.countryCode) {
-                        firebase.database().ref('users/' + user.uid + '/countryCode').set(res.countryCode);
-                    }
-                });
+                    .then(res => {
+                        if (res && res.countryCode) {
+                            firebase.database().ref('users/' + user.uid + '/countryCode').set(res.countryCode);
+                        }
+                    });
             } else {
                 this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
             }
@@ -138,46 +138,46 @@ class AuthenticationController {
     login() {
         this.soundService.tick.play();
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-            firebase.auth().signInWithEmailAndPassword(this.vm.loginData.email, this.vm.loginData.password)
-            .then(result => {
-                console.log(result);
-                this.vm.currentState = this.vm.states.LOGGED_IN;
-                this.setUser(result.user);
-                this.vm.loginData = {
-                    email: '',
-                    password: ''
-                };
-                this.$scope.$apply();
+            .then(() => {
+                firebase.auth().signInWithEmailAndPassword(this.vm.loginData.email, this.vm.loginData.password)
+                    .then(result => {
+                        console.log(result);
+                        this.vm.currentState = this.vm.states.LOGGED_IN;
+                        this.setUser(result.user);
+                        this.vm.loginData = {
+                            email: '',
+                            password: ''
+                        };
+                        this.$scope.$apply();
+                    })
+                    .catch(err => {
+                        console.log('Login error', err);
+                        if (err.code === 'auth/invalid-email') {
+                            this.toastService.errorToast(
+                                'Login error!',
+                                'The email entered is not valid'
+                            );
+                        } else if (err.code === 'auth/user-disabled') {
+                            this.toastService.errorToast(
+                                'Login error!',
+                                'The user has been disabled'
+                            );
+                        } else if (err.code === 'auth/user-not-found') {
+                            this.toastService.errorToast(
+                                'Login error!',
+                                'No user with this email found'
+                            );
+                        } else if (err.code === 'auth/wrong-password') {
+                            this.toastService.errorToast(
+                                'Login error!',
+                                'Incorrect password'
+                            );
+                        }
+                    });
             })
-            .catch(err => {
-                console.log('Login error', err);
-                if (err.code === 'auth/invalid-email') {
-                    this.toastService.errorToast(
-                        'Login error!',
-                        'The email entered is not valid'
-                    );
-                } else if (err.code === 'auth/user-disabled') {
-                    this.toastService.errorToast(
-                        'Login error!',
-                        'The user has been disabled'
-                    );
-                } else if (err.code === 'auth/user-not-found') {
-                    this.toastService.errorToast(
-                        'Login error!',
-                        'No user with this email found'
-                    );
-                } else if (err.code === 'auth/wrong-password') {
-                    this.toastService.errorToast(
-                        'Login error!',
-                        'Incorrect password'
-                    );
-                }
+            .catch(error => {
+                console.log('setPersistence error', error);
             });
-        })
-        .catch(error => {
-            console.log('setPersistence error', error)
-        });
     }
 
     signup() {
@@ -203,102 +203,103 @@ class AuthenticationController {
 
         let uid;
 
-        firebase.database().ref('/users/').once('value').then(snapshot => {
-            let users = snapshot.val();
-            users = users ? users : [];
-            const existingUser = Object.values(users).find(user => user.userName === this.vm.signupData.userName);
-            if (existingUser) {
-                // username already exists
-                throw 'username-taken';
-            } else {
-                return firebase.auth().createUserWithEmailAndPassword(this.vm.signupData.email, this.vm.signupData.password);
-            }
-        })
-        .then(result => {
-            this.vm.user = {
-                displayName: this.vm.signupData.userName,
-                email: result.user.email
-            };
-            uid = result.user.uid;
-            return firebase.database().ref('users/' + uid + '/userName').set(this.vm.signupData.userName);
-        })
-        .then(() => {
-            // Create new rating
-            const rating = {
-                mu: 25,
-                sigma: 8.333333333333334
-            };
-            return firebase.database().ref('users/' + uid + '/rating').set(rating);
-        })
-        .then(() => {
-            const user = firebase.auth().currentUser;
-            user.updateProfile({
-                displayName: this.vm.signupData.userName
+        firebase.database().ref('/users/').once('value')
+            .then(snapshot => {
+                let users = snapshot.val();
+                users = users ? users : [];
+                const existingUser = Object.values(users).find(user => user.userName === this.vm.signupData.userName);
+                if (existingUser) {
+                    // username already exists
+                    throw 'username-taken';
+                } else {
+                    return firebase.auth().createUserWithEmailAndPassword(this.vm.signupData.email, this.vm.signupData.password);
+                }
+            })
+            .then(result => {
+                this.vm.user = {
+                    displayName: this.vm.signupData.userName,
+                    email: result.user.email
+                };
+                uid = result.user.uid;
+                return firebase.database().ref('users/' + uid + '/userName').set(this.vm.signupData.userName);
+            })
+            .then(() => {
+                // Create new rating
+                const rating = {
+                    mu: 25,
+                    sigma: 8.333333333333334
+                };
+                return firebase.database().ref('users/' + uid + '/rating').set(rating);
+            })
+            .then(() => {
+                const user = firebase.auth().currentUser;
+                user.updateProfile({
+                    displayName: this.vm.signupData.userName
+                });
+                this.toastService.successToast('', 'You have been registered successfully!');
+                this.vm.signupData = {
+                    email: '',
+                    password: '',
+                    userName: ''
+                };
+            })
+            .catch(err => {
+                console.log('Sign up error', err);
+                if (err.code === 'auth/email-already-in-use') {
+                    this.toastService.errorToast(
+                        'Signup error!',
+                        'That email is already registered'
+                    );
+                } else if (err.code === 'auth/invalid-email') {
+                    this.toastService.errorToast(
+                        'Signup error!',
+                        'Invalid email'
+                    );
+                } else if (err.code === 'auth/weak-password') {
+                    this.toastService.errorToast(
+                        'Signup error!',
+                        'That password is too weak'
+                    );
+                } else if (err === 'username-taken') {
+                    this.toastService.errorToast(
+                        'Signup error!',
+                        'That username is already taken'
+                    );
+                }
             });
-            this.toastService.successToast('', 'You have been registered successfully!');
-            this.vm.signupData = {
-                email: '',
-                password: '',
-                userName: ''
-            };
-        })
-        .catch(err => {
-            console.log('Sign up error', err);
-            if (err.code === 'auth/email-already-in-use') {
-                this.toastService.errorToast(
-                    'Signup error!',
-                    'That email is already registered'
-                );
-            } else if (err.code === 'auth/invalid-email') {
-                this.toastService.errorToast(
-                    'Signup error!',
-                    'Invalid email'
-                );
-            } else if (err.code === 'auth/weak-password') {
-                this.toastService.errorToast(
-                    'Signup error!',
-                    'That password is too weak'
-                );
-            } else if (err === 'username-taken') {
-                this.toastService.errorToast(
-                    'Signup error!',
-                    'That username is already taken'
-                );
-            }
-        });
     }
 
     logout() {
         this.soundService.tick.play();
         const currentUser = firebase.auth().currentUser;
         firebase.auth().signOut()
-        .then(() => {
-            this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
-            this.vm.user = {
-                displayName: null,
-                email: null
-            };
-            this.vm.loginData = {
-                email: '',
-                password: ''
-            };
-            this.vm.signupData = {
-                email: '',
-                password: '',
-                userName: ''
-            };
-            this.$scope.$apply();
-        })
-        .then(() => {
-            this.socketService.lobbiesSocket.emit('signOutUser', currentUser.uid);
-        })
-        .catch(err => {
-            console.log('Logout error', err),
-            this.toastService.errorToast(
-                'Logout error',
-                ' '
-            );
-        });
+            .then(() => {
+                this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
+                this.vm.user = {
+                    displayName: null,
+                    email: null
+                };
+                this.vm.loginData = {
+                    email: '',
+                    password: ''
+                };
+                this.vm.signupData = {
+                    email: '',
+                    password: '',
+                    userName: ''
+                };
+                this.$scope.$apply();
+            })
+            .then(() => {
+                this.socketService.lobbiesSocket.emit('signOutUser', currentUser.uid);
+            })
+            .catch(err => {
+                console.log('Logout error', err),
+                this.toastService.errorToast(
+                    'Logout error',
+                    ' '
+                );
+            });
     }
 
     updateProfile() {
@@ -307,17 +308,18 @@ class AuthenticationController {
         user.updateProfile({
             displayName: this.vm.newDisplayNameData
         })
-        .then(() => {
-            this.vm.currentState = this.vm.states.LOGGED_IN;
-            this.vm.user.displayName = this.vm.newDisplayNameData;
-            this.$scope.$apply();
-        })
-        .catch(err => {
-            this.toastService.errorToast(
-                'Update failed',
-                ' '
-            );
-        });
+            .then(() => {
+                this.vm.currentState = this.vm.states.LOGGED_IN;
+                this.vm.user.displayName = this.vm.newDisplayNameData;
+                this.$scope.$apply();
+            })
+            .catch(err => {
+                console.error(err);
+                this.toastService.errorToast(
+                    'Update failed',
+                    ' '
+                );
+            });
     }
 
     cancelUpdate() {

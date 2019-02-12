@@ -12,12 +12,12 @@ class AutoUpdater {
                 }
             },
             get currentState() {
-               return this.currentStateInternal;
+                return this.currentStateInternal;
             },
             registerListener: function(listener) {
                 this.currentStateListener = listener;
             }
-        }
+        };
 
         if (ipcRenderer) {
             ipcRenderer.on('message', function(event, { state, data }) {

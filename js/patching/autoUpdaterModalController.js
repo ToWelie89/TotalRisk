@@ -18,7 +18,6 @@ class AutoUpdaterModalController {
 
         window.state.registerListener((val) => {
             this.vm.autoUpdatingState = val;
-            console.log(this.vm.autoUpdatingState)
             $scope.$apply();
 
             if (this.vm.autoUpdatingState.state === MESSAGE_TYPES.UPDATE_DOWNLOADING) {

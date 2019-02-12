@@ -1,11 +1,9 @@
-const io = require('socket.io-client');
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
-const { hashString } = require('./../helpers');
 const { GAME_PHASES, CONSTANTS, VICTORY_GOALS, TURN_LENGTHS } = require('./../gameConstants');
 const { normalizeTimeFromTimestamp, getRandomColor, lightenDarkenColor, objectsAreEqual, loadSvgIntoDiv } = require('./../helpers');
-const { avatars, PLAYER_COLORS, PLAYER_TYPES } = require('./../player/playerConstants');
+const { avatars, PLAYER_TYPES } = require('./../player/playerConstants');
 const CountryCodes = require('./../editor/countryCodes');
 const { getPlayerTooltipMarkup } = require('./../tooltips/tooltipHelpers');
 
@@ -211,8 +209,9 @@ class LobbiesController {
     }
 
     charactersLeft () {
-        return this.vm.showLobbyChat ? (this.vm.chatMaxLengthMessage - this.vm.lobbyChatMessage.length)
-                                     : (this.vm.chatMaxLengthMessage - this.vm.globalChatMessage.length);
+        return this.vm.showLobbyChat
+            ? (this.vm.chatMaxLengthMessage - this.vm.lobbyChatMessage.length)
+            : (this.vm.chatMaxLengthMessage - this.vm.globalChatMessage.length);
     }
 
     openSelectionScreen(clickedPlayer) {
@@ -284,7 +283,7 @@ class LobbiesController {
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.errorToast('', 'You have been kicked from the lobby.');
-            this.socketService.disconnectGameSocket()
+            this.socketService.disconnectGameSocket();
         });
 
         this.socketService.gameSocket.on('hostLeft', () => {

@@ -1,7 +1,7 @@
 const {PLAYER_COLORS} = require('./../player/playerConstants');
 
 class ColorPopoverController {
-    constructor($scope) {
+    constructor() {
         this.vm = this;
         this.vm.init = this.init;
     }

@@ -1,7 +1,6 @@
 import CardTurnInModalController from './cardTurnInModalController';
-import GameEngine from './../gameEngine';
 import Card from './../card/card';
-import {CARD_TYPE, CARD_COMBINATIONS} from './../card/cardConstants';
+import {CARD_TYPE} from './../card/cardConstants';
 import {createUibModalInstance, createSoundService, createTutorialService, createRootScope} from './../test/mockHelper';
 import {POSSIBLE_CARD_COMBINATIONS} from './../gameConstants';
 
@@ -23,7 +22,7 @@ describe('cardTurnInModalController', () => {
         cardTurnInModalController.cards.forEach(card => {
             card.isSelected = true;
         });
-    }
+    };
 
     beforeEach(() => {
         mockUibModalInstance = createUibModalInstance();
@@ -33,7 +32,7 @@ describe('cardTurnInModalController', () => {
 
         let mockData = {
             type: 'normal'
-        }
+        };
 
         mockGameEngine = {
             turn: {

@@ -20,13 +20,13 @@ class CharacterCreatorController {
         this.vm.showEditor = false;
 
         this.vm.showHistoricFlags = true;
-        this.vm.historicFlags = flags.sort((a, b) => { return a.name - b.name });
+        this.vm.historicFlags = flags.sort((a, b) => { return a.name - b.name; });
         this.vm.countryFlags = Object.keys(CountryCodes).map(c => {
             return {
                 name: CountryCodes[c].name,
                 path: `./assets/flagsSvg/countries/${c.toLowerCase()}.svg`
             };
-        }).sort((a, b) => { return a.name - b.name });
+        }).sort((a, b) => { return a.name - b.name; });
         this.vm.selectedFlag = flags[0];
 
         this.vm.currentSelection = [{
@@ -247,14 +247,14 @@ class CharacterCreatorController {
 
     makeDefaultCharacter() {
         this.saveCharacter(false)
-        .then(() => {
-            const user = firebase.auth().currentUser;
-            return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set(this.vm.selectedCharacterId);
-        })
-        .then(() => {
-            this.$rootScope.$broadcast('updatedDefaultAvatar', {});
-            this.toastService.successToast('', 'Set character as default');
-        });
+            .then(() => {
+                const user = firebase.auth().currentUser;
+                return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set(this.vm.selectedCharacterId);
+            })
+            .then(() => {
+                this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+                this.toastService.successToast('', 'Set character as default');
+            });
     }
 
     saveCharacter(showSavedToeast = true) {
@@ -270,57 +270,58 @@ class CharacterCreatorController {
             const user = snapshot.val();
             userCharacters = user && user.characters ? user.characters : [];
         })
-        .then(() => {
-            if (!this.vm.selectedCharacterId) {
-                const id = this.generateId();
-                this.vm.selectedCharacterId = id;
-                userCharacters.push({
-                    id,
-                    name: this.vm.name,
-                    hat: this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId,
-                    head: this.vm.currentSelection.find(x => x.type === 'head').selectedPartId,
-                    eyebrows: this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId,
-                    eyes: this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId,
-                    nose: this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId,
-                    mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId,
-                    torso: this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId,
-                    legs: this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId,
-                    skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId,
-                    flag: { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path }
-                });
-            } else {
-                const character = userCharacters.find(x => x.id === this.vm.selectedCharacterId);
-                character.name = this.vm.name;
-                character.hat = this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId;
-                character.head = this.vm.currentSelection.find(x => x.type === 'head').selectedPartId;
-                character.eyebrows = this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId;
-                character.eyes = this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId;
-                character.nose = this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId;
-                character.mouth = this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId;
-                character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId;
-                character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId;
-                character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId;
-                character.flag = { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path };
-            }
-        })
-        .then(() => {
-            return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
-        })
-        .then(() => {
-            stopGlobalLoading();
-            if (showSavedToeast) {
-                this.toastService.successToast('', 'Character saved!');
-            }
-            this.vm.characters = userCharacters;
-            setTimeout(() => {
-                this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
-                this.loadSavedCharacterPortraits();
-            }, 200);
-        })
-        .catch(err => {
-            stopGlobalLoading();
-            this.toastService.errorToast('Save failed');
-        });
+            .then(() => {
+                if (!this.vm.selectedCharacterId) {
+                    const id = this.generateId();
+                    this.vm.selectedCharacterId = id;
+                    userCharacters.push({
+                        id,
+                        name: this.vm.name,
+                        hat: this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId,
+                        head: this.vm.currentSelection.find(x => x.type === 'head').selectedPartId,
+                        eyebrows: this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId,
+                        eyes: this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId,
+                        nose: this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId,
+                        mouth: this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId,
+                        torso: this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId,
+                        legs: this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId,
+                        skinTone: this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId,
+                        flag: { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path }
+                    });
+                } else {
+                    const character = userCharacters.find(x => x.id === this.vm.selectedCharacterId);
+                    character.name = this.vm.name;
+                    character.hat = this.vm.currentSelection.find(x => x.type === 'hat').selectedPartId;
+                    character.head = this.vm.currentSelection.find(x => x.type === 'head').selectedPartId;
+                    character.eyebrows = this.vm.currentSelection.find(x => x.type === 'eyebrows').selectedPartId;
+                    character.eyes = this.vm.currentSelection.find(x => x.type === 'eyes').selectedPartId;
+                    character.nose = this.vm.currentSelection.find(x => x.type === 'nose').selectedPartId;
+                    character.mouth = this.vm.currentSelection.find(x => x.type === 'mouth').selectedPartId;
+                    character.torso = this.vm.currentSelection.find(x => x.type === 'torso').selectedPartId;
+                    character.legs = this.vm.currentSelection.find(x => x.type === 'legs').selectedPartId;
+                    character.skinTone = this.vm.currentSelection.find(x => x.type === 'skinTone').selectedPartId;
+                    character.flag = { name: this.vm.selectedFlag.name, path: this.vm.selectedFlag.path };
+                }
+            })
+            .then(() => {
+                return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
+            })
+            .then(() => {
+                stopGlobalLoading();
+                if (showSavedToeast) {
+                    this.toastService.successToast('', 'Character saved!');
+                }
+                this.vm.characters = userCharacters;
+                setTimeout(() => {
+                    this.selectCharacter(this.vm.characters.find(x => x.id === this.vm.selectedCharacterId));
+                    this.loadSavedCharacterPortraits();
+                }, 200);
+            })
+            .catch(err => {
+                console.error(err);
+                stopGlobalLoading();
+                this.toastService.errorToast('Save failed');
+            });
     }
 
     generateId() {
@@ -405,37 +406,38 @@ class CharacterCreatorController {
             userCharacters = user && user.characters ? user.characters : [];
             userCharacters = userCharacters.filter(x => x.id !== this.vm.selectedCharacterId);
         })
-        .then(() => {
-            return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
-        })
-        .then(() => {
-            if (defaultAvatar === this.vm.selectedCharacterId) {
-                return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set('')
-                    .then(() => {
-                        this.$rootScope.$broadcast('updatedDefaultAvatar', {});
-                    });
-            } else {
-                return;
-            }
-        })
-        .then(() => {
-            stopGlobalLoading();
-            this.toastService.successToast('Character deleted!');
-            this.vm.characters = userCharacters;
-            setTimeout(() => {
-                if (this.vm.characters.length > 0) {
-                    this.createNewCharacter();
-                    this.loadSavedCharacterPortraits();
+            .then(() => {
+                return firebase.database().ref('users/' + user.uid + '/characters').set(userCharacters);
+            })
+            .then(() => {
+                if (defaultAvatar === this.vm.selectedCharacterId) {
+                    return firebase.database().ref('users/' + user.uid + '/defaultAvatar').set('')
+                        .then(() => {
+                            this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+                        });
                 } else {
-                    this.vm.showEditor = false;
-                    this.$scope.$apply();
+                    return;
                 }
-            }, 200);
-        })
-        .catch(err => {
-            stopGlobalLoading();
-            this.toastService.errorToast('Deletion failed');
-        });
+            })
+            .then(() => {
+                stopGlobalLoading();
+                this.toastService.successToast('Character deleted!');
+                this.vm.characters = userCharacters;
+                setTimeout(() => {
+                    if (this.vm.characters.length > 0) {
+                        this.createNewCharacter();
+                        this.loadSavedCharacterPortraits();
+                    } else {
+                        this.vm.showEditor = false;
+                        this.$scope.$apply();
+                    }
+                }, 200);
+            })
+            .catch(err => {
+                console.err(err);
+                stopGlobalLoading();
+                this.toastService.errorToast('Deletion failed');
+            });
     }
 
     adjustSvgOffset() {

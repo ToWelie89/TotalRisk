@@ -1,15 +1,13 @@
 class WavingFlagDirective {
     constructor() {
         this.restrict = 'E';
-        this.template = `<div id="wavingFlag" class='flag'></div>`;
+        this.template = '<div id="wavingFlag" class="flag"></div>';
         this.scope = {
             flagUrl: '&flagUrl'
-        }
+        };
     }
 
     link(scope, elem, attr) {
-
-        var updateManually = attr.updateManually;
         var flagW = attr.flagWidth;
         var flagElementW = 2;
         var len = flagW/flagElementW;
@@ -25,11 +23,6 @@ class WavingFlagDirective {
             flag.querySelectorAll('.flag-element').forEach(x => {
                 x.style.backgroundImage = `url(${flagUrl})`;
             });
-            /*if (newVal !== oldVal && !updateManually) {
-                setTimeout(() => {
-                    init();
-                }, 50);
-            }*/
         });
 
         const init = () => {
@@ -47,7 +40,7 @@ class WavingFlagDirective {
                 fe.style.backgroundSize = attr.flagWidth + 'px 100%';
                 flag.append(fe);
             }
-        }
+        };
 
         setTimeout(() => {
             init();
