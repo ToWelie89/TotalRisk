@@ -198,6 +198,23 @@ const stopGlobalLoading = () => {
     $('#globalLoading').css('opacity', '0');
 };
 
+const getParameterValueByKey = parameterName => {
+    const pageURL = window.location.href;
+    let parameters = pageURL.split('?')[1];
+
+    if (parameters) {
+        parameters = parameters.split('&');
+        for (var i = 0, max = parameters.length; i < max; i++) {
+            var paramPair = parameters[i].split('=');
+            if (paramPair[0] === parameterName) {
+                return paramPair[1];
+            }
+        }
+    }
+
+    return null;
+};
+
 module.exports = {
     shuffle,
     arraysEqual,
@@ -218,5 +235,6 @@ module.exports = {
     arrayIncludesObject,
     loadSvgIntoDiv,
     startGlobalLoading,
-    stopGlobalLoading
+    stopGlobalLoading,
+    getParameterValueByKey
 };

@@ -1,5 +1,5 @@
 const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
-const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion} = require('./helpers');
+const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, getParameterValueByKey} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
@@ -46,6 +46,7 @@ class MainController {
         });
 
         this.vm.runningElectron = runningElectron();
+        this.vm.devMode = electronDevVersion() || getParameterValueByKey('test');
 
         if (this.vm.runningElectron) {
             this.openUpdaterModal();
