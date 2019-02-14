@@ -1,5 +1,23 @@
 <div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN_MULTIPLAYER" class="victoryScreen" ng-cloak>
-    <div class="victoryScreen__inner">
+    <div class="victoryScreen__background">
+        <div class="world">
+            <div class="world-globe">
+                <div class="world-globe-pole"></div>
+                <div class="world-globe-doms-container"></div>
+                <div class="world-globe-halo"></div>
+            </div>
+        </div>
+    </div>
+    <div class="victoryScreen__container">
+        <div class="podium">
+            <img src="assets/podium.png">
+            <div class="podiumSvgContainer" id="firstPlaceContainer"></div>
+            <div class="podiumSvgContainer" id="secondPlaceContainer"></div>
+            <div class="podiumSvgContainer" id="thirdPlaceContainer"></div>
+        </div>
+    </div>
+
+    <!-- <div class="victoryScreen__inner">
         <div class="textCenter">
             <h1>VICTORY</h1>
             <h3 class="text-shadow" style="color: {{ gameMultiplayer.playerWhoWon.color.mainColor }}">
@@ -56,5 +74,5 @@
                 <strong>Back to Menu</strong>
             </button>
         </div>
-    </div>
+    </div> -->
 </div>

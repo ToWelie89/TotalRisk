@@ -1,8 +1,9 @@
 const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
-const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, getParameterValueByKey} = require('./helpers');
+const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, getParameterValueByKey, loadSvgIntoDiv} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
+const {initGlobe} = require('./libs/globe');
 
 class MainController {
 
@@ -23,6 +24,7 @@ class MainController {
         this.vm.setGamePhase = this.setGamePhase;
         this.vm.aiTester = this.aiTester;
         this.vm.quit = this.quit;
+        this.vm.testEndScreen = this.testEndScreen;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -65,8 +67,8 @@ class MainController {
             this.$rootScope.appVersion = this.vm.appVersion;
         } else {
             fetch('./package.json')
-                .then((resp) => resp.json())
-                .then((data) => {
+                .then(resp => resp.json())
+                .then(data => {
                     this.vm.appVersion = data.version;
                     this.$rootScope.appVersion = this.vm.appVersion;
                     $scope.$apply();
@@ -74,6 +76,72 @@ class MainController {
         }
 
         console.log('Initialization of mainController');
+    }
+
+    testEndScreen() {
+        const players = Array.from(
+            new Array(3), (x, i) =>
+                new Player(
+                    Object.keys(avatars)[i],
+                    Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                    Object.keys(avatars).map(key => avatars[key])[i],
+                    PLAYER_TYPES.HUMAN
+                )
+        );
+        this.gameEngine.startGame(players, {});
+
+        players.forEach(p => {
+            this.gameEngine.players.get(p.name).statistics = {
+                battlesWon: 0,
+                battlesLost: 0,
+                troopsKilled: 0,
+                troopsLost: 0,
+                totalReinforcements: 0,
+                cardCombinationsUsed: 0,
+                retreats: 0
+            };
+        });
+        players.forEach((x, i) => {
+            x.rank = (i + 1);
+        });
+        this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN_MULTIPLAYER;
+        this.$rootScope.endScreenData = {
+            playersAsList: players
+        };
+
+        /*
+
+        loadSvgIntoDiv('./assets/avatarSvg/napoleon.svg', '#victoryPortraitMultiPlayer');
+        const flagPath = './assets/flagsSvg/france.svg';
+
+        var flagW = 250;
+        var flagElementW = 2;
+        var len = flagW/flagElementW;
+        var delay = 10;
+        var flag = document.getElementById('victoryFlagMultiplayer');
+        flag.innerHTML = '';
+        for (var i = 0; i < len; i++){
+            var fe = document.createElement('div');
+            fe.className = 'flag-element';
+            fe.style.backgroundSize = 250 + 'px 100%';
+            fe.style.backgroundPosition = -i*flagElementW+'px 0';
+            fe.style.webkitAnimationDelay = i*delay+'ms';
+            fe.style.animationDelay = i * delay + 'ms';
+            fe.style.webkitAnimationDelay = i*delay+'ms';
+            flag.appendChild(fe);
+        }
+        $('#victoryFlagMultiplayer .flag-element').css('background-image', `url(${flagPath})`);
+        */
+
+        loadSvgIntoDiv(players.find(p => p.rank === 1).avatar.svg, '#firstPlaceContainer');
+        loadSvgIntoDiv(players.find(p => p.rank === 2).avatar.svg, '#secondPlaceContainer');
+        loadSvgIntoDiv(players.find(p => p.rank === 3).avatar.svg, '#thirdPlaceContainer');
+
+        initGlobe({
+            bg: './assets/maps/globe_bg.jpg',
+            diffuse: './assets/maps/worldMap/globe.png',
+            halo: './assets/maps/globe_halo.png',
+        });
     }
 
     goToSettings() {
