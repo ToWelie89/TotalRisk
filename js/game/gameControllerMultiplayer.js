@@ -7,7 +7,7 @@ const {
     TURN_PHASES,
     ATTACK_MUSIC
 } = require('./../gameConstants');
-const { normalizeTimeFromTimestamp, getRandomColor, loadSvgIntoDiv } = require('./../helpers');
+const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
 const { displayReinforcementNumbers, displayDamageNumbers } = require('./../animations/animations');
 const { getTerritoryByName, getTerritoriesForMovement } = require('./../map/mapHelpers');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
@@ -367,56 +367,8 @@ class GameControllerMultiplayer extends GameController {
                 this.gameEngine.players.get(s.name).statistics = s.statistics;
             });
 
-            this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN_MULTIPLAYER;
             this.$rootScope.endScreenData = endScreenData;
-
-            if (this.vm.playerWhoWon.avatar.svg) {
-                loadSvgIntoDiv(this.vm.playerWhoWon.avatar.svg, '#victoryPortraitMultiPlayer');
-            } else if (this.vm.playerWhoWon.avatar.customCharacter) {
-                loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#victoryPortraitMultiPlayer', () => {
-                    const character = this.vm.playerWhoWon.avatar;
-
-                    $('#victoryPortraitMultiPlayer svg g[category="hat"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="head"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="eyes"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="nose"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="mouth"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="torso"] > g').css('visibility', 'hidden');
-                    $('#victoryPortraitMultiPlayer svg g[category="legs"] > g').css('visibility', 'hidden');
-
-                    $('#victoryPortraitMultiPlayer svg g[category="hat"] > g[name="${character.hat}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="head"] > g[name="${character.head}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="eyebrows"] > g[name="${character.eyebrows}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="eyes"] > g[name="${character.eyes}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="nose"] > g[name="${character.nose}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="mouth"] > g[name="${character.mouth}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="torso"] > g[name="${character.torso}"]').css('visibility', 'visible');
-                    $('#victoryPortraitMultiPlayer svg g[category="legs"] > g[name="${character.legs}"]').css('visibility', 'visible');
-
-                    $('#victoryPortraitMultiPlayer svg .skinTone').css('fill', character.skinTone);
-                });
-            }
-
-            const flagPath = this.vm.playerWhoWon.avatar.flag.path ? this.vm.playerWhoWon.avatar.flag.path : this.vm.playerWhoWon.avatar.flag;
-
-            var flagW = 250;
-            var flagElementW = 2;
-            var len = flagW/flagElementW;
-            var delay = 10;
-            var flag = document.getElementById('victoryFlagMultiplayer');
-            flag.innerHTML = '';
-            for (var i = 0; i < len; i++){
-                var fe = document.createElement('div');
-                fe.className = 'flag-element';
-                fe.style.backgroundSize = 250 + 'px 100%';
-                fe.style.backgroundPosition = -i*flagElementW+'px 0';
-                fe.style.webkitAnimationDelay = i*delay+'ms';
-                fe.style.animationDelay = i * delay + 'ms';
-                fe.style.webkitAnimationDelay = i*delay+'ms';
-                flag.appendChild(fe);
-            }
-            $('#victoryFlagMultiplayer .flag-element').css('background-image', `url(${flagPath})`);
+            this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
         });
 
         this.socketService.gameSocket.on('newReinforcements', newTroops => {

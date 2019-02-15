@@ -1,60 +1,79 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" class="victoryScreen" ng-cloak>
-    <div class="victoryScreen__inner">
-        <div class="textCenter">
-            <h1>VICTORY</h1>
-            <h3 class="text-shadow" style="color: {{ game.playerWhoWon.color.mainColor }}">
-                {{ game.playerWhoWon.name }}
-            </h3>
-            <div class="victoryPortrait" id="victoryPortraitSinglePlayer"></div>
-            <div class="flagContainer">
-                <div id="victoryFlagSingleplayer"></div>
+<div data-ng-show="main.currentGamePhase == main.gamePhases.END_SCREEN" class="victoryScreen" data-ng-controller="endScreenController as endScreen" ng-cloak>
+    <div class="victoryScreen__background">
+        <div class="world">
+            <div class="world-globe">
+                <div class="world-globe-pole"></div>
+                <div class="world-globe-doms-container"></div>
+                <div class="world-globe-halo"></div>
             </div>
-            <div data-ng-controller="endScreenTableController as endScreenTable">
-                <table id="endScreenTable">
-                    <thead>
-                        <tr>
-                            <th>Place</th>
-                            <th>Name</th>
-                            <th></th>
-                            <th class="textRight">Battles Won</th>
-                            <th class="textRight">Battles Lost</th>
-                            <th class="textRight">Retreats</th>
-                            <th class="textRight">Card combos used</th>
-                            <th class="textRight">Total reinforcements</th>
-                            <th class="textRight">Troops killed</th>
-                            <th class="textRight">Troops lost</th>
-                            <th class="textRight">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="player in endScreenTable.players">
-                            <td data-ng-bind="player.rank" class="textCenter"></td>
-                            <td data-ng-bind="player.name" style="color: {{ player.color.mainColor }};"></td>
-                            <td>
-                                <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
-                            </td>
-                            <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
-                            <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
-                            <td>
-                                <span data-ng-show="player.dead">
-                                    Dead (Turn {{ player.deadTurn }})
-                                </span>
-                                <span data-ng-show="!player.dead">
-                                    Alive
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        </div>
+    </div>
+    <div class="victoryScreen__container">
+        <div class="podium">
+            <img src="assets/podium.png">
+            <div class="podiumSvgContainer" id="firstPlaceContainer"></div>
+            <div class="podiumSvgContainer" id="secondPlaceContainer"></div>
+            <div class="podiumSvgContainer" id="thirdPlaceContainer"></div>
+
+            <div class="podiumFlagContainer" id="firstPlaceFlagContainer">
+                <div class="podiumFlagContainer__flagPoleTop"></div>
+                <div class="podiumFlagContainer__flagPole"></div>
+                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[0].avatar.flag"></waving-flag>
             </div>
-            <button type="button" class="button button-purple" data-ng-click="main.goBackToMenu()" style="margin-top: 100px;">
-                <strong>Back to Menu</strong>
-            </button>
+            <div class="podiumFlagContainer" id="secondPlaceFlagContainer">
+                <div class="podiumFlagContainer__flagPoleTop"></div>
+                <div class="podiumFlagContainer__flagPole"></div>
+                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[1].avatar.flag"></waving-flag>
+            </div>
+            <div class="podiumFlagContainer" id="thirdPlaceFlagContainer">
+                <div class="podiumFlagContainer__flagPoleTop"></div>
+                <div class="podiumFlagContainer__flagPole"></div>
+                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[2].avatar.flag"></waving-flag>
+            </div>
+        </div>
+
+        <div class="endScreenTableContainer">
+            <table class="endScreenTable">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th></th>
+                        <th class="textRight">Battles Won</th>
+                        <th class="textRight">Battles Lost</th>
+                        <th class="textRight">Retreats</th>
+                        <th class="textRight">Card combos used</th>
+                        <th class="textRight">Total reinforcements</th>
+                        <th class="textRight">Troops killed</th>
+                        <th class="textRight">Troops lost</th>
+                        <th class="textRight">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="player in endScreen.players">
+                        <td data-ng-bind="player.rank" class="textCenter"></td>
+                        <td data-ng-bind="player.name" style="color: {{ player.color.mainColor }};"></td>
+                        <td>
+                            <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
+                        </td>
+                        <td data-ng-bind="player.statistics.battlesWon" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.battlesLost" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.retreats" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.cardCombinationsUsed" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.totalReinforcements" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
+                        <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
+                        <td>
+                            <span data-ng-show="player.dead">
+                                Dead (Turn {{ player.deadTurn }})
+                            </span>
+                            <span data-ng-show="!player.dead">
+                                Alive
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

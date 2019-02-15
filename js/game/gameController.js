@@ -129,7 +129,6 @@ class GameController {
                 if (this.gameEngine.aiTesting) {
                     this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
                 }
-                this.handleVictory();
             }
         });
     }
@@ -278,31 +277,6 @@ class GameController {
 
     toArray(num) {
         return new Array(num);
-    }
-
-    handleVictory() {
-        this.vm.playerWhoWon = this.gameEngine.players.get(this.gameEngine.playerWhoWon);
-        if (this.vm.playerWhoWon.avatar.svg) {
-            loadSvgIntoDiv(this.vm.playerWhoWon.avatar.svg, '#victoryPortraitSinglePlayer');
-        }
-
-        var flagW = 250;
-        var flagElementW = 2;
-        var len = flagW/flagElementW;
-        var delay = 10;
-        var flag = document.getElementById('victoryFlagSingleplayer');
-        flag.innerHTML = '';
-        for(var i = 0; i < len; i++){
-            var fe = document.createElement('div');
-            fe.className = 'flag-element';
-            fe.style.backgroundSize = 250 + 'px 100%';
-            fe.style.backgroundPosition = -i*flagElementW+'px 0';
-            fe.style.webkitAnimationDelay = i*delay+'ms';
-            fe.style.animationDelay = i * delay + 'ms';
-            fe.style.webkitAnimationDelay = i*delay+'ms';
-            flag.appendChild(fe);
-        }
-        $('#victoryFlagSingleplayer .flag-element').css('background-image', `url(${this.vm.playerWhoWon.avatar.flag})`);
     }
 
     handleAi() {

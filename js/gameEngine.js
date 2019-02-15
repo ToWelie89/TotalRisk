@@ -230,7 +230,7 @@ class GameEngine {
                     });
 
                     this.$rootScope.players = [winner, loser];
-                    this.$rootScope.currentGamePhase = this.currentGameIsMultiplayer ? GAME_PHASES.END_SCREEN_MULTIPLAYER : GAME_PHASES.END_SCREEN;
+                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
 
                     return {
                         playerWon: true,
@@ -242,7 +242,7 @@ class GameEngine {
                     console.log(`Player ${this.turn.player.name} won!`);
                     this.setMusic(VICTORY_MUSIC);
                     this.playerWhoWon = this.turn.player.name;
-                    this.$rootScope.currentGamePhase = this.currentGameIsMultiplayer ? GAME_PHASES.END_SCREEN_MULTIPLAYER : GAME_PHASES.END_SCREEN;
+                    this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
                     setTimeout(() => {
                         const name = this.turn.player.avatar.pronounciation ? this.turn.player.avatar.pronounciation : this.turn.player.name;
                         if (this.settings.playSound) {

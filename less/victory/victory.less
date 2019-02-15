@@ -7,13 +7,6 @@
 	100% {	transform:	translate3d(0,-5%,0);}
 }
 
-body.endScreen {
-	background: #273a44;
-}
-#map.endScreen {
-	pointer-events:none;
-}
-
 .flag {
 	width: 200px;
 	height: 125px;
@@ -31,7 +24,7 @@ body.endScreen {
 
 .victoryScreen {
 	background: #000000b5;
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
@@ -86,10 +79,12 @@ body.endScreen {
 	    min-height: 600px;
 	    margin: 0 auto;
 
-	    .podium {
-	    	position: relative;
-	    	top: -202px;
+        .endScreenTableContainer, .podium {
+            position: relative;
+            top: -202px;
+        }
 
+	    .podium {
             .podiumFlagContainer {
                 width: 200px;
                 height: 300px;
@@ -103,26 +98,48 @@ body.endScreen {
                 }
 
                 &#secondPlaceFlagContainer {
-                    top: 0;
-                    left: 0px;
-                    transform: rotate(7deg);
+                    top: -201px;
+                    left: 327px;
+                    transform: rotate(-19deg);
                 }
 
                 &#thirdPlaceFlagContainer {
-                    top: 0px;
-                    left: 0px;
-                    transform: rotate(7deg);
+                    top: -87px;
+                    left: 1214px;
+                    transform: rotate(3deg);
                 }
 
                 &__flagPole {
                     width: 20px;
                     height: 300px;
                     float: left;
-                    background: gray;
                     position: absolute;
+                    z-index: 7;
+                    background: #eeeeee; /* Old browsers */
+                    background: -moz-linear-gradient(left, #eeeeee 0%, #cccccc 100%); /* FF3.6-15 */
+                    background: -webkit-linear-gradient(left, #eeeeee 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
+                    background: linear-gradient(to right, #eeeeee 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=1 ); /* IE6-9 */
+                }
+                &__flagPoleTop {
+                    width: 25px;
+                    height: 25px;
+                    position: absolute;
+                    top: -20px;
+                    left: -4px;
+                    border-radius: 50%;
+                    z-index: 8;
+                    background: #fefcea; /* Old browsers */
+                    background: -moz-radial-gradient(center, ellipse cover, #fefcea 0%, #f1da36 100%); /* FF3.6-15 */
+                    background: -webkit-radial-gradient(center, ellipse cover, #fefcea 0%,#f1da36 100%); /* Chrome10-25,Safari5.1-6 */
+                    background: radial-gradient(ellipse at center, #fefcea 0%,#f1da36 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
                 }
                 &__flag {
-
+                    z-index: 6;
+                    position: absolute;
+                    left: 0;
+                    top: 5px;
                 }
             }
 
@@ -153,52 +170,34 @@ body.endScreen {
 	    		}
 	    	}
 	    }
+
+        .endScreenTableContainer {
+            .endScreenTable {
+                width: 100%;
+                color: white;
+
+                thead {
+                    tr {
+                        th {
+                            text-align: left;
+                            padding: 10px;
+                        }
+                    }
+                }
+                tbody {
+                    tr {
+                        td {
+                            text-align: left;
+                            padding: 10px;
+
+                            .flag {
+                                margin-top: 0;
+                                position: static;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
-    h1 {
-    	font-family: 'Montserrat', sans-serif;
-    	margin-top: 30px;
-    }
-
-	&__inner {
-		position: relative;
-	    z-index: 5;
-	    width: 1450px;
-	    margin: 0 auto;
-
-		.victoryPortrait {
-		    height: 600px;
-		    svg {
-		    	height: 100%;
-		    }
-		}
-
-		.flagContainer {
-			position: absolute;
-			top: 50px;
-			left: 200px;
-			width: 250px;
-			height: 250px;
-
-			#victoryFlagSingleplayer, #victoryFlagMultiplayer {
-				width: 100%;
-				height: 100%;
-			}
-		}
-
-		@-webkit-keyframes wave{
-			0% {	-webkit-transform:	translate3d(0,5%,0);}
-			100% {	-webkit-transform:	translate3d(0,-5%,0);}
-		}
-		@keyframes wave{
-			0% {	transform:	translate3d(0,5%,0);}
-			100% {	transform:	translate3d(0,-5%,0);}
-		}
-	}
-}
-
-.gameScreenDuringVictory {
-	opacity: 0.25;
-	position: absolute;
-	width: 1450px;
 }

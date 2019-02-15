@@ -205,27 +205,4 @@ describe('gameController', () => {
         expect(gameController.toArray(5).length).toEqual(5);
         expect(typeof gameController.toArray(5)).toEqual('object');
     });
-
-    it('handleVictory handles victory correctly', () => {
-        // Arrange
-        document.getElementById = id => ({
-            innerHTML: 'test',
-            appendChild: jest.fn()
-        });
-        const cssCall = jest.fn();
-        window.$ = selector => {
-            return  {
-                css: (attribute, value) => {
-                    cssCall(attribute, value);
-                }
-            };
-        };
-        initData();
-        mockGameEngine.playerWhoWon = players[0].name;
-        // Act
-        gameController.handleVictory();
-        // Assert
-        expect(cssCall).toHaveBeenCalledWith('background-image', `url(${players[0].avatar.flag})`);
-        expect(loadSvgIntoDiv).toHaveBeenCalledWith('test.svg', '#victoryPortraitSinglePlayer');
-    });
 });

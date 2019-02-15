@@ -56,6 +56,8 @@ const runningElectron = () => !!(window && window.process && window.process.type
 
 const electronDevVersion = () => runningElectron() && window.process.env.NODE_ENV === 'dev';
 
+const devMode = () => electronDevVersion() || getParameterValueByKey('test');
+
 const hashString = string => {
     let hash = 0, i, chr;
     if (string.length === 0) return hash;
@@ -236,5 +238,6 @@ module.exports = {
     loadSvgIntoDiv,
     startGlobalLoading,
     stopGlobalLoading,
-    getParameterValueByKey
+    getParameterValueByKey,
+    devMode
 };

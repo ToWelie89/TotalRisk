@@ -1,9 +1,8 @@
 const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
-const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, getParameterValueByKey, loadSvgIntoDiv} = require('./helpers');
+const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, devMode} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
-const {initGlobe} = require('./libs/globe');
 
 class MainController {
 
@@ -48,7 +47,7 @@ class MainController {
         });
 
         this.vm.runningElectron = runningElectron();
-        this.vm.devMode = electronDevVersion() || getParameterValueByKey('test');
+        this.vm.devMode = devMode();
 
         if (this.vm.runningElectron) {
             this.openUpdaterModal();
@@ -80,7 +79,7 @@ class MainController {
 
     testEndScreen() {
         const players = Array.from(
-            new Array(3), (x, i) =>
+            new Array(6), (x, i) =>
                 new Player(
                     Object.keys(avatars)[i],
                     Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
@@ -104,44 +103,10 @@ class MainController {
         players.forEach((x, i) => {
             x.rank = (i + 1);
         });
-        this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN_MULTIPLAYER;
         this.$rootScope.endScreenData = {
             playersAsList: players
         };
-
-        /*
-
-        loadSvgIntoDiv('./assets/avatarSvg/napoleon.svg', '#victoryPortraitMultiPlayer');
-        const flagPath = './assets/flagsSvg/france.svg';
-
-        var flagW = 250;
-        var flagElementW = 2;
-        var len = flagW/flagElementW;
-        var delay = 10;
-        var flag = document.getElementById('victoryFlagMultiplayer');
-        flag.innerHTML = '';
-        for (var i = 0; i < len; i++){
-            var fe = document.createElement('div');
-            fe.className = 'flag-element';
-            fe.style.backgroundSize = 250 + 'px 100%';
-            fe.style.backgroundPosition = -i*flagElementW+'px 0';
-            fe.style.webkitAnimationDelay = i*delay+'ms';
-            fe.style.animationDelay = i * delay + 'ms';
-            fe.style.webkitAnimationDelay = i*delay+'ms';
-            flag.appendChild(fe);
-        }
-        $('#victoryFlagMultiplayer .flag-element').css('background-image', `url(${flagPath})`);
-        */
-
-        loadSvgIntoDiv(players.find(p => p.rank === 1).avatar.svg, '#firstPlaceContainer');
-        loadSvgIntoDiv(players.find(p => p.rank === 2).avatar.svg, '#secondPlaceContainer');
-        loadSvgIntoDiv(players.find(p => p.rank === 3).avatar.svg, '#thirdPlaceContainer');
-
-        initGlobe({
-            bg: './assets/maps/globe_bg.jpg',
-            diffuse: './assets/maps/worldMap/globe.png',
-            halo: './assets/maps/globe_halo.png',
-        });
+        this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
     }
 
     goToSettings() {
