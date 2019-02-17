@@ -55,7 +55,7 @@
                 <tbody>
                     <tr data-ng-repeat="player in endScreen.players track by $index">
                         <td data-ng-bind="player.rank" class="textCenter"></td>
-                        <td style="color: {{ player.color.mainColor }};">
+                        <td style="color: {{ player.color.name === 'Black' ? 'black' : player.color.mainColor }};">
                             {{ player.name }} <span data-ng-show="player.type === 1">(AI)</span>
                         </td>
                         <td>
