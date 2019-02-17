@@ -77,7 +77,7 @@ class MainController {
         console.log('Initialization of mainController');
     }
 
-    testEndScreen() {
+    testEndScreen(multiplayer = false) {
         const players = Array.from(
             new Array(6), (x, i) =>
                 new Player(
@@ -100,9 +100,44 @@ class MainController {
                 retreats: 0
             };
         });
-        players.forEach((x, i) => {
-            x.rank = (i + 1);
-        });
+
+        if (multiplayer) {
+            players.forEach((x, i) => {
+                x.rank = (i + 1);
+                if (i === 0) {
+                    x.newRating = {
+                        mu: 29.958612022864408,
+                        sigma: 7.749228804079122
+                    };
+                    x.oldRating = {
+                        mu: 25,
+                        sigma: 8.333333333333334
+                    };
+                } else if (i === 5) {
+                    x.newRating = {
+                        mu: 25,
+                        sigma: 7.192066920294255
+                    };
+                    x.oldRating = {
+                        mu: 25,
+                        sigma: 7.606688663292058
+                    };
+                } else {
+                    x.newRating = {
+                        mu: 21.2754611450882,
+                        sigma: 7.192066920294255
+                    };
+                    x.oldRating = {
+                        mu: 26.85053513218652,
+                        sigma: 7.606688663292058
+                    };
+                }
+            });
+        }
+
+        players[4].type = PLAYER_TYPES.AI;
+        players[5].dead = true;
+        players[5].deadTurn = 15;
         this.$rootScope.endScreenData = {
             playersAsList: players
         };

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="223.597 321.237 972.58 509.764" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="293.163 421.489 876.314 386.994" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
   <defs>
     <linearGradient id="gradient-0" gradientUnits="userSpaceOnUse" x1="733.941" y1="378.111" x2="733.941" y2="427.497" gradientTransform="matrix(1, 0, 0, 0.882584, 0, 94.767235)">
       <stop offset="0" style="stop-color: rgba(195, 195, 195, 1)"/>
@@ -50,6 +50,11 @@
       <stop offset="0" style="stop-color: rgb(245, 167, 118);"/>
       <stop offset="1" style="stop-color: rgb(173, 93, 44);"/>
     </linearGradient>
+    <path id="text-path-0" d="M 370.578 875.5 C 379.797 875.716 408.495 867.028 413.268 869.294"/>
+    <path id="text-path-1" d="M 394.321 956.416 C 380.229 1017.733 549.837 1087.861 640.628 1022.822"/>
+    <path id="text-path-2" d="M 368.094 951.866 C 431.853 943.654 529.124 943.034 593.504 952.486"/>
+    <path id="path-1" d="M 368.094 951.866 C 431.853 943.654 529.124 943.034 593.504 952.486"/>
+    <path id="path-2" d="M 368.094 951.866 C 431.853 943.654 529.124 943.034 593.504 952.486"/>
   </defs>
   <g transform="matrix(1, 0, 0, 0.686762, 85.234947, 251.874771)" style="">
     <polygon style="stroke: rgb(0, 0, 0); fill: url(#gradient-2);" points="210.461 428.464 544.585 428.464 482.443 370.805 267.749 370.805"/>

@@ -8,35 +8,35 @@
             </div>
         </div>
     </div>
-    <div class="victoryScreen__container">
-        <div class="podium">
-            <img src="assets/podium.png">
-            <div class="podiumSvgContainer" id="firstPlaceContainer"></div>
-            <div class="podiumSvgContainer" id="secondPlaceContainer"></div>
-            <div class="podiumSvgContainer" id="thirdPlaceContainer"></div>
+    <div class="podium">
+        <div id="endScreenPodiumImage" inject-svg src="assets/podium.svg"></div>
+        <div class="podiumSvgContainer" id="firstPlaceContainer"></div>
+        <div class="podiumSvgContainer" id="secondPlaceContainer"></div>
+        <div class="podiumSvgContainer" id="thirdPlaceContainer"></div>
 
-            <div class="podiumFlagContainer" id="firstPlaceFlagContainer">
-                <div class="podiumFlagContainer__flagPoleTop"></div>
-                <div class="podiumFlagContainer__flagPole"></div>
-                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[0].avatar.flag"></waving-flag>
-            </div>
-            <div class="podiumFlagContainer" id="secondPlaceFlagContainer">
-                <div class="podiumFlagContainer__flagPoleTop"></div>
-                <div class="podiumFlagContainer__flagPole"></div>
-                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[1].avatar.flag"></waving-flag>
-            </div>
-            <div class="podiumFlagContainer" id="thirdPlaceFlagContainer">
-                <div class="podiumFlagContainer__flagPoleTop"></div>
-                <div class="podiumFlagContainer__flagPole"></div>
-                <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[2].avatar.flag"></waving-flag>
-            </div>
+        <div class="podiumFlagContainer" id="firstPlaceFlagContainer">
+            <div class="podiumFlagContainer__flagPoleTop"></div>
+            <div class="podiumFlagContainer__flagPole"></div>
+            <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[0].avatar.flag"></waving-flag>
         </div>
-
+        <div class="podiumFlagContainer" id="secondPlaceFlagContainer">
+            <div class="podiumFlagContainer__flagPoleTop"></div>
+            <div class="podiumFlagContainer__flagPole"></div>
+            <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[1].avatar.flag"></waving-flag>
+        </div>
+        <div class="podiumFlagContainer" id="thirdPlaceFlagContainer">
+            <div class="podiumFlagContainer__flagPoleTop"></div>
+            <div class="podiumFlagContainer__flagPole"></div>
+            <waving-flag class="podiumFlagContainer__flag" flag-width="200" flag-height="120" flag-url="endScreen.players[2].avatar.flag"></waving-flag>
+        </div>
+    </div>
+    <div class="parchmentTop" id="endScreenParchmentElement" inject-svg src="assets/parchment.svg"></div>
+    <div class="victoryScreen__container">
         <div class="endScreenTableContainer">
             <table class="endScreenTable">
                 <thead>
                     <tr>
-                        <th>Place</th>
+                        <th>Rank</th>
                         <th>Name</th>
                         <th></th>
                         <th class="textRight">Battles Won</th>
@@ -47,12 +47,17 @@
                         <th class="textRight">Troops killed</th>
                         <th class="textRight">Troops lost</th>
                         <th class="textRight">Status</th>
+                        <th class="textRight" data-ng-show="endScreen.multiplayer">
+                            Rating
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="player in endScreen.players">
+                    <tr data-ng-repeat="player in endScreen.players track by $index">
                         <td data-ng-bind="player.rank" class="textCenter"></td>
-                        <td data-ng-bind="player.name" style="color: {{ player.color.mainColor }};"></td>
+                        <td style="color: {{ player.color.mainColor }};">
+                            {{ player.name }} <span data-ng-show="player.type === 1">(AI)</span>
+                        </td>
                         <td>
                             <waving-flag flag-width="60" flag-height="35" flag-url="player.avatar.flag"></waving-flag>
                         </td>
@@ -64,11 +69,26 @@
                         <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
                         <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
                         <td>
-                            <span data-ng-show="player.dead">
-                                Dead (Turn {{ player.deadTurn }})
+                            <span data-ng-show="player.dead" class="endScreenTableDead" uib-tooltip="DEAD" tooltip-placement="top">
+                                <div id="endScreenSkullIcon{{ $index }}" inject-svg src="assets/skull.svg"></div>
+                                <div>
+                                    (Turn {{ player.deadTurn }})
+                                </div>
                             </span>
                             <span data-ng-show="!player.dead">
                                 Alive
+                            </span>
+                        </td>
+                        <td
+                            class="textRight"
+                            data-ng-show="endScreen.multiplayer"
+                            data-ng-class="{'ratingDifferencePlus': player.ratingDifference > 0, 'ratingDifferenceMinus': player.ratingDifference < 0, 'ratingDifferenceNeutral': player.ratingDifference === 0}"
+                        >
+                            <span data-ng-show="player.type === 0">
+                                <span class="ratingDifferenceText">
+                                    {{ player.ratingDifference }}
+                                </span>
+                                <span class="glyphicon glyphicon-arrow-right"></span>
                             </span>
                         </td>
                     </tr>

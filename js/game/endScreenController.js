@@ -12,10 +12,20 @@ class EndScreenController {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
                 if ($rootScope.endScreenData.playersAsList) {
+                    // Multiplayer
+                    this.vm.multiplayer = true;
                     this.vm.players = $rootScope.endScreenData.playersAsList;
+                    this.vm.players.forEach(player => {
+                        const newRating = Math.floor(player.newRating.mu * 100);
+                        const oldRating = Math.floor(player.oldRating.mu * 100);
+                        player.ratingDifference = newRating - oldRating;
+                    });
                 } else {
+                    // Singleplayer
                     this.calculateRankings();
                 }
+
+                console.log('End screen players: ', this.vm.players);
 
                 const svgElements = ['firstPlaceContainer', 'secondPlaceContainer', 'thirdPlaceContainer'];
                 this.vm.players.slice(0, 3).forEach((player, index) => {

@@ -6,7 +6,8 @@
                    main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER ||
                    main.currentGamePhase === main.gamePhases.MULTIPLAYER_LOBBIES ||
                    main.currentGamePhase === main.gamePhases.EDIT_PROFILE ||
-                   main.currentGamePhase === main.gamePhases.PROFILE"
+                   main.currentGamePhase === main.gamePhases.PROFILE ||
+                   main.currentGamePhase === main.gamePhases.END_SCREEN"
      data-ng-controller="authenticationController as auth"
      ng-cloak>
     <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" style="height: 100%;">

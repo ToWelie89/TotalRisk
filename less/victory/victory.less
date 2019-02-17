@@ -31,6 +31,7 @@
     background-image: url(../assets/maps/globe_bg.jpg);
     transform: scale3d(1.01286, 1.01286, 1);
     background-size: cover;
+    text-align: center;
 
     &__background {
     	.world {
@@ -68,119 +69,152 @@
     	}
     }
 
-    &__container {
-    	background: #005210;
-	    top: 500px;
-	    position: relative;
-	    z-index: 10;
-	    width: 1600px;
-	    margin-left: 5%;
-	    text-align: center;
-	    min-height: 600px;
-	    margin: 0 auto;
+    .podium {
+        top: 350px;
+        position: relative;
+        z-index: 11;
+        width: 1600px;
+        margin-left: 5%;
+        text-align: center;
+        margin: 0 auto;
 
-        .endScreenTableContainer, .podium {
+        #endScreenPodiumImage {
             position: relative;
-            top: -202px;
+            z-index: 6;
+            width: 894px;
+            margin: 0 auto;
         }
 
-	    .podium {
-            .podiumFlagContainer {
-                width: 200px;
-                height: 300px;
-                position: absolute;
-                z-index: 5;
+        .podiumFlagContainer {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            z-index: 5;
 
-                &#firstPlaceFlagContainer {
-                    top: -278px;
-                    left: 890px;
-                    transform: rotate(7deg);
-                }
-
-                &#secondPlaceFlagContainer {
-                    top: -201px;
-                    left: 327px;
-                    transform: rotate(-19deg);
-                }
-
-                &#thirdPlaceFlagContainer {
-                    top: -87px;
-                    left: 1214px;
-                    transform: rotate(3deg);
-                }
-
-                &__flagPole {
-                    width: 20px;
-                    height: 300px;
-                    float: left;
-                    position: absolute;
-                    z-index: 7;
-                    background: #eeeeee; /* Old browsers */
-                    background: -moz-linear-gradient(left, #eeeeee 0%, #cccccc 100%); /* FF3.6-15 */
-                    background: -webkit-linear-gradient(left, #eeeeee 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
-                    background: linear-gradient(to right, #eeeeee 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=1 ); /* IE6-9 */
-                }
-                &__flagPoleTop {
-                    width: 25px;
-                    height: 25px;
-                    position: absolute;
-                    top: -20px;
-                    left: -4px;
-                    border-radius: 50%;
-                    z-index: 8;
-                    background: #fefcea; /* Old browsers */
-                    background: -moz-radial-gradient(center, ellipse cover, #fefcea 0%, #f1da36 100%); /* FF3.6-15 */
-                    background: -webkit-radial-gradient(center, ellipse cover, #fefcea 0%,#f1da36 100%); /* Chrome10-25,Safari5.1-6 */
-                    background: radial-gradient(ellipse at center, #fefcea 0%,#f1da36 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-                }
-                &__flag {
-                    z-index: 6;
-                    position: absolute;
-                    left: 0;
-                    top: 5px;
-                }
+            &#firstPlaceFlagContainer {
+                top: -278px;
+                left: 890px;
+                transform: rotate(7deg);
             }
 
-	    	.podiumSvgContainer {
-	    		width: 280px;
-	    		height: 370px;
-	    		position: absolute;
-                z-index: 10;
+            &#secondPlaceFlagContainer {
+                top: -201px;
+                left: 327px;
+                transform: rotate(-19deg);
+            }
 
-	    		svg {
-	    			width: 100%;
-	    			height: 100%;
-	    		}
+            &#thirdPlaceFlagContainer {
+                top: -87px;
+                left: 1214px;
+                transform: rotate(3deg);
+            }
 
-	    		&#firstPlaceContainer {
-	    			left: 41%;
-	    			top: -86%;
-	    		}
+            &__flagPole {
+                width: 20px;
+                height: 300px;
+                float: left;
+                position: absolute;
+                z-index: 7;
+                background: #eeeeee; /* Old browsers */
+                background: -moz-linear-gradient(left, #eeeeee 0%, #cccccc 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(left, #eeeeee 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to right, #eeeeee 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=1 ); /* IE6-9 */
+            }
+            &__flagPoleTop {
+                width: 25px;
+                height: 25px;
+                position: absolute;
+                top: -20px;
+                left: -4px;
+                border-radius: 50%;
+                z-index: 8;
+                background: #fefcea; /* Old browsers */
+                background: -moz-radial-gradient(center, ellipse cover, #fefcea 0%, #f1da36 100%); /* FF3.6-15 */
+                background: -webkit-radial-gradient(center, ellipse cover, #fefcea 0%,#f1da36 100%); /* Chrome10-25,Safari5.1-6 */
+                background: radial-gradient(ellipse at center, #fefcea 0%,#f1da36 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+            }
+            &__flag {
+                z-index: 6;
+                position: absolute;
+                left: 0;
+                top: 5px;
+            }
+        }
 
-	    		&#secondPlaceContainer {
-	    			left: 22%;
-	    			top: -66%;
-	    		}
+        .podiumSvgContainer {
+            width: 280px;
+            height: 370px;
+            position: absolute;
+            z-index: 10;
 
-	    		&#thirdPlaceContainer {
-	    			left: 60%;
-	    			top: -43%;
-	    		}
-	    	}
-	    }
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            &#firstPlaceContainer {
+                left: 42%;
+                top: -80%;
+            }
+
+            &#secondPlaceContainer {
+                left: 22%;
+                top: -61%;
+            }
+
+            &#thirdPlaceContainer {
+                left: 60%;
+                top: -39%;
+            }
+        }
+    }
+
+    .parchmentTop {
+        position: relative;
+        margin: 0 auto;
+        width: 1600px;
+        left: -35px;
+        top: 47px;
+        svg {
+            width: 1768px;
+            position: relative;
+        }
+    }
+
+    &__container {
+	    background: #cf9b49;
+        position: relative;
+        top: 340px;
+        z-index: 10;
+        width: 1600px;
+        margin-left: 5%;
+        text-align: center;
+        margin: 0 auto;
+        padding-bottom: 100px;
+        -webkit-clip-path: polygon(0% 0%, 0% 100%, 1% 98%, 2% 100%, 3% 99%, 5% 100%, 6% 95%, 6% 100%, 8% 100%, 9% 97%, 9% 100%, 11% 100%, 12% 99%, 13% 100%, 14% 99%, 15% 100%, 16% 95%, 17% 100%, 18% 99%, 19% 100%, 20% 99%, 21% 100%, 22% 95%, 23% 100%, 25% 99%, 26% 100%, 28% 99%, 31% 100%, 34% 100%, 34% 95%, 35% 100%, 37% 100%, 39% 97%, 39% 100%, 41% 100%, 43% 100%, 45% 100%, 48% 99%, 49% 100%, 49% 96%, 50% 100%, 53% 100%, 54% 98%, 54% 100%, 58% 99%, 59% 100%, 60% 96%, 61% 100%, 63% 98%, 64% 100%, 67% 99%, 69% 100%, 72% 98%, 73% 100%, 74% 95%, 75% 100%, 78% 98%, 79% 100%, 82% 97%, 82% 100%, 84% 97%, 86% 100%, 88% 97%, 88% 100%, 91% 99%, 96% 100%, 97% 96%, 98% 100%, 100% 96%, 100% 100%, 100% 92%, 99% 88%, 100% 88%, 99% 81%, 100% 79%, 100% 66%, 98% 63%, 100% 63%, 100% 53%, 99% 43%, 100% 38%, 100% 27%, 99% 19%, 100% 14%, 100% 5%, 100% 2%, 100% 0%);
+        clip-path: polygon(0% 0%, 0% 100%, 1% 98%, 2% 100%, 3% 99%, 5% 100%, 6% 95%, 6% 100%, 8% 100%, 9% 97%, 9% 100%, 11% 100%, 12% 99%, 13% 100%, 14% 99%, 15% 100%, 16% 95%, 17% 100%, 18% 99%, 19% 100%, 20% 99%, 21% 100%, 22% 95%, 23% 100%, 25% 99%, 26% 100%, 28% 99%, 31% 100%, 34% 100%, 34% 95%, 35% 100%, 37% 100%, 39% 97%, 39% 100%, 41% 100%, 43% 100%, 45% 100%, 48% 99%, 49% 100%, 49% 96%, 50% 100%, 53% 100%, 54% 98%, 54% 100%, 58% 99%, 59% 100%, 60% 96%, 61% 100%, 63% 98%, 64% 100%, 67% 99%, 69% 100%, 72% 98%, 73% 100%, 74% 95%, 75% 100%, 78% 98%, 79% 100%, 82% 97%, 82% 100%, 84% 97%, 86% 100%, 88% 97%, 88% 100%, 91% 99%, 96% 100%, 97% 96%, 98% 100%, 100% 96%, 100% 100%, 100% 92%, 99% 88%, 100% 88%, 99% 81%, 100% 79%, 100% 66%, 98% 63%, 100% 63%, 100% 53%, 99% 43%, 100% 38%, 100% 27%, 99% 19%, 100% 14%, 100% 5%, 100% 2%, 100% 0%);
 
         .endScreenTableContainer {
+            padding-left: 30px;
+            padding-right: 30px;
+
             .endScreenTable {
                 width: 100%;
                 color: white;
+                text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3686274509803922);
+                margin-top: -328px;
 
                 thead {
                     tr {
                         th {
                             text-align: left;
                             padding: 10px;
+                        }
+
+                        &:first-child {
+                            text-align: center;
                         }
                     }
                 }
@@ -189,6 +223,53 @@
                         td {
                             text-align: left;
                             padding: 10px;
+
+                            &:first-child {
+                                text-align: center;
+                            }
+
+                            &:nth-child(2) {
+                                font-weight: 900;
+                            }
+
+                            .endScreenTableDead {
+                                div {
+                                    float: left;
+                                    &:first-child {
+                                        width: 20px;
+                                    }
+                                    &:last-child {
+                                        padding-left: 5px;
+                                    }
+                                }
+                            }
+
+                            &.ratingDifferencePlus {
+                                span.ratingDifferenceText {
+                                    color: green;
+
+                                    &:before {
+                                        content: '+';
+                                        margin-right: -3px;
+                                    }
+                                }
+
+                                .glyphicon-arrow-right {
+                                    transform: rotate(-45deg);
+                                    color: green;
+                                }
+                            }
+
+                            &.ratingDifferenceMinus {
+                                span.ratingDifferenceText {
+                                    color: red;
+                                }
+
+                                .glyphicon-arrow-right {
+                                    transform: rotate(45deg);
+                                    color: red;
+                                }
+                            }
 
                             .flag {
                                 margin-top: 0;
