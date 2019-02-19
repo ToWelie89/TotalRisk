@@ -101,7 +101,8 @@ class TurnPresentationController {
 
                 this.vm.reinforcementData.reinforcementsFromTerritoriesAsList = new Array(this.vm.reinforcementData.reinforcementsFromTerritories);
                 this.vm.reinforcementData.regionBonuses.forEach(r => {
-                    r.bonusTroopsAsList = new Array(r.bonusTroops);
+                    r.bonusTroopsAsList = new Array(r.bonusTroops).fill(1);
+                    r.shortenedName = r.name.replace(' ', '');
                 });
             }
 

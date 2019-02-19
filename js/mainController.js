@@ -133,14 +133,16 @@ class MainController {
                     };
                 }
             });
+            players[4].type = PLAYER_TYPES.AI;
+            players[5].dead = true;
+            players[5].deadTurn = 15;
+            this.$rootScope.endScreenData = {
+                playersAsList: players
+            };
+        } else {
+            this.$rootScope.endScreenData = undefined;
         }
 
-        players[4].type = PLAYER_TYPES.AI;
-        players[5].dead = true;
-        players[5].deadTurn = 15;
-        this.$rootScope.endScreenData = {
-            playersAsList: players
-        };
         this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
     }
 

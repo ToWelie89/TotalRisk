@@ -26,14 +26,14 @@
                         <div
                             id="troops"
                             class="textCenter paddingBottom"
-                            data-ng-repeat="regionBonus in turnPresentation.reinforcementData.regionBonuses"
+                            data-ng-repeat="regionBonus in turnPresentation.reinforcementData.regionBonuses track by $index"
                             data-ng-show="turnPresentation.reinforcementData.regionBonuses.length > 0"
                         >
                             <h3>
                                 Bonus for region {{ regionBonus.name }}
                             </h3>
                             <span data-ng-repeat="troop in regionBonus.bonusTroopsAsList track by $index" class="troop_{{ turnPresentation.turn.player.color.name }}">
-                                <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="presentationModalTroopFromRegion{{ regionBonus.name }}Icon{{ $index }}">
+                                <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="presentationModalTroopFromRegion{{ regionBonus.shortenedName }}Icon{{ $index }}">
                                 </span>
                             </span>
                         </div>

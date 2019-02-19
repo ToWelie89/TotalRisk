@@ -1,17 +1,45 @@
-const { GAME_PHASES } = require('./../gameConstants');
-const { getCurrentOwnershipStandings } = require('./../map/mapHelpers');
-const { loadSvgIntoDiv } = require('./../helpers');
-const {initGlobe} = require('./../libs/globe');
+const {
+    GAME_PHASES
+} = require('./../gameConstants');
+const {
+    getCurrentOwnershipStandings
+} = require('./../map/mapHelpers');
+const {
+    loadSvgIntoDiv,
+    runningElectron
+} = require('./../helpers');
+const {
+    initGlobe
+} = require('./../libs/globe');
 
 class EndScreenController {
-    constructor($scope, $rootScope, gameEngine) {
+    constructor($scope, $rootScope, $sce, gameEngine, toastService) {
         this.vm = this;
+        this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$sce = $sce;
         this.gameEngine = gameEngine;
+        this.toastService = toastService;
+
+        this.vm.runningElectron = runningElectron();
+
+        this.vm.takeScreenshot = this.takeScreenshot;
+
+        const that = this;
+        ipcRenderer.on('takeScreenshotResponse', function(event, imagePath) {
+            that.toastService.successToast('Screenshot taken!', `Written file to ${imagePath}`);
+            that.vm.disableScreenshotButton = false;
+            that.$scope.$apply();
+        });
+        ipcRenderer.on('takeScreenshotError', function(event) {
+            that.toastService.errorToast('Error!', 'Screenshot could not be taken');
+            that.vm.disableScreenshotButton = false;
+            that.$scope.$apply();
+        });
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
-                if ($rootScope.endScreenData.playersAsList) {
+                if (this.$rootScope.endScreenData && this.$rootScope.endScreenData.playersAsList) {
                     // Multiplayer
                     this.vm.multiplayer = true;
                     this.vm.players = $rootScope.endScreenData.playersAsList;
@@ -19,10 +47,19 @@ class EndScreenController {
                         const newRating = Math.floor(player.newRating.mu * 100);
                         const oldRating = Math.floor(player.oldRating.mu * 100);
                         player.ratingDifference = newRating - oldRating;
+                        player.ratingTooltip = this.$sce.trustAsHtml(`
+                            <div class="ratingTooltip">
+                                From <strong>${oldRating}</strong> to <strong>${newRating}</strong>
+                            </div>
+                        `);
                     });
                 } else {
                     // Singleplayer
+                    this.vm.multiplayer = false;
                     this.calculateRankings();
+                    this.vm.players.forEach((x, i) => {
+                        x.rank = (i + 1);
+                    });
                 }
 
                 console.log('End screen players: ', this.vm.players);
@@ -64,6 +101,11 @@ class EndScreenController {
                 });
             }
         });
+    }
+
+    takeScreenshot() {
+        this.vm.disableScreenshotButton = true;
+        ipcRenderer.send('takeScreenshot');
     }
 
     calculateRankings(winner = undefined) {

@@ -6,12 +6,16 @@ const electron = require('electron');
 const {
     app,
     BrowserWindow,
-    globalShortcut
+    globalShortcut,
+    ipcMain
 } = require('electron');
 const log = require('electron-log');
 const {
     autoUpdater
 } = require('electron-updater');
+
+const fs = require('fs');
+const moment = require('moment');
 
 const Store = require('./../js/settings/electronStore.js');
 const ElectronSettings = require('./../js/settings/electronDefaultSettings.js');
@@ -139,7 +143,7 @@ const createDefaultWindow = () => {
         title: isDev ? 'TotalRisk DEVELOPMENT VERSION' : 'TotalRisk',
         fullscreen: riskSettings.fullScreen,
         show: false,
-        icon: 'icon.ico',
+        icon: '../icon.ico',
         webPreferences: {
             zoomFactor: screenConfig.zoomFactor
         }
@@ -231,6 +235,33 @@ const createDefaultWindow = () => {
         win.loadURL(`file://${__dirname}/../index.html`);
     });
 };
+
+ipcMain.on('takeScreenshot', function(event, arg) {
+    try {
+        win.webContents.capturePage(img => {
+            let path = electron.app.getPath('userData');
+
+            if (!path) {
+                win.webContents.send('takeScreenshotError');
+                return;
+            }
+
+            path += '\\screenshots';
+            if (!fs.existsSync(path)){
+                fs.mkdirSync(path);
+            }
+            const date = moment().format('YYYY-MM-DD_h-mm-ss');
+            const fileName = `Screenshot-${date}.png`;
+            const fullUrl = `${path}\\${fileName}`;
+
+            fs.writeFile(`${fullUrl}`, img.toPNG(), () => {
+                win.webContents.send('takeScreenshotResponse', fullUrl);
+            });
+        });
+    } catch (err) {
+        win.webContents.send('takeScreenshotError');
+    }
+});
 
 // Auto updater events
 autoUpdater.on('checking-for-update', () => {

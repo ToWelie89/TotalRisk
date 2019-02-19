@@ -29,7 +29,6 @@
     width: 100%;
     height: 100%;
     background-image: url(../assets/maps/globe_bg.jpg);
-    transform: scale3d(1.01286, 1.01286, 1);
     background-size: cover;
     text-align: center;
 
@@ -69,6 +68,30 @@
     	}
     }
 
+    .backButton {
+        position: relative;
+        left: -610px;
+        top: 420px;
+        z-index: 25;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        font-size: 20px;
+        border-width: 5px;
+    }
+
+    .screenshotButton {
+        position: relative;
+        left: -660px;
+        top: 530px;
+        z-index: 26;
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        font-size: 40px;
+        border-width: 5px;
+    }
+
     .podium {
         top: 350px;
         position: relative;
@@ -77,6 +100,7 @@
         margin-left: 5%;
         text-align: center;
         margin: 0 auto;
+        margin-top: -260px;
 
         #endScreenPodiumImage {
             position: relative;
@@ -92,21 +116,18 @@
             z-index: 5;
 
             &#firstPlaceFlagContainer {
-                top: -278px;
-                left: 890px;
-                transform: rotate(7deg);
+                top: -257px;
+                left: 928px;
             }
 
             &#secondPlaceFlagContainer {
-                top: -201px;
-                left: 327px;
-                transform: rotate(-19deg);
+                top: -208px;
+                left: 597px;
             }
 
             &#thirdPlaceFlagContainer {
                 top: -87px;
-                left: 1214px;
-                transform: rotate(3deg);
+                left: 1220px;
             }
 
             &__flagPole {
@@ -211,6 +232,10 @@
                         th {
                             text-align: left;
                             padding: 10px;
+
+                            &:nth-child(11), &:nth-child(12) {
+                                text-align: center;
+                            }
                         }
 
                         &:first-child {
@@ -234,7 +259,7 @@
                                 font-weight: 900;
                             }
 
-                            &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8), &:nth-child(9), &:nth-child(10) {
+                            &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8), &:nth-child(9), &:nth-child(10), &:nth-child(11), &:nth-child(12) {
                                 text-align: center;
                             }
 
@@ -243,6 +268,7 @@
                                     float: left;
                                     &:first-child {
                                         width: 20px;
+                                        margin-right: 5px;
                                     }
                                     &:last-child {
                                         padding-left: 5px;

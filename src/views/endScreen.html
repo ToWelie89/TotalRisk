@@ -8,6 +8,13 @@
             </div>
         </div>
     </div>
+    <button type="button" class="button button-green backButton" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+        Back to main menu
+    </button>
+    <button type="button" class="button button-purple screenshotButton" data-ng-show="endScreen.runningElectron" data-ng-click="endScreen.takeScreenshot()" data-ng-disabled="endScreen.disableScreenshotButton">
+        <span class="glyphicon glyphicon-camera"></span>
+    </button>
+
     <div class="podium">
         <div id="endScreenPodiumImage" inject-svg src="assets/podium.svg"></div>
         <div class="podiumSvgContainer" id="firstPlaceContainer"></div>
@@ -69,12 +76,12 @@
                         <td data-ng-bind="player.statistics.troopsKilled" class="textRight"></td>
                         <td data-ng-bind="player.statistics.troopsLost" class="textRight"></td>
                         <td>
-                            <span data-ng-show="player.dead" class="endScreenTableDead" uib-tooltip="DEAD" tooltip-placement="top">
+                            <div data-ng-show="player.dead" class="endScreenTableDead" uib-tooltip="DEAD" tooltip-placement="top">
                                 <div id="endScreenSkullIcon{{ $index }}" inject-svg src="assets/skull.svg"></div>
                                 <div>
                                     (Turn {{ player.deadTurn }})
                                 </div>
-                            </span>
+                            </div>
                             <span data-ng-show="!player.dead">
                                 Alive
                             </span>
@@ -85,10 +92,15 @@
                             data-ng-class="{'ratingDifferencePlus': player.ratingDifference > 0, 'ratingDifferenceMinus': player.ratingDifference < 0, 'ratingDifferenceNeutral': player.ratingDifference === 0}"
                         >
                             <span data-ng-show="player.type === 0">
-                                <span class="ratingDifferenceText">
-                                    {{ player.ratingDifference }}
+                                <span data-ng-show="player.ratingDifference !== 0" uib-tooltip-html="player.ratingTooltip" tooltip-placement="left">
+                                    <span class="ratingDifferenceText">
+                                        {{ player.ratingDifference }}
+                                    </span>
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
                                 </span>
-                                <span class="glyphicon glyphicon-arrow-right"></span>
+                                <span data-ng-show="player.ratingDifference === 0">
+                                    No change
+                                </span>
                             </span>
                         </td>
                     </tr>

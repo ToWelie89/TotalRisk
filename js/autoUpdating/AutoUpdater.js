@@ -1,10 +1,5 @@
 const { MESSAGE_TYPES, ERROR_TYPES } = require('./updaterConstants');
 const { runningElectron } = require('./../helpers');
-let ipcRenderer;
-
-if (runningElectron()) {
-    ipcRenderer = require('electron').ipcRenderer;
-}
 
 class AutoUpdater {
     constructor() {

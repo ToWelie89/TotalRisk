@@ -362,7 +362,7 @@ class GameController {
         this.$uibModal.open({
             templateUrl: 'src/modals/pauseMenuModal.html',
             backdrop: 'static',
-            windowClass: 'riskModal',
+            windowClass: 'riskModal pauseMenuModal',
             controller: 'pauseMenuModalController',
             controllerAs: 'pauseMenu',
             keyboard: false,

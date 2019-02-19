@@ -23,7 +23,8 @@
         "expect",
         "jasmine",
         "beforeEach",
-        "responsiveVoice"
+        "responsiveVoice",
+        "ipcRenderer"
     },
 
     "parser": "babel-eslint",
