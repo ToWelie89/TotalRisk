@@ -173,6 +173,7 @@ class EditProfileController {
 
             firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id).then(() => {
                 this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+                this.toastService.successToast('', 'Updated default avatar');
             });
         });
     }

@@ -57,6 +57,7 @@ class TurnPresentationController {
     }
 
     close(closingResponse = null) {
+        return;
         if (closingResponse) {
             this.$uibModalInstance.close(closingResponse);
         } else {

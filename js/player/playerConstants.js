@@ -156,19 +156,57 @@ const avatars = {
         },
         biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
     },
-    'Hannibal Barca': {
-        id: 'hannibal',
-        picture: './assets/img/hannibal_barca.png',
-        selectSound: '',
-        flag: './assets/flagsSvg/carthage.svg',
-        biography: 'Hannibal Barca was a general of the mighty Carthaginian empire in North Africa. During his childhood Rome inflicted a heavy humiliating defeat upon Carthage, to which he swore an oath to never be a friend of the romans, words he lived by for the rest of his life. He led one of the most audacious campaigns in history by crossing the alps in midwinter and challenging the roman empire on their own turf. He won every single battle he fought in the italian peninsula and eventually crushed the romans last ditch all out attack at the legendary battle of Cannae. He is considered one of the best generals in history.'
-    },
     'Genghis Khan': {
         id: 'genghiskhan',
         picture: './assets/img/genghiskhan.png',
+        svg: './assets/avatarSvg/genghisKhan.svg',
         selectSound: '',
         flag: './assets/flagsSvg/goldenhorde.svg',
+        svgAttributesLarge: {
+            svgWidth: '110%',
+            svgHeight: 'auto',
+            svgMarginLeft: '0px',
+            svgMarginTop: '-60px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '260%',
+            svgHeight: '120%',
+            svgMarginLeft: '-80px',
+            svgMarginTop: '0px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '140%',
+            svgHeight: '100%',
+            svgMarginLeft: '-11px',
+            svgMarginTop: '-19px',
+        },
         biography: 'Genghis Khan, whose real name was Timujin, was a feared leader and general who conquered the largest land empire in history. He came from a simple background, being the leader of a small tribe, but he managed to unite all of the mongolian tribes and also completely reformed with ingenious tactics, thus granting him the title \'Genghis Khan\' which means \'Ruler of all\'. He then destroyed the nearby chinese Han Empire and much of the former persian empire and expanded as far away as into Europe.'
+    },
+    'Hannibal Barca': {
+        id: 'hannibal',
+        picture: './assets/img/hannibal_barca.png',
+        svg: './assets/avatarSvg/hannibal.svg',
+        selectSound: '',
+        flag: './assets/flagsSvg/carthage.svg',
+        svgAttributesLarge: {
+            svgWidth: '120%',
+            svgHeight: 'auto',
+            svgMarginLeft: '-50px',
+            svgMarginTop: '-60px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '260%',
+            svgHeight: '140%',
+            svgMarginLeft: '-70px',
+            svgMarginTop: '0px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '151%',
+            svgHeight: '100%',
+            svgMarginLeft: '-30px',
+            svgMarginTop: '-25px',
+        },
+        biography: 'Hannibal Barca was a general of the mighty Carthaginian empire in North Africa. During his childhood Rome inflicted a heavy humiliating defeat upon Carthage, to which he swore an oath to never be a friend of the romans, words he lived by for the rest of his life. He led one of the most audacious campaigns in history by crossing the alps in midwinter and challenging the roman empire on their own turf. He won every single battle he fought in the italian peninsula and eventually crushed the romans last ditch all out attack at the legendary battle of Cannae. He is considered one of the best generals in history.'
     },
     'Attila the Hun': {
         id: 'attila',
