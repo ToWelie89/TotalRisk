@@ -130,32 +130,6 @@ const avatars = {
         },
         biography: 'Napoleon Bonaparte was a man who came from nothing, being a minor nobleman from the island of Corsica and a captain in the french army after the french revolution, but he would later become the empereor of France, the greatest empire in Europe during his time. Napoleon is regarded as one of the greatest military geniuses of all time, having defeated most of the mighty kingdoms and empires of Europe through tactical brilliance making him perhaps the most powerful man in the world. His greatest triumph was the battle of Austerlitz where he completely destroyed the organized Russian and Austrian resistance.'
     },
-    'Alexander the Great': {
-        id: 'alexander',
-        picture: './assets/img/alexander.png',
-        selectSound: '',
-        flag: './assets/flagsSvg/macedon.svg',
-        svg: './assets/avatarSvg/alexander.svg',
-        svgAttributesLarge: {
-            svgWidth: '90%',
-            svgHeight: '100%',
-            svgMarginLeft: '0px',
-            svgMarginTop: '-30px',
-        },
-        svgAttributesSmall: {
-            svgWidth: '150%',
-            svgHeight: '100%',
-            svgMarginLeft: '-16px',
-            svgMarginTop: '-30px',
-        },
-        svgAttributesXsmall: {
-            svgWidth: '130%',
-            svgHeight: '100%',
-            svgMarginLeft: '-14px',
-            svgMarginTop: '-32px',
-        },
-        biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
-    },
     'Genghis Khan': {
         id: 'genghiskhan',
         picture: './assets/img/genghiskhan.png',
@@ -181,6 +155,32 @@ const avatars = {
             svgMarginTop: '-19px',
         },
         biography: 'Genghis Khan, whose real name was Timujin, was a feared leader and general who conquered the largest land empire in history. He came from a simple background, being the leader of a small tribe, but he managed to unite all of the mongolian tribes and also completely reformed with ingenious tactics, thus granting him the title \'Genghis Khan\' which means \'Ruler of all\'. He then destroyed the nearby chinese Han Empire and much of the former persian empire and expanded as far away as into Europe.'
+    },
+    'Alexander the Great': {
+        id: 'alexander',
+        picture: './assets/img/alexander.png',
+        selectSound: '',
+        flag: './assets/flagsSvg/macedon.svg',
+        svg: './assets/avatarSvg/alexander.svg',
+        svgAttributesLarge: {
+            svgWidth: '90%',
+            svgHeight: '100%',
+            svgMarginLeft: '0px',
+            svgMarginTop: '-30px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '150%',
+            svgHeight: '100%',
+            svgMarginLeft: '-16px',
+            svgMarginTop: '-30px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '130%',
+            svgHeight: '100%',
+            svgMarginLeft: '-14px',
+            svgMarginTop: '-32px',
+        },
+        biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
     },
     'Hannibal Barca': {
         id: 'hannibal',
