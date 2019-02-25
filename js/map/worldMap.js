@@ -18,7 +18,7 @@ class WorldMap {
     getTotalNumberOfTerritories() {
         let count = 0;
         this.regions.forEach(region => {
-            region.territories.forEach(territory => {
+            region.territories.forEach(() => {
                 count++;
             });
         });

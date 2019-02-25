@@ -31,9 +31,9 @@ const createTutorialService = () => {
         attackModalFightExplanation: jest.fn().mockImplementation(() => Promise.resolve()),
         attackModalRetreatExplanation: jest.fn().mockImplementation(() => Promise.resolve()),
         startAttack: jest.fn().mockImplementation(() => Promise.resolve()),
-        afterAttack: jest.fn().mockImplementation(attackData => Promise.resolve()),
-        afterAttack2: jest.fn().mockImplementation(attackData => Promise.resolve()),
-        moveAfterAttackExplanation: jest.fn().mockImplementation(attackData => Promise.resolve())
+        afterAttack: jest.fn().mockImplementation(() => Promise.resolve()),
+        afterAttack2: jest.fn().mockImplementation(() => Promise.resolve()),
+        moveAfterAttackExplanation: jest.fn().mockImplementation(() => Promise.resolve())
     };
 };
 

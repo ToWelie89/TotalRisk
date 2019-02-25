@@ -23,7 +23,8 @@ module.exports = {
         "jest": true,
         "dice_box": true,
         "__dirname": true,
-        "iziToast": true
+        "iziToast": true,
+        "ipcRenderer": true
     },
     "rules": {
         "no-console": "off",

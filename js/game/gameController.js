@@ -9,7 +9,7 @@ const {
 } = require('./../gameConstants');
 const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = require('./../map/mapHelpers');
 const {PLAYER_TYPES} = require('./../player/playerConstants');
-const {delay, loadSvgIntoDiv, lightenDarkenColor} = require('./../helpers');
+const {delay, lightenDarkenColor} = require('./../helpers');
 const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 

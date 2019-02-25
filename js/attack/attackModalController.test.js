@@ -2,16 +2,12 @@ import AttackModalController from './attackModalController';
 import {createUibModalInstance, createSoundService, createScope, createRootScope, createTutorialService, createSocketService} from './../test/mockHelper';
 import Territory from './../map/territory';
 import { worldMap } from './../map/worldMapConfiguration';
-import Player from './../player/player';
-import {PLAYER_COLORS, avatars} from './../player/playerConstants';
 import {arraysEqual, delay} from './../helpers';
 
 describe('attackModalController', () => {
     let attackModalController;
     let territory1;
     let territory2;
-    let player1;
-    let player2;
 
     let mockScope;
     let mockRootScope;
@@ -29,9 +25,6 @@ describe('attackModalController', () => {
 
         territory2 = new Territory(worldMap.regions[0].territories[1]); // Egypt
         territory2.owner = 'Kalle'; // Attacker
-
-        player1 = new Player('Pelle', PLAYER_COLORS.RED, avatars['Julius Caesar']);
-        player2 = new Player('Kalle', PLAYER_COLORS.GREEN, avatars['Napoleon Bonaparte']);
 
         mockAttackData = {
             territoryAttacked: territory1,
@@ -96,7 +89,7 @@ describe('attackModalController', () => {
                 }
             };
         };
-        document.getElementById = selector => {
+        document.getElementById = () => {
             return {
                 getBBox: () => {
                     return {
@@ -254,7 +247,7 @@ describe('attackModalController', () => {
         territory2.numberOfTroops = 5;
         territory1.numberOfTroops = 0;
 
-        attackModalController.battleHandler.handleAttack = (x, y) => { // Mock handle attack result
+        attackModalController.battleHandler.handleAttack = () => { // Mock handle attack result
             return {
                 attackDice: [6, 5, 4],
                 defendDice: [4, 3],
@@ -282,7 +275,7 @@ describe('attackModalController', () => {
         territory2.numberOfTroops = 0;
         territory1.numberOfTroops = 3;
 
-        attackModalController.battleHandler.handleAttack = (x, y) => { // Mock handle attack result
+        attackModalController.battleHandler.handleAttack = () => { // Mock handle attack result
             return {
                 attackDice: [3, 2, 3],
                 defendDice: [6, 5],
@@ -321,7 +314,7 @@ describe('attackModalController', () => {
         territory2.numberOfTroops = 0;
         territory1.numberOfTroops = 3;
 
-        attackModalController.battleHandler.handleAttack = (x, y) => { // Mock handle attack result
+        attackModalController.battleHandler.handleAttack = () => { // Mock handle attack result
             return {
                 attackDice: [5, 3, 1],
                 defendDice: [6, 2],
@@ -423,7 +416,7 @@ describe('attackModalController', () => {
 
         const attackHandled = jest.fn();
 
-        attackModalController.battleHandler.handleAttack = (x, y) => { // Mock handle attack result
+        attackModalController.battleHandler.handleAttack = () => { // Mock handle attack result
             attackHandled();
 
             territory2.numberOfTroops = territory2.numberOfTroops - attackerCasualties;

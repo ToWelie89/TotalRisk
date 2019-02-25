@@ -387,7 +387,7 @@ class LobbiesController {
                     url = `./assets/flagsSvg/countries/${userData.countryCode.toLowerCase()}.svg`;
                 }
 
-                var wavingFlag = this.$compile(`<waving-flag flag-width="90" flag-height="50" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+                var wavingFlag = this.$compile(`<waving-flag flag-width="90" flag-height="50" flag-url="'${url}'"></waving-flag>`)(this.$scope);
 
                 setTimeout(() => {
                     const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, userData);

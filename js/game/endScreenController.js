@@ -25,17 +25,19 @@ class EndScreenController {
 
         this.vm.takeScreenshot = this.takeScreenshot;
 
-        const that = this;
-        ipcRenderer.on('takeScreenshotResponse', function(event, imagePath) {
-            that.toastService.successToast('Screenshot taken!', `Written file to ${imagePath}`);
-            that.vm.disableScreenshotButton = false;
-            that.$scope.$apply();
-        });
-        ipcRenderer.on('takeScreenshotError', function(event) {
-            that.toastService.errorToast('Error!', 'Screenshot could not be taken');
-            that.vm.disableScreenshotButton = false;
-            that.$scope.$apply();
-        });
+        if (ipcRenderer) {
+            const that = this;
+            ipcRenderer.on('takeScreenshotResponse', function(event, imagePath) {
+                that.toastService.successToast('Screenshot taken!', `Written file to ${imagePath}`);
+                that.vm.disableScreenshotButton = false;
+                that.$scope.$apply();
+            });
+            ipcRenderer.on('takeScreenshotError', function(event) {
+                that.toastService.errorToast('Error!', 'Screenshot could not be taken');
+                that.vm.disableScreenshotButton = false;
+                that.$scope.$apply();
+            });
+        }
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {

@@ -232,7 +232,7 @@ class LobbiesController {
             if (tooltipData.countryCode && CountryCodes[tooltipData.countryCode]) {
                 url = `./assets/flagsSvg/countries/${tooltipData.countryCode.toLowerCase()}.svg`;
             }
-            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="\'${url}\'"></waving-flag>`)(this.$scope);
+            var wavingFlag = this.$compile(`<waving-flag flag-width="50" flag-height="30" flag-url="'${url}'"></waving-flag>`)(this.$scope);
 
             setTimeout(() => {
                 const markup = getPlayerTooltipMarkup(wavingFlag[0].innerHTML, tooltipData);

@@ -1,0 +1,110 @@
+@-webkit-keyframes phasePulsate {
+    0% {
+        box-shadow: inset 0 0 50px rgba(107, 255, 104, 1), 0 0 50px #79ff7a;
+    }
+    100% {
+        box-shadow: inset 0 0 50px rgba(107, 255, 104, 0.6), 0 0 50px #79ff7a;
+    }
+}
+@keyframes phasePulsate {
+    0% {
+        box-shadow: inset 0 0 50px rgba(107, 255, 104, 1), 0 0 50px #79ff7a;
+    }
+    100% {
+        box-shadow: inset 0 0 50px rgba(107, 255, 104, 0.6), 0 0 50px #79ff7a;
+    }
+}
+
+.phaseIndicator {
+    width: 300px;
+
+    h3 {
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        color: white;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .stepsContainer {
+        height: 50px;
+        width: 100%;
+
+        .orbContainer {
+            width: 33%;
+            text-align: center;
+            float: left;
+
+            &:nth-child(1), &:nth-child(2) {
+                .orb {
+                    &:after {
+                        content: "";
+                        width: 300%;
+                        position: absolute;
+                        z-index: -1;
+                        height: 5px;
+                        background: linear-gradient(0deg, #909090 0%, #ececec 100%);
+                        top: 13px;
+                    }
+                }
+            }
+
+            .orb {
+                width: 35px;
+                height: 35px;
+                float: left;
+                margin: 0;
+                border-radius: 50%;
+                position: relative;
+                background: radial-gradient(circle at 50% 120%, #81f17a, #5ada52 10%, #14770d 80%, #074403 100%);
+                border: 2px solid #cacaca;
+                left: 30%;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 1%;
+                    left: 5%;
+                    width: 90%;
+                    height: 90%;
+                    border-radius: 50%;
+                    background: radial-gradient(circle at 50% 0px, #ffffff, rgba(255, 255, 255, 0) 58%);
+                    -webkit-filter: blur(5px);
+                    z-index: 2;
+                }
+
+                .glyphicon-ok {
+                    display: none;
+                }
+
+                &.active {
+                    box-shadow: inset 0 0 50px #6bff68, 0 0 50px #79ff7a;
+                    animation: phasePulsate 1s ease infinite alternate;
+                }
+
+                &.futureStep {
+                    background: radial-gradient(circle at 50% 120%, #68a264, #298624 10%, #071b05 80%, #041d03 100%);
+                }
+
+                &.done {
+                    .glyphicon-ok {
+                        display: inline-block;
+                        color: #7dfb5e;
+                        position: relative;
+                        left: 12px;
+                        top: 17px;
+                        z-index: 5;
+                        font-size: 12px;
+                        background: #194603;
+                        padding: 5px;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
