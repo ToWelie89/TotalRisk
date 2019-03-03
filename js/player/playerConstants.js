@@ -96,11 +96,23 @@ const avatars = {
         selectSound: '',
         flag: './assets/flagsSvg/rome.svg',
         svg: './assets/avatarSvg/caesar.svg',
-        svgAttributesSmall: {
-            svgWidth: '180%',
+        svgAttributesLarge: {
+            svgWidth: '130%',
             svgHeight: '100%',
-            svgMarginLeft: '-30px',
-            svgMarginTop: '-7px',
+            svgMarginLeft: '-20px',
+            svgMarginTop: '0px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '220%',
+            svgHeight: '130%',
+            svgMarginLeft: '-60px',
+            svgMarginTop: '0px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '150%',
+            svgHeight: '100%',
+            svgMarginLeft: '-13px',
+            svgMarginTop: '4px',
         },
         biography: 'Gaius Julius Caesar was a roman politician and general. He successfully conquered germanic tribes in Gaul where one of his most famous battle was the battle of Alesia where his 60 000 strong roman force defeated a gallic horde of around 200 000 men. Caesar then won a roman civil war against his biggest rival Pompey and became a roman dictator and one of the most powerful leaders of his age.'
     },
@@ -111,16 +123,16 @@ const avatars = {
         flag: './assets/flagsSvg/france.svg',
         svg: './assets/avatarSvg/napoleon.svg',
         svgAttributesLarge: {
-            svgWidth: '160%',
-            svgHeight: '440px',
-            svgMarginLeft: '-75px',
-            svgMarginTop: '-20px',
+            svgWidth: '190%',
+            svgHeight: '520px',
+            svgMarginLeft: '-113px',
+            svgMarginTop: '-47px',
         },
         svgAttributesSmall: {
-            svgWidth: '260%',
-            svgHeight: '100%',
-            svgMarginLeft: '-60px',
-            svgMarginTop: '0px',
+            svgWidth: '280%',
+            svgHeight: '120%',
+            svgMarginLeft: '-80px',
+            svgMarginTop: '10px',
         },
         svgAttributesXsmall: {
             svgWidth: '220%',
@@ -163,22 +175,22 @@ const avatars = {
         flag: './assets/flagsSvg/macedon.svg',
         svg: './assets/avatarSvg/alexander.svg',
         svgAttributesLarge: {
-            svgWidth: '90%',
+            svgWidth: '120%',
             svgHeight: '100%',
-            svgMarginLeft: '0px',
-            svgMarginTop: '-30px',
+            svgMarginLeft: '-26px',
+            svgMarginTop: '-161px',
         },
         svgAttributesSmall: {
-            svgWidth: '150%',
-            svgHeight: '100%',
-            svgMarginLeft: '-16px',
-            svgMarginTop: '-30px',
+            svgWidth: '190%',
+            svgHeight: '160%',
+            svgMarginLeft: '-36px',
+            svgMarginTop: '-60px',
         },
         svgAttributesXsmall: {
             svgWidth: '130%',
             svgHeight: '100%',
-            svgMarginLeft: '-14px',
-            svgMarginTop: '-32px',
+            svgMarginLeft: '-12px',
+            svgMarginTop: '-58px',
         },
         biography: 'Few men have shaped the world so much as Alexander the Great, he was a seemingly fearless warrior with ambitions and confidence out of this world. He expanded his small kingdom of Macedon into becoming one of the largest empires ever by completely defeating the superpower of his age, the Persian Empire. He personally led his companion cavalry in person and was near-mortally wounded at several occasions. He died of fever at the young of 32, having conquered two thirds of the known world and never having lost a single battle.'
     },
@@ -211,8 +223,27 @@ const avatars = {
     'Attila the Hun': {
         id: 'attila',
         picture: './assets/img/attila.png',
+        svg: './assets/avatarSvg/attila.svg',
         selectSound: '',
         flag: './assets/flagsSvg/hunnicempire.svg',
+        svgAttributesLarge: {
+            svgWidth: '160%',
+            svgHeight: 'auto',
+            svgMarginLeft: '-109px',
+            svgMarginTop: '-29px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '280%',
+            svgHeight: '140%',
+            svgMarginLeft: '-100px',
+            svgMarginTop: '0px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '181%',
+            svgHeight: '100%',
+            svgMarginLeft: '-44px',
+            svgMarginTop: '-11px',
+        },
         biography: 'During the later days of the Roman empire nomadic peoples, referred to as barbarians by the romans, terrorized and attacked everywhere along the vast borders of the empire. None of these barbarian leaders were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
     },
     'Scipio Africanus': {
@@ -232,6 +263,7 @@ const avatars = {
     'Leonidas': {
         id: 'leonidas',
         picture: './assets/img/leonidas.png',
+        svg: './assets/avatarSvg/leonidas.svg',
         selectSound: '',
         flag: './assets/flagsSvg/sparta.svg',
         biography: 'Leonidas was king of the renowned warrior citystate known as Sparta. He led a force of 300 spartans supported by 7 000 greek allies against a persian invasion force led by King Xerxes I whose army was at least 10 times bigger. Leonidas and his army successfully defended the mountain pass of Thermopylae for several crucial days despite the severe numerical disadvantage. After being surrounded Leonidas and the last of the men who had chosen to stay fought a valiant last stand, a moment that has been immortalized in both history and legend.'
