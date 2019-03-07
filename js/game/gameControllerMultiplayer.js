@@ -432,6 +432,7 @@ class GameControllerMultiplayer extends GameController {
             this.vm.turn = this.gameEngine.turn;
             if (reinforcementData) {
                 this.gameEngine.reinforcementData = reinforcementData;
+                this.gameEngine.troopsToDeploy = reinforcementData.totalReinforcements;
                 this.vm.troopsToDeploy = this.gameEngine.reinforcementData.totalReinforcements;
             }
             this.$scope.$apply();

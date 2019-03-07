@@ -28,7 +28,7 @@
                     <div class="col-xs-12" style="padding: 0px; margin-left: 5px;">
                         <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ game.getCurrentPlayerColor() }}"><span data-ng-bind="game.turn.player.name"></span></strong>
                     </div>
-                    <div class="col-xs-12" style="padding: 0px;">
+                    <div class="col-xs-12" style="padding: 0px; height: 80px; min-height: 80px; max-height: 80px;">
                         <div
                             class="floatLeft"
                             data-ng-disabled="game.turn.turnPhase !== 0"
@@ -91,29 +91,52 @@
                 <div class="row">
                     <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                         <div>
-                            <div data-ng-show="game.turn.turnPhase == 0" class="troop_{{ game.turn.player.color.name }}">
-                                <div>Deployment phase</div>
-                                <div data-ng-if="game.troopsToDeploy <= 8">
-                                    <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in game.toArray(game.troopsToDeploy) track by $index">
-                                        <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                            <div class="phaseIndicator">
+                                <h3 style="margin-top: 0;" data-ng-show="game.turn.turnPhase == 0">
+                                    Deployment phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="game.turn.turnPhase == 1">
+                                    Attack phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="game.turn.turnPhase == 2">
+                                    Movement phase
+                                </h3>
+                                <div class="stepsContainer">
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': game.turn.turnPhase == 0, 'done': game.turn.turnPhase != 0}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': game.turn.turnPhase == 1, 'done': game.turn.turnPhase > 1, 'futureStep': game.turn.turnPhase < 1}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': game.turn.turnPhase == 2, 'done': game.turn.turnPhase > 2, 'futureStep': game.turn.turnPhase < 2}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div data-ng-if="game.troopsToDeploy > 8">
-                                    <div class="floatLeft">
-                                        <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                <div class="troop_{{ game.turn.player.color.name }}" data-ng-show="game.turn.turnPhase == 0" style="width: 300px; position: absolute;">
+                                    <div class="textCenter" data-ng-if="game.troopsToDeploy <= 12">
+                                        <div style="display: inline-block;" class="mainTroopIndicator" data-ng-repeat="i in game.toArray(game.troopsToDeploy) track by $index">
+                                            <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
                                     </div>
-                                    <span class="floatLeft paddingLeft">x{{ game.troopsToDeploy }}</span>
-                                </div>
-                                <div data-ng-if="game.troopsToDeploy === 0">
-                                    <strong>No more reinforcements!</strong>
+                                    <div data-ng-if="game.troopsToDeploy > 12" class="textCenter" style="margin-top: -5px;">
+                                        <div style="display: inline-block;">
+                                            <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
+                                        <div style="display: inline-block; position: relative; font-size: 22px; top: -12px;">
+                                            x{{ game.troopsToDeploy }}
+                                        </div>
+                                    </div>
+                                    <div class="textCenter" data-ng-if="game.troopsToDeploy === 0">
+                                        <strong>No more reinforcements!</strong>
+                                    </div>
                                 </div>
                             </div>
-                            <span data-ng-show="game.turn.turnPhase == 1">
-                                Attack phase
-                            </span>
-                            <span data-ng-show="game.turn.turnPhase == 2">
-                                Movement phase
-                            </span>
                         </div>
                     </div>
                     <div class="col-xs-3" style="line-height: 30px;">

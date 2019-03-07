@@ -1,7 +1,7 @@
 <div class="container mainContent" id="multiplayerContainer" data-ng-controller="gameControllerMultiplayer as gameMultiplayer"">
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
         <div class="row" id="topBar">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px;">
+            <div class="col-xs-4 textCenter" style="padding-left:0px; padding-top:6px;">
                 <div class="col-xs-3">
                     <div style="position: absolute; z-index: 1000; top: -91px; left: -110px; transform: scale(0.5);">
                         <div class="setupBoxAvatarsContainer__item" style="margin-top: 0px;">
@@ -29,7 +29,7 @@
                         <span style="float: left; color: white;">Current player:</span>
                         <strong id="playerName" class="floatLeft text-shadow" style="margin-bottom: 5px; clear: both; letter-spacing: -2px; line-height: 30px; color: {{ gameMultiplayer.getCurrentPlayerColor() }}"><span data-ng-bind="gameMultiplayer.turn.player.name"></span></strong>
                     </div>
-                    <div class="col-xs-12" style="padding: 0px;">
+                    <div class="col-xs-12" style="padding: 0px; height: 80px; min-height: 80px; max-height: 80px;">
                         <div
                             class="floatLeft cardContainer"
                             data-ng-disabled="gameMultiplayer.turn.turnPhase !== 0"
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
+            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-4 textCenter" style="padding-right:0px;">
                 <div class="buttonGroup">
                     <button type="button" class="button button-blue" data-ng-class="{'filter-selected': gameMultiplayer.filter === 'byOwner'}" id="showByOwner" data-ng-click="gameMultiplayer.filterByOwner()">
                         <strong>Color by owner</strong>
@@ -88,33 +88,56 @@
                 </div>
                 <h4 class="colorWhite">Turn number <strong data-ng-bind="gameMultiplayer.turn.turnNumber"></strong></h4>
             </div>
-            <div class="col-xs-3 paddingTop--double colorWhite" id="turnInfo">
+            <div class="col-xs-4 paddingTop--double colorWhite" id="turnInfo">
                 <div class="row">
                     <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                         <div>
-                            <div data-ng-show="gameMultiplayer.turn.turnPhase == 0" class="troop_{{ gameMultiplayer.turn.player.color.name }}">
-                                <div>Deployment phase</div>
-                                <div data-ng-if="gameMultiplayer.troopsToDeploy <= 9">
-                                    <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in gameMultiplayer.toArray(gameMultiplayer.troopsToDeploy) track by $index">
-                                        <div id="reinforcementTroopIconMultiplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                            <div class="phaseIndicator">
+                                <h3 style="margin-top: 0;" data-ng-show="gameMultiplayer.turn.turnPhase == 0">
+                                    Deployment phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="gameMultiplayer.turn.turnPhase == 1">
+                                    Attack phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="gameMultiplayer.turn.turnPhase == 2">
+                                    Movement phase
+                                </h3>
+                                <div class="stepsContainer">
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameMultiplayer.turn.turnPhase == 0, 'done': gameMultiplayer.turn.turnPhase != 0}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameMultiplayer.turn.turnPhase == 1, 'done': gameMultiplayer.turn.turnPhase > 1, 'futureStep': gameMultiplayer.turn.turnPhase < 1}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameMultiplayer.turn.turnPhase == 2, 'done': gameMultiplayer.turn.turnPhase > 2, 'futureStep': gameMultiplayer.turn.turnPhase < 2}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div data-ng-if="gameMultiplayer.troopsToDeploy > 9">
-                                    <div class="floatLeft">
-                                        <div id="reinforcementTroopIconMultiplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                <div class="troop_{{ gameMultiplayer.turn.player.color.name }}" data-ng-show="gameMultiplayer.turn.turnPhase == 0" style="width: 300px; position: absolute;">
+                                    <div class="textCenter" data-ng-if="gameMultiplayer.troopsToDeploy <= 12">
+                                        <div style="display: inline-block;" class="mainTroopIndicator" data-ng-repeat="i in gameMultiplayer.toArray(gameMultiplayer.troopsToDeploy) track by $index">
+                                            <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
                                     </div>
-                                    <span class="floatLeft paddingLeft">x{{ gameMultiplayer.troopsToDeploy }}</span>
-                                </div>
-                                <div data-ng-if="gameMultiplayer.troopsToDeploy === 0">
-                                    <strong>No more reinforcements!</strong>
+                                    <div data-ng-if="gameMultiplayer.troopsToDeploy > 12" class="textCenter" style="margin-top: -5px;">
+                                        <div style="display: inline-block;">
+                                            <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
+                                        <div style="display: inline-block; position: relative; font-size: 22px; top: -12px;">
+                                            x{{ gameMultiplayer.troopsToDeploy }}
+                                        </div>
+                                    </div>
+                                    <div class="textCenter" data-ng-if="gameMultiplayer.troopsToDeploy === 0">
+                                        <strong>No more reinforcements!</strong>
+                                    </div>
                                 </div>
                             </div>
-                            <span data-ng-show="gameMultiplayer.turn.turnPhase == 1">
-                                Attack phase
-                            </span>
-                            <span data-ng-show="gameMultiplayer.turn.turnPhase == 2">
-                                Movement phase
-                            </span>
                         </div>
                     </div>
                     <div class="col-xs-3" style="line-height: 30px;">
