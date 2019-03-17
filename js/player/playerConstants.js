@@ -246,6 +246,33 @@ const avatars = {
         },
         biography: 'During the later days of the Roman empire nomadic peoples, referred to as barbarians by the romans, terrorized and attacked everywhere along the vast borders of the empire. None of these barbarian leaders were as feared as Atilla the Hun. He was the leader of a tribal empire consisting of huns, ostrogoths and alans and he commanded a huge army of almost 100 000 men. He successfully plundered the Balkans and invaded the eastern roman empire and Italy.'
     },
+    'Leonidas': {
+        id: 'leonidas',
+        picture: './assets/img/leonidas.png',
+        svg: './assets/avatarSvg/leonidas.svg',
+        svgAttributesLarge: {
+            svgWidth: '110%',
+            svgHeight: 'auto',
+            svgMarginLeft: '-13px',
+            svgMarginTop: '-60px',
+        },
+        svgAttributesSmall: {
+            svgWidth: '260%',
+            svgHeight: '160%',
+            svgMarginLeft: '-70px',
+            svgMarginTop: '-20px',
+        },
+        svgAttributesXsmall: {
+            svgWidth: '141%',
+            svgHeight: '100%',
+            svgMarginLeft: '-17px',
+            svgMarginTop: '-25px',
+        },
+        selectSound: '',
+        flag: './assets/flagsSvg/sparta.svg',
+        biography: 'Leonidas was king of the renowned warrior citystate known as Sparta. He led a force of 300 spartans supported by 7 000 greek allies against a persian invasion force led by King Xerxes I whose army was at least 10 times bigger. Leonidas and his army successfully defended the mountain pass of Thermopylae for several crucial days despite the severe numerical disadvantage. After being surrounded Leonidas and the last of the men who had chosen to stay fought a valiant last stand, a moment that has been immortalized in both history and legend.'
+    },
+    /*
     'Scipio Africanus': {
         id: 'scipio',
         picture: './assets/img/scipio.png',
@@ -259,14 +286,6 @@ const avatars = {
         selectSound: '',
         flag: './assets/flagsSvg/athens.svg',
         biography: 'Miltiades was an Athenian citizen who was elected to serve as one of the greek generals at the legendary battles of Marathon, where a 10 000 strong greek force defeated a persian invading army of over 25 000. Miltiades have been credited with devising the tactics that defeated the persians in this crucial engagement that saved greek civilisation from persian rule.'
-    },
-    'Leonidas': {
-        id: 'leonidas',
-        picture: './assets/img/leonidas.png',
-        svg: './assets/avatarSvg/leonidas.svg',
-        selectSound: '',
-        flag: './assets/flagsSvg/sparta.svg',
-        biography: 'Leonidas was king of the renowned warrior citystate known as Sparta. He led a force of 300 spartans supported by 7 000 greek allies against a persian invasion force led by King Xerxes I whose army was at least 10 times bigger. Leonidas and his army successfully defended the mountain pass of Thermopylae for several crucial days despite the severe numerical disadvantage. After being surrounded Leonidas and the last of the men who had chosen to stay fought a valiant last stand, a moment that has been immortalized in both history and legend.'
     },
     'Henry V': {
         id: 'henryv',
@@ -354,7 +373,7 @@ const avatars = {
         picture: './assets/img/boudicca.png',
         selectSound: '',
         flag: './assets/flagsSvg/iceni.svg'
-    }
+    }*/
 };
 
 /*

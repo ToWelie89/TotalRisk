@@ -12,7 +12,7 @@
                     <h3 data-ng-bind="characterSelection.currentSelectedPlayer.name"></h3>
                     <p class="characterBio" data-ng-bind="characterSelection.currentSelectedPlayer.avatar.biography" data-ng-show="characterSelection.currentSelectedPlayer"></p>
                 </div> -->
-                <div style="float: left; width: 100%;">
+                <div style="float: left; width: 100%; min-height: 506px; height: 506px; max-height: 506px;">
                     <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer" style="position: absolute; top: 100px; z-index: 1;">
                         <waving-flag flag-width="400" flag-height="200" flag-url="characterSelection.currentSelectedPlayer.avatar.flag" update-manually="true"></waving-flag>
                     </div>

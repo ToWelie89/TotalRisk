@@ -1,5 +1,10 @@
-<div class="container mainContent" data-ng-controller="gameController as game"" id="singlePlayerContainer">
-    <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING" ng-cloak>
+<div
+    class="container"
+    data-ng-controller="gameController as game"
+    id="singlePlayerContainer"
+    data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING"
+>
+    <div style="height: 100%;" ng-cloak>
         <div class="row colorWhite" id="topBar">
             <div class="col-xs-4 textCenter paddingTop--double" style="padding-left:0px;">
                 <div class="col-xs-3">
@@ -152,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="position: relative;">
+        <div class="row gameView">
             <div class="ownageChartContainer" uib-tooltip-html="game.ownageChartTooltip" tooltip-placement="right">
                 <canvas id="ownageChartSingleplayer" width="100" height="100"></canvas>
             </div>
@@ -164,10 +169,6 @@
                 inject-svg
                 src="assets/maps/worldMap/worldMap.svg">
            </div>
-        </div>
-        <div class="row">
-            <div id="currentTerritoryInfo">
-            </div>
         </div>
     </div>
 </div>

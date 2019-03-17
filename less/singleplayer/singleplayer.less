@@ -1,21 +1,55 @@
 #singlePlayerContainer {
+	padding: 0;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    background: rgb(62, 62, 62);
+
 	#topBar {
-		background: rgba(67, 64, 64, 0.6901960784313725);
-	    border-top-right-radius: 30px;
-	    border-top-left-radius: 60px;
-	    box-shadow: 3px 3px 8px #202020;
-        height: 140px;
-        min-height: 140px;
-        max-height: 140px;
+        height: 150px;
+        min-height: 150px;
+        max-height: 150px;
+        width: 1500px;
+        margin: 0 auto;
+
+        #playerName {
+            font-size: 30px;
+        }
+
+        .phaseIndicator {
+        	position: absolute;
+        	z-index: 10;
+        }
+
+        #turnInfo {
+            svg {
+                width: 40px;
+                height: 40px;
+                margin-left: -8px;
+                margin-right: -8px;
+                filter: url(#droppy);
+            }
+        }
+
+        #cardButton {
+            cursor: url(../assets/cursors/new/pointer.png), auto;
+            &.cardButton--disabled {
+                cursor: url(../assets/cursors/new/notAllowed.png), auto;
+            }
+        }
 	}
 
-	#map {
-	    background: #5397d1;
-	    border-radius: 30px;
-	    border-radius: 30px;
-	    border-top-left-radius: 0px;
-	    border-top-right-radius: 0px;
-        box-shadow: 3px 3px 8px #202020;
+	.gameView {
+		background: #5397d1;
+	    position: relative;
+        height: ~"calc(100% - 150px)";
+        box-shadow: inset 0px 0px 100px 11px rgba(28, 48, 150, 0.83);
+
+		#map {
+	        width: 1500px;
+	        margin: 0 auto;
+		}
 	}
 
 	#mainTurnAvatar {
@@ -23,27 +57,6 @@
 	    width: 110px;
 	    background-size: cover;
 	    background-position: center center;
-	}
-
-	#playerName {
-	    font-size: 30px;
-	}
-
-	#turnInfo {
-	    svg {
-	        width: 40px;
-	        height: 40px;
-	        margin-left: -8px;
-	        margin-right: -8px;
-	        filter: url(#droppy);
-	    }
-	}
-
-	#cardButton {
-	    cursor: url(../assets/cursors/new/pointer.png), auto;
-	    &.cardButton--disabled {
-	        cursor: url(../assets/cursors/new/notAllowed.png), auto;
-	    }
 	}
 
 	#cardCounter {
