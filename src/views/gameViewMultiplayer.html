@@ -1,4 +1,9 @@
-<div class="container mainContent" id="multiplayerContainer" data-ng-controller="gameControllerMultiplayer as gameMultiplayer"">
+<div
+    class="container"
+    id="multiplayerContainer"
+    data-ng-controller="gameControllerMultiplayer as gameMultiplayer"
+    data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER"
+>
     <div data-ng-show="main.currentGamePhase == main.gamePhases.GAME_MULTIPLAYER" ng-cloak>
         <div class="row" id="topBar">
             <div class="col-xs-4 textCenter" style="padding-left:0px; padding-top:6px;">
@@ -160,7 +165,7 @@
             <div id="timerBarInner" style="width: {{ gameMultiplayer.turn.player.type === 0 ? gameMultiplayer.timerWidth + 'px' : '100%' }}">
             </div>
         </div>
-        <div class="row" style="position: relative; padding-top: 21px;">
+        <div class="row gameView">
             <div class="ownageChartContainer" uib-tooltip-html="gameMultiplayer.ownageChartTooltip" tooltip-placement="right">
                 <canvas id="ownageChartMultiplayer" width="100" height="100"></canvas>
             </div>
