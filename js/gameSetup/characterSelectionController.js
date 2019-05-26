@@ -51,8 +51,9 @@ class CharacterSelectionController {
                         });
                     }
                     setTimeout(() => {
+                        // Must fix this
                         this.loadSavedCharacterPortraits();
-                    }, 500);
+                    }, 2000);
                 });
             }
         });
@@ -69,12 +70,14 @@ class CharacterSelectionController {
     loadSavedCharacterPortraits() {
         document.querySelectorAll('.selectableAvatars__item').forEach(characterBox => {
             if (characterBox.querySelector('div[character]')) {
+                console.log(characterBox.querySelector('div[character]'))
                 const avatarId = characterBox.querySelector('div[character]').getAttribute('character');
                 characterBox.querySelector('svg').setAttribute('viewBox', '127 10 398 400');
                 characterBox.querySelector('svg').setAttribute('xmlns', 'http://www.w3.org/2000/svg'+Math.random());
                 characterBox.querySelector('svg').setAttribute('xmlns:bx', 'https://boxy-svg.com'+Math.random());
 
                 if (characterBox.querySelector('svg')) {
+                    console.log(avatarId, this.vm.avatars)
                     const character = Object.values(this.vm.avatars).find(x => x.id === avatarId);
 
                     $(`.selectableAvatars__item div[character="${avatarId}"] svg g[category="hat"] > g`).css('visibility', 'hidden');
@@ -153,20 +156,23 @@ class CharacterSelectionController {
                 $('#selectedCharacterSvg svg g[category="torso"] > g').css('visibility', 'hidden');
                 $('#selectedCharacterSvg svg g[category="legs"] > g').css('visibility', 'hidden');
 
-                $('#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]').css('visibility', 'visible');
-                $('#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]').css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
+                $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
 
                 $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
             });
         }
 
         $('#characterSelectionFlag .flag-element').css('background-image', `url("${this.vm.currentSelectedPlayer.avatar.flag}")`);
+        if (this.vm.currentSelectedPlayer.avatar.backgroundSvg) {
+            loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.backgroundSvg, '#characterSelectionModal__background');
+        }
     }
 
     selectAvatarAndClose(avatar) {

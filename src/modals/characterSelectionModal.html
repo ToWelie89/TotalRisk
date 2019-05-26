@@ -1,5 +1,8 @@
 <div>
     <div id="characterSelectionModal" class="riskModal" role="dialog" data-backdrop="static">
+        <div id="characterSelectionModal__leftGradient"></div>
+        <div id="characterSelectionModal__rightGradient"></div>
+        <div id="characterSelectionModal__background"></div>
         <!-- Modal content-->
         <div class="modal-body textCenter">
             <div class="row" style="width: 800px; margin: 0 auto;">
@@ -36,15 +39,20 @@
             </div>
             <div class="row selectableAvatars">
                 <div data-ng-repeat="avatar in characterSelection.avatars" class="selectableAvatars__item">
-                    <img ng-src="{{ avatar.picture }}"
-                         data-ng-if="!avatar.customCharacter"
-                         data-ng-click="characterSelection.selectAvatar(avatar)"
-                         data-ng-dblclick="characterSelection.selectAvatarAndClose(avatar)"
-                         data-ng-class="{'selectableAvatars__item--selected': characterSelection.avatarIsSelected(avatar),
-                                         'selectableAvatars__item--taken': characterSelection.avatarIsTaken(avatar)}" />
+                     <div style="background-color: black;"
+                          id="selectionModalCustomCharacter{{ avatar.id }}"
+                          class="selectionModalCharacer"
+                          data-ng-if="!avatar.customCharacter"
+                          data-ng-click="characterSelection.selectAvatar(avatar)"
+                          data-ng-dblclick="characterSelection.selectAvatarAndClose(avatar)"
+                          data-ng-class="{'selectableAvatars__item--selected': characterSelection.avatarIsSelected(avatar),
+                                          'selectableAvatars__item--taken': characterSelection.avatarIsTaken(avatar)}"
+                          inject-svg
+                          src="{{ avatar.svg }}">
+                      </div>
                      <div id="selectionModalCustomCharacter{{ avatar.id }}"
                           character="{{ avatar.id }}"
-                          style="background-color: {{ avatar.bgColor }}"
+                          style="background-color: black;"
                           data-ng-if="avatar.customCharacter"
                           data-ng-click="characterSelection.selectAvatar(avatar)"
                           data-ng-dblclick="characterSelection.selectAvatarAndClose(avatar)"

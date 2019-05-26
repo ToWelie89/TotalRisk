@@ -1,14 +1,16 @@
 'use strict';
 
-const firebaseAdmin = require('firebase-admin');
-const serviceAccount = require('./firebaseCredentials.json');
-
-firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: 'https://totalrisk-e2899.firebaseio.com'
-});
-
 const BEHIND_PROXY = process.env.BEHIND_PROXY;
+
+if (!BEHIND_PROXY) {
+    const firebaseAdmin = require('firebase-admin');
+    const serviceAccount = require('./firebaseCredentials.json');
+
+    firebaseAdmin.initializeApp({
+        credential: firebaseAdmin.credential.cert(serviceAccount),
+        databaseURL: 'https://totalrisk-e2899.firebaseio.com'
+    });
+}
 
 const bodyParser = require('body-parser');
 const express = require('express');

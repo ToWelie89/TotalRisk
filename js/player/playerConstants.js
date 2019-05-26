@@ -250,6 +250,7 @@ const avatars = {
         id: 'leonidas',
         picture: './assets/img/leonidas.png',
         svg: './assets/avatarSvg/leonidas.svg',
+        backgroundSvg: './assets/avatarBackgrounds/hellenic.svg',
         svgAttributesLarge: {
             svgWidth: '110%',
             svgHeight: 'auto',

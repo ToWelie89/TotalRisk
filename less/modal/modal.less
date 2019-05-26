@@ -327,19 +327,46 @@
                         padding-bottom: 0;
                     }
                 }
-
-                .row {
-                    background: #103c40;
-                }
             }
 
             #characterSelectionModal {
+                min-height: 800px;
+                &__leftGradient, &__rightGradient {
+                    position: absolute;
+                    width: 200px;
+                    height: 800px;
+                    background-color: gainsboro;
+                    z-index: 2;
+                }
+                &__leftGradient {
+                    left: 0;
+                }
+                &__rightGradient {
+                    right: 0;
+                }
+                &__background {
+                    min-height: 800px;
+                    position: absolute;
+                    top: 0;
+                    z-index: 1;
+                    width: 100%;
+
+                    svg {
+                        height: 800px;
+                        width: 100%;
+                    }
+                }
 
                 color: #d2d2d2;
                 text-shadow: 1px 1px 10px black;
 
                 #selectedCharacterPortrait {
                     box-shadow: 3px 3px 10px black;
+                }
+
+                .modal-body {
+                    position: relative;
+                    z-index: 5;
                 }
 
                 .characterBio {
@@ -360,15 +387,15 @@
                         display: inline-flex;
                         padding: 5px;
 
-                        img, div[character] {
+                        div {
                             width: 80px;
                             height: 80px;
-                            border-radius: 5%;
-                            border-top-left-radius: 40%;
-                            border-bottom-right-radius: 40%;
+                            border-radius: 50%;
+                            //border-top-left-radius: 40%;
+                            //border-bottom-right-radius: 40%;
                             border: 3px solid white;
-                            border-bottom: 3px solid #949494;
-                            border-right: 3px solid #949494;
+                            //border-bottom: 3px solid #949494;
+                            //border-right: 3px solid #949494;
                             cursor: url(../assets/cursors/new/pointer.png), auto;
                             box-shadow: 1px 1px 3px black;
                             transition: all 0.2s;
