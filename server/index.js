@@ -1,9 +1,11 @@
 'use strict';
 
-const BEHIND_PROXY = process.env.BEHIND_PROXY;
+const BEHIND_PROXY = !!process.env.BEHIND_PROXY;
+
+let firebaseAdmin;
 
 if (!BEHIND_PROXY) {
-    const firebaseAdmin = require('firebase-admin');
+    firebaseAdmin = require('firebase-admin');
     const serviceAccount = require('./firebaseCredentials.json');
 
     firebaseAdmin.initializeApp({

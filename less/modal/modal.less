@@ -330,11 +330,11 @@
             }
 
             #characterSelectionModal {
-                min-height: 800px;
+                min-height: 740px;
                 &__leftGradient, &__rightGradient {
                     position: absolute;
                     width: 200px;
-                    height: 800px;
+                    height: 740px;
                     background-color: gainsboro;
                     z-index: 2;
                 }
@@ -345,14 +345,14 @@
                     right: 0;
                 }
                 &__background {
-                    min-height: 800px;
+                    min-height: 740px;
                     position: absolute;
                     top: 0;
                     z-index: 1;
                     width: 100%;
 
                     svg {
-                        height: 800px;
+                        height: 740px;
                         width: 100%;
                     }
                 }
@@ -364,9 +364,50 @@
                     box-shadow: 3px 3px 10px black;
                 }
 
+                #characterSelectionFlag {
+                    position: absolute;
+                    text-align: center;
+                    margin: 0 auto;
+                    left: 630px;
+                    height: 420px;
+                    bottom: 60px;
+                    transform: rotate(-10deg);
+
+                    .poleTop {
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        background: yellow;
+                        top: -35px;
+                        left: -11px;
+                        z-index: 2;
+                    }
+
+                    .pole {
+                        height: 100%;
+                        width: 15px;
+                        background: #7b7b7b;
+                        position: absolute;
+                        left: -8px;
+                        top: -20px;
+                        z-index: 1;
+                    }
+
+                    #wavingFlag {
+                        position: absolute;
+                        z-index: 0;
+
+                        .flag-element {
+                            background-size: auto 100% !important;
+                        }
+                    }
+                }
+
                 .modal-body {
                     position: relative;
                     z-index: 5;
+                    height: 740px;
                 }
 
                 .characterBio {
@@ -379,10 +420,11 @@
                 }
 
                 .selectableAvatars {
-                    width: 800px;
-                    margin: 0 auto;
-                    padding-top: 30px;
-                    padding-bottom: 30px;
+                    position: absolute;
+                    text-align: center;
+                    width: 100%;
+                    bottom: -100px;
+
                     &__item {
                         display: inline-flex;
                         padding: 5px;

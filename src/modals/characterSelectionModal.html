@@ -10,17 +10,13 @@
                     Character Selection
                 </h2>
             </div>
-            <div class="row" style="width: 800px; height: 300px; margin: 0 auto; padding: 10px;">
-                <!-- <div style="float: left; width: 50%;">
-                    <h3 data-ng-bind="characterSelection.currentSelectedPlayer.name"></h3>
-                    <p class="characterBio" data-ng-bind="characterSelection.currentSelectedPlayer.avatar.biography" data-ng-show="characterSelection.currentSelectedPlayer"></p>
-                </div> -->
-                <div style="float: left; width: 100%; min-height: 506px; height: 506px; max-height: 506px;">
-                    <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer" style="position: absolute; top: 100px; z-index: 1;">
-                        <waving-flag flag-width="400" flag-height="200" flag-url="characterSelection.currentSelectedPlayer.avatar.flag" update-manually="true"></waving-flag>
-                    </div>
-                    <img data-ng-show="characterSelection.currentSelectedPlayer && !characterSelection.currentSelectedPlayer.avatar.svg && !characterSelection.currentSelectedPlayer.avatar.customCharacter" id="selectedCharacterPortrait" ng-src="{{ characterSelection.currentSelectedPlayer ? characterSelection.currentSelectedPlayer.avatar.picture : '' }}" style="width: 200px; height: 200px;" />
-
+            <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
+                <div class="pole"></div>
+                <div class="poleTop"></div>
+                <waving-flag flag-width="400" flag-height="200" flag-url="characterSelection.currentSelectedPlayer.avatar.flag" update-manually="true"></waving-flag>
+            </div>
+            <div class="row" style="position: absolute; width: 100%; bottom: -10px;">
+                <div>
                     <div id="selectedCharacterSvg" data-ng-show="characterSelection.currentSelectedPlayer && (characterSelection.currentSelectedPlayer.avatar.svg || characterSelection.currentSelectedPlayer.avatar.customCharacter)" style="position: relative; z-index: 2;">
                     </div>
                 </div>
@@ -32,7 +28,7 @@
                             font-weight: bold;
                             text-shadow: 0 0 10px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
             </div>
-            <div class="row textCenter" style="width: 800px; margin: 0 auto;">
+            <div class="row textCenter" style="margin: 0 auto; position: absolute; bottom: 10px; width: 100%;">
                 <button type="button" class="button button-green large"  data-ng-click="characterSelection.ok()" data-ng-disabled="!characterSelection.currentSelectedPlayer">
                     Select
                 </button>
