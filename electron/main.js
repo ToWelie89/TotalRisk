@@ -7,7 +7,8 @@ const {
     app,
     BrowserWindow,
     globalShortcut,
-    ipcMain
+    ipcMain,
+    session
 } = require('electron');
 const log = require('electron-log');
 const {
@@ -93,7 +94,8 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
 
 // Create window here
 const createDefaultWindow = () => {
-    const isDev = process.env.NODE_ENV === 'dev';
+    const isDev = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-no-tools';
+    const dontUseWebTools = process.env.NODE_ENV === 'dev-no-tools';
 
     let windowBounds = store.get('windowBounds');
     let riskSettings = store.get('riskSettings');
@@ -222,10 +224,11 @@ const createDefaultWindow = () => {
                 sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
             }, 1500);
         });
-        //win.webContents.openDevTools();
     }
 
-    win.webContents.openDevTools();
+    if (!dontUseWebTools) {
+        win.webContents.openDevTools();
+    }
 
     win.setMenu(null);
 
@@ -236,7 +239,7 @@ const createDefaultWindow = () => {
     });
 };
 
-ipcMain.on('takeScreenshot', function(event, arg) {
+ipcMain.on('takeScreenshot', function (event, arg) {
     try {
         win.webContents.capturePage(img => {
             let path = electron.app.getPath('userData');
@@ -247,7 +250,7 @@ ipcMain.on('takeScreenshot', function(event, arg) {
             }
 
             path += '\\screenshots';
-            if (!fs.existsSync(path)){
+            if (!fs.existsSync(path)) {
                 fs.mkdirSync(path);
             }
             const date = moment().format('YYYY-MM-DD_h-mm-ss');
@@ -291,6 +294,14 @@ autoUpdater.on('update-downloaded', (info) => {
 
 // Create app
 app.on('ready', () => {
+    /* session.defaultSession.webRequest.onBeforeRequest({}, (details, callback) => {
+        if (details.url.indexOf('7accc8730b0f99b5e7c0702ea89d1fa7c17bfe33') !== -1) {
+            console.log('ERROR: CAPTURED REQUEST 7accc8730b0f99b5e7c0702ea89d1fa7c17bfe33 !!!')
+            callback({ redirectURL: details.url.replace('7accc8730b0f99b5e7c0702ea89d1fa7c17bfe33', '57c9d07b416b5a2ea23d28247300e4af36329bdc') });
+        } else {
+            callback({ cancel: false });
+        }
+    }); */
     createDefaultWindow();
 });
 
