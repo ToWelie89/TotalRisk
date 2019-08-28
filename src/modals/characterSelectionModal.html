@@ -9,24 +9,25 @@
                 <h2>
                     Character Selection
                 </h2>
+                <h4 style="z-index: 2;
+                           bottom: 100px;
+                           color: #ff2929;
+                           font-size: 70px;
+                           font-weight: bold;
+                           font-family: 'Cinzel', serif;
+                           letter-spacing: 2px;
+                           text-shadow: -2px 2px 3px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
             </div>
             <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
                 <div class="pole"></div>
                 <div class="poleTop"></div>
                 <waving-flag flag-width="400" flag-height="200" flag-url="characterSelection.currentSelectedPlayer.avatar.flag" update-manually="true"></waving-flag>
             </div>
-            <div class="row" style="position: absolute; width: 100%; bottom: -10px;">
+            <div class="row" style="position: absolute; width: 100%; bottom: 70px;">
                 <div>
                     <div id="selectedCharacterSvg" data-ng-show="characterSelection.currentSelectedPlayer && (characterSelection.currentSelectedPlayer.avatar.svg || characterSelection.currentSelectedPlayer.avatar.customCharacter)" style="position: relative; z-index: 2;">
                     </div>
                 </div>
-                <h4 style="position: relative;
-                            z-index: 2;
-                            bottom: 100px;
-                            color: #c19898;
-                            font-size: 54px;
-                            font-weight: bold;
-                            text-shadow: 0 0 10px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
             </div>
             <div class="row textCenter" style="margin: 0 auto; position: absolute; bottom: 10px; width: 100%;">
                 <button type="button" class="button button-green large"  data-ng-click="characterSelection.ok()" data-ng-disabled="!characterSelection.currentSelectedPlayer">

@@ -316,7 +316,7 @@
             width: 100%;
 
             .modal-content {
-                background: #103c40;
+                background: gainsboro;
 
                 .modal-body {
                     padding-top: 0;
@@ -333,16 +333,17 @@
                 min-height: 740px;
                 &__leftGradient, &__rightGradient {
                     position: absolute;
-                    width: 200px;
+                    width: 20%;
                     height: 740px;
-                    background-color: gainsboro;
                     z-index: 2;
                 }
                 &__leftGradient {
                     left: 0;
+                    background: linear-gradient(90deg, rgba(220,220,220,1) 42%, rgba(0,0,0,0) 98%);
                 }
                 &__rightGradient {
                     right: 0;
+                    background: linear-gradient(-90deg, rgba(220,220,220,1) 42%, rgba(0,0,0,0) 98%);
                 }
                 &__background {
                     min-height: 740px;
