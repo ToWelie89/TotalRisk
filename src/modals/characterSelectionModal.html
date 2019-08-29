@@ -12,17 +12,17 @@
                 <h4 style="z-index: 2;
                            bottom: 100px;
                            color: #ff2929;
-                           font-size: 70px;
+                           font-size: 67px;
                            font-weight: bold;
                            font-family: 'Cinzel', serif;
                            letter-spacing: 2px;
                            text-shadow: -2px 2px 3px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
             </div>
-            <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
+            <!-- <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
                 <div class="pole"></div>
                 <div class="poleTop"></div>
                 <waving-flag flag-width="400" flag-height="200" flag-url="characterSelection.currentSelectedPlayer.avatar.flag" update-manually="true"></waving-flag>
-            </div>
+            </div> -->
             <div class="row" style="position: absolute; width: 100%; bottom: 70px;">
                 <div>
                     <div id="selectedCharacterSvg" data-ng-show="characterSelection.currentSelectedPlayer && (characterSelection.currentSelectedPlayer.avatar.svg || characterSelection.currentSelectedPlayer.avatar.customCharacter)" style="position: relative; z-index: 2;">
@@ -37,7 +37,7 @@
             <div class="row selectableAvatars">
                 <div data-ng-repeat="avatar in characterSelection.avatars" class="selectableAvatars__item">
                      <div style="background-color: black;"
-                          id="selectionModalCustomCharacter{{ avatar.id }}"
+                          id="selectionModalCharacter{{ avatar.id }}"
                           class="selectionModalCharacer"
                           data-ng-if="!avatar.customCharacter"
                           data-ng-click="characterSelection.selectAvatar(avatar)"
@@ -48,6 +48,8 @@
                           src="{{ avatar.svg }}">
                       </div>
                      <div id="selectionModalCustomCharacter{{ avatar.id }}"
+                          ng-show="!characterSelection.loadingCharacters"
+                          class="selectableAvatars__item__customCharacter"
                           character="{{ avatar.id }}"
                           style="background-color: black;"
                           data-ng-if="avatar.customCharacter"

@@ -33,6 +33,7 @@ class GameSetupController {
         this.vm.lightenDarkenColor = this.lightenDarkenColor;
         this.vm.openSelectionScreen = this.openSelectionScreen;
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
+        this.vm.customCharacters = [];
 
         this.fetchDefaultAvatar();
     }
@@ -42,6 +43,9 @@ class GameSetupController {
             if (authUser) {
                 firebase.database().ref('/users/' + authUser.uid).once('value').then(snapshot => {
                     const user = snapshot.val();
+                    if (user && user.characters) {
+                        this.vm.customCharacters = user.characters;
+                    }
                     if (user && user.defaultAvatar) {
                         if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
                             const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
@@ -153,7 +157,8 @@ class GameSetupController {
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
                 selectedPlayers: () => this.vm.players,
-                multiplayer: () => false
+                multiplayer: () => false,
+                customCharacters: () => this.vm.customCharacters
             }
         }).result.then(closeResponse => {
             $('.mainWrapper').css('filter', 'none');

@@ -5,7 +5,7 @@ const {avatars} = require('./../player/playerConstants');
 const {objectsAreEqual, arrayIncludesObject, getRandomColor, loadSvgIntoDiv} = require('./../helpers');
 
 class CharacterSelectionController {
-    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, socketService) {
+    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, customCharacters, socketService) {
         this.vm = this;
         this.$scope = $scope;
         this.$uibModalInstance = $uibModalInstance;
@@ -14,6 +14,7 @@ class CharacterSelectionController {
         this.vm.currentSelectedPlayer = currentSelectedPlayer ? Object.assign({}, currentSelectedPlayer) : null;
         this.vm.oldAvatar = currentSelectedPlayer ? currentSelectedPlayer.avatar : null;
         this.vm.selectedPlayers = selectedPlayers.filter(x => x !== undefined);
+        this.vm.customCharacters = customCharacters || [];
         this.multiplayer = multiplayer;
         this.vm.avatars = avatars;
         this.vm.selectAvatar = this.selectAvatar;
@@ -21,6 +22,7 @@ class CharacterSelectionController {
         this.vm.selectAvatarAndClose = this.selectAvatarAndClose;
         this.vm.avatarIsSelected = this.avatarIsSelected;
         this.vm.avatarIsTaken = this.avatarIsTaken;
+        this.vm.loadingCharacters = true;
 
         if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.userName) {
             this.vm.currentSelectedPlayer.name = this.vm.currentSelectedPlayer.userName;
@@ -39,24 +41,16 @@ class CharacterSelectionController {
             }
         }, 50);
 
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                firebase.database().ref('users/' + user.uid).on('value', snapshot => {
-                    const user = snapshot.val();
-                    if (user && user.characters) {
-                        user.characters.forEach(c => {
-                            this.vm.avatars[c.name] = c;
-                            this.vm.avatars[c.name].customCharacter = true;
-                            this.vm.avatars[c.name].bgColor = getRandomColor();
-                        });
-                    }
-                    setTimeout(() => {
-                        // Must fix this
-                        this.loadSavedCharacterPortraits();
-                    }, 2000);
-                });
-            }
-        });
+        if (this.vm.customCharacters && this.vm.customCharacters.length > 0) {
+            this.vm.customCharacters.forEach(c => {
+                this.vm.avatars[c.name] = c;
+                this.vm.avatars[c.name].customCharacter = true;
+            });
+            setTimeout(() => {
+                // Must fix this
+                this.loadSavedCharacterPortraits();
+            }, 1500);
+        }
 
         if (this.multiplayer) { // Is multiplayer game
             this.socketService.gameSocket.on('updatedPlayers', players => {
@@ -101,6 +95,8 @@ class CharacterSelectionController {
                 }
             }
         });
+        this.vm.loadingCharacters = false;
+        this.$scope.$apply();
     }
 
     avatarIsSelected(avatar) {
@@ -144,6 +140,7 @@ class CharacterSelectionController {
         if (this.vm.currentSelectedPlayer.avatar.svg) {
             loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.svg, '#selectedCharacterSvg');
         } else if (this.vm.currentSelectedPlayer.avatar.customCharacter) {
+            $('#selectedCharacterSvg').css('opacity', '0');
             loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', () => {
                 const character = Object.values(this.vm.avatars).find(x => x.id === this.vm.currentSelectedPlayer.avatar.id);
 
@@ -166,6 +163,10 @@ class CharacterSelectionController {
                 $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
 
                 $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
+
+                $('#selectedCharacterSvg').animate({
+                    opacity: '1'
+                }, 200);
             });
         }
 

@@ -1,3 +1,11 @@
+.selectionModalCharacterStyle(@transform, @marginTop, @marginLeft) {
+    svg {
+        transform: @transform;
+        margin-top: @marginTop;
+        margin-left: @marginLeft;
+    }
+}
+
 .autoUpdaterModal {
     > .modal-dialog {
         width: 900px;
@@ -427,18 +435,14 @@
                     bottom: -100px;
 
                     &__item {
-                        display: inline-flex;
+                        display: inline-block;
                         padding: 5px;
 
                         div {
                             width: 80px;
                             height: 80px;
                             border-radius: 50%;
-                            //border-top-left-radius: 40%;
-                            //border-bottom-right-radius: 40%;
                             border: 3px solid white;
-                            //border-bottom: 3px solid #949494;
-                            //border-right: 3px solid #949494;
                             cursor: url(../assets/cursors/new/pointer.png), auto;
                             box-shadow: 1px 1px 3px black;
                             transition: all 0.2s;
@@ -462,10 +466,39 @@
                                 -webkit-transform: translate(0px, 3px);
                                 border: 3px solid;
                             }
+
+                            &#selectionModalCharacter {
+                                &caesar {
+                                    .selectionModalCharacterStyle(scale(2.2), 52px, 3px);
+                                }
+                                &napoleon {
+                                    .selectionModalCharacterStyle(scale(2.1), 37px, -4px);
+                                }
+                                &genghiskhan {
+                                    .selectionModalCharacterStyle(scale(2.1), 25px, 2px);
+                                }
+                                &alexander {
+                                    .selectionModalCharacterStyle(scale(2.5), 30px, -3px);
+                                }
+                                &hannibal {
+                                    .selectionModalCharacterStyle(scale(2.5), 47px, -18px);
+                                }
+                                &attila {
+                                    .selectionModalCharacterStyle(scale(2.5), 47px, -20px);
+                                }
+                                &leonidas {
+                                    .selectionModalCharacterStyle(scale(2.5), 47px, -4px);
+                                }
+                            }
                         }
 
-                        div[character] {
-                            display: table-caption;
+                        &__customCharacter {
+                            transition: all 0.5s;
+                            svg {
+                                margin-top: -15px;
+                                overflow: visible;
+                                margin-left: -1px;
+                            }
                         }
 
                         &--selected {
