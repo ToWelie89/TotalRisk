@@ -93,6 +93,12 @@ module.exports = function(grunt) {
         'browserify:build', // Use browserify to transpile ES6 source code with babel
         // 'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
-        'notify:build'
+        //'notify:build'
+    ]);
+    grunt.registerTask('buildjs', [
+        'browserify:build'
+    ]);
+    grunt.registerTask('buildcss', [
+        'less'
     ]);
 };

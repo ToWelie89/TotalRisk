@@ -35,9 +35,15 @@ class CharacterSelectionController {
         $('.mainWrapper').css('filter', 'blur(5px)');
         $('.mainWrapper').css('-webkit-filter', 'blur(5px)');
 
+        if (!currentSelectedPlayer) {
+            const backgroundToSelect = './assets/avatarBackgrounds/default.svg';
+            loadSvgIntoDiv(backgroundToSelect, '#characterSelectionModal__background');
+            this.currentBackground = backgroundToSelect;
+        }
+
         setTimeout(() => {
             if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.svg) {
-                loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.svg, '#selectedCharacterSvg');
+                this.selectAvatar(this.vm.currentSelectedPlayer.avatar, true);
             }
         }, 50);
 
@@ -120,8 +126,12 @@ class CharacterSelectionController {
         }
     }
 
-    selectAvatar(avatar) {
+    selectAvatar(avatar, initialLoad = false) {
         if (this.avatarIsTaken(avatar)) {
+            return;
+        }
+
+        if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.id === avatar.id && !initialLoad) {
             return;
         }
 
@@ -171,8 +181,11 @@ class CharacterSelectionController {
         }
 
         $('#characterSelectionFlag .flag-element').css('background-image', `url("${this.vm.currentSelectedPlayer.avatar.flag}")`);
-        if (this.vm.currentSelectedPlayer.avatar.backgroundSvg) {
-            loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.backgroundSvg, '#characterSelectionModal__background');
+
+        const backgroundToSelect = this.vm.currentSelectedPlayer.avatar.backgroundSvg || './assets/avatarBackgrounds/default.svg';
+        if (this.currentBackground !== backgroundToSelect) {
+            loadSvgIntoDiv(backgroundToSelect, '#characterSelectionModal__background');
+            this.currentBackground = backgroundToSelect;
         }
     }
 

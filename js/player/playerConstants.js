@@ -92,6 +92,7 @@ const PLAYER_COLORS = {
 const avatars = {
     'Julius Caesar': {
         id: 'caesar',
+        title: 'Emperor of Rome',
         picture: './assets/img/caesar.png',
         selectSound: '',
         flag: './assets/flagsSvg/rome.svg',
@@ -118,6 +119,7 @@ const avatars = {
     },
     'Napoleon Bonaparte': {
         id: 'napoleon',
+        title: 'Emperor of France',
         picture: './assets/img/napoleon.png',
         selectSound: '',
         flag: './assets/flagsSvg/france.svg',
@@ -144,6 +146,7 @@ const avatars = {
     },
     'Genghis Khan': {
         id: 'genghiskhan',
+        title: 'Great Khan of the Mongol Empire',
         picture: './assets/img/genghiskhan.png',
         svg: './assets/avatarSvg/genghisKhan.svg',
         selectSound: '',
@@ -170,10 +173,12 @@ const avatars = {
     },
     'Alexander the Great': {
         id: 'alexander',
+        title: 'King of Macedonia',
         picture: './assets/img/alexander.png',
         selectSound: '',
         flag: './assets/flagsSvg/macedon.svg',
         svg: './assets/avatarSvg/alexander.svg',
+        backgroundSvg: './assets/avatarBackgrounds/hellenic.svg',
         svgAttributesLarge: {
             svgWidth: '120%',
             svgHeight: '100%',
@@ -196,6 +201,7 @@ const avatars = {
     },
     'Hannibal Barca': {
         id: 'hannibal',
+        title: 'General of Carthage',
         picture: './assets/img/hannibal_barca.png',
         svg: './assets/avatarSvg/hannibal.svg',
         selectSound: '',
@@ -222,6 +228,7 @@ const avatars = {
     },
     'Attila the Hun': {
         id: 'attila',
+        title: 'Scourge of God',
         picture: './assets/img/attila.png',
         svg: './assets/avatarSvg/attila.svg',
         selectSound: '',
@@ -248,6 +255,7 @@ const avatars = {
     },
     'Leonidas': {
         id: 'leonidas',
+        title: 'King of Sparta',
         picture: './assets/img/leonidas.png',
         svg: './assets/avatarSvg/leonidas.svg',
         backgroundSvg: './assets/avatarBackgrounds/hellenic.svg',

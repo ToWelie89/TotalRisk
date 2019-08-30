@@ -6,17 +6,23 @@
         <!-- Modal content-->
         <div class="modal-body textCenter">
             <div class="row" style="width: 800px; margin: 0 auto;">
-                <h2>
-                    Character Selection
-                </h2>
-                <h4 style="z-index: 2;
-                           bottom: 100px;
-                           color: #ff2929;
+                <h4 style="color: #ff2929;
                            font-size: 67px;
                            font-weight: bold;
                            font-family: 'Cinzel', serif;
                            letter-spacing: 2px;
-                           text-shadow: -2px 2px 3px black;" data-ng-show="characterSelection.currentSelectedPlayer" data-ng-bind="characterSelection.currentSelectedPlayer.name"></h4>
+                           text-shadow: -2px 2px 3px black;"
+                    data-ng-show="characterSelection.currentSelectedPlayer"
+                    data-ng-bind="characterSelection.currentSelectedPlayer.name">
+                </h4>
+                <h2 style="margin-top: -8px;
+                           color: #000000;
+                           font-size: 35px;
+                           font-family: 'Cinzel', serif;
+                           text-shadow: -2px 2px 3px black;"
+                    data-ng-show="characterSelection.currentSelectedPlayer && characterSelection.currentSelectedPlayer.avatar.title"
+                    data-ng-bind="characterSelection.currentSelectedPlayer.avatar.title">
+                </h2>
             </div>
             <!-- <div id="characterSelectionFlag" class="marginBottom" data-ng-show="characterSelection.currentSelectedPlayer">
                 <div class="pole"></div>
