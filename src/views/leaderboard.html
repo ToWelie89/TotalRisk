@@ -1,0 +1,41 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.LEADERBOARD" class="textCenter mainMenuBox" data-ng-controller="leaderboardController as leaderboard" id="leaderboard" style="position: relative;" ng-cloak>
+    <div id="mainDiv">
+        <div class="backButtonContainer">
+            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <table id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Rank
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Rating
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="user in leaderboard.users track by $index">
+                            <td>
+                                {{ $index + 1 }}
+                            </td>
+                            <td>
+                                {{ user.userName || 'N/A' }}
+                            </td>
+                            <td>
+                                {{ user.normalizedRating }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

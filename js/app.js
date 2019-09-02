@@ -33,6 +33,7 @@ import LobbiesController from './multiplayer/lobbiesController.js';
 import LobbyController from './multiplayer/lobbyController.js';
 import EditProfileController from './editProfile/editProfileController';
 import ProfileController from './profile/profileController';
+import LeaderboardController from './leaderboard/leaderboardController';
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import SocketService from './multiplayer/socketService';
@@ -77,6 +78,7 @@ app.controller('hostNewGameModalController', HostNewGameModalController);
 app.controller('joinPrivateLobbyController', JoinPrivateLobbyController);
 app.controller('editProfileController', EditProfileController);
 app.controller('profileController', ProfileController);
+app.controller('leaderboardController', LeaderboardController);
 /* SERVICES */
 app.service('soundService', SoundService);
 app.service('mapService', MapService);
