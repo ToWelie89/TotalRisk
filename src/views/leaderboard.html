@@ -10,27 +10,66 @@
                 <table id="leaderboardTable">
                     <thead>
                         <tr>
-                            <th>
+                            <th class="rank">
                                 Rank
                             </th>
-                            <th>
+                            <th class="userName">
                                 Name
                             </th>
-                            <th>
+                            <th class="from">
+                                From
+                            </th>
+                            <th class="wins">
+                                Wins
+                            </th>
+                            <th class="defeats">
+                                Losses
+                            </th>
+                            <th class="dcs">
+                                Disconnects
+                            </th>
+                            <th class="rating">
                                 Rating
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr data-ng-repeat="user in leaderboard.users track by $index">
-                            <td>
+                            <td class="rank">
                                 {{ $index + 1 }}
                             </td>
-                            <td>
+                            <td class="userName">
                                 {{ user.userName || 'N/A' }}
                             </td>
-                            <td>
+                            <td class="from">
+                                <waving-flag
+                                    ng-if="user.flag"
+                                    flag-width="36"
+                                    flag-height="22"
+                                    flag-url="user.flag"
+                                    uib-tooltip="{{ user.countryName }}"
+                                    tooltip-placement="right"
+                                    tooltip-class="standardTooltip"
+                                ></waving-flag>
+                            </td>
+                            <td class="wins">
+                                {{ user.totalWins || 'N/A' }}
+                            </td>
+                            <td class="defeats">
+                                {{ user.totalDefeats || 'N/A' }}
+                            </td>
+                            <td class="dcs">
+                                {{ user.totalDisconnects || 'N/A' }}
+                            </td>
+                            <td class="rating" data-ng-class="{'ratingDifferencePlus': user.ratingDifference > 0, 'ratingDifferenceMinus': user.ratingDifference < 0, 'ratingDifferenceNeutral': user.ratingDifference === 0}">
                                 {{ user.normalizedRating }}
+                                <span
+                                    class="glyphicon glyphicon-arrow-right"
+                                    ng-show="user.ratingDifference !== 0"
+                                    uib-tooltip="{{ (user.ratingDifference < 0) ? 'Current trend. Rating has decreased by '+user.ratingDifference*-1+' lately.' : 'Current trend. Rating has increased by '+user.ratingDifference+' lately.' }}"
+                                    tooltip-placement="right"
+                                    tooltip-class="standardTooltip"
+                                ></span>
                             </td>
                         </tr>
                     </tbody>

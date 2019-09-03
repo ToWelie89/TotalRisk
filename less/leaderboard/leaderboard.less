@@ -35,22 +35,50 @@
 		}
 
         #leaderboardTable {
-            width: 600px;
+            width: 800px;
             margin: 0 auto;
             color: white;
             margin-top: 70px;
 
             tr {
+                padding-top: 5px;
+                padding-bottom: 5px;
+
                 th, td {
                     text-align: left;
                 }
-                td:nth-child(1) {
-                    //padding-left: 10px;
+
+                td {
+                    padding: 3px 0;
                 }
-                td:nth-child(3) {
-                    //text-align: right;
+
+                th.wins, th.defeats, th.dcs,
+                td.wins, td.defeats, td.dcs {
+                    text-align: center;
+                }
+
+                th.rating, td.rating {
+                    text-align: right;
+                }
+
+                td.from {
+                    float: left;
+                }
+
+                .ratingDifferencePlus {
+                    .glyphicon-arrow-right {
+                        transform: rotate(-45deg);
+                        color: #3def3d;
+                    }
+                }
+
+                .ratingDifferenceMinus {
+                    .glyphicon-arrow-right {
+                        transform: rotate(45deg);
+                        color: #ff6969;
+                    }
                 }
             }
-        }
+        }   
     }
 }

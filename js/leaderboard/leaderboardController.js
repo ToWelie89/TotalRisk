@@ -1,4 +1,5 @@
 const firebase = require('firebase/app');
+const CountryCodes = require('./../editor/countryCodes');
 const MINIMUM_NUMBER_OF_GAMES_PLAYED_FOR_RANKED = 2;
 
 class LeaderboardController {
@@ -12,11 +13,16 @@ class LeaderboardController {
             users = users.filter(x => x.recentGames && x.recentGames.length >= MINIMUM_NUMBER_OF_GAMES_PLAYED_FOR_RANKED);
             users.forEach(x => {
                 x.normalizedRating = Math.floor(x.rating.mu * 100);
+                const previousRating = Math.floor(x.oldRatings.sort((a,b) => b.timestamp - a.timestamp)[0].mu * 100);;
+                x.ratingDifference = x.normalizedRating - previousRating;
+
+                if (x.countryCode && CountryCodes[x.countryCode]) {
+                    x.flag = `./assets/flagsSvg/countries/${x.countryCode.toLowerCase()}.svg`;
+                    x.countryName = CountryCodes[x.countryCode].name;
+                }
             });
             users = users.sort((a, b) => b.normalizedRating - a.normalizedRating);
             this.vm.users = users;
-            console.log('leaderboard users', users);
-
             //this.mockData();
         });
     }
