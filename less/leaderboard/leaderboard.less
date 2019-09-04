@@ -1,84 +1,167 @@
 #leaderboard {
 	#mainDiv {
-		margin-top: 70px;
         width: 100%;
         margin: 0 auto;
-        padding-bottom: 40px;
         background: rgba(59, 59, 59, 0.788235294117647);
         border-radius: 30px;
         height: 896px;
-        overflow-y: scroll;
 
-        &::-webkit-scrollbar-track {
-			cursor: url(../assets/cursors/new/default.png), auto;
-		    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-		    background-color: #F5F5F5;
-		    border-top-right-radius: 10px;
-		}
+        #leaderBoardTableContainer {
+            overflow-y: auto;
+            max-height: 730px;
+            margin: 50px;
 
-		&::-webkit-scrollbar {
-			cursor: url(../assets/cursors/new/default.png), auto;
-		    width: 20px;
-		    background-color: #F5F5F5;
-		    border-top-right-radius: 10px;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			cursor: url(../assets/cursors/new/default.png), auto;
-		    border-radius: 10px;
-		    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-		    background-color: #555;
-
-		    &:hover {
-		    	background-color: #222;
-		    }
-		}
-
-        #leaderboardTable {
-            width: 800px;
-            margin: 0 auto;
-            color: white;
-            margin-top: 70px;
-
-            tr {
-                padding-top: 5px;
-                padding-bottom: 5px;
-
-                th, td {
-                    text-align: left;
+            &::-webkit-scrollbar-track {
+                cursor: url(../assets/cursors/new/default.png), auto;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+                border-radius: 10px;
+            }
+    
+            &::-webkit-scrollbar {
+                cursor: url(../assets/cursors/new/default.png), auto;
+                width: 20px;
+                background-color: #F5F5F5;
+                border-radius: 10px;
+            }
+    
+            &::-webkit-scrollbar-thumb {
+                cursor: url(../assets/cursors/new/default.png), auto;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #555;
+    
+                &:hover {
+                    background-color: #222;
                 }
+            }
 
-                td {
-                    padding: 3px 0;
-                }
+            #leaderboardTable {
+                width: 80%;
+                margin: 0 auto;
+                color: white;
+    
+                tr {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
 
-                th.wins, th.defeats, th.dcs,
-                td.wins, td.defeats, td.dcs {
-                    text-align: center;
-                }
-
-                th.rating, td.rating {
-                    text-align: right;
-                }
-
-                td.from {
-                    float: left;
-                }
-
-                .ratingDifferencePlus {
-                    .glyphicon-arrow-right {
-                        transform: rotate(-45deg);
-                        color: #3def3d;
+                    &.myRanking {
+                        background: linear-gradient(0deg, rgba(27,56,139,1) 0%, rgba(119,184,226,1) 100%);
+                        td {
+                            &:first-child {
+                                //border-top-left-radius: 20px;
+                                //border-bottom-left-radius: 20px;
+                            }
+        
+                            &:last-child {
+                                //border-top-right-radius: 20px;
+                                //border-bottom-right-radius: 20px;
+                            }
+                        }
                     }
-                }
 
-                .ratingDifferenceMinus {
-                    .glyphicon-arrow-right {
-                        transform: rotate(45deg);
-                        color: #ff6969;
+                    &.leagueMaster {
+                        background-color: rgba(27, 102, 126, 0.70);
+                        &:first-child {
+                            td:first-child {
+                                border-top-left-radius: 10px;
+                            }
+                            td:last-child {
+                                border-top-right-radius: 10px;
+                            }
+                        }
+                        &.last {
+                            background: linear-gradient(180deg, rgba(27, 102, 126, 0.7) 60%, rgba(255, 215, 0, 0.7) 100%);
+                        }
+                    }
+                    &.leaguePro {
+                        background-color: rgba(255, 215, 0, 0.7);
+                        &.last {
+                            background: linear-gradient(180deg, rgba(255, 215, 0, 0.7) 60%, rgba(192, 192, 192, 0.7) 100%);
+                        }
+                    }
+                    &.leagueIntermediate {
+                        background-color: rgba(192, 192, 192, 0.7);
+                        &.last {
+                            background: linear-gradient(180deg, rgba(192, 192, 192, 0.7) 60%, rgba(131, 98, 22, 0.7) 100%);
+                        }
+                    }
+                    &.leagueNovice {
+                        background-color: rgba(131, 98, 22, 0.7);
+                        &.last {
+                            td:first-child {
+                                border-bottom-left-radius: 10px;
+                            }
+                            td:last-child {
+                                border-bottom-right-radius: 10px;
+                            }
+                        }
+                    }
+
+                    .leaderboardLeagueIcon {
+                        height: 0;
+                        svg {
+                            width: 50px;
+                            padding-top: 10px;
+                        }
+                    }
+                    .leaderboardLeagueLabel {
+                        font-size: 18px;
+                        display: none;
+                    }
+
+                    th {
+                        padding-bottom: 20px;
+                    }
+    
+                    th, td {
+                        text-align: left;
+                    }
+    
+                    td {
+                        padding: 3px 0;
+                    }
+
+                    td:first-child {
+                        padding-left: 10px;
+                    }
+
+                    th:last-child, td:last-child {
+                        padding-right: 10px;
+                    }
+
+                    th.league, td.league {
+                        text-align: center;
+                    }
+    
+                    th.wins, th.defeats, th.dcs,
+                    td.wins, td.defeats, td.dcs {
+                        text-align: center;
+                    }
+    
+                    th.rating, td.rating {
+                        text-align: right;
+                    }
+    
+                    td.from {
+                        float: left;
+                    }
+    
+                    .ratingDifferencePlus {
+                        .glyphicon-arrow-right {
+                            transform: rotate(-45deg);
+                            color: #3def3d;
+                        }
+                    }
+    
+                    .ratingDifferenceMinus {
+                        .glyphicon-arrow-right {
+                            transform: rotate(45deg);
+                            color: #ff6969;
+                        }
                     }
                 }
             }
-        }   
+        }
     }
 }

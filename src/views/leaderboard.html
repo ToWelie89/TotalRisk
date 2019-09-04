@@ -5,11 +5,23 @@
                 <span class="glyphicon glyphicon-arrow-left"></span>
             </button>
         </div>
-        <div class="row">
+        <div class="row paddingTop--double">
             <div class="col-xs-12">
+                <button type="button" class="button button-green" data-ng-click="leaderboard.findMyRanking()" data-ng-disabled="!leaderboard.userUid">
+                    Find my ranking
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="leaderBoardTableContainer">
                 <table id="leaderboardTable">
                     <thead>
                         <tr>
+                            <th class="league">
+                                <span data-ng-show="leaderboard.showRanks">
+                                    League
+                                </span>
+                            </th>
                             <th class="rank">
                                 Rank
                             </th>
@@ -34,7 +46,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="user in leaderboard.users track by $index">
+                        <tr data-ng-repeat="user in leaderboard.users track by $index"
+                            data-ng-class="{'myRanking': leaderboard.userUid === user.id, 'last': $index == leaderboard.LEAGUES[user.league].maxIndex}"
+                            class="league{{user.league}}"
+                            player-id="{{ user.id }}"
+                        >
+                            <td class="league">
+                                <span data-ng-show="leaderboard.showRanks && leaderboard.LEAGUES[user.league].minIndex == $index">
+                                    <div id="leaderboardLeagueIcon{{user.league}}{{$index}}"
+                                         class="leaderboardLeagueIcon"
+                                         uib-tooltip="{{ user.league }} league"
+                                         tooltip-placement="right"
+                                         tooltip-class="standardTooltip"
+                                         inject-svg
+                                         src="{{leaderboard.LEAGUES[user.league].icon}}">
+                                    </div>
+                                    <h3 class="leaderboardLeagueLabel">
+                                        {{ user.league }} league
+                                    </h3>
+                                </span>
+                            </td>
                             <td class="rank">
                                 {{ $index + 1 }}
                             </td>

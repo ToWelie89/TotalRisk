@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="60.615 56.463 378.77 359.672" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="gradient-0" gradientUnits="userSpaceOnUse" x1="250.21" y1="75.638" x2="250.21" y2="398.361">
+      <stop offset="0" style="stop-color: rgba(34, 127, 155, 1)"/>
+      <stop offset="1" style="stop-color: rgba(16, 58, 72, 1)"/>
+    </linearGradient>
+    <linearGradient id="gradient-1" gradientUnits="userSpaceOnUse" x1="250.21" y1="59.595" x2="250.21" y2="410.747">
+      <stop offset="0" style="stop-color: rgb(250, 254, 255);"/>
+      <stop offset="1" style="stop-color: rgba(11, 165, 212, 1)"/>
+    </linearGradient>
+    <linearGradient id="gradient-2" gradientUnits="userSpaceOnUse" x1="554" y1="283.69" x2="554" y2="524.85" gradientTransform="matrix(-0.809587, -0.587, 0.598318, -0.825199, 748.708438, 1092.898608)">
+      <stop offset="0" style="stop-color: rgba(191, 243, 235, 1)"/>
+      <stop offset="1" style="stop-color: rgba(105, 227, 209, 1)"/>
+    </linearGradient>
+  </defs>
+  <path d="M 250.21 59.595 L 434.821 193.723 L 364.306 410.747 L 136.114 410.747 L 65.599 193.723 Z" style="fill: url(#gradient-1);" bx:shape="n-gon 250.21 253.707 194.112 194.112 5 0 1@9a83e6c5"/>
+  <path d="M 250.21 75.638 L 419.876 198.907 L 355.069 398.361 L 145.351 398.361 L 80.544 198.907 Z" style="fill: url(#gradient-0);" bx:shape="n-gon 250.21 254.035 178.397 178.397 5 0 1@bbe5a829"/>
+  <path d="M 554 283.69 L 585.343 373.86 L 680.785 375.805 L 604.714 433.478 L 632.358 524.85 L 554 470.324 L 475.642 524.85 L 503.286 433.478 L 427.215 375.805 L 522.657 373.86 Z" style="fill: url(#gradient-2);" transform="matrix(-0.809017, 0.587785, -0.587785, -0.809017, 942.675694, 265.949587)" bx:shape="star 554 417 133.31 133.31 0.4 5 1@24ed2750"/>
+</svg>
