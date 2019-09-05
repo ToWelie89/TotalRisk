@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="col-xs-7 textLeft marginTop--double">
-                    <div style="clear: both;" class="paddingTop">
+                    <div class="paddingTop col-xs-4" style="padding-left: 0;">
                         <strong style="font-size: 20px;" class="colorWhite">
                             Rating
                         </strong>
@@ -73,7 +73,30 @@
                             {{ profile.user.rating.normalized }}
                         </p>
                     </div>
-                    <div data-ng-show="profile.user.flag" class="floatLeft">
+                    <div class="paddingTop col-xs-4" style="padding-left: 0;">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            League
+                        </strong>
+                        <p class="colorWhite">
+                            <div id="profileLeagueIcon"
+                                ng-if="profile.league"
+                                inject-svg
+                                src="{{profile.LEAGUES[profile.league].icon}}"
+                                uib-tooltip="{{ profile.league }}"
+                                tooltip-placement="left"
+                                tooltip-class="standardTooltip"
+                            ></div>
+                        </p>
+                    </div>
+                    <div class="paddingTop col-xs-4" style="padding-left: 0;">
+                        <strong style="font-size: 20px;" class="colorWhite">
+                            Global rank
+                        </strong>
+                        <p class="colorWhite">
+                            {{ profile.rank }}
+                        </p>
+                    </div>
+                    <div data-ng-show="profile.user.flag" class="floatLeft" style="clear: both;">
                         <strong style="font-size: 20px;" class="colorWhite floatLeft">
                             From
                         </strong>

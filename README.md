@@ -7,16 +7,16 @@ This is a web application of the classic board game Risk that is run straight in
 Technologies used:
 
 - **Babel** (For transpiling ES2015)
-- **Grunt** (Build tool used for building and running tests)
+- **Grunt** (Build tool used for building and running tests and other things)
 - **Jest** (For unit tests)
 - **Angular 1.x** (MVW framework)
 - **less** (CSS preprocessor)
 - **Bootstrap** (HTML & CSS framework)
 - **Electron** (Used for creating exe-installer dists of the game so that it can be intalled and ran as a desktop application)
-- **Node.js** For running the server that is used for online gameplay
+- **Node.js** For running the server logic that is used for online gameplay
 - **Express.js** Backend server framework
 - **Socket.IO** Websocket client for updating clients with new data from the server
-- **Firebase** Database and authentication handling
+- **Firebase** Database and authentication handling and storing of user data (such as statistics and user settings)
 
 ## Getting started
 
@@ -33,9 +33,9 @@ However if you want to run on a production web environment you can instead run
 npm install --prod
 ```
 
-This will not install dependencies only needed for development, such as Karma and Electron, which will save time and space.
+This will not install dependencies only needed for development, such as Karma and Electron packages, which will save time and space.
 
-- Build project
+Build project (this may require you to first install grunt and grunt-cli globally using npm)
 
 ```
 grunt
@@ -48,21 +48,29 @@ grunt
 ```
 npm start
 ```
-Open http://127.0.0.1:5000 in your browser.
+Open http://127.0.0.1:5000 in your browser. Running the game in your browser is good enough for testing out the game locally and for development purposes, but the actual finished game is supposed to be a standalone application that can be run in full screen. To try this out, continue reading the section below.
 
 ## How to run locally (Electron version)
 
-- Run
+To run the game as a standalone application I am using Electron. If you want to run the game as an Electron application you may need to install Electron globally first by running:
+
+```
+npm install -g electron
+```
+
+and then run:
 
 ```
 npm run electron
 ```
 
-There is a also a development mode which allows you to use Chrome webtools in-game for debugging and refreshing the app by pressing F5. To run in dev mode run:
+This will run the game as a standalone electron Windows application. However this will run as a production mode, it will attempt to check for previous releases of the game and patch the game with the latest version if one is found. This is done using electron-updater. But right now the game is in development and the game may get stuck in a loading screen unless you run in a specific dev mode. To do this run:
 
 ```
 npm run electron:dev
 ```
+
+In dev mode you can also refresh the app by pressing F5, so that you don't have to restart the game when you make changes.
 
 ## How to test locally
 
@@ -82,7 +90,7 @@ Simply run
 npm run build
 ```
 
-The built executable can then be found in the dist-folder.
+This may take a little while. When done the newly built setup exe-file can be found in the dist-folder.
 
 ## Publishing new release
 
@@ -124,14 +132,6 @@ npm install -g cloc
 
 ## Troubleshooting
 
-### Electron problem
-
-If you have problems with running the app using Electron you might need to install Electron globally.
-
-```
-npm install -g electron
-```
-
 ### Failed to load gRPC binary module error
 
 If you get an error message sort of like this it might have something to do with a known issue between Firebase and Electron. I managed to fix this by running (in a console with admin rights):
@@ -158,52 +158,3 @@ For other issues please leave a bug report [here](https://github.com/ToWelie89/T
 + **replace:inlineModalSvgs**: This will inline the markup from the svg-file used for the map into the html markup
 + **replace:inlineSvg**: Inline more svg files to html files
 + **notify:build**: Notify the user that the build is complete
-
-## Repository structure
-```
-├───assets
-│   ├───cursors
-│   ├───flags
-│   ├───fonts
-│   ├───img
-│   └───troopIcons
-├───audio
-├───build
-├───cssLibs
-├───electron
-│   ├───assets
-│   ├───dist
-├───js
-│   ├───ai
-│   ├───angular
-│   ├───card
-│   ├───directives
-│   ├───libs
-│   ├───map
-│   ├───player
-│   ├───settings
-│   ├───sound
-│   ├───test
-│   ├───tutorial
-│   └───voice
-├───less
-│   ├───animations
-│   ├───banner
-│   ├───buttons
-│   ├───cards
-│   ├───cursors
-│   ├───default
-│   ├───dice
-│   ├───endScreenTable
-│   ├───fonts
-│   ├───modal
-│   ├───settings
-│   ├───setup
-│   ├───startScreen
-│   ├───svg
-│   ├───switch
-│   ├───troops
-│   └───variables
-│   └───victory
-└───src
-```

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <style>
+  @keyframes scrollLeaderboardList {
+        0% { transform: translate(0px, 0px); }
+        50% { transform: translate(0px, -300px); }
+        100% { transform: translate(0px, 0px); }
+    }
+    #leaderboardIconList {
+        animation: scrollLeaderboardList 3s linear infinite;
+        transform: translate(0px, 0px);
+        transform-origin: 50% 50%;
+    }
+  </style>
+  <g id="leaderboardIconList">
+    <rect x="24.376" y="25.724" width="451.301" height="50.029" style="fill: rgb(179, 199, 255);"/>
+    <text x="42.095" y="61.16" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">1</text>
+    <rect x="24.898" y="91.386" width="451.301" height="50.029" style="fill: rgb(170, 193, 255);"/>
+    <text x="42.617" y="126.822" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">2</text>
+    <rect x="24.636" y="156.528" width="451.301" height="50.029" style="fill: rgb(157, 183, 255);"/>
+    <text x="42.355" y="191.964" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">3</text>
+    <rect x="25.158" y="222.19" width="451.301" height="50.029" style="fill: rgb(142, 172, 255);"/>
+    <text x="42.877" y="257.626" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">4</text>
+    <rect x="25.549" y="286.03" width="451.301" height="50.029" style="fill: rgb(129, 163, 255);"/>
+    <text x="43.268" y="321.466" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">5</text>
+    <rect x="26.071" y="351.692" width="451.301" height="50.029" style="fill: rgb(113, 151, 255);"/>
+    <text x="43.79" y="387.128" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">6</text>
+    <rect x="25.809" y="416.834" width="451.301" height="50.029" style="fill: rgb(98, 140, 255);"/>
+    <text x="43.528" y="452.27" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">7</text>
+    <rect x="26.331" y="482.496" width="451.301" height="50.029" style="fill: rgb(86, 131, 255);"/>
+    <text x="44.05" y="517.932" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">8</text>
+    <rect x="26.721" y="546.335" width="451.301" height="50.029" style="fill: rgb(70, 120, 255);"/>
+    <text x="44.44" y="581.771" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">9</text>
+    <rect x="27.243" y="611.997" width="451.301" height="50.029" style="fill: rgb(47, 103, 255);"/>
+    <text x="44.962" y="647.433" style="white-space: pre; fill: rgb(51, 51, 51); font-family: Oswald; font-size: 28px;">10</text>
+  </g>
+</svg>

@@ -4,6 +4,7 @@ require('firebase/auth');
 const {GAME_PHASES} = require('./../gameConstants');
 const {avatars} = require('./../player/playerConstants');
 const CountryCodes = require('./../editor/countryCodes');
+const {getRankingOfPlayerByUid, LEAGUES} = require('./../leaderboard/rankConstants');
 
 const Chart = require('chart.js');
 
@@ -21,6 +22,7 @@ class ProfileController {
         });
 
         this.vm.editProfile = this.editProfile;
+        this.vm.LEAGUES = LEAGUES;
     }
 
     init() {
@@ -40,68 +42,76 @@ class ProfileController {
                     bio: ''
                 };
                 this.vm.user = normalizedUser;
-
-                firebase.database().ref('/users/' + normalizedUser.uid).once('value').then(snapshot => {
-                    const user = snapshot.val();
-
-                    if (user) {
-                        this.vm.user.bio = user.bio ? user.bio : '';
-                        this.vm.user.rating = user.rating;
-                        this.vm.user.totalDefeats = user.totalDefeats ? user.totalDefeats : 0;
-                        this.vm.user.totalWins = user.totalWins ? user.totalWins : 0;
-                        this.vm.user.totalDisconnects = user.totalDisconnects ? user.totalDisconnects : 0;
-                        this.vm.user.recentGames = user.recentGames ? user.recentGames : [];
-                        this.vm.user.oldRatings = user.oldRatings ? user.oldRatings : [];
-
-                        this.vm.user.recentGames.forEach(g => {
-                            g.ratingBeforeGame.normalized = Math.floor(g.ratingBeforeGame.mu * 100);
-                            g.ratingAfterGame.normalized = Math.floor(g.ratingAfterGame.mu * 100);
-
-                            g.ratingAfterGame.diff = (g.ratingAfterGame.normalized - g.ratingBeforeGame.normalized);
-                        });
-
-                        this.vm.user.recentGames = this.vm.user.recentGames.sort((a, b) => b.timestamp - a.timestamp);
-
-                        this.vm.user.rating.normalized = Math.floor(this.vm.user.rating.mu * 100);
-
-                        if (user.countryCode && CountryCodes[user.countryCode]) {
-                            this.vm.user.countryName = CountryCodes[user.countryCode].name;
-                            this.vm.user.flag = `./assets/flagsSvg/countries/${user.countryCode.toLowerCase()}.svg`;
-                        }
-
-                        const totalGames = (this.vm.user.totalWins + this.vm.user.totalDefeats);
-                        this.vm.user.winRate = Math.round((this.vm.user.totalWins / totalGames) * 100);
-
-                        if (user.defaultAvatar) {
-                            if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
-                                const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
-                                chosenDefaultAvatar.customCharacter = true;
-                                this.vm.user.defaultAvatar = chosenDefaultAvatar;
-                            } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
-                                const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
-                                chosenDefaultAvatar.customCharacter = false;
-                                this.vm.user.defaultAvatar = chosenDefaultAvatar;
-                            }
-                        }
-
-                        this.setChart();
-
-                        this.vm.loading = false;
-                        this.$scope.$apply();
-                    } else {
-                        this.vm.loading = false;
-                        this.$scope.$apply();
-                    }
-                }).catch(err => {
-                    this.toastService.errorToast(
-                        '',
-                        err.code
-                    );
-                    this.vm.loading = false;
-                    this.vm.error = true;
-                    this.$scope.$apply();
-                });
+                this.getUserData();
             }
+        });
+    }
+
+    getUserData() {
+        //getRankingOfPlayerByUid(this.vm.user.uid).then(response => {
+        return getRankingOfPlayerByUid('id10').then(response => {
+            this.vm.league = response.league;
+            this.vm.rank = response.rank;
+        }).then(() => {
+            return firebase.database().ref('/users/' + this.vm.user.uid).once('value').then(snapshot => {
+                const user = snapshot.val();
+                if (user) {
+                    this.vm.user.bio = user.bio ? user.bio : '';
+                    this.vm.user.rating = user.rating;
+                    this.vm.user.totalDefeats = user.totalDefeats ? user.totalDefeats : 0;
+                    this.vm.user.totalWins = user.totalWins ? user.totalWins : 0;
+                    this.vm.user.totalDisconnects = user.totalDisconnects ? user.totalDisconnects : 0;
+                    this.vm.user.recentGames = user.recentGames ? user.recentGames : [];
+                    this.vm.user.oldRatings = user.oldRatings ? user.oldRatings : [];
+
+                    this.vm.user.recentGames.forEach(g => {
+                        g.ratingBeforeGame.normalized = Math.floor(g.ratingBeforeGame.mu * 100);
+                        g.ratingAfterGame.normalized = Math.floor(g.ratingAfterGame.mu * 100);
+
+                        g.ratingAfterGame.diff = (g.ratingAfterGame.normalized - g.ratingBeforeGame.normalized);
+                    });
+
+                    this.vm.user.recentGames = this.vm.user.recentGames.sort((a, b) => b.timestamp - a.timestamp);
+
+                    this.vm.user.rating.normalized = Math.floor(this.vm.user.rating.mu * 100);
+
+                    if (user.countryCode && CountryCodes[user.countryCode]) {
+                        this.vm.user.countryName = CountryCodes[user.countryCode].name;
+                        this.vm.user.flag = `./assets/flagsSvg/countries/${user.countryCode.toLowerCase()}.svg`;
+                    }
+
+                    const totalGames = (this.vm.user.totalWins + this.vm.user.totalDefeats);
+                    this.vm.user.winRate = Math.round((this.vm.user.totalWins / totalGames) * 100);
+
+                    if (user.defaultAvatar) {
+                        if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
+                            const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = true;
+                            this.vm.user.defaultAvatar = chosenDefaultAvatar;
+                        } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
+                            const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
+                            chosenDefaultAvatar.customCharacter = false;
+                            this.vm.user.defaultAvatar = chosenDefaultAvatar;
+                        }
+                    }
+
+                    this.setChart();
+
+                    this.vm.loading = false;
+                    this.$scope.$apply();
+                } else {
+                    this.vm.loading = false;
+                    this.$scope.$apply();
+                }
+            })
+        }).catch(err => {
+            this.toastService.errorToast(
+                '',
+                err.code
+            );
+            this.vm.loading = false;
+            this.vm.error = true;
+            this.$scope.$apply();
         });
     }
 

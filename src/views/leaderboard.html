@@ -7,7 +7,7 @@
         </div>
         <div class="row paddingTop--double">
             <div class="col-xs-12">
-                <button type="button" class="button button-green" data-ng-click="leaderboard.findMyRanking()" data-ng-disabled="!leaderboard.userUid">
+                <button type="button" class="button button-green" data-ng-click="leaderboard.scrollToMe()" data-ng-disabled="!leaderboard.userUid">
                     Find my ranking
                 </button>
             </div>
@@ -55,9 +55,6 @@
                                 <span data-ng-show="leaderboard.showRanks && leaderboard.LEAGUES[user.league].minIndex == $index">
                                     <div id="leaderboardLeagueIcon{{user.league}}{{$index}}"
                                          class="leaderboardLeagueIcon"
-                                         uib-tooltip="{{ user.league }} league"
-                                         tooltip-placement="right"
-                                         tooltip-class="standardTooltip"
                                          inject-svg
                                          src="{{leaderboard.LEAGUES[user.league].icon}}">
                                     </div>
