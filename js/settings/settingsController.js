@@ -54,6 +54,7 @@ class SettingsController {
         this.vm.toggleSound = this.toggleSound;
         this.vm.toggleAnnouncer = this.toggleAnnouncer;
         this.vm.toggleFullScreen = this.toggleFullScreen;
+        this.vm.toggle3d = this.toggle3d;
         this.vm.updateProxySettings = this.updateProxySettings;
     }
 
@@ -79,7 +80,14 @@ class SettingsController {
 
         const window = electron.remote.getCurrentWindow();
         window.setFullScreen(this.vm.settings.fullScreen);
+        this.soundService.changeColor.play();
 
+        this.vm.settings.saveSettings();
+    }
+
+    toggle3d() {
+        this.vm.settings.toggle3d = !this.vm.settings.toggle3d;
+        this.soundService.changeColor.play();
         this.vm.settings.saveSettings();
     }
 

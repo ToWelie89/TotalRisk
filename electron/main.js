@@ -7,8 +7,7 @@ const {
     app,
     BrowserWindow,
     globalShortcut,
-    ipcMain,
-    session
+    ipcMain
 } = require('electron');
 const log = require('electron-log');
 const {

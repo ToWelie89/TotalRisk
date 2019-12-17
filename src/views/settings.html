@@ -51,6 +51,23 @@
                 </div>
             </div>
         </div>
+        <div class="row" style="width: 600px; margin: 0 auto;">
+            <div class="col-xs-4">
+                <div>
+                    3D effects <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                     data-placement="bottom" title="Enable/disable 3D effects" style="color: #f0f048;"></span>
+                </div>
+            </div>
+            <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                <div>
+                    <label class="switch" data-ng-click="settings.toggle3d()">
+                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.enable3d">
+                        <span class="switch-label" data-on="On" data-off="Off"></span>
+                        <span class="switch-handle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>

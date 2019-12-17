@@ -13,13 +13,14 @@ const {
 } = require('./../libs/globe');
 
 class EndScreenController {
-    constructor($scope, $rootScope, $sce, gameEngine, toastService) {
+    constructor($scope, $rootScope, $sce, gameEngine, toastService, settings) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$sce = $sce;
         this.gameEngine = gameEngine;
         this.toastService = toastService;
+        this.settings = settings;
 
         this.vm.runningElectron = runningElectron();
 
@@ -96,11 +97,13 @@ class EndScreenController {
                     }
                 });
 
-                initGlobe({
-                    bg: './assets/maps/globe_bg.jpg',
-                    diffuse: './assets/maps/worldMap/globe.png',
-                    halo: './assets/maps/globe_halo.png',
-                });
+                if (this.settings.enable3d) {
+                    initGlobe({
+                        bg: './assets/maps/globe_bg.jpg',
+                        diffuse: './assets/maps/worldMap/globe.png',
+                        halo: './assets/maps/globe_halo.png',
+                    });
+                }
             }
         });
     }

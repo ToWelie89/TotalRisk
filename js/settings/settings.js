@@ -30,6 +30,7 @@ class Settings {
         this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
+        this.enable3d      = savedSettings ? savedSettings.enable3d      : settings.enable3d;
         this.musicVolume   = savedSettings ? savedSettings.musicVolume   : settings.musicVolume;
         this.sfxVolume     = savedSettings ? savedSettings.sfxVolume     : settings.sfxVolume;
         this.aiSpeedValues = {
@@ -52,7 +53,8 @@ class Settings {
             showAnnouncer: this.showAnnouncer,
             fullScreen:    this.fullScreen,
             musicVolume:   this.musicVolume,
-            sfxVolume:     this.sfxVolume
+            sfxVolume:     this.sfxVolume,
+            enable3d:      this.enable3d
         };
 
         if (this.runningElectron) {

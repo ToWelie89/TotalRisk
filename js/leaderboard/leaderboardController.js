@@ -1,6 +1,7 @@
 const firebase = require('firebase/app');
 const {MINIMUM_NUMBER_OF_PLAYERS_TO_ENABLE_RANKING, getLeaderboard} = require('./rankConstants');
 const {GAME_PHASES} = require('./../gameConstants');
+const {devMode} = require('./../helpers');
 
 class LeaderboardController {
     constructor($scope, $rootScope, $timeout) {
@@ -15,8 +16,6 @@ class LeaderboardController {
         this.vm.scrollToMe = this.scrollToMe;
 
         firebase.auth().onAuthStateChanged(authUser => {
-            this.vm.userUid = 'id10';
-            return;
             if (authUser) {
                 this.vm.userUid = authUser.uid;
             } else {
@@ -33,10 +32,11 @@ class LeaderboardController {
 
     init() {
         getLeaderboard().then(response => {
+            console.log('Lool', response);
             this.vm.users = response.leaderboardList;
             this.vm.LEAGUES = response.leagues;
 
-            if (this.vm.users.length >= MINIMUM_NUMBER_OF_PLAYERS_TO_ENABLE_RANKING) {
+            if (this.vm.users.length >= MINIMUM_NUMBER_OF_PLAYERS_TO_ENABLE_RANKING || devMode()) {
                 this.$scope.$apply();
                 this.vm.showRanks = true;
                 if (this.vm.userUid) {

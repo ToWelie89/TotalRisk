@@ -6,7 +6,8 @@ const settings = {
     showAnnouncer: true,
     fullScreen: false,
     musicVolume: 80,
-    sfxVolume: 60
+    sfxVolume: 60,
+    enable3d: true
 };
 
 module.exports = {settings};
