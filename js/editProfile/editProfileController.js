@@ -151,29 +151,33 @@ class EditProfileController {
     }
 
     selectDefaultAvatar() {
-        this.$uibModal.open({
-            templateUrl: 'src/modals/characterSelectionModal.html',
-            backdrop: 'static',
-            windowClass: 'riskModal characterSelect',
-            controller: 'characterSelectionController',
-            controllerAs: 'characterSelection',
-            keyboard: false,
-            resolve: {
-                currentSelectedPlayer: () => ({
-                    avatar: this.vm.user.defaultAvatar
-                }),
-                selectedPlayers: () => [],
-                multiplayer: () => false
-            }
-        }).result.then(closeResponse => {
-            $('.mainWrapper').css('filter', 'none');
-            $('.mainWrapper').css('-webkit-filter', 'none');
-
-            this.vm.user.defaultAvatar = closeResponse.avatar;
-
-            firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id).then(() => {
-                this.$rootScope.$broadcast('updatedDefaultAvatar', {});
-                this.toastService.successToast('', 'Updated default avatar');
+        firebase.database().ref('/users/' + this.vm.user.uid).once('value').then(snapshot => {
+            const user = snapshot.val();
+            this.$uibModal.open({
+                templateUrl: 'src/modals/characterSelectionModal.html',
+                backdrop: 'static',
+                windowClass: 'riskModal characterSelect',
+                controller: 'characterSelectionController',
+                controllerAs: 'characterSelection',
+                keyboard: false,
+                resolve: {
+                    currentSelectedPlayer: () => ({
+                        avatar: this.vm.user.defaultAvatar
+                    }),
+                    selectedPlayers: () => [],
+                    multiplayer: () => false,
+                    customCharacters: () => user && user.characters ? user.characters : []
+                }
+            }).result.then(closeResponse => {
+                $('.mainWrapper').css('filter', 'none');
+                $('.mainWrapper').css('-webkit-filter', 'none');
+    
+                this.vm.user.defaultAvatar = closeResponse.avatar;
+    
+                firebase.database().ref('users/' + this.vm.user.uid + '/defaultAvatar').set(this.vm.user.defaultAvatar.id).then(() => {
+                    this.$rootScope.$broadcast('updatedDefaultAvatar', {});
+                    this.toastService.successToast('', 'Updated default avatar');
+                });
             });
         });
     }

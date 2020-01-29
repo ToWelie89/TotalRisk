@@ -1,54 +1,51 @@
-@keyframes caesar_mouth {
+@keyframes caesar_head {
     40% { transform: translate(0px, 0px); }
-    50% { transform: translate(0px, -5px); }
+    50% { transform: translate(0px, 2px); }
     70% { transform: translate(0px, 0px); }
 }
-@keyframes caesar_right_eye_outer {
-    40% { transform: matrix(0.444056, 0, 0, 0.473315, 97.565155, 74.801147); }
-    50% { transform: matrix(0.444056, 0, 0, 0.473315, 102, 74.801147); }
-    60% { transform: matrix(0.444056, 0, 0, 0.473315, 97.565155, 74.801147); }
-    75% { transform: matrix(0.444056, 0, 0, 0.473315, 94, 74.801147); }
-    85% { transform: matrix(0.444056, 0, 0, 0.473315, 97.565155, 74.801147); }
-}
-@keyframes caesar_right_eye_inner {
+@keyframes caesar_mouth {
     40% { transform: translate(0px, 0px); }
-    50% { transform: translate(5px, 0px); }
-    60% { transform: translate(0px, 0px); }
-    75% { transform: translate(-3px, 0px); }
-    85% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, -1px); }
+    70% { transform: translate(0px, 0px); }
 }
-@keyframes caesar_left_eye_outer {
-    40% { transform: matrix(0.444056, 0, 0, 0.473315, 70.855858, 75.046837); }
-    50% { transform: matrix(0.444056, 0, 0, 0.473315, 75, 75.046837); }
-    60% { transform: matrix(0.444056, 0, 0, 0.473315, 70.855858, 75.046837); }
-    75% { transform: matrix(0.444056, 0, 0, 0.473315, 66, 75.046837); }
-    85% { transform: matrix(0.444056, 0, 0, 0.473315, 70.855858, 75.046837); }
+@keyframes caesar_left_eye {
+    10% { transform: translate(0px, 0px) }
+    40% { transform: translate(-3px, 0px) }
+    60% { transform: translate(2px, 0px) }
+    90% { transform: translate(0px, 0px) }
 }
-@keyframes caesar_left_eye_inner {
-    40% { transform: translate(0px, 0px); }
-    50% { transform: translate(4px, 0px); }
-    60% { transform: translate(0px, 0px); }
-    75% { transform: translate(-5px, 0px); }
-    85% { transform: translate(0px, 0px); }
+@keyframes caesar_right_eye {
+    10% { transform: translate(0px, 0px) }
+    40% { transform: translate(-3px, 0px) }
+    60% { transform: translate(2px, 0px) }
+    90% { transform: translate(0px, 0px) }
+}
+@keyframes caesar_cape {
+    0% { transform: rotate(0deg) }
+    50% { transform: rotate(3deg) }
+    100% { transform: rotate(0deg) }
 }
 
 svg[character="caesar"] {
+    overflow: visible;
+    // mouth
+    #head {
+        animation: caesar_head 6s linear infinite;
+    }
     // mouth
     #mouth {
-        animation: caesar_mouth 3s linear infinite;
-    }
-    // right eye
-    #rightEyeOuter {
-        animation: caesar_right_eye_outer 3s linear infinite;
-    }
-    #rightEyeInner {
-        animation: caesar_right_eye_inner 3s linear infinite;
+        animation: caesar_mouth 4s linear infinite;
     }
     // left eye
-    #leftEyeOuter {
-        animation: caesar_left_eye_outer 3s linear infinite;
+    #leftEye {
+        animation: caesar_left_eye 3s linear infinite;
     }
-    #leftEyeInner {
-        animation: caesar_left_eye_inner 3s linear infinite;
+    // right eye
+    #rightEye {
+        animation: caesar_right_eye 3s linear infinite;
+    }
+    // cape
+    #cape {
+        animation: caesar_cape 5s linear infinite;
     }
 }

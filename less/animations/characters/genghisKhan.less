@@ -1,0 +1,87 @@
+@keyframes genghisKhan_head {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, 2px); }
+    70% { transform: translate(0px, 0px); }
+}
+@keyframes genghisKhan_mouth {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, -1px); }
+    70% { transform: translate(0px, 0px); }
+}
+@keyframes genghisKhan_left_eye {
+    10% { transform: translate(0px, 0px) }
+    40% { transform: translate(-3px, 0px) }
+    60% { transform: translate(2px, 0px) }
+    90% { transform: translate(0px, 0px) }
+}
+@keyframes genghisKhan_right_eye {
+    10% { transform: translate(0px, 0px) }
+    40% { transform: translate(-3px, 0px) }
+    60% { transform: translate(2px, 0px) }
+    90% { transform: translate(0px, 0px) }
+}
+@keyframes genghisKhan_cape {
+    0% { transform: rotate(0deg) }
+    50% { transform: rotate(3deg) }
+    100% { transform: rotate(0deg) }
+}
+@keyframes genghisKhan_rightLeg {
+    0% { transform: matrix(-0.988179, 0.153311, 0.153311, 0.988179, 790.608, -55.5386); }
+    50% { transform: matrix(-1, -2e-05, -2e-05, 1, 853.284, -2.10106); }
+    100% { transform: matrix(-0.988179, 0.153311, 0.153311, 0.988179, 790.608, -55.5386); }
+}
+@keyframes genghisKhan_feather {
+    0% { transform: matrix(0.999848, 0.017453, -0.017453, 0.999848, 2.68351, -8.29001); }
+    50% { transform: matrix(0.997564, -0.069756, 0.069756, 0.997564, -8.99383, 33.8916); }
+    100% { transform: matrix(0.999848, 0.017453, -0.017453, 0.999848, 2.68351, -8.29001); }
+}
+@keyframes genghisKhan_shield {
+    0% { transform: matrix(1, 0, 0, 1, 2.1e-05, -1.1e-05); }
+    50% { transform: matrix(0.999391, -0.0349, 0.0349, 0.999391, -11.1929, 11.5978); }
+    100% { transform: matrix(1, 0, 0, 1, 2.1e-05, -1.1e-05); }
+}
+@keyframes genghisKhan_eyebrows {
+    20% { transform: translate(0px, 0px); }
+    30% { transform: translate(0px, -2px); }
+    50% { transform: translate(0px, 0px); }
+}
+
+svg[character="genghisKhan"] {
+    overflow: visible;
+    // mouth
+    #head {
+        animation: genghisKhan_head 6s linear infinite;
+    }
+    // mouth
+    #mouth {
+        animation: genghisKhan_mouth 4s linear infinite;
+    }
+    // left eye
+    #leftEye {
+        animation: genghisKhan_left_eye 3s linear infinite;
+    }
+    // right eye
+    #rightEye {
+        animation: genghisKhan_right_eye 3s linear infinite;
+    }
+    // cape
+    #cape {
+        animation: genghisKhan_cape 5s linear infinite;
+    }
+    // right leg
+    #rightLeg {
+        animation: genghisKhan_rightLeg 5s linear infinite;
+    }
+    // feather
+    #feather {
+        animation: genghisKhan_feather 5s linear infinite;
+    }
+    // shield
+    #shield {
+        animation: genghisKhan_shield 5s linear infinite;
+    }
+    // eyebrows
+    #eyebrows {
+        animation: genghisKhan_eyebrows 4s linear infinite;
+    }
+}

@@ -1,34 +1,60 @@
+@keyframes alexander_head {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, 1px); }
+    70% { transform: translate(0px, 0px); }
+}
 @keyframes alexander_mouth {
     40% { transform: translate(0px, 0px); }
-    50% { transform: translate(0px, -4px); }
-    80% { transform: translate(0px, 0px); }
-}
-@keyframes alexander_right_eye {
-    40% { transform: translate(0px, 0px); }
-    50% { transform: translate(-5px, 0px); }
-    60% { transform: translate(0px, 0px); }
-    75% { transform: translate(4px, 0px); }
-    85% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, -1px); }
+    70% { transform: translate(0px, 0px); }
 }
 @keyframes alexander_left_eye {
-    40% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
-    50% { transform: matrix(1, 0, 0, 1, 15.966425, 0.153811) }
-    60% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
-    75% { transform: matrix(1, 0, 0, 1, 20.966425, 0.153811) }
-    85% { transform: matrix(1, 0, 0, 1, 16.966425, 0.153811) }
+    10% { transform: matrix(1, 0, 0, 1, -250.504, 44.3593) }
+    40% { transform: matrix(1, 0, 0, 1, -254.504, 44.3593) }
+    60% { transform: matrix(1, 0, 0, 1, -248.504, 44.3593) }
+    90% { transform: matrix(1, 0, 0, 1, -250.504, 44.3593) }
+}
+@keyframes alexander_right_eye {
+    10% { transform: matrix(-1, 0, 0, 1, -530.86, 44.3879); }
+    40% { transform: matrix(-1, 0, 0, 1, -532.86, 44.3879); }
+    60% { transform: matrix(-1, 0, 0, 1, -527.86, 44.3879); }
+    90% { transform: matrix(-1, 0, 0, 1, -530.86, 44.3879); }
+}
+@keyframes alexander_cape {
+    0% { transform: matrix(1, 0, 0, 1, 5.37886, 4.81272); }
+    50% { transform: matrix(0.99863, 0.052336, -0.052336, 0.99863, 18.9977, 25.9005); }
+    100% { transform: matrix(1, 0, 0, 1, 5.37886, 4.81272); }
+}
+@keyframes alexander_eyebrows {
+    40% { transform: translate(0px, 0px); }
+    50% { transform: translate(0px, -1px); }
+    70% { transform: translate(0px, 0px); }
 }
 
 svg[character="alexander"] {
+    overflow: visible;
+    // mouth
+    #head {
+        animation: alexander_head 6s linear infinite;
+    }
     // mouth
     #mouth {
-        animation: alexander_mouth 3s linear infinite;
+        animation: alexander_mouth 4s linear infinite;
     }
     // left eye
     #leftEye {
-        animation: alexander_right_eye 3s linear infinite;
+        animation: alexander_left_eye 3s linear infinite;
     }
     // right eye
     #rightEye {
-        animation: alexander_left_eye 3s linear infinite;
+        animation: alexander_right_eye 3s linear infinite;
+    }
+    // cape
+    #cape {
+        animation: alexander_cape 5s linear infinite;
+    }
+    // eyebrows
+    #eyebrows {
+        animation: alexander_eyebrows 2s linear infinite;
     }
 }

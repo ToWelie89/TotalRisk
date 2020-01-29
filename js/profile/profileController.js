@@ -48,8 +48,7 @@ class ProfileController {
     }
 
     getUserData() {
-        //getRankingOfPlayerByUid(this.vm.user.uid).then(response => {
-        return getRankingOfPlayerByUid('id10').then(response => {
+        getRankingOfPlayerByUid(this.vm.user.uid).then(response => {
             this.vm.league = response.league;
             this.vm.rank = response.rank;
         }).then(() => {
@@ -107,7 +106,7 @@ class ProfileController {
         }).catch(err => {
             this.toastService.errorToast(
                 '',
-                err.code
+                err.code || 'Something went wrong when trying to fetch profile'
             );
             this.vm.loading = false;
             this.vm.error = true;

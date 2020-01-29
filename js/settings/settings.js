@@ -15,7 +15,7 @@ class Settings {
                 defaults: ElectronSettings
             });
 
-            savedSettings = this.store.get('');
+            savedSettings = this.store.get('riskSettings');
             this.proxySettings = this.store.get('proxySettings');
             console.log('Saved settings from JSON file: ', savedSettings);
         } else {
