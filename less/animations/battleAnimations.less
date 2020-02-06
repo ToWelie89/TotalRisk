@@ -1,0 +1,21 @@
+@keyframes battleCloudsAnimation {
+    0% { transform: translate(280px,0); }
+    100% { transform: translate(-540px,0) }
+}
+@keyframes glowingSunAnimation {
+    0% { opacity: 1 }
+    50% { opacity: 0.5 }
+}
+
+#attackModalBattleSvg {
+    #clouds {
+        animation: battleCloudsAnimation 65s linear infinite;
+    }
+    #glowing_sun {
+        animation: glowingSunAnimation 5s linear infinite;
+    }
+    .soldier {
+        transition: transform 50ms ease-out, opacity 180ms;
+        opacity: 1;
+    }
+}

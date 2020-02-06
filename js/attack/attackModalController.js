@@ -1,6 +1,7 @@
 const BattleHandler = require('./battleHandler');
-const {delay} = require('./../helpers');
+const {delay, shuffle, randomIntFromInterval } = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
+const { loadSvgIntoDiv } = require('./../helpers');
 
 class AttackModalController {
     constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine) {
@@ -20,6 +21,7 @@ class AttackModalController {
 
         this.vm.diceAreRolling = false;
         this.vm.loading = true;
+        this.vm.deployTroopsAnimationLoading = true;
 
         // PUBLIC FUNCTIONS
         this.vm.fight = this.fight;
@@ -57,7 +59,8 @@ class AttackModalController {
         this.vm.attackerTotalCasualites = 0;
         this.vm.defenderTotalCasualites = 0;
 
-        this.getCountrySvgDelay = 500;
+        //this.getCountrySvgDelay = 500;
+        this.getCountrySvgDelay = 1;
         this.moveTroopsDelay = 2500;
         this.closeModalDelay = 2500;
         this.startShakeAnimationDelay = 100;
@@ -68,35 +71,77 @@ class AttackModalController {
 
         if (this.multiplayerMode) {
             // display territories in battle for other players
-
             this.socketService.gameSocket.on('skipToNextPlayer', () => {
                 this.retreat();
             });
         }
-
-        const defendingNationName = this.vm.defender.name;
         setTimeout(() => {
-            this.getCountrySvg(defendingNationName);
+            //this.getCountrySvg(defendingNationName);
+
+            const battleFields = [
+                'assets/battle.svg',
+                'assets/battle_night.svg'
+            ];
+            const randomizedBattlefield = battleFields[Math.floor(Math.random() * battleFields.length)];
+            loadSvgIntoDiv(randomizedBattlefield, '#attackModalBattleSvg', () => {
+                let attackerCannons = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon.left')).reverse();
+                const attackerSoldiers = Array.from(document.querySelectorAll('#attackModalBattleSvg svg #leftArmy .soldier')).sort((a, b) => {
+                    return Number(a.getAttribute('index')) - Number(b.getAttribute('index'));
+                }).slice(0, this.vm.attacker.numberOfTroops);
+                const defenderSoldiers = Array.from(document.querySelectorAll('#attackModalBattleSvg svg #rightArmy .soldier')).sort((a, b) => {
+                    return Number(a.getAttribute('index')) - Number(b.getAttribute('index'));
+                }).slice(0, this.vm.defender.numberOfTroops);
+                let defenderCannons = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon.right')).reverse();
+
+                const cannonsToShow = numberOfTroops => {
+                    let cannonsToShow;
+                    if (numberOfTroops <= 8) cannonsToShow = 0;
+                    if (numberOfTroops > 8 && numberOfTroops <= 12) cannonsToShow = 1;
+                    if (numberOfTroops > 12 && numberOfTroops <= 15) cannonsToShow = 2;
+                    if (numberOfTroops > 16) cannonsToShow = 3;
+                    return cannonsToShow;
+                };
+
+                const attackerCannonsToShow = cannonsToShow(this.vm.attacker.numberOfTroops);
+                const defenderCannonsToShow = cannonsToShow(this.vm.defender.numberOfTroops);
+
+                attackerCannons = attackerCannons.slice(0, attackerCannonsToShow);
+                defenderCannons = defenderCannons.slice(0, defenderCannonsToShow);
+    
+                attackerSoldiers.forEach(s => {
+                    s.querySelectorAll('.colorable').forEach(c => c.style.fill = this.vm.attacker.color.mainColor);
+                });
+                defenderSoldiers.forEach(s => {
+                    s.querySelectorAll('.colorable').forEach(c => c.style.fill = this.vm.defender.color.mainColor);
+                });
+
+                const allUnits = [...attackerSoldiers, ...attackerCannons, ...defenderSoldiers, ...defenderCannons];
+                allUnits.forEach((unit, index) => {
+                    setTimeout(() => {
+                        unit.style.display = 'block';
+                        soundService.newMessage.play();
+                        if (index === (allUnits.length - 1)) {
+                            this.vm.deployTroopsAnimationLoading = false;
+                            this.$scope.$apply();
+                        }
+                    }, 50 * index);
+                });
+            });
+
 
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');
-            this.attacker_box = new dice_box(attackerCanvas, { w: 440, h: 200 }, {
+            this.attacker_box = new dice_box(attackerCanvas, { w: 618, h: 200 }, {
                 dice_color: '#6b0a05'
             });
-            this.defender_box = new dice_box(defenderCanvas, { w: 440, h: 200 }, {
+            this.defender_box = new dice_box(defenderCanvas, { w: 618, h: 200 }, {
                 dice_color: '#061a7f'
             });
 
-            $('#territoryContainer').animate({
-                opacity: 1
-            }, 400);
-
-            $('#diceContainer').animate({
-                height: '202px'
-            }, 400, () => {
+            setTimeout(() => {
                 $('#diceContainer').animate({
                     opacity: 1
-                }, 400, () => {
+                }, 150, () => {
                     this.vm.loading = false;
                     this.$scope.$apply();
                     if (attackData.tutorialMode) {
@@ -104,7 +149,7 @@ class AttackModalController {
                         this.runTutorial();
                     }
                 });
-            });
+            }, 50);
 
         }, this.getCountrySvgDelay);
     }
@@ -165,6 +210,32 @@ class AttackModalController {
 
         this.attacker_box.throw(this.vm.attackerDice, this.afterRoll, this);
         this.defender_box.throw(this.vm.defenderDice, this.afterRoll, this);
+
+        const visibleUnits = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon, #attackModalBattleSvg svg .soldier'))
+                                .filter(c => c.style.display === 'block');
+        shuffle(visibleUnits);
+        visibleUnits.forEach(s => {
+            const randomDelay = randomIntFromInterval(0, 200);
+            const soldierOriginalTransform = s.style.transform || getComputedStyle(s).transform;
+            setTimeout(() => {
+                s.querySelector('.fireflash').style.display = 'block';
+                
+                if (s.classList.contains('soldier')) {
+                    const soldierTransformStyle = soldierOriginalTransform.replace('matrix(', '').replace(')', '').split(',');
+                    soldierTransformStyle[4] = Math.round(Number(soldierTransformStyle[4].replace(' ', ''))) - 10;
+    
+                    const newTransform = `matrix(${soldierTransformStyle.join(',')})`;
+                    s.style.transform = newTransform;
+                }
+                
+                setTimeout(() => {
+                    s.querySelector('.fireflash').style.display = 'none';
+                    if (s.classList.contains('soldier')) s.style.transform = soldierOriginalTransform;
+                }, 100);
+            }, randomDelay);
+        });
+
+        this.soundService.muskets.play();
     }
 
     battleFought(attackerCasualties, defenderCasualties, attackerNumberOfTroops, defenderNumberOfTroops) {
@@ -190,9 +261,9 @@ class AttackModalController {
         }
 
         // If one player loses 2 troops a scream sound is heard
-        if (context.battleHandlerResponse.defenderCasualties === 2 || context.battleHandlerResponse.attackerCasualties === 2) {
+        /* if (context.battleHandlerResponse.defenderCasualties === 2 || context.battleHandlerResponse.attackerCasualties === 2) {
             context.soundService.screamSound.play();
-        }
+        } */
 
         context.vm.attackerTotalCasualites += context.battleHandlerResponse.attackerCasualties;
         context.vm.defenderTotalCasualites += context.battleHandlerResponse.defenderCasualties;
@@ -201,6 +272,58 @@ class AttackModalController {
         context.vm.defender = context.battleHandlerResponse.defender;
         context.vm.attackerCasualties = context.battleHandlerResponse.attackerCasualties;
         context.vm.defenderCasualties = context.battleHandlerResponse.defenderCasualties;
+
+        context.$scope.$apply();
+
+        const cannonsToShow = numberOfTroops => {
+            let cannonsToShow;
+            if (numberOfTroops <= 8) cannonsToShow = 0;
+            if (numberOfTroops > 8 && numberOfTroops <= 12) cannonsToShow = 1;
+            if (numberOfTroops > 12 && numberOfTroops <= 15) cannonsToShow = 2;
+            if (numberOfTroops > 16) cannonsToShow = 3;
+            return cannonsToShow;
+        };
+
+        const animateDyingSoldiers = soldiersToDie => {
+            soldiersToDie.forEach((s, i) => {
+                s.style.opacity = 0;
+                const delay = 180 + (i * 50);
+                setTimeout(() => {
+                    s.style.display = 'none';
+                }, delay);
+            });
+        };
+
+        // Hide attacker cannons according to losses
+        const attackerNumberOfTroops = context.vm.attacker.numberOfTroops;
+        const attackerCannonsToShow = cannonsToShow(attackerNumberOfTroops);
+        const visibleAttackerCannons = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon.left')).filter(c => c.style.display === 'block');
+        const attackerCannonsToHide = visibleAttackerCannons.length - attackerCannonsToShow;
+        visibleAttackerCannons.slice(0, attackerCannonsToHide).forEach(c => c.style.display = 'none');
+        // Hide attacker soldiers cannons according to losses
+        if (attackerNumberOfTroops < 8) {
+            const soldiersToShow = attackerNumberOfTroops;
+            const visibleSoldiers = Array.from(document.querySelectorAll('#attackModalBattleSvg svg #leftArmy .soldier')).filter(s => s.style.display === 'block');
+            const numberOfsoldiersToHide = visibleSoldiers.length - soldiersToShow;
+            
+            const soldiersToHide = visibleSoldiers.sort((a, b) => Number(b.getAttribute('index')) - Number(a.getAttribute('index'))).slice(0, numberOfsoldiersToHide);
+            animateDyingSoldiers(soldiersToHide);
+        }
+
+        // Hide defender cannons according to losses
+        const defenderCannonsToShow = cannonsToShow(context.vm.defender.numberOfTroops);
+        const visibleDefenderCannons = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon.right')).filter(c => c.style.display === 'block');
+        const defenderCannonsToHide = visibleDefenderCannons.length - defenderCannonsToShow;
+        visibleDefenderCannons.slice(0, defenderCannonsToHide).forEach(c => c.style.display = 'none');
+        // Hide defender soldiers cannons according to losses
+        if (context.vm.defender.numberOfTroops < 8) {
+            const soldiersToShow = context.vm.defender.numberOfTroops;
+            const visibleSoldiers = Array.from(document.querySelectorAll('#attackModalBattleSvg svg #rightArmy .soldier')).filter(s => s.style.display === 'block');
+            const numberOfsoldiersToHide = visibleSoldiers.length - soldiersToShow;
+            
+            const soldiersToHide = visibleSoldiers.sort((a, b) => Number(b.getAttribute('index')) - Number(a.getAttribute('index'))).slice(0, numberOfsoldiersToHide);
+            animateDyingSoldiers(soldiersToHide);
+        }
 
         context.battleFought(
             context.battleHandlerResponse.attackerCasualties,

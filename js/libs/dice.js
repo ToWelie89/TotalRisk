@@ -202,7 +202,7 @@ this.dice_box = function(container, dimentions, options) {
     container.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
-    this.renderer.setClearColor( 0xffffff, 0);
+    //this.renderer.setClearColor( 0xffffff, 0);
 
     this.reinit(container, dimentions);
 
@@ -274,8 +274,8 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
 
     var mw = Math.max(this.w, this.h);
     if (this.light) this.scene.remove(this.light);
-    this.light = new THREE.SpotLight(that.spot_light_color, 1.8);
-    this.light.position.set(-mw / 2, mw / 2, mw * 2);
+    this.light = new THREE.SpotLight(that.spot_light_color, 1.3);
+    this.light.position.set(-mw / 10, mw / 2, mw * 2);
     this.light.target.position.set(0, 0, 0);
     this.light.distance = mw * 5;
     this.light.castShadow = true;
@@ -291,8 +291,14 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
     var texture = new THREE.TextureLoader().load('https://blueblots.com/wp-content/uploads/2011/12/35-seamless-wood-texture.jpg');
 
     if (this.desk) this.scene.remove(this.desk);
-    this.desk = new THREE.Mesh(new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
-            new THREE.MeshPhongMaterial({ map: texture }));
+    this.desk = new THREE.Mesh(
+        new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
+        new THREE.MeshPhongMaterial({
+            //map: texture,
+            color: 0xb5885e,
+            transparent: true
+        })
+    );
     this.desk.receiveShadow = true;
     this.scene.add(this.desk);
 

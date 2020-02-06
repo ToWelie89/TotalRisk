@@ -3,107 +3,88 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="turnAvatarContainer">
-                    <div class="" id="attackModalAttackerPortrait" player-portrait avatar="attack.attacker.avatar" target="attackModalAttackerPortraitSvg" small>
-                        <div id="attackModalAttackerPortraitSvg">
-                        </div>
-                    </div>
-                </div>
-                <div class="turnAvatarContainer right">
-                    <div class="" id="attackModalDefenderPortrait" player-portrait avatar="attack.defender.avatar" target="attackModalDefenderPortraitSvg" small>
-                        <div id="attackModalDefenderPortraitSvg">
-                        </div>
-                    </div>
-                </div>
                 <div class="modal-body">
                     <div class="modal-body textCenter">
-                        <div class="row">
-                          <div class="col-xs-12" style="z-index: 10; margin-bottom: -30px;">
-                              <h2 class="banner">Battle of {{ attack.defender.name }}</h2>
-                          </div>
-                        </div>
-                        <div class="row" style="opacity: 0; max-height: 250px; height: 250px; min-height: 250px;" id="territoryContainer">
+                        <div class="row" id="territoryContainer">
                             <div class="col-xs-12">
-                                <svg id="territorySvg" xmlns="http://www.w3.org/2000/svg">
-                                </svg>
+                                <style>
+                                    #attackModalBattleSvg .soldier, #attackModalBattleSvg .cannon, #attackModalBattleSvg .fireflash {
+                                        display: none;
+                                    }
+                                </style>
+                                <span id="attackModalBattleSvg"></span>
                             </div>
                         </div>
-                        <div class="row marginTop--double">
-                            <div class="col-xs-6" id="attackerTroops">
-                                <span data-ng-repeat="troop in attack.getAsArray(attack.attacker.numberOfTroops) track by $index" class="troop_{{ attack.attacker.color.name }}" data-ng-show="attack.attacker.numberOfTroops <= 18">
-                                    <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="attackerTroopIcon{{ $index }}">
-                                    </span>
-                                </span>
-                                <span data-ng-show="attack.attacker.numberOfTroops > 18" class="troop_{{ attack.attacker.color.name }}">
-                                    <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="attackerTroopIcon-static">
-                                    </span>
-                                    <span>x{{attack.attacker.numberOfTroops}}</span>
-                                </span>
-                                <div data-ng-show="attack.attacker.numberOfTroops == 0 && !attack.diceAreRolling" class="deadLabel">
-                                    <strong>DEAD!</strong>
+                        <div id="attackModalBottomWrapper">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="" id="attackModalAttackerPortrait" player-portrait avatar="attack.attacker.avatar" target="attackModalAttackerPortraitSvg" small>
+                                        <div id="attackModalAttackerPortraitSvg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="" id="attackModalDefenderPortrait" player-portrait avatar="attack.defender.avatar" target="attackModalDefenderPortraitSvg" small>
+                                        <div id="attackModalDefenderPortraitSvg">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xs-6" id="defenderTroops">
-                                <span data-ng-repeat="troop in attack.getAsArray(attack.defender.numberOfTroops) track by $index" class="troop_{{ attack.defender.color.name }}" data-ng-show="attack.defender.numberOfTroops <= 18">
-                                    <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="defenderTroopIcon{{ $index }}">
-                                    </span>
-                                </span>
-                                <span data-ng-show="attack.defender.numberOfTroops > 18" class="troop_{{ attack.defender.color.name }}">
-                                    <span class="troopIcon troop large" inject-svg src="assets/troopIcons/soldier2.svg" id="defenderTroopIcon-static">
-                                    </span>
-                                    <span>x{{attack.defender.numberOfTroops}}</span>
-                                </span>
-                                <div data-ng-show="attack.defender.numberOfTroops == 0" class="deadLabel">
-                                    <strong>DEAD!</strong>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    {{ attack.attacker.numberOfTroops }}
+                                </div>
+                                <div class="col-xs-6">
+                                    {{ attack.defender.numberOfTroops }}
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <strong>Attacker</strong>
-                            </div>
-                            <div class="col-xs-6">
-                                <strong>Defender</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6" data-ng-bind="attack.attacker.owner"></div>
-                            <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
-                        </div>
-                        <div class="row paddingTop paddingBottom" data-ng-hide="attack.fightIsOver || attack.diceAreRolling || attack.isBlitzFight">
-                            <button type="button" id="fightTillDeathButton" class="button button-purple" data-ng-click="attack.blitzFight()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight">
-                                <strong>Fight till death!</strong>
-                            </button>
-                            <button type="button" id="fightButton" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight">
-                                <strong>Fight</strong>
-                            </button>
-                            <button type="button" id="retreatButton" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight">
-                                <strong>Retreat!</strong>
-                            </button>
-                        </div>
-                        <div class="row" style="height: 0; opacity: 0;" id="diceContainer">
-                            <div class="col-xs-6" data-ng-if="attack.attackerDice" style="width: 440px; height: 200px;">
-                                <div id="attackerCanvas" style="width: 440px; height: 200px;"></div>
-                            </div>
-                            <div class="col-xs-6" data-ng-if="attack.defenderDice" style="width: 440px; height: 200px;">
-                                <div id="defenderCanvas" style="width: 440px; height: 200px;"></div>
-                            </div>
-                        </div>
-                        <div class="row" data-ng-show="attack.showMoveTroops">
-                            <div class="col-xs-12 marginTop">
-                                <h4>
-                                    Choose the number of troops to move the newly conquered territory.
-                                </h4>
-                            </div>
-                            <div class="col-xs-12 textCenter" id="sliderContainer">
-                                <div class="col-xs-6" style="margin: 0 auto; float: none;">
-                                    <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>Attacker</strong>
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong>Defender</strong>
                                 </div>
                             </div>
-                            <div class="col-xs-12 paddingTop">
-                                <button type="button" class="button button-blue" data-ng-click="attack.moveTroops()" id="moveButton">
-                                    <strong>Move troops</strong>
+                            <div class="row">
+                                <div class="col-xs-6" data-ng-bind="attack.attacker.owner"></div>
+                                <div class="col-xs-6" data-ng-bind="attack.defender.owner"></div>
+                            </div>
+                            <div class="row paddingTop paddingBottom">
+                                <button type="button" id="fightTillDeathButton" class="button button-purple" data-ng-click="attack.blitzFight()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight || attack.fightIsOver || attack.diceAreRolling || attack.deployTroopsAnimationLoading">
+                                    <strong>Fight till death!</strong>
                                 </button>
+                                <button type="button" id="fightButton" class="button button-blue" data-ng-click="attack.fight()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight || attack.fightIsOver || attack.diceAreRolling || attack.deployTroopsAnimationLoading">
+                                    <strong>Fight</strong>
+                                </button>
+                                <button type="button" id="retreatButton" class="button button-blue" data-ng-click="attack.retreat()" data-ng-disabled="attack.disableButtons || attack.loading || attack.isBlitzFight || attack.fightIsOver || attack.diceAreRolling || attack.deployTroopsAnimationLoading">
+                                    <strong>Retreat!</strong>
+                                </button>
+                            </div>
+                            <div class="row" style="opacity: 0;" id="diceContainer">
+                                <div class="col-xs-6" data-ng-if="attack.attackerDice" style="width: 50%; height: 200px;">
+                                    <div id="attackerCanvas" style="width: 618px; height: 200px;"></div>
+                                </div>
+                                <div class="col-xs-6" data-ng-if="attack.defenderDice" style="width: 50%; height: 200px;">
+                                    <div id="defenderCanvas" style="width: 618px; height: 200px;"></div>
+                                </div>
+                            </div>
+                            <div class="row" data-ng-show="attack.showMoveTroops">
+                                <div class="col-xs-12 marginTop">
+                                    <h4>
+                                        Choose the number of troops to move the newly conquered territory.
+                                    </h4>
+                                </div>
+                                <div class="col-xs-12 textCenter" id="sliderContainer">
+                                    <div class="col-xs-6" style="margin: 0 auto; float: none;">
+                                        <rzslider rz-slider-model="attack.moveNumberOfTroops" rz-slider-options="attack.movementSliderOptions"></rzslider>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 paddingTop">
+                                    <button type="button" class="button button-blue marginBottom" data-ng-click="attack.moveTroops()" id="moveButton">
+                                        <strong>Move troops</strong>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

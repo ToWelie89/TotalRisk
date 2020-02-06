@@ -24,6 +24,7 @@ class MainController {
         this.vm.aiTester = this.aiTester;
         this.vm.quit = this.quit;
         this.vm.testEndScreen = this.testEndScreen;
+        this.vm.testAttackModal = this.testAttackModal;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -75,6 +76,40 @@ class MainController {
         }
 
         console.log('Initialization of mainController');
+    }
+
+    testAttackModal() {
+        this.$uibModal.open({
+            templateUrl: 'src/modals/attackModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal attackModalWrapper',
+            controller: 'attackModalController',
+            controllerAs: 'attack',
+            keyboard: false,
+            resolve: {
+                attackData: () => {
+                    return {
+                        territoryAttacked: {name: 'Brazil', owner: 'Kalle', numberOfTroops: 11},
+                        attackFrom: {name: 'Argentina', owner: 'Pelle', numberOfTroops: 18},
+                        attacker: new Player(
+                            'Pelle',
+                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[4],
+                            Object.keys(avatars).map(key => avatars[key])[0],
+                            PLAYER_TYPES.HUMAN
+                        ),
+                        defender: new Player(
+                            'Kalle',
+                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[1],
+                            Object.keys(avatars).map(key => avatars[key])[3],
+                            PLAYER_TYPES.HUMAN
+                        ),
+                        multiplayer: false
+                    };
+                }
+            }
+        }).result.then(closeResponse => {
+            
+        });
     }
 
     testEndScreen(multiplayer = false) {
