@@ -2,7 +2,15 @@
     <div id="turnPresentationModal" class="riskModal" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div id="turnPresenterAvatar" player-portrait avatar="turnPresentation.turn.player.avatar" target="turnPresenterAvatarTarget" small data-ng-hide="turnPresentation.tutorial">
+                <div
+                    id="turnPresenterAvatar"
+                    player-portrait
+                    avatar="turnPresentation.turn.player.avatar"
+                    target="turnPresenterAvatarTarget"
+                    small
+                    loading="noloadingelement"
+                    data-ng-hide="turnPresentation.tutorial"
+                >
                     <div id="turnPresenterAvatarTarget">
                     </div>
                 </div>

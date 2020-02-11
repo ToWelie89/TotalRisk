@@ -41,7 +41,7 @@ class PlayerPortraitDirective {
 
                 if (loading) {
                     $(`#${loading.value}`).show();
-                    $(`${targetSelector}`).hide();
+                    $(`${targetSelector}`).css('opacity', '0');
                 }
 
                 loadSvgIntoDiv('assets/avatarSvg/custom.svg', targetSelector, () => {
@@ -73,17 +73,22 @@ class PlayerPortraitDirective {
 
                     if (loading) {
                         $(`#${loading.value}`).hide();
-                        $(`${targetSelector}`).show();
+                        setTimeout(() => {
+                            $(`${targetSelector}`).animate({
+                                opacity: 1
+                            }, 250);
+                        }, 50);
                     }
                 });
             } else if (avatar.svg) {
+                const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svg`;
+
                 if (loading) {
                     $(`#${loading.value}`).show();
-                    $(`${targetSelector}`).hide();
+                    $(`${targetSelector}`).css('opacity', '0');
                 }
                 portraitBox.style.backgroundImage = '';
 
-                const targetSelector = target ? target : `#${id} .setupBoxAvatarsContainer__item__portrait__svg`;
 
                 let attributes;
 
@@ -103,7 +108,11 @@ class PlayerPortraitDirective {
 
                     if (loading) {
                         $(`#${loading.value}`).hide();
-                        $(`${targetSelector}`).show();
+                        setTimeout(() => {
+                            $(`${targetSelector}`).animate({
+                                opacity: 1
+                            }, 250);
+                        }, 50);
                     }
                 }, 10);
             } else {

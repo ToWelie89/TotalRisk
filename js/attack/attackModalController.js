@@ -93,6 +93,13 @@ class AttackModalController {
                 }).slice(0, this.vm.defender.numberOfTroops);
                 let defenderCannons = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon.right')).reverse();
 
+                document.querySelector('#attackModalBattleSvg #leftTroopCounter').textContent = this.vm.attacker.numberOfTroops;
+                document.querySelector('#attackModalBattleSvg #rightTroopCounter').textContent = this.vm.defender.numberOfTroops;
+
+                $('#attackModalBattleSvg #leftTroopCounter, #attackModalBattleSvg #rightTroopCounter').animate({
+                    opacity: 1
+                }, 350);
+
                 const cannonsToShow = numberOfTroops => {
                     let cannonsToShow;
                     if (numberOfTroops <= 8) cannonsToShow = 0;
@@ -272,6 +279,9 @@ class AttackModalController {
         context.vm.defender = context.battleHandlerResponse.defender;
         context.vm.attackerCasualties = context.battleHandlerResponse.attackerCasualties;
         context.vm.defenderCasualties = context.battleHandlerResponse.defenderCasualties;
+
+        document.querySelector('#attackModalBattleSvg #leftTroopCounter').textContent = context.vm.attacker.numberOfTroops;
+        document.querySelector('#attackModalBattleSvg #rightTroopCounter').textContent = context.vm.defender.numberOfTroops;
 
         context.$scope.$apply();
 

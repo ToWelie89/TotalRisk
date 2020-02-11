@@ -2,7 +2,6 @@ const {TURN_PHASES, GAME_PHASES} = require('./../gameConstants');
 const { MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING } = require('./../gameConstants');
 
 class TurnPresentationController {
-
     constructor($scope, $rootScope, $uibModalInstance, $sce, gameAnnouncerService, gameEngine, settings, data) {
         this.vm = this;
 
@@ -25,7 +24,6 @@ class TurnPresentationController {
     }
 
     keyupEventListener(e) {
-
         if (e.keyCode === 27) { // Escape
             if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
                 return;
