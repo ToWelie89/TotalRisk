@@ -76,8 +76,6 @@ class AttackModalController {
             });
         }
         setTimeout(() => {
-            //this.getCountrySvg(defendingNationName);
-
             const battleFields = [
                 'assets/battle.svg',
                 'assets/battle_night.svg'
@@ -134,7 +132,6 @@ class AttackModalController {
                     }, 50 * index);
                 });
             });
-
 
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');

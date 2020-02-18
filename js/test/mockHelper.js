@@ -74,6 +74,9 @@ const createSoundService = () => {
         },
         tick: {
             play: jest.fn()
+        },
+        muskets: {
+            play: jest.fn()
         }
     };
 };
