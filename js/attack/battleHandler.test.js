@@ -19,7 +19,7 @@ describe('BattleHandler', () => {
         const attackDice = [1, 5, 4];
         const defendDice = [2, 1];
 
-        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, attackDice, defendDice);
+        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, false, attackDice, defendDice);
 
         expect(handleAttackResponse.attackDice).toEqual([5, 4, 1]);
         expect(handleAttackResponse.defendDice).toEqual([2, 1]);
@@ -40,7 +40,7 @@ describe('BattleHandler', () => {
         const attackDice = [2, 3, 1];
         const defendDice = [5, 6];
 
-        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, attackDice, defendDice);
+        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, false, attackDice, defendDice);
 
         expect(handleAttackResponse.attackDice).toEqual([3, 2, 1]);
         expect(handleAttackResponse.defendDice).toEqual([6, 5]);
@@ -61,7 +61,7 @@ describe('BattleHandler', () => {
         const attackDice = [5, 2, 2];
         const defendDice = [4, 3];
 
-        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, attackDice, defendDice);
+        const handleAttackResponse = battleHandler.handleAttack(attacker, defender, false, attackDice, defendDice);
 
         expect(handleAttackResponse.attackDice).toEqual([5, 2, 2]);
         expect(handleAttackResponse.defendDice).toEqual([4, 3]);

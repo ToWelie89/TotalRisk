@@ -1,0 +1,34 @@
+<div class="riskModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-body textCenter">
+                    <div class="row">
+                        <div class="col-xs-12" class="scenarioContainer">
+                            <div
+                                data-ng-repeat="s in scenario.scenarios"
+                                class="scenarioContainer__scenario"
+                                style="background-image: url({{ s.background || '' }});"
+                                data-ng-dblclick="scenario.selectedScenario = s; scenario.selectScenario();"
+                                data-ng-click="scenario.selectedScenario = s;"
+                            >
+                                <p class="scenarioContainer__scenario__title">
+                                    {{ s.displayName || '' }}
+                                </p>
+                                <p class="scenarioContainer__scenario__description">
+                                    {{ s.description || '' }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <button type="button" class="button button-green" data-ng-click="scenario.selectScenario()" data-ng-disabled="!scenario.selectedScenario">
+                                <strong>Select</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,6 +9,7 @@ firebase.initializeApp(FirebaseSettings);
 import AutoUpdater from './autoUpdating/AutoUpdater';
 const autoUpdater = new AutoUpdater();
 
+// Controllers
 import MainController from './mainController';
 import GameController from './game/gameController';
 import GameControllerTutorial from './game/gameControllerTutorial';
@@ -34,6 +35,8 @@ import LobbyController from './multiplayer/lobbyController.js';
 import EditProfileController from './editProfile/editProfileController';
 import ProfileController from './profile/profileController';
 import LeaderboardController from './leaderboard/leaderboardController';
+import ScenarioSelectorModalController from './scenario/scenarioSelectorModalController';
+// Services
 import SoundService from './sound/soundService';
 import TutorialService from './tutorial/tutorialService';
 import SocketService from './multiplayer/socketService';
@@ -43,6 +46,7 @@ import Settings from './settings/settings';
 import AiHandler from './ai/aiHandler';
 import GameEngine from './gameEngine';
 import GameAnnouncer from './voice/gameAnnouncer';
+// Directives
 import WavingFlagDirective from './directives/wavingFlagDirective';
 import PlayerPortraitDirective from './directives/playerPortraitDirective';
 import InjectSVGDirective from './directives/injectSvgDirective';
@@ -79,6 +83,7 @@ app.controller('joinPrivateLobbyController', JoinPrivateLobbyController);
 app.controller('editProfileController', EditProfileController);
 app.controller('profileController', ProfileController);
 app.controller('leaderboardController', LeaderboardController);
+app.controller('scenarioSelectorModalController', ScenarioSelectorModalController);
 /* SERVICES */
 app.service('soundService', SoundService);
 app.service('mapService', MapService);

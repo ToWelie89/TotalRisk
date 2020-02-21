@@ -1,24 +1,27 @@
 class BattleHandler {
-    handleAttack(attacker, defender, preDeterminedAttackDice = null, preDeterminedDefendDice = null) {
+    handleAttack(attacker, defender, unlimitedDiceMode = false, preDeterminedAttackDice = null, preDeterminedDefendDice = null) {
         const newAttacker = Object.assign({}, attacker);
         const newDefender = Object.assign({}, defender);
-
-        const attackDice = preDeterminedAttackDice
-            ? preDeterminedAttackDice
-            : Array.from(new Array(attacker.numberOfTroops > 3 ? 3 : attacker.numberOfTroops), () => this.getRandomDiceValue());
-        const defendDice = preDeterminedDefendDice
-            ? preDeterminedDefendDice
-            : Array.from(new Array(defender.numberOfTroops > 2 ? 2 : defender.numberOfTroops), () => this.getRandomDiceValue());
-
-        this.sortDescending(attackDice);
-        this.sortDescending(defendDice);
-
+        const numberOfAttackDice = unlimitedDiceMode
+            ? attacker.numberOfTroops 
+            : (attacker.numberOfTroops > 3) 
+                ? 3
+                : attacker.numberOfTroops;
+        const numberOfDefendDice = unlimitedDiceMode
+            ? defender.numberOfTroops 
+            : (defender.numberOfTroops > 2) 
+                ? 2
+                : defender.numberOfTroops;
+        const attackDice = preDeterminedAttackDice || new Array(numberOfAttackDice).fill().map(x => Math.floor(Math.random() * 6) + 1);
+        const defendDice = preDeterminedDefendDice || new Array(numberOfDefendDice).fill().map(x => Math.floor(Math.random() * 6) + 1);
+        attackDice.sort((a, b) => b - a);
+        defendDice.sort((a, b) => b - a);
         let defenderCasualties = 0;
         let attackerCasualties = 0;
-
-        [0, 1].forEach(x => {
-            if (attackDice[x] && defendDice[x]) {
-                if (attackDice[x] > defendDice[x]) {
+        const minAmountOfDice = Math.min(attackDice.length, defendDice.length);
+        new Array(minAmountOfDice).fill().forEach((x, i) => {
+            if (attackDice[i] && defendDice[i]) {
+                if (attackDice[i] > defendDice[i]) {
                     newDefender.numberOfTroops--;
                     defenderCasualties++;
                 } else {
@@ -27,7 +30,6 @@ class BattleHandler {
                 }
             }
         });
-
         return {
             attackDice,
             defendDice,
@@ -36,14 +38,6 @@ class BattleHandler {
             defenderCasualties,
             attackerCasualties
         };
-    }
-
-    sortDescending(array) {
-        array.sort((a, b) => b - a);
-    }
-
-    getRandomDiceValue() {
-        return Math.floor(Math.random() * 6) + 1;
     }
 }
 

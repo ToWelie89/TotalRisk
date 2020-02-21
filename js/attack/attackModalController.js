@@ -1,7 +1,7 @@
 const BattleHandler = require('./battleHandler');
 const {delay, shuffle, randomIntFromInterval } = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
-const { loadSvgIntoDiv } = require('./../helpers');
+const {loadSvgIntoDiv} = require('./../helpers');
 
 class AttackModalController {
     constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine) {
@@ -205,7 +205,7 @@ class AttackModalController {
         this.soundService.diceRoll.play();
         this.vm.diceAreRolling = true;
 
-        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender, preDeterminedAttackDice, preDeterminedDefendDice);
+        const response = this.vm.battleHandler.handleAttack(this.vm.attacker, this.vm.defender, false, preDeterminedAttackDice, preDeterminedDefendDice);
         this.vm.attackerDice = response.attackDice;
         this.vm.defenderDice = response.defendDice;
         this.battleHandlerResponse = response;
@@ -463,20 +463,15 @@ class AttackModalController {
     }
 
     convertTroopAmountToTroopTypes(troops) {
-        if (!troops) {
-            return [];
-        }
-        const cannons = Math.floor(troops / 10);
-        troops -= (cannons * 10);
-        const horses = Math.floor(troops / 5);
-        troops -= (horses * 5);
-
-        const array = Array.from(new Array(cannons + horses + troops));
-        array.fill('cannon', 0, cannons);
-        array.fill('horse', cannons, (cannons + horses));
-        array.fill('troop', (cannons + horses), (cannons + horses + troops));
-
-        return array;
+        const types = [{ name: 'cannon', value: 10, amount: 0 }, { name: 'horse', value: 5, amount: 0 }, { name: 'troop', value: 1, amount: 0 }]
+        types.forEach(type => {
+            type.amount = Math.floor(troops / type.value);
+            troops = troops % type.value;
+        });
+        return types.reduce((t, c) => {
+            t = [...t, ...new Array(c.amount).fill(c.name)];
+            return t;
+        }, []);
     }
 
     getCountrySvg(territoryName) {

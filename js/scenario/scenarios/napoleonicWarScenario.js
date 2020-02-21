@@ -16,6 +16,7 @@ const NAPOLEONIC_WARS_SCENARIO = {
     id: 'NAPOLEONIC_WARS',
     displayName: 'Napoleonic wars',
     map: 'napoleonicEurope.svg',
+    description: 'Play as one of the major european powers during the conflict of the Napoleonic wars that took place in the early 19th century.',
     specialRules: [
         SPECIAL_RULES.ALLIES,
         SPECIAL_RULES.FORTS,

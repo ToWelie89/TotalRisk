@@ -21,6 +21,7 @@ class MainController {
         this.vm.startTutorial = this.startTutorial;
         this.vm.goBackToMenu = this.goBackToMenu;
         this.vm.setGamePhase = this.setGamePhase;
+        this.vm.startNewLocalGame = this.startNewLocalGame;
         this.vm.aiTester = this.aiTester;
         this.vm.quit = this.quit;
         this.vm.testEndScreen = this.testEndScreen;
@@ -261,6 +262,21 @@ class MainController {
         this.$rootScope.players = players;
         this.$rootScope.chosenGoal = VICTORY_GOALS[3];
         this.$rootScope.currentGamePhase = GAME_PHASES.AI_TESTING;
+    }
+
+    startNewLocalGame() {
+        this.$uibModal.open({
+            templateUrl: 'src/modals/scenarioSelectorModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal scenarioSelectorModal',
+            controller: 'scenarioSelectorModalController',
+            controllerAs: 'scenario',
+            keyboard: false
+        }).result.then((closeResponse) => {
+            // handle scenario somehow
+            const selectedScenario = closeResponse.selectedScenario;
+            this.setGamePhase(this.vm.gamePhases.PLAYER_SETUP);
+        });
     }
 
     setGamePhase(phase) {

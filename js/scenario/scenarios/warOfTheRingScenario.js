@@ -9,6 +9,7 @@ const WAR_OF_THE_RING_SCENARIO = {
     id: 'WAR_OF_THE_RING',
     displayName: 'War of the one ring',
     map: 'middleEarth.svg',
+    description: 'Play either as the forces of good or evil in the battle for Middle Earth.',
     specialRules: [
         SPECIAL_RULES.ALLIES,
         SPECIAL_RULES.FORTS,
