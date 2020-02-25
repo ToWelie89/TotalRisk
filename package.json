@@ -14,7 +14,6 @@
     "test": "jest --no-cache --config js/test/jest.conf.js --coverage",
     "electron-rebuild": ".\\node_modules\\.bin\\electron-rebuild.cmd",
     "build": "npm run pack && npm run dist",
-    "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "publish": "electron-builder -p always",
