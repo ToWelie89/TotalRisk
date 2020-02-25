@@ -78,12 +78,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.get('/debug', (req, res, next) => {
+    res.sendFile(TEST_INDEX);
+});
 if (!process.env.PROD) {
     app.get('/', (req, res, next) => {
         res.sendFile(MAIN_INDEX);
-    });
-    app.get('/debug', (req, res, next) => {
-        res.sendFile(TEST_INDEX);
     });
 }
 app.post('/lobbies/playerCanJoinRoom', (req, res, next) => {

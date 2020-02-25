@@ -16,30 +16,33 @@ Technologies used:
 - **Node.js** For running the server logic that is used for online gameplay
 - **Express.js** Backend server framework
 - **Socket.IO** Websocket client for updating clients with new data from the server
+- **Heroku** For dedicated remote server
 - **Firebase** Database and authentication handling and storing of user data (such as statistics and user settings)
 
 ## Getting started
 
 - Clone the repo
-- Get dependencies by running
+- Install all dependencies by running
 
 ```
 npm install
 ```
 
-However if you want to run on a production web environment you can instead run
+(To build and run the project locally you need both dependencies and devDependencies)
+
+- Build the project (this may require you to first install grunt and grunt-cli globally using npm)
 
 ```
-npm install --prod
+grunt default
 ```
 
-This will not install dependencies only needed for development, such as Karma and Electron packages, which will save time and space.
-
-Build project (this may require you to first install grunt and grunt-cli globally using npm)
+**DO NOTE!** You can now run the game on your local machine, however the server that is used primarily for online play still runs on a remote server. If you want the game to use the local server you need to build the assets using the following command instead:
 
 ```
-grunt
+grunt default:local
 ```
+
+This will change the endpoints to your local machine instead. This is useful if you are developing changes on the server logic and need to test it out locally, or if the remote prod server is for some reason down.
 
 ## How to run locally (Web version)
 

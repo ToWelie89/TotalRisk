@@ -1,5 +1,21 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        replace: {
+            dist: {
+                options: {
+                    patterns: [{
+                        match: /https:\/\/totalconquest.herokuapp.com/g,
+                        replacement: 'http://127.0.0.1:5000'
+                    }]
+                },
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['assetsDist/app.bundle.js'],
+                    dest: 'assetsDist/'
+                }]
+            }
+        },
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             options: {
@@ -29,9 +45,16 @@ module.exports = function(grunt) {
             build: ['assetsDist/app.bundle.js', 'assetsDist/default.css']
         },
         watch: {
-            scripts: {
+            prod: {
                 files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg'],
                 tasks: ['default'],
+                options: {
+                    spawn: false
+                }
+            },
+            local: {
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg'],
+                tasks: ['default:local'],
                 options: {
                     spawn: false
                 }
@@ -86,6 +109,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-replace');
 
     // Default task for building
     grunt.registerTask('default', [
@@ -94,6 +118,10 @@ module.exports = function(grunt) {
         // 'uglify', // Minify and uglify css and put it in build folder
         'less', // Compile CSS files and put them in build folder
         //'notify:build'
+    ]);
+    grunt.registerTask('default:local', [
+        'default',
+        'replace' // replace actual prod endpoint with local 127.0.0.1:5000 for testing locally run server
     ]);
     grunt.registerTask('buildjs', [
         'browserify:build'
