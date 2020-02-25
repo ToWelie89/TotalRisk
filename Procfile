@@ -1,1 +1,1 @@
-web: node server/index.js
+web: cross-env PROD=true node server/index.js

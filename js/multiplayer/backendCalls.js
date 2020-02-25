@@ -1,4 +1,4 @@
-const rootPath = 'http://localhost:5000';
+const rootPath = 'https://totalconquest.herokuapp.com';
 
 const playerCanJoinRoom = (userUid, lobbyId, successCallback, failCallback) => {
     $.post({

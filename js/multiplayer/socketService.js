@@ -1,4 +1,5 @@
 const io = require('socket.io-client');
+const endpoint = 'https://totalconquest.herokuapp.com';
 
 class SocketService {
     constructor() {
@@ -7,11 +8,11 @@ class SocketService {
     }
 
     createLobbiesSocket() {
-        this.lobbiesSocket = io.connect('http://127.0.0.1:5000/lobbies', {transports: ['websocket', 'polling', 'flashsocket']});
+        this.lobbiesSocket = io.connect(`${endpoint}/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
     }
 
     createGameSocket() {
-        this.gameSocket = io.connect('http://127.0.0.1:5000/game', {transports: ['websocket', 'polling', 'flashsocket']});
+        this.gameSocket = io.connect(`${endpoint}/game`, {transports: ['websocket', 'polling', 'flashsocket']});
     }
 
     disconnectLobbiesSocket() {

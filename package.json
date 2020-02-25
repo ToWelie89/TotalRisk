@@ -94,13 +94,13 @@
     "izitoast": "^1.4.0",
     "jquery": "^2.2.4",
     "moment": "^2.24.0",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "cross-env": "^5.2.0"
   },
   "devDependencies": {
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "cross-env": "^5.2.0",
     "electron": "^3.0.10",
     "electron-builder": "^20.28.4",
     "electron-rebuild": "^1.8.2",
