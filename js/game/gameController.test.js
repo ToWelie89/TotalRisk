@@ -18,7 +18,7 @@ import {VICTORY_GOALS, TURN_PHASES} from './../gameConstants';
 jest.mock('./../helpers');
 import {loadSvgIntoDiv} from './../helpers';
 
-loadSvgIntoDiv.mockImplementation((x, y) => {
+loadSvgIntoDiv.mockImplementation(() => {
     jest.fn();
 });
 
@@ -120,7 +120,7 @@ describe('gameController', () => {
         // Arrange
         initData();
         gameController.setChartData = jest.fn();
-        mockUibModal.open = (kek) => {
+        mockUibModal.open = () => {
             return {
                 result: Promise.resolve()
             };

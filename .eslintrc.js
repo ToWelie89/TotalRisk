@@ -18,6 +18,7 @@ module.exports = {
         "describe": true,
         "beforeEach": true,
         "it": true,
+        "xit": true,
         "expect": true,
         "process": true,
         "jest": true,
@@ -31,10 +32,6 @@ module.exports = {
         "indent": [
             "error",
             4
-        ],
-        "linebreak-style": [
-            "error",
-            "windows"
         ],
         "quotes": [
             "error",

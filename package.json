@@ -12,13 +12,12 @@
     "electron:dev": "cross-env NODE_ENV=dev electron .",
     "electron:dev-no-tools": "cross-env NODE_ENV=dev-no-tools electron .",
     "test": "jest --no-cache --config js/test/jest.conf.js --coverage",
-    "electron-rebuild": ".\\node_modules\\.bin\\electron-rebuild.cmd",
     "build-app": "npm run pack && npm run dist",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "publish": "electron-builder -p always",
     "lines": "cloc ./js ./electron ./server ./src ./less ./index.html ./Gruntfile.js --exclude-dir=libs",
-    "eslint": "node .\\node_modules\\eslint\\bin\\eslint.js js server electron"
+    "eslint": "node node_modules/eslint/bin/eslint.js js server electron"
   },
   "keywords": [
     "angular",
@@ -74,7 +73,6 @@
     "bootstrap": "^3.3.6",
     "chart.js": "^2.7.3",
     "com.izaakschroeder.trueskill": "0.0.2",
-    "concurrently": "^4.0.1",
     "electron-log": "^2.2.17",
     "electron-updater": "^4.0.0",
     "esprima": "^4.0.0",
@@ -93,7 +91,6 @@
     "babel-register": "^6.26.0",
     "electron": "^3.0.10",
     "electron-builder": "^20.28.4",
-    "electron-rebuild": "^1.8.2",
     "eslint": "^5.13.0",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.2.0",
@@ -106,7 +103,6 @@
     "grunt-notify": "^0.4.5",
     "grunt-replace": "^1.0.1",
     "handlebars": "^4.5.0",
-    "jasmine-core": "^2.4.1",
     "jest": "^23.6.0",
     "regenerator-runtime": "^0.12.1"
   }

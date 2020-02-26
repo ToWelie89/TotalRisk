@@ -33,7 +33,7 @@ class EndScreenController {
                 that.vm.disableScreenshotButton = false;
                 that.$scope.$apply();
             });
-            ipcRenderer.on('takeScreenshotError', function(event) {
+            ipcRenderer.on('takeScreenshotError', function() {
                 that.toastService.errorToast('Error!', 'Screenshot could not be taken');
                 that.vm.disableScreenshotButton = false;
                 that.$scope.$apply();

@@ -46,7 +46,7 @@ class LeaderboardController {
                 }
             } else {
                 this.vm.showRanks = false;
-            };
+            }
         });
     }
 

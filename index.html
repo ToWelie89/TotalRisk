@@ -4,31 +4,14 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="icon.ico">
     <title>TotalRisk</title>
-
-    <!-- Fix for electron -->
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-
-    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js'></script> -->
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
-    <script>
-    // Disable tabbing of elements
-    document.onkeydown = function(){
-        if(window.event && window.event.keyCode == 9) {
-            return false;
-        }
-    }
-    </script>
     <script src="js/libs/socket.io.js"></script>
     <script>
         let electron;
         let ipcRenderer;
-        let io;
-        let desktopCapturer;
         let screen;
         if (!!(window && window.process && window.process.type)) { // If running Electron
             electron = require('electron');
             ipcRenderer = require('electron').ipcRenderer;
-            desktopCapturer = require('electron').desktopCapturer;
             screen = require('electron').screen;
         }
     </script>
@@ -37,7 +20,6 @@
     <script src='js/libs/cannon.min.js'></script>
     <script src='js/libs/dice.js'></script>
     <script src='js/libs/css_globe_PerspectiveTransform.js'></script>
-    <script src='js/libs/globe.js'></script>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
@@ -63,7 +45,6 @@
     <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
     <link href="assetsDist/default.css" rel="stylesheet" type="text/css">
 
-    <!-- <link href='https://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>-->
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel&display=swap" rel="stylesheet">
@@ -73,7 +54,6 @@
 <body ng-app="risk" data-ng-controller="mainController as main">
     <div id="backgroundImage"></div>
     <div id="backgroundSmoke"></div>
-
     <div id="globalLoading">
         <div class="spinner">
           <div class="bounce1"></div>

@@ -12,8 +12,8 @@ class BattleHandler {
             : (defender.numberOfTroops > 2) 
                 ? 2
                 : defender.numberOfTroops;
-        const attackDice = preDeterminedAttackDice || new Array(numberOfAttackDice).fill().map(x => Math.floor(Math.random() * 6) + 1);
-        const defendDice = preDeterminedDefendDice || new Array(numberOfDefendDice).fill().map(x => Math.floor(Math.random() * 6) + 1);
+        const attackDice = preDeterminedAttackDice || new Array(numberOfAttackDice).fill().map(() => Math.floor(Math.random() * 6) + 1);
+        const defendDice = preDeterminedDefendDice || new Array(numberOfDefendDice).fill().map(() => Math.floor(Math.random() * 6) + 1);
         attackDice.sort((a, b) => b - a);
         defendDice.sort((a, b) => b - a);
         let defenderCasualties = 0;

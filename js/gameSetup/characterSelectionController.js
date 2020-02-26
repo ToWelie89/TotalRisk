@@ -1,8 +1,8 @@
-const firebase = require('firebase/app');
+require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {avatars} = require('./../player/playerConstants');
-const {objectsAreEqual, arrayIncludesObject, getRandomColor, loadSvgIntoDiv} = require('./../helpers');
+const {objectsAreEqual, arrayIncludesObject, loadSvgIntoDiv} = require('./../helpers');
 
 class CharacterSelectionController {
     constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, customCharacters, socketService) {
@@ -70,14 +70,13 @@ class CharacterSelectionController {
     loadSavedCharacterPortraits() {
         document.querySelectorAll('.selectableAvatars__item').forEach(characterBox => {
             if (characterBox.querySelector('div[character]')) {
-                console.log(characterBox.querySelector('div[character]'))
                 const avatarId = characterBox.querySelector('div[character]').getAttribute('character');
                 characterBox.querySelector('svg').setAttribute('viewBox', '127 10 398 400');
                 characterBox.querySelector('svg').setAttribute('xmlns', 'http://www.w3.org/2000/svg'+Math.random());
                 characterBox.querySelector('svg').setAttribute('xmlns:bx', 'https://boxy-svg.com'+Math.random());
 
                 if (characterBox.querySelector('svg')) {
-                    console.log(avatarId, this.vm.avatars)
+                    console.log(avatarId, this.vm.avatars);
                     const character = Object.values(this.vm.avatars).find(x => x.id === avatarId);
 
                     $(`.selectableAvatars__item div[character="${avatarId}"] svg g[category="hat"] > g`).css('visibility', 'hidden');

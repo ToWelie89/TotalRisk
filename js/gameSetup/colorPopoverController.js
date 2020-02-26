@@ -7,7 +7,7 @@ class ColorPopoverController {
     }
 
     init(player) {
-        this.vm.colors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
+        this.vm.colors = Array.from(Object.keys(PLAYER_COLORS).map((key) => PLAYER_COLORS[key]));
         this.vm.player = player;
     }
 }

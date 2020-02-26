@@ -8,7 +8,7 @@ const STANCES = {
     NEUTRAL: 1
 };
 
-const FACTIONS = {
+const FACTIONS = {
     NONE: 'None',
     COALITION: 'Coaliton',
     FRENCH_EMPIRE: 'French empire',

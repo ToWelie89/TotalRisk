@@ -78,15 +78,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.get('/debug', (req, res, next) => {
+app.get('/debug', (req, res) => {
     res.sendFile(TEST_INDEX);
 });
 if (!process.env.PROD) {
-    app.get('/', (req, res, next) => {
+    app.get('/', (req, res) => {
         res.sendFile(MAIN_INDEX);
     });
 }
-app.post('/lobbies/playerCanJoinRoom', (req, res, next) => {
+app.post('/lobbies/playerCanJoinRoom', (req, res) => {
     const game = games.find(game => game.id === Number(req.body.lobbyId));
     if (game) {
         const player = game.players.find(player => player.userUid === req.body.userUid);
@@ -141,7 +141,7 @@ const updateLobbies = () => {
 const getRandomUnusedColor = roomId => {
     const game = games.find(game => game.id === roomId);
     const usedColors = game.players.map(socket => socket.color);
-    const allColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
+    const allColors = Array.from(Object.keys(PLAYER_COLORS).map((key) => PLAYER_COLORS[key]));
 
     const availableColors = allColors.filter(color => !usedColors.includes(color));
 
@@ -152,7 +152,7 @@ const getRandomUnusedColor = roomId => {
 const getUnusedAvatar = roomId => {
     const game = games.find(game => game.id === roomId);
     const usedAvatars = game.players.map(socket => socket.avatar);
-    const allAvatars = Array.from(Object.keys(avatars).map((key, index) => ({
+    const allAvatars = Array.from(Object.keys(avatars).map((key) => ({
         name: key,
         avatar: avatars[key]
     })));
@@ -255,7 +255,7 @@ const nextTurn = roomId => {
 
 const handleAi = game => {
     game.aiHandler = new AiHandler(game.gameEngine, {}, {
-        updateMap: filter => {
+        updateMap: () => {
             console.log('update map in multiplayer ai handler');
             updateMapState(game.id);
         }
@@ -578,7 +578,7 @@ io
             });
         });
 
-        socket.on('signOutUser', uid => {
+        socket.on('signOutUser', () => {
             const onlineUsers = lobbiesSocketList
                 .map(x => ({
                     userName: x.userName,
@@ -602,7 +602,7 @@ io
             updateOnlineUsers();
         });
 
-        socket.on('disconnect', reason => {
+        socket.on('disconnect', () => {
             lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
             updateOnlineUsers();
         });

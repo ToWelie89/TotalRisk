@@ -16,7 +16,7 @@ class WavingFlagDirective {
         flag.style.width = attr.flagWidth + 'px';
         flag.style.height = attr.flagHeight + 'px';
 
-        scope.$watch(scope.flagUrl, (newVal, oldVal) => {
+        scope.$watch(scope.flagUrl, () => {
             const flagAttribute = scope.flagUrl();
             const flagUrl = (typeof flagAttribute === 'object') ? flagAttribute.path : flagAttribute;
 

@@ -22,9 +22,9 @@ describe('gameSetupController', () => {
         };
         firebase.database = () => {
             return {
-                ref: path => {
+                ref: () => {
                     return {
-                        once: val => {
+                        once: () => {
                             return Promise.resolve({
                                 val: () => ({ test: 1 })
                             });
@@ -43,9 +43,9 @@ describe('gameSetupController', () => {
         // Arrange
         firebase.database = () => {
             return {
-                ref: path => {
+                ref: () => {
                     return {
-                        once: val => {
+                        once: () => {
                             return Promise.resolve({
                                 val: () => ({
                                     defaultAvatar: 'napoleon',
@@ -74,9 +74,9 @@ describe('gameSetupController', () => {
         };
         firebase.database = () => {
             return {
-                ref: path => {
+                ref: () => {
                     return {
-                        once: val => {
+                        once: () => {
                             return Promise.resolve({
                                 val: () => ({
                                     defaultAvatar: 'abc123',
@@ -102,9 +102,9 @@ describe('gameSetupController', () => {
         // Arrange
         firebase.database = () => {
             return {
-                ref: path => {
+                ref: () => {
                     return {
-                        once: val => {
+                        once: () => {
                             return Promise.resolve({
                                 val: () => ({
                                     characters: []
@@ -137,9 +137,9 @@ describe('gameSetupController', () => {
         // Arrange
         firebase.database = () => {
             return {
-                ref: path => {
+                ref: () => {
                     return {
-                        once: val => {
+                        once: () => {
                             return Promise.resolve({
                                 val: () => ({
                                     defaultAvatar: 'leeeeeeeeeeeeeel',

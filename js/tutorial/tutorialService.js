@@ -520,7 +520,7 @@ class TutorialService {
                         };
                     }
                 }
-            }).result.then(closeResponse => {
+            }).result.then(() => {
                 resolve();
             });
         });

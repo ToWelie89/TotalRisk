@@ -102,7 +102,7 @@ class ProfileController {
                     this.vm.loading = false;
                     this.$scope.$apply();
                 }
-            })
+            });
         }).catch(err => {
             this.toastService.errorToast(
                 '',
@@ -129,7 +129,7 @@ class ProfileController {
         this.gamesChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(d => ('')),
+                labels: data.map(() => ('')),
                 datasets: [{
                     data,
                     backgroundColor: [

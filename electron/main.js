@@ -238,7 +238,7 @@ const createDefaultWindow = () => {
     });
 };
 
-ipcMain.on('takeScreenshot', function (event, arg) {
+ipcMain.on('takeScreenshot', function () {
     try {
         win.webContents.capturePage(img => {
             let path = electron.app.getPath('userData');
@@ -270,11 +270,11 @@ autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES);
 });
 
-autoUpdater.on('update-available', (info) => {
+autoUpdater.on('update-available', () => {
     sendStatusToWindow(MESSAGE_TYPES.NEW_UPDATE_AVAILABLE);
 });
 
-autoUpdater.on('update-not-available', (info) => {
+autoUpdater.on('update-not-available', () => {
     sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
 });
 
@@ -287,7 +287,7 @@ autoUpdater.on('download-progress', (progressObj) => {
     sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADING, 'message', progressObj);
 });
 
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', () => {
     sendStatusToWindow(MESSAGE_TYPES.UPDATE_DOWNLOADED);
 });
 

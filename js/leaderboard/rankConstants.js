@@ -17,11 +17,11 @@ const getLeaderboard = () => {
             })).reverse();
         } else {
             const usersFromDatabase = snapshot.val();
-            let users = Object.entries(usersFromDatabase).map(x => (Object.assign({id: x[0]}, x[1])))
+            let users = Object.entries(usersFromDatabase).map(x => (Object.assign({id: x[0]}, x[1])));
             users = users.filter(x => x.recentGames && x.recentGames.length >= MINIMUM_NUMBER_OF_GAMES_PLAYED_FOR_RANKED);
             users.forEach(x => {
                 x.normalizedRating = Math.floor(x.rating.mu * 100);
-                const previousRating = Math.floor(x.oldRatings.sort((a,b) => b.timestamp - a.timestamp)[0].mu * 100);;
+                const previousRating = Math.floor(x.oldRatings.sort((a,b) => b.timestamp - a.timestamp)[0].mu * 100);
                 x.ratingDifference = x.normalizedRating - previousRating;
 
                 if (x.countryCode && CountryCodes[x.countryCode]) {
@@ -66,8 +66,8 @@ const getRankingOfPlayerByUid = uid => {
         return {
             league: player.league,
             rank
-        }
-    })
+        };
+    });
 };
 
 const LEAGUES = {

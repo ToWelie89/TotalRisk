@@ -8,7 +8,7 @@ class PlayerTypePopoverController {
     }
 
     init(player) {
-        this.vm.types = Array.from(Object.keys(PLAYER_TYPES).map((key, index) => PLAYER_TYPES[key]));
+        this.vm.types = Array.from(Object.keys(PLAYER_TYPES).map((key) => PLAYER_TYPES[key]));
         this.vm.player = player;
     }
 

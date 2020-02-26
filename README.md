@@ -90,7 +90,7 @@ This will run a bunch of Jest unit tests.
 Simply run
 
 ```
-npm run build
+npm run build-app
 ```
 
 This may take a little while. When done the newly built setup exe-file can be found in the dist-folder.
@@ -119,7 +119,7 @@ grunt bump:[major/minor/patch]
 
 This will automatically push your commit to the repo, bump the version in package.json and creating a tag.
 
-## Bumping version
+## Get code stats
 
 To see how many lines of code the project consists of simply run:
 

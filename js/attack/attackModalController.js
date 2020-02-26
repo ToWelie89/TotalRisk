@@ -215,8 +215,7 @@ class AttackModalController {
         this.attacker_box.throw(this.vm.attackerDice, this.afterRoll, this);
         this.defender_box.throw(this.vm.defenderDice, this.afterRoll, this);
 
-        const visibleUnits = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon, #attackModalBattleSvg svg .soldier'))
-                                .filter(c => c.style.display === 'block');
+        const visibleUnits = Array.from(document.querySelectorAll('#attackModalBattleSvg svg .cannon, #attackModalBattleSvg svg .soldier')).filter(c => c.style.display === 'block');
         shuffle(visibleUnits);
         visibleUnits.forEach(s => {
             const randomDelay = randomIntFromInterval(0, 200);
@@ -463,7 +462,7 @@ class AttackModalController {
     }
 
     convertTroopAmountToTroopTypes(troops) {
-        const types = [{ name: 'cannon', value: 10, amount: 0 }, { name: 'horse', value: 5, amount: 0 }, { name: 'troop', value: 1, amount: 0 }]
+        const types = [{ name: 'cannon', value: 10, amount: 0 }, { name: 'horse', value: 5, amount: 0 }, { name: 'troop', value: 1, amount: 0 }];
         types.forEach(type => {
             type.amount = Math.floor(troops / type.value);
             troops = troops % type.value;

@@ -166,7 +166,7 @@ class MapService {
         country.setAttribute('stroke', 'gainsboro');
     }
 
-    mouseoverSea(evt) {
+    mouseoverSea() {
         document.getElementById('currentTerritoryInfo').innerHTML = ' ';
     }
 

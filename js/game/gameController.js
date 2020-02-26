@@ -63,11 +63,11 @@ class GameController {
             }
         });
 
-        this.$scope.$watch('this.gameEngine.troopsToDeploy', (newValue, oldValue) => {
+        this.$scope.$watch('this.gameEngine.troopsToDeploy', () => {
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
         });
 
-        this.$scope.$watch('gameEngine.troopsToDeploy', (newValue, oldValue) => {
+        this.$scope.$watch('gameEngine.troopsToDeploy', () => {
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
         });
 
@@ -171,7 +171,7 @@ class GameController {
                         };
                     }
                 }
-            }).result.then(closeResponse => {
+            }).result.then(() => {
                 callback();
                 this.turnPresenterIsOpen = false;
                 if (this.escapeWasPressed) {
@@ -369,7 +369,7 @@ class GameController {
             resolve: {
                 multiplayer: () => false
             }
-        }).result.then(closeResponse => {
+        }).result.then(() => {
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
                 this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             }
@@ -502,7 +502,7 @@ class GameController {
                         };
                     }
                 }
-            }).result.then(closeResponse => {
+            }).result.then(() => {
                 callback();
                 this.turnPresenterIsOpen = false;
                 if (this.escapeWasPressed) {
@@ -533,7 +533,7 @@ class GameController {
                             };
                         }
                     }
-                }).result.then(closeResponse => {
+                }).result.then(() => {
                     this.mapService.updateMap(this.gameEngine.filter);
                     this.turnPresenterIsOpen = false;
                     if (this.escapeWasPressed) {

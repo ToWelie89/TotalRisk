@@ -108,9 +108,7 @@ class MainController {
                     };
                 }
             }
-        }).result.then(closeResponse => {
-            
-        });
+        }).result.then(() => {});
     }
 
     testEndScreen(multiplayer = false) {

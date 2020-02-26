@@ -216,7 +216,7 @@ class GameSetupController {
 
     getUnusedColor() {
         const usedColors = this.vm.players.map(player => player.color);
-        const availableColors = Array.from(Object.keys(PLAYER_COLORS).map((key, index) => PLAYER_COLORS[key]));
+        const availableColors = Array.from(Object.keys(PLAYER_COLORS).map((key) => PLAYER_COLORS[key]));
 
         const colorToReturn = availableColors.find(color => !usedColors.includes(color));
         return colorToReturn;
@@ -224,7 +224,7 @@ class GameSetupController {
 
     getUnusedAvatar() {
         const usedAvatars = this.vm.players.map(player => player.avatar);
-        const availableAvatars = Array.from(Object.keys(avatars).map((key, index) => avatars[key]));
+        const availableAvatars = Array.from(Object.keys(avatars).map((key) => avatars[key]));
 
         const avatarToReturn = availableAvatars.find(avatar => !usedAvatars.includes(avatar));
         const nameOfAvatar = Object.keys(avatars).find(name => avatars[name] === avatarToReturn);

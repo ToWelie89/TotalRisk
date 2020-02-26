@@ -348,7 +348,7 @@ class GameControllerMultiplayer extends GameController {
             resolve: {
                 multiplayer: () => true
             }
-        }).result.then(closeResponse => {
+        }).result.then(() => {
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
                 this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             }
@@ -455,7 +455,7 @@ class GameControllerMultiplayer extends GameController {
                             };
                         }
                     }
-                }).result.then(closeResponse => {
+                }).result.then(() => {
                     this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
                     this.turnPresenterIsOpen = false;
                     this.vm.currentOwnagePercentage = this.gameEngine.standings.find(x => x.name === this.gameEngine.turn.player.name).percentageOwned;
