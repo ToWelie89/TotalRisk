@@ -1,0 +1,223 @@
+.selectionModalCharacterStyle(@transform, @marginTop, @marginLeft) {
+    svg {
+        transform: @transform;
+        margin-top: @marginTop;
+        margin-left: @marginLeft;
+    }
+}
+
+.riskModal.characterSelect {
+    .modal-dialog {
+        width: 100%;
+
+        .modal-content {
+            background: #d8d8d8;
+
+            .modal-body {
+                padding-top: 0;
+                padding-bottom: 0;
+
+                .modal-body {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                }
+            }
+        }
+
+        #characterSelectionModal {
+            min-height: 740px;
+            &__leftGradient, &__rightGradient {
+                position: absolute;
+                width: 20%;
+                height: 740px;
+                z-index: 2;
+            }
+            &__leftGradient {
+                left: 0;
+                background: linear-gradient(90deg, rgba(220,220,220,1) 42%, rgba(0,0,0,0) 98%);
+            }
+            &__rightGradient {
+                right: 0;
+                background: linear-gradient(-90deg, rgba(220,220,220,1) 42%, rgba(0,0,0,0) 98%);
+            }
+            &__background {
+                min-height: 740px;
+                position: absolute;
+                top: 0;
+                z-index: 1;
+                width: 100%;
+                text-align: center;
+
+                svg {
+                    height: 740px;
+                    width: 100%;
+                }
+            }
+
+            color: #d2d2d2;
+            text-shadow: 1px 1px 10px black;
+
+            #selectedCharacterPortrait {
+                box-shadow: 3px 3px 10px black;
+            }
+
+            #characterSelectionFlag {
+                position: absolute;
+                text-align: center;
+                margin: 0 auto;
+                left: 630px;
+                height: 420px;
+                bottom: 60px;
+                transform: rotate(-10deg);
+
+                .poleTop {
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: yellow;
+                    top: -35px;
+                    left: -11px;
+                    z-index: 2;
+                }
+
+                .pole {
+                    height: 100%;
+                    width: 15px;
+                    background: #7b7b7b;
+                    position: absolute;
+                    left: -8px;
+                    top: -20px;
+                    z-index: 1;
+                }
+
+                #wavingFlag {
+                    position: absolute;
+                    z-index: 0;
+
+                    .flag-element {
+                        background-size: auto 100% !important;
+                    }
+                }
+            }
+
+            .modal-body {
+                position: relative;
+                z-index: 5;
+                height: 740px;
+            }
+
+            .characterBio {
+                text-align: left;
+                font-size: 13px;
+                padding: 20px;
+                border-radius: 10px;
+                background: linear-gradient(to bottom, rgba(255, 255, 255, 0.33) 1%, transparent 100%);
+                background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.33) 1%, transparent 100%);
+            }
+
+            .selectableAvatars {
+                position: absolute;
+                text-align: center;
+                width: 100%;
+                bottom: -100px;
+
+                &__item {
+                    display: inline-block;
+                    padding: 5px;
+
+                    div {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        border: 3px solid white;
+                        cursor: url(../assets/cursors/new/pointer.png), auto;
+                        box-shadow: 1px 1px 3px black;
+                        transition: all 0.2s;
+                        overflow: hidden;
+
+                        svg {
+                            width: 80px;
+                            height: 80px;
+                        }
+
+                        * {
+                            cursor: url(../assets/cursors/new/pointer.png), auto;
+                        }
+
+                        &:hover {
+                            border: 3px solid #ff6d6d;
+                        }
+
+                        &:active {
+                            transform: translate(0px, 3px);
+                            -webkit-transform: translate(0px, 3px);
+                            border: 3px solid;
+                        }
+
+                        &#selectionModalCharacter {
+                            &caesar {
+                                .selectionModalCharacterStyle(scale(2.2), 52px, 3px);
+                            }
+                            &napoleon {
+                                .selectionModalCharacterStyle(scale(2.1), 37px, -4px);
+                            }
+                            &genghiskhan {
+                                .selectionModalCharacterStyle(scale(2.1), 25px, 2px);
+                            }
+                            &alexander {
+                                .selectionModalCharacterStyle(scale(2.5), 30px, -3px);
+                            }
+                            &hannibal {
+                                .selectionModalCharacterStyle(scale(2.5), 47px, -18px);
+                            }
+                            &attila {
+                                .selectionModalCharacterStyle(scale(2.5), 47px, -20px);
+                            }
+                            &leonidas {
+                                .selectionModalCharacterStyle(scale(2.5), 47px, -4px);
+                            }
+                        }
+                    }
+
+                    &__customCharacter {
+                        transition: all 0.5s;
+                        svg {
+                            margin-top: -15px;
+                            overflow: visible;
+                            margin-left: -1px;
+                        }
+                    }
+
+                    &--selected {
+                        border: 3px solid #be2bd5 !important;
+                        cursor: url(../assets/cursors/new/default.png), auto !important;
+
+                        &:active {
+                            transform: translate(0px, 0px) !important;
+                            -webkit-transform: translate(0px, 0px) !important;
+                            border: 3px solid white;
+                        }
+                    }
+
+                    &--taken {
+                        cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
+                        -webkit-filter: grayscale(100%);
+                        filter: grayscale(100%);
+                        border-color: grey !important;
+                        opacity: 0.6;
+
+                        * {
+                            cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
+                        }
+                    }
+
+                    &--notAvailable {
+                        -webkit-filter: grayscale(100%);
+                        filter: grayscale(100%);
+                    }
+                }
+            }
+        }
+    }
+}

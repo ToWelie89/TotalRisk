@@ -1,0 +1,68 @@
+.attackModalWrapper {
+    > .modal-dialog {
+        width: 1300px;
+
+        > .modal-content {
+            box-shadow: none;
+            background-color: transparent;
+            margin-top: 50px;
+
+            #attackModal {
+                #attackModalAttackerPortraitSvg, #attackModalDefenderPortraitSvg {
+                    height: 250px;
+                    width: 230px;
+                    text-align: center;
+                    margin: 0 auto;
+                    margin-top: -50px;
+                    svg {
+                        height: 100% !important;
+                        margin: 0 !important;
+                        width: auto !important;
+                    }
+                }
+                .modal-dialog {
+                    width: 100%;
+                    .modal-content {
+                        background: transparent;
+                        box-shadow: none;
+                        .modal-body {
+                            padding: 0;
+
+                            #territoryContainer {
+                                max-height: 487px;
+                                .col-xs-12 {
+                                    padding: 0;
+                                }
+                            }
+
+                            .row {
+                                text-align: center;
+                                .col-xs-12, .col-xs-6 {
+                                    text-align: center;
+                                }
+                            }
+
+                            #attackModalBattleSvg {
+                                max-height: 487px;
+                            }
+
+                            #attackModalBottomWrapper {
+                                background: linear-gradient(180deg, rgba(170,170,170,1) 0%, rgba(255,255,255,1) 10%);
+                                margin-top: -10px;
+                                width: 95%;
+                                margin: 0 auto;
+                            }
+                        }
+
+                        #diceContainer {
+                            margin-top: 10px;
+                            .col-xs-6 {
+                                padding: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

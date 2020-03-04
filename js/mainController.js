@@ -273,7 +273,7 @@ class MainController {
         }).result.then((closeResponse) => {
             // handle scenario somehow
             const selectedScenario = closeResponse.selectedScenario;
-            this.setGamePhase(this.vm.gamePhases.PLAYER_SETUP);
+            this.setGamePhase(selectedScenario.setupPhase);
         });
     }
 

@@ -1,4 +1,5 @@
 const { createLeader, STANCES, FACTIONS, SPECIAL_RULES } = require('./../scenarioConstants');
+const { GAME_PHASES } = require('./../../gameConstants');
 
 const THEODEN = createLeader('Theodén', './assets/avatarBackgrounds/lotr/theoden.png');
 const DENETHOR = createLeader('Denethor II', './assets/avatarBackgrounds/lotr/denethor.png');
@@ -7,8 +8,11 @@ const SARUMAN = createLeader('Saruman', './assets/avatarBackgrounds/lotr/saruman
 
 const WAR_OF_THE_RING_SCENARIO = {
     id: 'WAR_OF_THE_RING',
+    disabled: true,
     displayName: 'War of the one ring',
+    setupPhase: GAME_PHASES.PLAYER_SETUP,
     map: 'middleEarth.svg',
+    background: 'assets/scenarios/warofthering.jpg',
     description: 'Play either as the forces of good or evil in the battle for Middle Earth.',
     specialRules: [
         SPECIAL_RULES.ALLIES,

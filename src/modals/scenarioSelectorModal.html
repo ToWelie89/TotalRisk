@@ -1,27 +1,39 @@
-<div class="riskModal" role="dialog" data-backdrop="static">
+<div id="scenarioSelectorModal" class="riskModal" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-body">
                 <div class="modal-body textCenter">
                     <div class="row">
-                        <div class="col-xs-12" class="scenarioContainer">
+                        <div class="col-xs-12 scenarioContainer">
                             <div
                                 data-ng-repeat="s in scenario.scenarios"
                                 class="scenarioContainer__scenario"
                                 style="background-image: url({{ s.background || '' }});"
-                                data-ng-dblclick="scenario.selectedScenario = s; scenario.selectScenario();"
-                                data-ng-click="scenario.selectedScenario = s;"
+                                data-ng-dblclick="scenario.doubleClick(s)"
+                                data-ng-click="scenario.click(s)"
+                                data-ng-class="{'selected': scenario.selectedScenario === s, 'disabled': s.disabled}"
+                                uib-tooltip-html="scenario.scenarioNotAvailableTooltip"
+                                tooltip-enable="s.disabled"
+                                tooltip-placement="right"
+                                tooltip-class="warningTooltipTop"
                             >
-                                <p class="scenarioContainer__scenario__title">
-                                    {{ s.displayName || '' }}
-                                </p>
-                                <p class="scenarioContainer__scenario__description">
+                                <p class="scenarioContainer__scenario__text">
+                                    <strong>{{ s.displayName || '' }}</strong><br>
                                     {{ s.description || '' }}
                                 </p>
+                                <div class="scenarioContainer__scenario__specialRulesContainer">
+                                    <div
+                                        data-ng-repeat="specialRule in s.specialRules"
+                                        class="scenarioContainer__scenario__specialRulesContainer__item"
+                                        uib-tooltip-html="specialRule.tooltipHtml"
+                                        tooltip-placement="bottom"
+                                    >
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-xs-12">
+                        <div class="col-xs-12 paddingTop">
                             <button type="button" class="button button-green" data-ng-click="scenario.selectScenario()" data-ng-disabled="!scenario.selectedScenario">
                                 <strong>Select</strong>
                             </button>

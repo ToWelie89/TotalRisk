@@ -1,5 +1,6 @@
 const moment = require('moment');
 const { createLeader, STANCES, FACTIONS, SPECIAL_RULES } = require('./../scenarioConstants');
+const { GAME_PHASES } = require('./../../gameConstants');
 
 const NAPOLEON = createLeader('Theodén', './assets/avatarSvg/napoleon.svg');
 const KING_GEORGE = createLeader('George III', '');
@@ -14,7 +15,10 @@ const OTTO = createLeader('Otto', '');
 
 const NAPOLEONIC_WARS_SCENARIO = {
     id: 'NAPOLEONIC_WARS',
-    displayName: 'Napoleonic wars',
+    disabled: false,
+    displayName: 'Napoleonic Wars',
+    setupPhase: GAME_PHASES.PLAYER_SETUP,
+    background: 'assets/scenarios/napoleonicwar.jpg',
     map: 'napoleonicEurope.svg',
     description: 'Play as one of the major european powers during the conflict of the Napoleonic wars that took place in the early 19th century.',
     specialRules: [
