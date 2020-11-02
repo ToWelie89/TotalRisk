@@ -13,7 +13,7 @@ const DeploymentHandler = require('./deployment/deploymentHandler');
 class GameEngine {
 
     constructor(gameAnnouncerService, $rootScope, settings) {
-        this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.COMPUTERNAME;
+        this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.COMPUTERNAME || process.env.PROD;
 
         this.gameAnnouncerService = gameAnnouncerService;
         this.$rootScope = $rootScope;
