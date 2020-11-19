@@ -51,9 +51,12 @@ const TURN_LENGTHS = [
     30,
     60,
     90,
-    120,
-    150,
-    180
+    120, // 2 min
+    150, // 2,5 min
+    180, // 3 min
+    360, // 6 min
+    600, // 10 min
+    900 // 15 min
 ];
 
 const VICTORY_GOALS = [
