@@ -5,8 +5,8 @@
     box-shadow: 0 -2px 0 3px #0b9512 inset, 0 5px 5px rgba(0, 7, 1, 0.17), 0 15px rgba(255, 255, 255, 0.25) inset;
     cursor: url(../assets/cursors/new/pointer.png), auto;
     display: table;
-    height: 75px;
-    width: 75px;
+    height: 105px;
+    width: 105px;
     transition: all 350ms ease-out;
 
     * {
@@ -28,6 +28,7 @@
         color: white;
         font-family: 'Montserrat', sans-serif;
         font-weight: bold;
+        font-size: 24px;
     }
 
     &.nextButton--disabled {
@@ -128,7 +129,7 @@ strong {
         }
     }
 
-    &[disabled] {
+    &[disabled], &.disabled {
         background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
         border: 1px solid #515151 !important;
         cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
@@ -214,7 +215,7 @@ strong {
             background-image: linear-gradient(to bottom, #c5caef, #6164c0) !important;
         }
 
-        &[disabled] {
+        &[disabled], &.disabled {
             text-shadow: none !important;
             transition: none;
             &:hover {
@@ -313,7 +314,7 @@ strong {
             box-shadow: inset 0 1px 0 #c6e6b3, inset 0 -1px 0 #79b356, inset 0 0 0 1px #a4cc8b;
         }
 
-        &[disabled] {
+        &[disabled], .disabled {
             &:hover {
                 background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
             }
@@ -331,7 +332,7 @@ strong {
 
         &.button--selected {
             background-image: linear-gradient(to bottom,#ade68a,#81bd5b)!important;
-            &[disabled] {
+            &[disabled], &.disabled {
                 background-image: linear-gradient(to bottom,#e3e3e3,#757575) !important;
                 border-top: 3px solid #f13434 !important;
                 border-bottom: 3px solid #f13434 !important;

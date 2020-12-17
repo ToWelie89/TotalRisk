@@ -1,7 +1,7 @@
 import DeploymentHandler from './deploymentHandler';
 import Player from './../player/player';
 import WorldMap from './../map/worldMap';
-import { worldMap } from './../map/worldMapConfiguration';
+import { worldMap } from './../map/maps/classicMap/worldMapConfiguration';
 import { CONSTANTS } from './../gameConstants';
 
 describe('DeploymentHandler', () => {

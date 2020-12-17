@@ -1,22 +1,28 @@
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
-const {CONSTANTS, VICTORY_GOALS} = require('./../gameConstants');
-const {lightenDarkenColor} = require('./../helpers');
+const {CONSTANTS, VICTORY_GOALS, GAME_PHASES, MAPS} = require('./../gameConstants');
+const {lightenDarkenColor, loadSvgIntoDiv} = require('./../helpers');
 
 const firebase = require('firebase/app');
 require('firebase/auth');
 
 class GameSetupController {
 
-    constructor($scope, soundService, $uibModal) {
+    constructor($scope, soundService, $uibModal, $rootScope, $sce, gameEngine) {
         this.vm = this;
+        this.$scope = $scope
         this.soundService = soundService;
         this.$uibModal = $uibModal;
+        this.$rootScope = $rootScope;
+        this.$sce = $sce;
+        this.vm.gameEngine = gameEngine;
 
         // PUBLIC FIELDS
         this.vm.maxPlayers = CONSTANTS.MAX_NUMBER_OF_PLAYERS;
         this.vm.minPlayers = CONSTANTS.MIN_NUMBER_OF_PLAYERS;
         this.vm.victoryGoals = VICTORY_GOALS;
+        this.vm.maps = MAPS;
+        this.vm.showMapList = false;
 
         // PUBLIC FUNCTIONS
         this.vm.init = this.init;
@@ -32,10 +38,46 @@ class GameSetupController {
         this.vm.setGoal = this.setGoal;
         this.vm.lightenDarkenColor = this.lightenDarkenColor;
         this.vm.openSelectionScreen = this.openSelectionScreen;
+        this.vm.openMapSelectorMenu = this.openMapSelectorMenu;
+        this.vm.selectMap = this.selectMap;
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
         this.vm.customCharacters = [];
 
+        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
+
+        this.vm.mapTooltips = {};
+        MAPS.forEach(map => {
+            this.vm.mapTooltips[map.id] = this.$sce.trustAsHtml(`
+                <strong>${map.name}</strong><br>
+                <i>${map.description}</i>
+            `);
+        })
+
         this.fetchDefaultAvatar();
+
+        this.$rootScope.$watch('currentGamePhase', () => {
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP) {
+                this.vm.players = Array.from(
+                    new Array(CONSTANTS.MIN_NUMBER_OF_PLAYERS), (x, i) =>
+                        new Player(
+                            Object.keys(avatars)[i],
+                            Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                            Object.keys(avatars).map(key => avatars[key])[i],
+                            PLAYER_TYPES.HUMAN
+                        )
+                );
+                this.fetchDefaultAvatar();
+            }
+        });
+    }
+
+    openMapSelectorMenu() {
+        this.vm.showMapList = !this.vm.showMapList;
+    }
+
+    selectMap(map) {
+        this.gameEngine.selectedMap = map;
+        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
     }
 
     fetchDefaultAvatar() {
@@ -45,6 +87,8 @@ class GameSetupController {
                     const user = snapshot.val();
                     if (user && user.characters) {
                         this.vm.customCharacters = user.characters;
+                    } else {
+                        this.vm.customCharacters = [];
                     }
                     if (user && user.defaultAvatar) {
                         if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
@@ -70,6 +114,7 @@ class GameSetupController {
                     return Promise.reject();
                 });
             } else {
+                this.vm.customCharacters = [];
                 return Promise.resolve();
             }
         });
@@ -109,7 +154,7 @@ class GameSetupController {
 
     setGoal(goal) {
         this.vm.chosenGoal = goal;
-        this.soundService.changeColor.play();
+        this.soundService.tick.play();
     }
 
     updateAvatarOfPlayer(player, avatar) {
@@ -126,7 +171,7 @@ class GameSetupController {
             currentOwnerOfAvatar.name = newAvatar.name;
         }
 
-        this.soundService.changeColor.play();
+        this.soundService.tick.play();
     }
 
     updateColorOfPlayer(player, color) {
@@ -140,7 +185,7 @@ class GameSetupController {
             currentOwnerOfColor.color = this.getUnusedColor();
         }
 
-        this.soundService.changeColor.play();
+        this.soundService.tick.play();
     }
 
     openSelectionScreen(currentSelectedPlayer) {
@@ -164,6 +209,10 @@ class GameSetupController {
             $('.mainWrapper').css('filter', 'none');
             $('.mainWrapper').css('-webkit-filter', 'none');
 
+            if (closeResponse.cancel) {
+                return;
+            }
+
             if (newPlayer) {
                 this.vm.players.push(
                     new Player(
@@ -186,7 +235,7 @@ class GameSetupController {
             return;
         }
 
-        this.soundService.bleep2.play();
+        this.soundService.tick.play();
 
         const avatar = this.getUnusedAvatar();
 
@@ -236,8 +285,9 @@ class GameSetupController {
     }
 
     choosePlayerType(player, type) {
-        player.type = type;
-        this.soundService.changeColor.play();
+        //player.type = type;
+        this.vm.players.find(x => x.name === player.name).type = type;
+        this.soundService.tick.play();
     }
 
     getFirstUnusedName() {

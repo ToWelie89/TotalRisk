@@ -51,7 +51,7 @@ class TurnPresentationController {
     presentTurnSilently() {
         setTimeout(() => {
             this.close();
-        }, 2000);
+        }, 3500);
     }
 
     close(closingResponse = null) {
@@ -86,7 +86,9 @@ class TurnPresentationController {
                         }
                     }, () => {
                         this.gameEngine.setMusicVolume(this.settings.musicVolume);
-                        this.close();
+                        setTimeout(() => {
+                            this.close();
+                        }, 2500);
                     });
                 });
             } else {
@@ -111,7 +113,9 @@ class TurnPresentationController {
                     }
                 }, () => {
                     this.gameEngine.setMusicVolume(this.settings.musicVolume);
-                    this.close();
+                    setTimeout(() => {
+                        this.close();
+                    }, 2500);
                 });
             } else {
                 this.presentTurnSilently();
@@ -135,7 +139,7 @@ class TurnPresentationController {
     }
 
     speakTutorialMessages() {
-        this.gameAnnouncerService.speak(this.data.messages[this.currentMessageIndex].message, () => {}, () => {
+        this.gameAnnouncerService.speakTutorialMessage(this.data.messages[this.currentMessageIndex].message, () => {}, () => {
             if ((this.data.messages.length - 1) === this.currentMessageIndex) {
                 // Last message was spoken
                 if (this.data.afterSpeech) {

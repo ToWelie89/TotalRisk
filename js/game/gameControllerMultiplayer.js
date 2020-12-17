@@ -2,6 +2,7 @@ const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {
+    IN_GAME_MUSIC,
     PAUSE_MODES,
     GAME_PHASES,
     TURN_PHASES,
@@ -12,12 +13,13 @@ const { displayReinforcementNumbers, displayDamageNumbers } = require('./../anim
 const { getTerritoryByName, getTerritoriesForMovement } = require('./../map/mapHelpers');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
 const Card = require('./../card/card');
+const {setArrowBetweenTerritories, clearArrow} = require('./../map/mapArrow');
 
 const GameController = require('./gameController');
 
 class GameControllerMultiplayer extends GameController {
-    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
-        super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
+    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService, timerService) {
+        super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService, timerService);
 
         this.vm.lobbyChatMessage = '';
         this.vm.lobbyChatMessages = [];
@@ -38,6 +40,8 @@ class GameControllerMultiplayer extends GameController {
         this.globalChatColor = getRandomColor();
 
         this.vm.isMyTurn = this.isMyTurn;
+
+        this.mapSelector = '#multiplayerMap';
 
         this.elementIds = {
             ownageChart: 'ownageChartMultiplayer',
@@ -189,6 +193,8 @@ class GameControllerMultiplayer extends GameController {
     }
 
     engageAttackPhase(clickedTerritory) {
+        this.socketService.gameSocket.emit('playerStartInvasion', this.gameEngine.selectedTerritory.name, clickedTerritory.name);
+
         this.$uibModal.open({
             templateUrl: 'src/modals/attackModal.html',
             backdrop: 'static',
@@ -211,6 +217,8 @@ class GameControllerMultiplayer extends GameController {
             this.gameEngine.setMusic();
             console.log('Battle is over ', closeResponse);
             this.updateChartData();
+
+            this.socketService.gameSocket.emit('playerEndInvasion', this.gameEngine.selectedTerritory.name, clickedTerritory.name);
         });
     }
 
@@ -246,7 +254,7 @@ class GameControllerMultiplayer extends GameController {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 // this.soundService.addTroopSound.play();
-                displayReinforcementNumbers(clickedTerritory.name);
+                displayReinforcementNumbers(this.mapSelector, clickedTerritory.name);
 
                 this.socketService.gameSocket.emit('troopAddedToTerritory', clickedTerritory.name);
             } else {
@@ -276,7 +284,7 @@ class GameControllerMultiplayer extends GameController {
                        clickedTerritory.name !== this.gameEngine.selectedTerritory.name &&
                        getTerritoriesForMovement(this.gameEngine.selectedTerritory, this.gameEngine.map).includes(clickedTerritory.name)) {
                 // move troops
-                this.engageMovementPhase(clickedTerritory);
+                this.engageMovementPhase(clickedTerritory, '#multiplayerMap');
             } else {
                 this.gameEngine.selectedTerritory = clickedTerritory;
                 this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
@@ -312,24 +320,74 @@ class GameControllerMultiplayer extends GameController {
         this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
     }
 
-    initiateTimer() {
-        clearInterval(this.turnTimer);
-        const turnLength = this.$rootScope.turnLength;
-        const turnLengthMs = (turnLength * 1000);
-        this.turnTimerSeconds = turnLengthMs;
-        this.turnTimerFunction = () => {
-            this.turnTimerSeconds -= 100;
-            const totalWidth = $('#timerBar').width();
-            const widthPercentage = (this.turnTimerSeconds === 0) ? 100 : ((turnLengthMs - this.turnTimerSeconds) / turnLengthMs);
-            this.vm.timerWidth = Math.floor(widthPercentage * totalWidth);
-            this.vm.secondsLeft = Math.floor(this.turnTimerSeconds / 1000);
+    engageMovementPhase(toTerritory) {
+        this.socketService.gameSocket.emit('playerStartMovement', this.gameEngine.selectedTerritory.name, toTerritory.name);
 
-            this.$scope.$apply();
-            if (this.turnTimerSeconds <= 0) {
-                clearInterval(this.turnTimer);
+        this.$uibModal.open({
+            templateUrl: 'src/modals/movementModal.html',
+            backdrop: 'static',
+            windowClass: 'riskModal',
+            controller: 'movementModalController',
+            windowClass: 'riskModal movementModalWrapper',
+            controllerAs: 'movement',
+            keyboard: false,
+            resolve: {
+                data: () => {
+                    return {
+                        moveTo: toTerritory,
+                        moveFrom: this.gameEngine.selectedTerritory,
+                        mapSelector: this.mapSelector
+                    };
+                }
             }
+        }).result.then(closeResponse => {
+            this.socketService.gameSocket.emit('playerEndMovement', this.gameEngine.selectedTerritory.name, toTerritory.name);
+
+            if (closeResponse === 'cancelled') {
+                this.gameEngine.selectedTerritory = undefined;
+                this.mapService.updateMap(this.vm.filter);
+                return;
+            }
+
+            this.gameEngine.selectedTerritory = undefined;
+            this.gameEngine.setMusic(IN_GAME_MUSIC);
+            console.log('Movement complete ', closeResponse);
+            this.updateGameAfterMovement(closeResponse);
+            this.soundService.movement.play();
+            this.nextTurn();
+        });
+    }
+
+    initiateTimer() {
+        if (this.vm.hourGlassTimerInterval) {
+            clearInterval(this.vm.hourGlassTimerInterval);
+        }
+
+        this.vm.secondsLeft = this.$rootScope.turnLength;
+        this.vm.flashingWarningStarted = false;
+
+        const terminalFunction = () => {
+            this.vm.secondsLeft--;
+                this.$scope.$apply();
+
+                if (this.vm.secondsLeft <= 15 && !this.vm.flashingWarningStarted) {
+                    if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER) {
+                        this.timerService.startFlashingTimerWarning();
+                        // TODO WARNING SOUND
+                        this.gameAnnouncerService.speak('15 seconds left');
+                        this.vm.flashingWarningStarted = true;
+                    }
+                }
+
+                if (this.vm.secondsLeft <= 0) {
+                    clearInterval(this.vm.hourGlassTimerInterval);
+                    this.vm.flashingWarningStarted = false;
+                }
         };
-        this.turnTimer = setInterval(this.turnTimerFunction, 100);
+
+        this.timerService.startTimer(this.$rootScope.turnLength, () => {
+            this.vm.hourGlassTimerInterval = setInterval(terminalFunction, 1000);
+        });
     }
 
     openPauseModal() {
@@ -348,17 +406,24 @@ class GameControllerMultiplayer extends GameController {
             resolve: {
                 multiplayer: () => true
             }
-        }).result.then(() => {
+        }).result.then(response => {
+            this.startMenuIsOpen = false;
+            this.escapeWasPressed = false;
+
+            if (response.quitGame) {
+                this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
+                return;
+            }
+
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
                 this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             }
-            this.startMenuIsOpen = false;
-            this.escapeWasPressed = false;
         });
     }
 
     setSocketListeners() {
         this.socketService.gameSocket.on('playerWonNotifier', (endScreenData) => {
+            clearInterval(this.vm.hourGlassTimerInterval);
             console.log('A player won', endScreenData);
 
             this.vm.playerWhoWon = this.gameEngine.players.get(endScreenData.winner);
@@ -382,6 +447,22 @@ class GameControllerMultiplayer extends GameController {
             }
         });
 
+        this.socketService.gameSocket.on('setHighlightedNotifier', territoryName => {
+            document.querySelector(`${this.mapSelector} svg .country[id="${territoryName}"]`).classList.add('highlighted');
+        });
+
+        this.socketService.gameSocket.on('removeHighlightedNotifier', territoryName => {
+            document.querySelector(`${this.mapSelector} svg .country[id="${territoryName}"`).classList.remove('highlighted');
+        });
+
+        this.socketService.gameSocket.on('setArrowNotifier', (from, to, arrowType) => {
+            setArrowBetweenTerritories(this.mapSelector, from, to, arrowType, true);
+        });
+
+        this.socketService.gameSocket.on('clearArrowNotifier', () => {
+            clearArrow(this.mapSelector, true);
+        });
+
         this.socketService.gameSocket.on('updatedCardsForPlayer', (ownerUid, cards) => {
             this.soundService.cardSelect.play();
             const playerName = Array.from(this.gameEngine.players.values()).find(x => x.userUid === ownerUid).name;
@@ -398,17 +479,17 @@ class GameControllerMultiplayer extends GameController {
             this.vm.turn = this.gameEngine.turn;
         });
 
-        this.socketService.gameSocket.on('updateMapState', territories => {
+        this.socketService.gameSocket.on('updateMapState', (territories, doNotRemoveHighlightClass) => {
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = territories.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
                 t.numberOfTroops = territoryFromServer.numberOfTroops;
             });
-            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid, doNotRemoveHighlightClass);
             this.$scope.$apply();
         });
 
-        this.socketService.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName) => {
+        this.socketService.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName, doNotRemoveHighlightClass = false) => {
             this.gameEngine.addTroopToTerritory(territoryName);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
             this.$scope.$apply();
@@ -416,16 +497,17 @@ class GameControllerMultiplayer extends GameController {
             this.updateChartData();
 
             this.soundService.addTroopSound.play();
-            displayReinforcementNumbers(territoryName);
+            displayReinforcementNumbers(this.mapSelector, territoryName);
 
-            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid, doNotRemoveHighlightClass);
         });
 
         this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcementData) => {
+            this.gameEngine.selectedTerritory = undefined;
             if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.initiateTimer();
             } else if (turn.newPlayer && turn.player.type === PLAYER_TYPES.AI) {
-                clearInterval(this.turnTimer);
+                clearInterval(this.vm.hourGlassTimerInterval);
             }
 
             this.gameEngine.turn = turn;
@@ -439,7 +521,7 @@ class GameControllerMultiplayer extends GameController {
 
             this.soundService.tick.play();
 
-            if (this.settings.showAnnouncer) {
+            if (this.settings.showAnnouncer  && this.vm.turn.newPlayer) {
                 this.turnPresenterIsOpen = true;
                 this.$uibModal.open({
                     templateUrl: 'src/modals/turnPresentationModal.html',
@@ -469,23 +551,23 @@ class GameControllerMultiplayer extends GameController {
             }
         });
 
-        this.socketService.gameSocket.on('battleFoughtNotifier', (battleData) => {
+        this.socketService.gameSocket.on('battleFoughtNotifier', (battleData, doNotRemoveHighlightClass = false) => {
             console.log('battleData',battleData);
 
             getTerritoryByName(this.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
 
             if (battleData.attackerCasualties) {
-                displayDamageNumbers(battleData.attackerTerritory, battleData.attackerCasualties);
+                displayDamageNumbers(this.mapSelector, battleData.attackerTerritory, battleData.attackerCasualties);
             }
             if (battleData.defenderCasualties) {
-                displayDamageNumbers(battleData.defenderTerritory, battleData.defenderCasualties);
+                displayDamageNumbers(this.mapSelector, battleData.defenderTerritory, battleData.defenderCasualties);
             }
             if (battleData.attackerCasualties || battleData.defenderCasualties) {
                 this.soundService.muskets.play();
             }
 
-            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+            this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid, doNotRemoveHighlightClass);
 
             this.updateChartData();
         });

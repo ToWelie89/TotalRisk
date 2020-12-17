@@ -4,9 +4,12 @@ const { allValuesInArrayAreEqual, removeDuplicates, chancePercentage, shuffle } 
 const BattleHandler = require('./../attack/battleHandler');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
 const { displayDamageNumbers, displayReinforcementNumbers } = require('./../animations/animations');
+const { clearArrow, setArrowBetweenTerritories } = require('./../map/mapArrow');
+const { GAME_PHASES } = require('./../gameConstants');
 
 class AiHandler {
-    constructor(gameEngine, soundService, mapService, settings) {
+    constructor($rootScope, gameEngine, soundService, mapService, settings) {
+        this.$rootScope = $rootScope;
         this.gameEngine = gameEngine;
         this.soundService = soundService;
         this.mapService = mapService;
@@ -44,7 +47,7 @@ class AiHandler {
                 console.log(`Cards turned in for ${bestCombo.value} new troops`);
 
                 if (this.gameEngine.aiTesting) {
-                    if (!this.multiplayerMode) {
+                    if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                         this.soundService.cardTurnIn.play();
                     }
 
@@ -52,7 +55,7 @@ class AiHandler {
                     this.updateCallback();
                     resolve();
                 } else {
-                    if (!this.multiplayerMode) {
+                    if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                         $('.mainTroopIndicator').addClass('animated infinite bounce');
                         this.soundService.cardTurnIn.play();
                     }
@@ -208,15 +211,20 @@ class AiHandler {
         // Update stats
         this.gameEngine.players.get(this.gameEngine.turn.player.name).statistics.totalReinforcements += this.gameEngine.troopsToDeploy;
 
+        let delay = this.DELAY_BETWEEN_EACH_TROOP_DEPLOY;
+        if (delay >= 600 && this.gameEngine.troopsToDeploy >= 12) {
+            delay = 200;
+        }
+
         const createPromise = (territoryName, index) => {
             return new Promise(resolve => {
                 setTimeout(() => {
                     this.gameEngine.addTroopToTerritory(territoryName);
-                    this.mapService.updateMap(this.gameEngine.filter);
-
-                    if (!this.multiplayerMode) {
+                    
+                    if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
+                        this.mapService.updateMap(this.gameEngine.filter, true);
                         this.soundService.addTroopSound.play();
-                        displayReinforcementNumbers(territoryName);
+                        displayReinforcementNumbers(this.gameEngine.mapSelector, territoryName);
                     }
 
                     if (this.multiplayerMode) {
@@ -225,7 +233,7 @@ class AiHandler {
                         callback();
                     }
                     resolve();
-                }, (this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (index + 1)));
+                }, (delay * (index + 1)));
             });
         };
 
@@ -287,17 +295,27 @@ class AiHandler {
 
         let totalIndex = 0;
         const promises = [];
+        let lastTerritory;
         territoriesToDeploy.forEach(territory => {
-            promises.push(new Promise(resolve => {
-                setTimeout(() => {
-                    if (!this.multiplayerMode) {
-                        $(`#svgMap .country[id="${territory.name}"]`).addClass('blink_me');
-                    }
-                    resolve();
-                }, this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (promises.length + 1));
-            }));
-
-            totalIndex++;
+            if (lastTerritory !== territory) {
+                promises.push(new Promise(resolve => {
+                    setTimeout(() => {
+                        if (!this.multiplayerMode) {
+                            if (territory.troopsToDeploy > 0) {
+                                $(`#svgMap .country[id="${territory.name}"]`).addClass('highlighted');
+                            }
+                        } else {
+                            if (territory.troopsToDeploy > 0) {
+                                this.setHighlighted(territory.name);
+                            }
+                        }
+                        resolve();
+                    }, delay * (promises.length + 1));
+                }));
+                totalIndex++;
+            }
+            
+            lastTerritory = territory;
 
             for (let i = 0; i < territory.troopsToDeploy; i++) {
                 promises.push(createPromise(territory.name, totalIndex));
@@ -307,11 +325,14 @@ class AiHandler {
             promises.push(new Promise(resolve => {
                 setTimeout(() => {
                     if (!this.multiplayerMode) {
-                        $(`#svgMap .country[id="${territory.name}"]`).removeClass('blink_me');
+                        $(`#svgMap .country[id="${territory.name}"]`).removeClass('highlighted');
+                    } else {
+                        this.removeHighlighted(territory.name);
                     }
                     resolve();
-                }, this.DELAY_BETWEEN_EACH_TROOP_DEPLOY * (promises.length + 1));
+                }, delay * (promises.length + 1));
             }));
+            totalIndex++;
         });
         this.territoriesToDeploy = territoriesToDeploy;
         return Promise.all(promises);
@@ -325,7 +346,6 @@ class AiHandler {
         let battleIndex = 0;
 
         this.territoriesToDeploy.forEach(territoryToDeploy => {
-
             const currentInvasion = {
                 startingPosition: {
                     attackFrom: territoryToDeploy.name,
@@ -361,8 +381,13 @@ class AiHandler {
             promises.push(new Promise(resolve => {
                 setTimeout(() => {
                     if (!this.multiplayerMode) {
-                        $(`#svgMap .country[id="${currentInvasion.startingPosition.attackFrom}"]`).addClass('blink_me');
-                        $(`#svgMap .country[id="${currentInvasion.startingPosition.attackTo}"]`).addClass('blink_me');
+                        setArrowBetweenTerritories(this.gameEngine.mapSelector, territoryToDeploy.name, territoryToDeploy.territoryToAttack.name, 'attackArrow');
+                        $(`#svgMap .country[id="${currentInvasion.startingPosition.attackFrom}"]`).addClass('highlighted');
+                        $(`#svgMap .country[id="${currentInvasion.startingPosition.attackTo}"]`).addClass('highlighted');
+                    } else {
+                        this.setArrow(territoryToDeploy.name, territoryToDeploy.territoryToAttack.name, 'attackArrow');
+                        this.setHighlighted(currentInvasion.startingPosition.attackFrom);
+                        this.setHighlighted(currentInvasion.startingPosition.attackTo);
                     }
                     resolve();
                 }, this.DELAY_BETWEEN_EACH_BATTLE * (battleIndex + 1));
@@ -381,10 +406,10 @@ class AiHandler {
 
                         if (!this.multiplayerMode) {
                             if (battle.attackerCasualties > 0) {
-                                displayDamageNumbers(attacker.name, battle.attackerCasualties);
+                                displayDamageNumbers(this.gameEngine.mapSelector, attacker.name, battle.attackerCasualties);
                             }
                             if (battle.defenderCasualties > 0) {
-                                displayDamageNumbers(defender.name, battle.defenderCasualties);
+                                displayDamageNumbers(this.gameEngine.mapSelector, defender.name, battle.defenderCasualties);
                             }
                         }
 
@@ -397,7 +422,7 @@ class AiHandler {
                             if (!this.gameEngine.turn.playerHasWonAnAttackThisTurn) {
                                 this.gameEngine.takeCard(attacker.owner);
 
-                                if (!this.multiplayerMode) {
+                                if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                                     this.soundService.cardSelect.play();
                                 } else {
                                     takeCardCallback(
@@ -413,15 +438,20 @@ class AiHandler {
                             this.updateCallback();
 
                             if (!this.multiplayerMode) {
-                                $(`#svgMap .country[id="${attacker.name}"]`).removeClass('blink_me');
-                                $(`#svgMap .country[id="${defender.name}"]`).removeClass('blink_me');
+                                clearArrow(this.gameEngine.mapSelector);
+                                $(`#svgMap .country[id="${attacker.name}"]`).removeClass('highlighted');
+                                $(`#svgMap .country[id="${defender.name}"]`).removeClass('highlighted');
+                            } else {
+                                this.clearArrow();
+                                this.removeHighlighted(attacker.name);
+                                this.removeHighlighted(defender.name);
                             }
 
                             const territories = getTerritoriesByOwner(this.gameEngine.map, defeatedPlayer);
                             if (territories.length === 0) {
                                 // The losing player was defeated entirely
                                 const resp = this.gameEngine.handleDefeatedPlayer(defeatedPlayer, attacker.owner, false);
-                                if (resp.length > 0 && !this.multiplayerMode) {
+                                if (resp.length > 0 && !this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                                     this.soundService.cardSelect.play();
                                 }
                             }
@@ -439,8 +469,13 @@ class AiHandler {
                             attacker.numberOfTroops = 1;
 
                             if (!this.multiplayerMode) {
-                                $(`#svgMap .country[id="${attacker.name}"]`).removeClass('blink_me');
-                                $(`#svgMap .country[id="${defender.name}"]`).removeClass('blink_me');
+                                clearArrow(this.gameEngine.mapSelector);
+                                $(`#svgMap .country[id="${attacker.name}"]`).removeClass('highlighted');
+                                $(`#svgMap .country[id="${defender.name}"]`).removeClass('highlighted');
+                            } else {
+                                this.clearArrow();
+                                this.removeHighlighted(attacker.name);
+                                this.removeHighlighted(defender.name);
                             }
 
                             // Update stats
@@ -451,9 +486,9 @@ class AiHandler {
                             attacker.numberOfTroops = battle.attackingTroops + 1;
                         }
 
-                        this.mapService.updateMap(this.gameEngine.filter);
-                        if (!this.multiplayerMode) {
-                            this.soundService.diceRoll.play();
+                        this.mapService.updateMap(this.gameEngine.filter, true);
+                        if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
+                            this.soundService.muskets.play();
                         }
 
                         // Update stats
@@ -644,6 +679,11 @@ class AiHandler {
             const doNotKeepAttacking = playerIsWeak && playerHasCard;
 
             if (movement && movement.importance > 0 && !doNotKeepAttacking) {
+                if (!this.multiplayerMode) {
+                    setArrowBetweenTerritories(this.gameEngine.mapSelector, movement.from.name, movement.to.name, 'movementArrow');
+                } else {
+                    this.setArrow(movement.from.name, movement.to.name, 'movementArrow');
+                }
                 // Move
                 setTimeout(() => {
                     const from = getTerritoryByName(this.gameEngine.map, movement.from.name);
@@ -652,8 +692,11 @@ class AiHandler {
                     from.numberOfTroops = 1;
 
                     this.mapService.updateMap(this.gameEngine.filter);
-                    if (!this.multiplayerMode) {
+                    if (!this.multiplayerMode && this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
                         this.soundService.movement.play();
+                        clearArrow(this.gameEngine.mapSelector);
+                    } else {
+                        this.clearArrow();
                     }
                     resolve();
                 }, this.DELAY_BEFORE_MOVE);

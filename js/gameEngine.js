@@ -3,26 +3,35 @@
  */
 
 const WorldMap = require('./map/worldMap');
+const {worldMap} = require('./map/maps/classicMap/worldMapConfiguration');
 const { getTerritoryByName, getTerritoriesByOwner, getCurrentOwnershipStandings } = require('./map/mapHelpers');
 const { playerIterator, PLAYER_TYPES } = require('./player/playerConstants');
-const { TURN_PHASES, MAIN_MUSIC, IN_GAME_MUSIC, AI_MUSIC, VICTORY_MUSIC, MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING, GAME_PHASES } = require('./gameConstants');
+const {
+    TURN_PHASES,
+    MAIN_MUSIC,
+    IN_GAME_MUSIC,
+    AI_MUSIC,
+    VICTORY_MUSIC,
+    MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING,
+    GAME_PHASES,
+    MAPS
+} = require('./gameConstants');
 const { shuffle, randomIntFromInterval, randomDoubleFromInterval } = require('./helpers');
 const { initiatieCardDeck } = require('./card/cardHandler');
 const DeploymentHandler = require('./deployment/deploymentHandler');
 
 class GameEngine {
-
     constructor(gameAnnouncerService, $rootScope, settings) {
         this.thisIsBackendGameEngine = process.env && process.env.NODE_ENV === 'web' || process.env.COMPUTERNAME || process.env.PROD;
 
         this.gameAnnouncerService = gameAnnouncerService;
         this.$rootScope = $rootScope;
         this.filter = 'byOwner';
-        // Initialize world map
-        this.map = new WorldMap();
         this.settings = settings;
         this.selectedTerritory = undefined;
         this.isTutorialMode = false;
+
+        this.selectedMap = MAPS[0];
 
         if (!this.thisIsBackendGameEngine) {
             $(document).ready(() => {
@@ -86,8 +95,15 @@ class GameEngine {
         }
     }
 
+    initMap() {
+        // Initialize world map
+        this.map = new WorldMap(this.selectedMap);
+    }
+
     startGame(players, winningCondition, aiTesting = false) {
         console.log('Game started!');
+
+        this.filter = 'byOwner';
 
         // Initialize player list
         this.players = new Map();
@@ -99,7 +115,7 @@ class GameEngine {
             x.cards = [];
             x.dead = false;
         });
-        this.cardDeck = initiatieCardDeck();
+        this.cardDeck = initiatieCardDeck(worldMap);
 
         if (!this.currentGameIsMultiplayer) {
             this.iterator = playerIterator(Array.from(this.players), [TURN_PHASES.DEPLOYMENT, TURN_PHASES.ATTACK, TURN_PHASES.MOVEMENT]);
@@ -175,7 +191,7 @@ class GameEngine {
     takeCard(player) {
         if (!this.turn.playerHasWonAnAttackThisTurn) {
             if (this.cardDeck.length === 0) {
-                this.cardDeck = initiatieCardDeck();
+                this.cardDeck = initiatieCardDeck(worldMap);
             }
 
             const cardToTake = this.cardDeck[0];
@@ -271,7 +287,7 @@ class GameEngine {
 
     handleDefeatedPlayer(defeatedPlayer, playerWhoDefeatedHim) {
         if (!this.currentGameIsMultiplayer && this.settings.playSound) {
-            this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated = require(the game by ${playerWhoDefeatedHim}`, () => {
+            this.gameAnnouncerService.speak(`Player ${defeatedPlayer} was eliminated by player ${playerWhoDefeatedHim}`, () => {
                 if (this.settings.musicVolume > MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING) {
                     this.setMusicVolume(MUSIC_VOLUME_WHEN_VOICE_IS_SPEAKING);
                 }

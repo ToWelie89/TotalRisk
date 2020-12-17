@@ -74,7 +74,7 @@ class AuthenticationController {
         if (this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER) {
             return;
         }
-
+        this.soundService.tick.play();
         this.$rootScope.currentGamePhase = GAME_PHASES.PROFILE;
     }
 

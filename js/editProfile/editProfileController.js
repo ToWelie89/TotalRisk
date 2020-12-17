@@ -171,6 +171,10 @@ class EditProfileController {
             }).result.then(closeResponse => {
                 $('.mainWrapper').css('filter', 'none');
                 $('.mainWrapper').css('-webkit-filter', 'none');
+
+                if (closeResponse.cancel) {
+                    return;
+                }
     
                 this.vm.user.defaultAvatar = closeResponse.avatar;
     

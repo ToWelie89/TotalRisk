@@ -56,10 +56,9 @@ class PauseMenuModalController {
 
     exitToMenu() {
         this.soundService.tick.play();
-        this.$uibModalInstance.close();
-        this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
         this.gameEngine.setMusic(MAIN_MUSIC);
         this.socketService.disconnectGameSocket();
+        this.$uibModalInstance.close({ quitGame: true });
     }
 }
 

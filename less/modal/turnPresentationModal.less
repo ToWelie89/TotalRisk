@@ -1,15 +1,19 @@
 .turnPresentationModalWrapper {
     > .modal-dialog {
+        width: 1000px;
         > .modal-content {
             background: url(../assets/modalBackground.png);
             background-size: 100% 100%;
             box-shadow: none;
+            margin-top: 160px;
 
             #turnPresentationModal {
                 .modal-content {
                     background-color: transparent;
                     box-shadow: none;
-                    margin-top: 200px;
+                    margin-top: 100px;
+                    padding-top: 30px;
+                    padding-bottom: 40px;
             
                     #troops {
                         width: 80%;
@@ -22,11 +26,16 @@
                 }
             
                 #turnPresenterAvatarTarget {
-                    height: 300px;
-                    width: 100px;
+                    height: 700px;
+                    width: 400px;
                     position: absolute;
-                    left: -70px;
+                    left: -300px;
                     top: -10px;
+
+                    svg {
+                        margin-top: 20px !important;
+                        max-height: 700px !important;
+                    }
                 }
             }
         }

@@ -18,6 +18,13 @@ class Settings {
             savedSettings = this.store.get('riskSettings');
             this.proxySettings = this.store.get('proxySettings');
             console.log('Saved settings from JSON file: ', savedSettings);
+
+            Object.keys(ElectronSettings.riskSettings).forEach(key => {
+                if (savedSettings[key] === undefined || savedSettings[key] === null) {
+                    savedSettings[key] = ElectronSettings.riskSettings[key];
+                }
+            });
+
         } else {
             savedSettings = localStorage.getItem('riskSettings');
             if (savedSettings) {
@@ -31,6 +38,8 @@ class Settings {
         this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
         this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
         this.enable3d      = savedSettings ? savedSettings.enable3d      : settings.enable3d;
+        this.fastDice      = savedSettings ? savedSettings.fastDice      : settings.fastDice;
+
         this.musicVolume   = savedSettings ? savedSettings.musicVolume   : settings.musicVolume;
         this.sfxVolume     = savedSettings ? savedSettings.sfxVolume     : settings.sfxVolume;
         this.aiSpeedValues = {
@@ -52,6 +61,7 @@ class Settings {
             aiSpeed:       this.aiSpeed,
             showAnnouncer: this.showAnnouncer,
             fullScreen:    this.fullScreen,
+            fastDice:      this.fastDice,
             musicVolume:   this.musicVolume,
             sfxVolume:     this.sfxVolume,
             enable3d:      this.enable3d

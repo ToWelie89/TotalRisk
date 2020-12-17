@@ -1,0 +1,146 @@
+#characterGallery {
+	#mainDiv {
+		margin-top: 70px;
+        width: 100%;
+        margin: 0 auto;
+        background: rgba(59, 59, 59, 0.788235294117647);
+        border-radius: 30px;
+        height: 896px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .backButtonContainer {
+            top: 0;
+            z-index: 99999;
+        }
+        
+        #loadingIndicator {
+            position: absolute;
+            top: 40%;
+
+            .lds-ring {
+                width: 100px;
+                height: 100px;
+                div {
+                    width: 100px;
+                    height: 100px;
+                    border-width: 14px;
+                }
+            }
+        }
+
+        @-webkit-keyframes waveGalleryFlag {
+            0% {
+                transform: rotate(-11deg);
+            }
+            50% {
+                transform: rotate(-9deg);
+            }
+            100% {
+                transform: rotate(-11deg);
+            }
+        }
+
+        #galleryContainer {
+            height: 100%;
+            overflow-y: scroll;
+            padding-left: 20px;
+            padding-top: 30px;
+
+            &.noScroll {
+                overflow-y: hidden;
+            }
+
+            .characterContainer {
+                width: 330px;
+                float: left;
+                transition: all 500ms;
+                display: table;
+                vertical-align: middle;
+                position: relative;
+                text-align: center;
+                transform-origin: center;
+                margin: 10px;
+                padding: 10px;
+                box-shadow: 0 0 30px #000000a6;
+                overflow: hidden;
+
+                svg {
+                    transform: scale(1);
+                    transition: all 500ms;
+                    position: relative;
+                    z-index: 500;
+                }
+
+                &:hover {
+                    box-shadow: 0 0 30px #000000a6;
+                    svg {
+                        transform: scale(1.05);
+                    }
+
+                    .characterContainerFlag {
+                        -webkit-animation: waveGalleryFlag 800ms cubic-bezier(0, 0, 0.2, 1);
+                    }
+
+                    .characterContainerInner {
+                        display: table-cell;
+                    }
+                }
+
+                .characterContainerFlag {
+                    position: absolute;
+                    top: 130px;
+                    left: -80px;
+                    width: 500px;
+                    height: 290px;
+                    background-size: 100% 100%;
+                    transform: rotate(-10deg);
+                    -webkit-filter: brightness(50%);
+                    -webkit-animation: none;
+                    -webkit-animation-iteration-count: infinite;
+                    animation-iteration-count: infinite !important;
+                }
+
+                .characterContainerInner {
+                    display: none;
+                    color: white;
+                    position: absolute;
+                    z-index: 1000;
+                    color: white;
+                    top: 50%;
+                    width: 90%;
+                    background: #1f1f1f;
+                    padding: 10px;
+                    border-radius: 10px;
+                }
+            }
+
+            &::-webkit-scrollbar-track {
+                cursor: url(../assets/cursors/new/default.png), auto !important;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+                border-radius: 10px;
+            }
+        
+            &::-webkit-scrollbar {
+                cursor: url(../assets/cursors/new/default.png), auto !important;
+                width: 20px;
+                background-color: #F5F5F5;
+                border-radius: 10px;
+            }
+        
+            &::-webkit-scrollbar-thumb {
+                cursor: url(../assets/cursors/new/default.png), auto !important;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #555;
+        
+                &:hover {
+                    background-color: #222;
+                }
+            }
+        }
+
+    }
+}

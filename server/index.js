@@ -106,6 +106,9 @@ app.post('/lobbies/playerCanJoinRoom', (req, res) => {
         });
     }
 });
+app.post('/lobbies/ping', (req, res) => {
+    res.send();
+});
 
 const server = http.createServer(app);
 const io = socketIO.listen(server); //pass a http.Server instance
@@ -164,15 +167,17 @@ const getUnusedAvatar = roomId => {
 
 const addNewMessage = (roomId, msg) => {
     const game = games.find(game => game.id === roomId);
-    if (msg.uid && msg.uid !== 'SERVER') {
-        const player = game.players.find(player => player.userUid === msg.uid);
-        msg.color = player.color.mainColor;
+    if (game) {
+        if (msg.uid && msg.uid !== 'SERVER') {
+            const player = game.players.find(player => player.userUid === msg.uid);
+            msg.color = player.color.mainColor;
+        }
+        game.messages.push(msg);
+    
+        game.players.forEach(playerSocket => {
+            playerSocket.emit('messagesUpdated', game.messages);
+        });
     }
-    game.messages.push(msg);
-
-    game.players.forEach(playerSocket => {
-        playerSocket.emit('messagesUpdated', game.messages);
-    });
 };
 
 const setPlayers = (roomId) => {
@@ -234,30 +239,32 @@ const skipToNextPlayer = roomId => {
 const nextTurn = roomId => {
     const game = games.find(game => game.id === roomId);
 
-    const turn = game.gameEngine.nextTurn();
-    let reinforcementData = {};
-    if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
-        reinforcementData = game.gameEngine.reinforcementData;
-    }
+    if (game && game.gameEngine) {
+        const turn = game.gameEngine.nextTurn();
+        let reinforcementData = {};
 
-    if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
-        startTimer(game.id);
-    }
+        if (turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
+            reinforcementData = game.gameEngine.reinforcementData;
+        }
 
-    game.players.forEach(player => {
-        player.emit('nextTurnNotifier', turn, reinforcementData);
-    });
+        if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
+            startTimer(game.id);
+        }
 
-    if (turn.player.type === PLAYER_TYPES.AI) {
-        handleAi(game);
+        game.players.forEach(player => {
+            player.emit('nextTurnNotifier', turn, reinforcementData);
+        });
+
+        if (turn.player.type === PLAYER_TYPES.AI) {
+            handleAi(game);
+        }
     }
 };
 
 const handleAi = game => {
-    game.aiHandler = new AiHandler(game.gameEngine, {}, {
-        updateMap: () => {
-            console.log('update map in multiplayer ai handler');
-            updateMapState(game.id);
+    game.aiHandler = new AiHandler({}, game.gameEngine, {}, {
+        updateMap: (filter, doNotRemoveHighlightClass = false) => {
+            updateMapState(game.id, doNotRemoveHighlightClass);
         }
     }, {});
     game.aiHandler.multiplayerMode = true;
@@ -270,18 +277,39 @@ const handleAi = game => {
     let speed;
 
     if (game.aiSpeed === 'Fast') {
-        speed = 100;
+        speed = 200;
     } else if (game.aiSpeed === 'Medium') {
-        speed = 400;
+        speed = 700;
     } else {
-        speed = 800;
+        speed = 1100;
     }
+
+    game.aiHandler.setHighlighted = territoryName => {
+        game.players.forEach(player => {
+            player.emit('setHighlightedNotifier', territoryName);
+        });
+    };
+    game.aiHandler.removeHighlighted = territoryName => {
+        game.players.forEach(player => {
+            player.emit('removeHighlightedNotifier', territoryName);
+        });
+    };
+    game.aiHandler.setArrow = (from, to, arrowType) => {
+        game.players.forEach(player => {
+            player.emit('setArrowNotifier', from, to, arrowType);
+        });
+    };
+    game.aiHandler.clearArrow = () => {
+        game.players.forEach(player => {
+            player.emit('clearArrowNotifier');
+        });
+    };
 
     game.aiHandler.DELAY_BETWEEN_EACH_TROOP_DEPLOY = speed;
     game.aiHandler.DELAY_BETWEEN_EACH_BATTLE = speed;
     game.aiHandler.DELAY_BEFORE_MOVE = speed;
 
-    delay(1500)
+    delay(5000)
         .then(() => game.aiHandler.turnInCards((userUid, newHand, newTroops) => {
             game.players.forEach(player => {
                 player.emit('updatedCardsForPlayer', userUid, newHand);
@@ -292,7 +320,7 @@ const handleAi = game => {
         .then(() => game.aiHandler.contemplateAlternativesForAttack())
         .then(() => game.aiHandler.deployTroops((territoryName) => {
             game.players.forEach(player => {
-                player.emit('troopAddedToTerritoryNotifier', territoryName);
+                player.emit('troopAddedToTerritoryNotifier', territoryName, true);
             });
         }))
         .then(() => {
@@ -303,8 +331,9 @@ const handleAi = game => {
         })
         .then(() => game.aiHandler.attackTerritories((battleData) => {
             game.players.forEach(player => {
-                player.emit('battleFoughtNotifier', battleData);
+                player.emit('battleFoughtNotifier', battleData, true);
             });
+            updateMapState(game.id, true);
         }, (userUid, newHand) => {
             game.players.forEach(player => {
                 player.emit('updatedCardsForPlayer', userUid, newHand);
@@ -319,6 +348,9 @@ const handleAi = game => {
         .then(() => game.aiHandler.movementPhase())
         .then(() => {
             updateMapState(game.id);
+            return delay(3000);
+        })
+        .then(() => {
             nextTurn(game.id);
         })
         .catch((reason) => {
@@ -494,7 +526,7 @@ const handleGameOver = game => {
     updateLobbies();
 };
 
-const updateMapState = roomId => {
+const updateMapState = (roomId, doNotRemoveHighlightClass = false) => {
     const game = games.find(game => game.id === roomId);
 
     const territories = [];
@@ -509,17 +541,25 @@ const updateMapState = roomId => {
         });
 
         game.players.forEach(player => {
-            player.emit('updateMapState', territories);
+            player.emit('updateMapState', territories, doNotRemoveHighlightClass);
         });
     }
 };
 
 const updateOnlineUsers = (callback = () => {}) => {
+
+    console.log(lobbiesSocketList
+        .map(x => ({
+            userName: x.userName,
+            userUid: x.userUid,
+            tooltipInfo: x.tooltipInfo || ''
+        })))
+
     const onlineUsers = lobbiesSocketList
         .map(x => ({
             userName: x.userName,
             userUid: x.userUid,
-            tooltipInfo: x.tooltipInfo
+            tooltipInfo: x.tooltipInfo || ''
         }))
         .filter(x => x.userName !== null &&
             x.userName !== undefined &&
@@ -541,8 +581,10 @@ io
         updateLobbies();
 
         socket.on('setUser', (userName, userUid) => {
+            console.log('set user', userName, userUid)
             socket.userName = userName;
             socket.userUid = userUid;
+            updateOnlineUsers();
 
             updateOnlineUsers(() => {
                 if (!BEHIND_PROXY) {
@@ -579,6 +621,9 @@ io
         });
 
         socket.on('signOutUser', () => {
+            socket.userUid = undefined;
+            socket.userName = undefined;
+
             const onlineUsers = lobbiesSocketList
                 .map(x => ({
                     userName: x.userName,
@@ -594,12 +639,36 @@ io
             lobbiesSocketList.forEach(s => {
                 s.emit('onlineUsers', onlineUsers);
             });
-            lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
+            //lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
         });
 
         socket.on('removeUser', () => {
-            lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
+            socket.userUid = undefined;
+            socket.userName = undefined;
+            //lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
             updateOnlineUsers();
+        });
+
+        socket.on('getLobbies', () => {
+            socket.emit('currentLobbies', games.map(game => ({
+                id: game.id,
+                roomName: game.roomName,
+                password: game.password,
+                creationTimestamp: game.creationTimestamp,
+                creator: game.creator,
+                creatorUid: game.creatorUid,
+                maxNumberOfPlayer: game.maxNumberOfPlayer,
+                version: game.version,
+                map: game.map,
+                state: game.state,
+                players: game.players.map(p => ({
+                    userName: p.userName,
+                    userUid: p.userUid
+                })),
+                turnLength: game.turnLength,
+                aiSpeed: game.aiSpeed,
+                chosenGoal: game.chosenGoal
+            })));
         });
 
         socket.on('disconnect', () => {
@@ -652,8 +721,8 @@ io
             newRoom.currentLockedSlots = [];
             newRoom.timer = {};
             newRoom.state = states.LOBBY;
-            newRoom.turnLength = TURN_LENGTHS[2];
-            newRoom.aiSpeed = 'Fast';
+            newRoom.turnLength = TURN_LENGTHS[4];
+            newRoom.aiSpeed = 'Slow';
             games.push(newRoom);
             updateLobbies();
             socket.emit('createNewRoomResponse', newRoom);
@@ -750,6 +819,55 @@ io
                 // No player has the chosen color, it is available
                 player.color = Object.values(PLAYER_COLORS).find(x => x.name === colorName);
                 setPlayers(roomId);
+            }
+        });
+
+        socket.on('getMessages', () => {
+            const game = games.find(game => game.id === socket.roomId);
+            socket.emit('messagesUpdated', game.messages);
+        });
+
+        socket.on('playerStartMovement', (from, to) => {
+            const game = games.find(game => game.id === socket.roomId);
+            if (game) {
+                game.players.forEach(player => {
+                    player.emit('setHighlightedNotifier', from);
+                    player.emit('setHighlightedNotifier', to);
+                    player.emit('setArrowNotifier', from, to, 'movementArrow');
+                });
+            }
+        });
+
+        socket.on('playerEndMovement', (from, to) => {
+            const game = games.find(game => game.id === socket.roomId);
+            if (game) {
+                game.players.forEach(player => {
+                    player.emit('removeHighlightedNotifier', from);
+                    player.emit('removeHighlightedNotifier', to);
+                    player.emit('clearArrowNotifier');
+                });
+            }
+        });
+
+        socket.on('playerStartInvasion', (attackFrom, attackTo) => {
+            const game = games.find(game => game.id === socket.roomId);
+            if (game) {
+                game.players.forEach(player => {
+                    player.emit('setHighlightedNotifier', attackFrom);
+                    player.emit('setHighlightedNotifier', attackTo);
+                    player.emit('setArrowNotifier', attackFrom, attackTo, 'attackArrow');
+                });
+            }
+        });
+
+        socket.on('playerEndInvasion', (attackFrom, attackTo) => {
+            const game = games.find(game => game.id === socket.roomId);
+            if (game) {
+                game.players.forEach(player => {
+                    player.emit('removeHighlightedNotifier', attackFrom);
+                    player.emit('removeHighlightedNotifier', attackTo);
+                    player.emit('clearArrowNotifier');
+                });
             }
         });
 
@@ -885,6 +1003,10 @@ io
                 x.isHost
             ));
 
+            console.log('starting game', game.gameEngine.selectedMap);
+
+            game.gameEngine.selectedMap = game.map;
+            game.gameEngine.initMap();
             game.gameEngine.startGame(playerList, game.chosenGoal);
 
             startTimer(game.id);
@@ -899,7 +1021,15 @@ io
             });
 
             game.players.forEach(player => {
-                player.emit('gameStarted', playerList, game.chosenGoal, territories, game.gameEngine.turn, game.gameEngine.troopsToDeploy);
+                player.emit(
+                    'gameStarted',
+                    playerList,
+                    game.chosenGoal,
+                    territories,
+                    game.gameEngine.turn,
+                    game.gameEngine.troopsToDeploy,
+                    game.gameEngine.selectedMap
+                );
             });
 
             addNewMessage(socket.roomId, {
@@ -974,7 +1104,7 @@ io
             getTerritoryByName(game.gameEngine.map, battleData.defenderTerritory).numberOfTroops = battleData.defenderNumberOfTroops;
 
             game.players.forEach(player => {
-                player.emit('battleFoughtNotifier', battleData);
+                player.emit('battleFoughtNotifier', battleData, true);
             });
         });
 
@@ -1011,8 +1141,13 @@ io
         });
 
         socket.on('updateMovement', (movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops) => {
+            //console.log('updatemovement', movementFromTerritoryName, movementFromTerritoryNumberOfTroops, movementToTerritoryName, movementToTerritoryNumberOfTroops);
+
             const game = games.find(game => game.id === socket.roomId);
 
+            //console.log('game exists', !!game)
+
+            // TODO - här kraschade det sist
             getTerritoryByName(game.gameEngine.map, movementFromTerritoryName).numberOfTroops = movementFromTerritoryNumberOfTroops;
             getTerritoryByName(game.gameEngine.map, movementToTerritoryName).numberOfTroops = movementToTerritoryNumberOfTroops;
 

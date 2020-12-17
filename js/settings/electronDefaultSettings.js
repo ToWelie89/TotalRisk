@@ -3,11 +3,12 @@
 const ElectronSettings = {
     riskSettings: {
         playSound: true,
-        aiSpeed: 'Fast',
+        aiSpeed: 'Medium',
         showAnnouncer: true,
         fullScreen: false,
-        musicVolume: 80,
-        sfxVolume: 60,
+        fastDice: false,
+        musicVolume: 5,
+        sfxVolume: 20,
         enable3d: true
     }
 };

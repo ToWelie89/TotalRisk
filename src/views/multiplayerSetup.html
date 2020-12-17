@@ -12,8 +12,25 @@
                 </div>
             </div>
             <div id="lobbiesButtons">
-                <div style="position: absolute; left: 0; color: white; bottom: 0;">
-                    {{ lobbies.onlineUsers.length }} players online
+                <div style="position: absolute; left: 0; color: white; bottom: 0; text-align: left;">
+                    <div data-ng-show="lobbies.socketService.lobbiesSocket && lobbies.socketService.lobbiesSocket.connected">
+                        <div>
+                            {{ lobbies.onlineUsers.length }} players online
+                        </div>
+                        <div>
+                            <span>
+                                <span style="color: #53f753;">Connected to server</span>
+                                <span data-ng-show="lobbies.ping">
+                                    - {{ lobbies.ping }} ms latency
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div data-ng-hide="lobbies.socketService.lobbiesSocket && lobbies.socketService.lobbiesSocket.connected">
+                        <span style="color: #ff9797;">
+                            No server connection
+                        </span>
+                    </div>
                 </div>
                 <button
                     type="button"
@@ -24,7 +41,7 @@
                     Host new game
                 </button>
                 <form autocomplete="off">
-                    <input autocomplete="nope" id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" data-ng-show="lobbies.lobbies.length !== 0" ng-change="lobbies.filterRooms()" />
+                    <input autocomplete="nope" id="searchBar" type="text" data-ng-model="lobbies.searchText" placeholder="Search rooms" ng-disabled="lobbies.lobbies.length === 0" ng-change="lobbies.filterRooms()" />
                 </form>
             </div>
             <div id="lobbyList">

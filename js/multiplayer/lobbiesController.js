@@ -13,7 +13,7 @@ const {
     stopGlobalLoading,
     hashString
 } = require('./../helpers');
-const { playerCanJoinRoom } = require('./backendCalls');
+const { playerCanJoinRoom, ping } = require('./backendCalls');
 const CountryCodes = require('./../editor/countryCodes');
 const { getPlayerTooltipMarkup } = require('./../tooltips/tooltipHelpers');
 
@@ -28,7 +28,8 @@ class LobbiesController {
         this.$timeout = $timeout;
         this.toastService = toastService;
         this.soundService = soundService;
-        this.socketService = socketService;
+
+        this.vm.socketService = socketService;
 
         this.vm.isAuthenticated = false;
         this.vm.searchText = '';
@@ -96,16 +97,21 @@ class LobbiesController {
         this.vm.filterRooms = this.filterRooms;
         this.vm.sendChatMessage = this.sendChatMessage;
         this.vm.charactersLeft = this.charactersLeft;
+
+        this.$rootScope.$watch('currentGamePhase', () => {
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES) {
+                this.startPingInterval();
+            } else {
+                clearInterval(this.pingInterval);
+                this.pingInterval = undefined;
+            }
+        });
     }
 
     setMapTooltips() {
-        const maps = Object.entries(MAPS).map(x => {
-            return Object.assign(x[1], { key: x[0] });
-        });
-
         this.vm.mapTooltips = {};
 
-        maps.forEach(m => {
+        MAPS.forEach(m => {
             this.vm.mapTooltips[m.key] = this.$sce.trustAsHtml(`
                 <div class="playerTooltip">
                     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
@@ -114,7 +120,7 @@ class LobbiesController {
         });
         //this.$scope.$apply();
 
-        maps.forEach(m => {
+        MAPS.forEach(m => {
             let markup;
 
             $.get(m.mainMap, (svg) => {
@@ -207,21 +213,29 @@ class LobbiesController {
                     creatorUid: user.uid,
                     maxNumberOfPlayer: CONSTANTS.MAX_NUMBER_OF_PLAYERS,
                     version: this.$rootScope.appVersion,
-                    map: MAPS[closeResponse.map]
+                    map: closeResponse.map
                 };
-                this.socketService.lobbiesSocket.emit('createNewRoom', newRoom);
+                if (!this.vm.socketService.lobbiesSocket || !this.vm.socketService.lobbiesSocket.connected) {
+                    stopGlobalLoading();
+                    this.toastService.errorToast(
+                        'Could not create room',
+                        'The game is not correctly connected to the game server'
+                    );
+                } else {
+                    this.vm.socketService.lobbiesSocket.emit('createNewRoom', newRoom);
+                }
             }
         });
     }
 
     setUser(userName = undefined, userUid = undefined) {
-        if (!this.socketService) {
-            this.socketService.createLobbiesSocket();
+        if (!this.vm.socketService.lobbiesSocket) {
+            return;
         }
         if (userName && userUid) {
-            this.socketService.lobbiesSocket.emit('setUser', userName, userUid);
+            this.vm.socketService.lobbiesSocket.emit('setUser', userName, userUid);
         } else {
-            this.socketService.lobbiesSocket.emit('removeUser');
+            this.vm.socketService.lobbiesSocket.emit('removeUser');
         }
     }
 
@@ -242,14 +256,47 @@ class LobbiesController {
         }
     }
 
+    startPingInterval() {
+        if (this.pingInterval) {
+            return;
+        }
+        this.pingInterval = setInterval(() => {
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES) {
+                ping((res) => {
+                    this.vm.ping = res === 0 ? 1 : res;
+                    this.$scope.$apply();
+                }, () => {
+                    this.vm.ping = undefined;
+                    this.$scope.$apply();
+                    clearInterval(this.pingInterval);
+                    this.pingInterval = undefined;
+                });
+            }
+        }, 1500);
+    }
+
     setupSocket() {
         this.socketService.createLobbiesSocket();
 
-        this.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', response => {
+        this.vm.socketService.lobbiesSocket.on('connect', () => {
+            this.startPingInterval();
+
+            this.vm.socketService.lobbiesSocket.emit('getLobbies');
+
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    this.setUser(user.displayName, user.uid);
+                } else {
+                    this.setUser();
+                }
+            });
+        });
+
+        this.vm.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', response => {
             this.setTooltipOfOnlineUser(response.uid, response);
         });
 
-        this.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
+        this.vm.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
             this.vm.onlineUsers = onlineUsers;
             console.log('Players online: ', onlineUsers);
 
@@ -267,9 +314,10 @@ class LobbiesController {
                     this.setTooltipOfOnlineUser(u.userUid, u.tooltipInfo);
                 }
             });
+
         });
 
-        this.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
+        this.vm.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
             this.vm.lobbies = [];
             lobbies.forEach(lobby => {
                 this.vm.lobbies.push(lobby);
@@ -295,11 +343,23 @@ class LobbiesController {
                 this.$scope.$apply();
             }, 1);
         });
-        this.socketService.lobbiesSocket.on('createNewRoomResponse', room => {
+        this.vm.socketService.lobbiesSocket.on('createNewRoomResponse', room => {
             this.$rootScope.currentLobby = room;
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
             this.$rootScope.$apply();
             stopGlobalLoading();
+        });
+        this.vm.socketService.lobbiesSocket.on('disconnect', data => {
+            if (this.$rootScope.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES && data === 'transport close') {
+                this.$scope.$apply();
+                console.log('DISCONNECTED');
+                this.vm.lobbies = [];
+                this.vm.onlineUsers = [];
+                this.toastService.errorToast(
+                    'Lost connection',
+                    'Lost connection to server'
+                );
+            }
         });
     }
 

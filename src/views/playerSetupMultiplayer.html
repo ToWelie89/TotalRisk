@@ -25,6 +25,22 @@
                                 {{ lobby.room.map.name }}
                             </span>
                         </div>
+                        <div>
+                            <strong>Regions</strong>
+                        </div>
+                        <div>
+                            <span>
+                                {{ lobby.room.map.regions }}
+                            </span>
+                        </div>
+                        <div>
+                            <strong>Territories</strong>
+                        </div>
+                        <div>
+                            <span>
+                                {{ lobby.room.map.territories }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div width="100%" class="floatLeft marginTop--double">
@@ -47,7 +63,7 @@
                             Turn length (seconds)
                         </p>
                     </div>
-                    <div>
+                    <div data-ng-class="{'userIsNotHost': !lobby.userIsHost}">
                         <rzslider rz-slider-model="lobby.turnLength" rz-slider-options="lobby.turnLengthSliderOptions"></rzslider>
                     </div>
                     <div>
@@ -55,7 +71,7 @@
                             AI speed
                         </p>
                     </div>
-                    <div>
+                    <div data-ng-class="{'userIsNotHost': !lobby.userIsHost}">
                         <rzslider rz-slider-model="lobby.aiSpeed" rz-slider-options="lobby.aiSpeedSliderOptions"></rzslider>
                     </div>
                 </div>
@@ -128,9 +144,24 @@
             </div>
             <div id="lobbyRightPanel">
                 <div>
-                    <button type="button" class="button button-green large" data-ng-disabled="lobby.startGameIsDisabled()" data-ng-click="lobby.startGame()" data-ng-show="lobby.userIsHost">
-                        <strong>Start</strong>
-                    </button>
+                    <div
+                        tooltip-enable="lobby.startGameIsDisabled()"
+                        uib-tooltip="{{lobby.getStartTooltip()}}"
+                        tooltip-placement="top"
+                        data-ng-class="{'notAllowed': lobby.startGameIsDisabled()}"
+                        style="display: inline-block;;"
+                    >
+                        <button
+                            type="button"
+                            class="button button-green large"
+                            data-ng-class="{'disabled': lobby.startGameIsDisabled()}"
+                            style="{{ lobby.startGameIsDisabled() ? 'pointer-events: none;' : '' }}"
+                            data-ng-click="lobby.startGame()"
+                            data-ng-show="lobby.userIsHost"
+                        >
+                            <strong>Start</strong>
+                        </button>
+                    </div>
                     <button type="button" class="button button-purple large" data-ng-disabled="lobby.addAiDisabled()" data-ng-click="lobby.addAi()" data-ng-show="lobby.userIsHost">
                         <strong>Add AI</strong>
                     </button>

@@ -11,6 +11,13 @@
 		padding-left: 100px;
 		vertical-align: top;
 
+		.userIsNotHost {
+			.rz-pointer.rz-pointer-min {
+				background-color: #c3c3c3 !important;
+				cursor: url(../assets/cursors/new/notAllowed.png), auto !important;
+			}
+		}
+
 		.rzslider {
 			.rz-bubble {
 				color: white;
@@ -51,7 +58,10 @@
 			    	}
 			    	text {
 			    		display: none;
-			    	}
+					}
+					#troopCounters {
+						display: none;
+					}
 			    }
 			}
 

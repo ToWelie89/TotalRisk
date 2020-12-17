@@ -1,12 +1,11 @@
-const { worldMap } = require('./../map/worldMapConfiguration');
 const { shuffle } = require('./../helpers');
 const Card = require('./card');
 const { CARD_TYPE } = require('./cardConstants');
 
-const initiatieCardDeck = () => {
+const initiatieCardDeck = (mapConfiguration) => {
     const cardDeck = [];
     const territories = [];
-    worldMap.regions.forEach(region => {
+    mapConfiguration.regions.forEach(region => {
         region.territories.forEach(territory => {
             territories.push({
                 name: territory.name,

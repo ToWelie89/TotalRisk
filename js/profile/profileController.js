@@ -9,11 +9,12 @@ const {getRankingOfPlayerByUid, LEAGUES} = require('./../leaderboard/rankConstan
 const Chart = require('chart.js');
 
 class ProfileController {
-    constructor($scope, $rootScope, toastService) {
+    constructor($scope, $rootScope, toastService, soundService) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.toastService = toastService;
+        this.soundService = soundService;
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.PROFILE) {
@@ -148,6 +149,7 @@ class ProfileController {
     }
 
     editProfile() {
+        this.soundService.tick.play();
         this.$rootScope.currentGamePhase = GAME_PHASES.EDIT_PROFILE;
     }
 }

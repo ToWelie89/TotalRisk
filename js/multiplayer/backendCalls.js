@@ -21,6 +21,26 @@ const playerCanJoinRoom = (userUid, lobbyId, successCallback, failCallback) => {
     });
 };
 
+const ping = (successCallback, failCallback) => {
+    const time = Date.now();
+    $.post({
+        'async': true,
+        'crossDomain': true,
+        'url': `${rootPath}/lobbies/ping`,
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        'data': {
+            'timestamp': Date.now()
+        }
+    }).done(() => {
+        successCallback(Date.now() - time);
+    }).fail(() => {
+        failCallback();
+    });
+};
+
 const getUserCountry = () => {
     return new Promise((resolve, reject) => {
         $.get('http://ip-api.com/json/').done(response => {
@@ -31,4 +51,4 @@ const getUserCountry = () => {
     });
 };
 
-module.exports = { playerCanJoinRoom, getUserCountry };
+module.exports = { playerCanJoinRoom, getUserCountry, ping };

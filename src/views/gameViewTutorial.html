@@ -1,29 +1,69 @@
-<div class="container mainContent" id="tutorialContainer" data-ng-controller="gameControllerTutorial as gameTutorial">
-    <div data-ng-show="main.currentGamePhase == main.gamePhases.TUTORIAL" ng-cloak>
-        <div class="row" style="background: rgba(67, 64, 64, 0.6901960784313725);
-                                border-radius: 30px;
-                                border-bottom-left-radius: 60px; border-top-left-radius: 60px;">
-            <div class="col-xs-4 textCenter paddingTop--double " style="padding-left:0px; overflow:hidden;">
-                <div class="col-xs-3" id="mainTurnAvatar" player-portrait avatar="gameTutorial.turn.player.avatar" target="mainTurnAvatarTutorial" small>
-                    <div id="mainTurnAvatarTutorial">
+<div
+    class="container"
+    id="singlePlayerContainer"
+    data-ng-controller="gameControllerTutorial as gameTutorial"
+    data-ng-show="main.currentGamePhase == main.gamePhases.TUTORIAL"
+    ng-cloak
+>
+    <div style="height: 100%;" ng-cloak>
+        <div class="row colorWhite" id="topBar">
+            <div class="col-xs-4 textCenter paddingTop--double" style="padding-left:0px;">
+                <div class="col-xs-3">
+                    <div style="position: absolute; z-index: 1000; top: -91px; left: -110px; transform: scale(0.5);">
+                        <div class="setupBoxAvatarsContainer__item" style="margin-top: 0px;">
+                            <div
+                                id="currentPlayerPortraitTutorial"
+                                player-portrait
+                                avatar="gameTutorial.turn.player.avatar"
+                                class="box-shadow setupBoxAvatarsContainer__item__portrait"
+                                style="background-color: {{ gameTutorial.lightenDarkenColor(gameTutorial.turn.player.color.mainColor, -70)  }};
+                                       border-color: {{ gameTutorial.turn.player.color.mainColor }};">
+
+                                <div class="setupBoxAvatarsContainer__item__portrait__svg" data-ng-show="!gameTutorial.turn.player.avatar.customCharacter">
+                                </div>
+                                <div class="setupBoxAvatarsContainer__item__portrait__svgCustom" data-ng-show="gameTutorial.turn.player.avatar.customCharacter">
+                                </div>
+                            </div>
+                            <div class="setupBoxAvatarsContainer__item__flag">
+                                <waving-flag flag-width="90" flag-height="50" flag-url="gameTutorial.turn.player.avatar.flag"></waving-flag>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-9">
-                    <div class="col-xs-12" style="padding: 0px;">
+                    <div class="col-xs-12" style="padding: 0px; margin-left: 5px;">
                         <strong id="playerName" class="floatLeft text-shadow" style="letter-spacing: -2px; line-height: 30px; color: {{ gameTutorial.getCurrentPlayerColor() }}"><span data-ng-bind="gameTutorial.turn.player.name"></span></strong>
                     </div>
-                    <div class="col-xs-12" style="padding: 0px;">
-                        <img src="assets/img/cards.png"
-                             id="cardButton"
-                             class="floatLeft"
-                             style="width: 30px;"
-                             data-ng-disabled="gameTutorial.turn.turnPhase !== 0"
-                             data-ng-click="gameTutorial.turnInCards()"
-                             data-ng-class="{'cardButton--disabled': gameTutorial.aiTurn}"
-                             data-toggle="tooltip"
-                             data-placement="bottom"
-                             value="Open cards view" />
-                        <h4 class="floatLeft marginLeft" id="cardCounter">({{gameTutorial.turn.player.cards.length}})</h4>
+                    <div class="col-xs-12" style="padding: 0px; height: 80px; min-height: 80px; max-height: 80px;">
+                        <div
+                            class="floatLeft"
+                            data-ng-disabled="gameTutorial.turn.turnPhase !== 0"
+                            data-ng-click="gameTutorial.turnInCards()"
+                            data-ng-show="gameTutorial.turn.player.cards.length > 0"
+                            data-ng-class="{'fakeLink': gameTutorial.turn.turnPhase === 0}"
+                            uib-tooltip="These are the cards you currently have on hand. Click to turn in if in deployment phase."
+                            tooltip-placement="bottom"
+                            id="cardButton"
+                        >
+                            <div class="marginLeft" style="pointer-events: none; pointer-events: none; height: 40px;">
+                                <div class="card small"
+                                data-ng-repeat="card in gameTutorial.turn.player.cards track by $index"
+                                data-territory-name="{{card.name}}"
+                                data-region-name="{{card.regionName}}">
+                                    <span data-ng-show="gameTutorial.turn.player.type === gameTutorial.PLAYER_TYPES.HUMAN">
+                                        <span id="cardTroopIconCannon{{ $index }}" data-ng-show="card.cardType === gameTutorial.CARD_TYPE.CANNON" class="troopIcon cannon" inject-svg src="assets/troopIcons/cannon.svg">
+                                        </span>
+                                        <span id="cardTroopIconHorse{{ $index }}" data-ng-show="card.cardType === gameTutorial.CARD_TYPE.HORSE" class="troopIcon horse" inject-svg src="assets/troopIcons/horse.svg">
+                                        </span>
+                                        <span id="cardTroopIconSoldier{{ $index }}" data-ng-show="card.cardType === gameTutorial.CARD_TYPE.TROOP" class="troopIcon troop" inject-svg src="assets/troopIcons/soldier.svg">
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ng-show="gameTutorial.turn.player.cards.length === 0" class="floatLeft marginLeft marginTop">
+                            No cards on hand
+                        </div>
                         <h4 class="floatLeft marginLeft" style="clear: left;" data-ng-show="gameTutorial.currentOwnagePercentage">
                             <span data-ng-show="gameTutorial.chosenGoal !== 100">
                                 Currently controlling <strong>{{ gameTutorial.currentOwnagePercentage }}/{{ gameTutorial.chosenGoal }}%</strong>
@@ -35,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-5 textCenter" style="padding-right:0px;">
+            <div id="filters" class="paddingTop--double paddingBottom--double col-xs-4 textCenter" style="padding-right:0px;">
                 <div class="buttonGroup">
                     <button type="button" class="button button-blue" data-ng-class="{'filter-selected': gameTutorial.filter === 'byOwner'}" id="showByOwner" data-ng-click="gameTutorial.filterByOwner()">
                         <strong>Color by owner</strong>
@@ -54,33 +94,56 @@
                 </div>
                 <h4>Turn number <strong data-ng-bind="gameTutorial.turn.turnNumber"></strong></h4>
             </div>
-            <div class="col-xs-3 paddingTop--double " id="turnInfo">
+            <div class="col-xs-4 paddingTop--double " id="turnInfo">
                 <div class="row">
                     <div class="col-xs-9" style="line-height: 40px;" id="currentPhaseIndicator">
                         <div>
-                            <div data-ng-show="gameTutorial.turn.turnPhase == 0" class="troop_{{ gameTutorial.turn.player.color.name }}">
-                                <div>Deployment phase</div>
-                                <div data-ng-if="gameTutorial.troopsToDeploy <= 9">
-                                    <div class="mainTroopIndicator floatLeft" data-ng-repeat="i in gameTutorial.toArray(gameTutorial.troopsToDeploy) track by $index">
-                                        <div id="reinforcementTroopIconTutorial{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                            <div class="phaseIndicator">
+                                <h3 style="margin-top: 0;" data-ng-show="gameTutorial.turn.turnPhase == 0">
+                                    Deployment phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="gameTutorial.turn.turnPhase == 1">
+                                    Attack phase
+                                </h3>
+                                <h3 style="margin-top: 0;" data-ng-show="gameTutorial.turn.turnPhase == 2">
+                                    Movement phase
+                                </h3>
+                                <div class="stepsContainer">
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameTutorial.turn.turnPhase == 0, 'done': gameTutorial.turn.turnPhase != 0}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameTutorial.turn.turnPhase == 1, 'done': gameTutorial.turn.turnPhase > 1, 'futureStep': gameTutorial.turn.turnPhase < 1}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="orbContainer">
+                                        <div class="orb" data-ng-class="{'active': gameTutorial.turn.turnPhase == 2, 'done': gameTutorial.turn.turnPhase > 2, 'futureStep': gameTutorial.turn.turnPhase < 2}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div data-ng-if="gameTutorial.troopsToDeploy > 9">
-                                    <div class="floatLeft">
-                                        <div id="reinforcementTroopIconTutorial-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                <div id="troopsToDeployContainer" class="troop_{{ gameTutorial.turn.player.color.name }}" data-ng-show="gameTutorial.turn.turnPhase == 0" style="width: 300px; position: absolute;">
+                                    <div class="textCenter" data-ng-if="gameTutorial.troopsToDeploy <= 12">
+                                        <div style="display: inline-block;" class="mainTroopIndicator" data-ng-repeat="i in gameTutorial.toArray(gameTutorial.troopsToDeploy) track by $index">
+                                            <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
                                     </div>
-                                    <span class="floatLeft paddingLeft">x{{ gameTutorial.troopsToDeploy }}</span>
-                                </div>
-                                <div data-ng-if="gameTutorial.troopsToDeploy === 0">
-                                    <strong>No more reinforcements!</strong>
+                                    <div data-ng-if="gameTutorial.troopsToDeploy > 12" class="textCenter" style="margin-top: -5px;">
+                                        <div style="display: inline-block;">
+                                            <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                        </div>
+                                        <div style="display: inline-block; position: relative; font-size: 22px; top: -12px;">
+                                            x{{ gameTutorial.troopsToDeploy }}
+                                        </div>
+                                    </div>
+                                    <div class="textCenter" data-ng-if="gameTutorial.troopsToDeploy === 0">
+                                        <strong>No more reinforcements!</strong>
+                                    </div>
                                 </div>
                             </div>
-                            <span data-ng-show="gameTutorial.turn.turnPhase == 1">
-                                Attack phase
-                            </span>
-                            <span data-ng-show="gameTutorial.turn.turnPhase == 2">
-                                Movement phase
-                            </span>
                         </div>
                     </div>
                     <div class="col-xs-3" style="line-height: 30px;">
@@ -96,25 +159,18 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="position: relative;">
+        <div class="row gameView">
             <div class="ownageChartContainer" uib-tooltip-html="gameTutorial.ownageChartTooltip" tooltip-placement="right">
-                <canvas id="ownageChartTutorial" width="100" height="100"></canvas>
+                <canvas id="ownageChartSingleplayer" width="100" height="100"></canvas>
             </div>
             <div class="troopChartContainer" uib-tooltip-html="gameTutorial.troopChartTooltip" tooltip-placement="right">
-                <canvas id="troopChartTutorial" width="100" height="100"></canvas>
+                <canvas id="troopChartSingleplayer" width="100" height="100"></canvas>
             </div>
            <div id="tutorialMap"
-             style="background: #5397d1;
-                    border-radius: 30px;
-                    margin-top: 20px;
-                    box-shadow: 3px 3px 8px #202020;"
-                    inject-svg
-                    src="assets/maps/worldMap/worldMap.svg">
+                data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
+                inject-svg
+                src="assets/maps/worldMap/worldMap.svg">
            </div>
-        </div>
-        <div class="row">
-            <div id="currentTerritoryInfo">
-            </div>
         </div>
     </div>
 </div>

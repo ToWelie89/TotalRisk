@@ -8,6 +8,7 @@
                    main.currentGamePhase === main.gamePhases.EDIT_PROFILE ||
                    main.currentGamePhase === main.gamePhases.PROFILE ||
                    main.currentGamePhase === main.gamePhases.END_SCREEN ||
+                   main.currentGamePhase === main.gamePhases.CHARACTER_GALLERY ||
                    main.currentGamePhase === main.gamePhases.LEADERBOARD"
      data-ng-controller="authenticationController as auth"
      ng-cloak>
@@ -71,9 +72,11 @@
         </div>
     </div>
     <div data-ng-show="auth.currentState === auth.states.NOT_LOGGED_IN">
-        <p>
-            You are not logged in
-        </p>
+        <div class="marginBottom">
+            <p>
+                You are not logged in
+            </p>
+        </div>
         <button type="button" class="button button-green marginLeft" data-ng-click="auth.goToState(auth.states.LOGIN)">
             Login
         </button>
@@ -89,11 +92,17 @@
             <button type="button" class="button button-green marginRight" data-ng-click="auth.goToState(auth.states.NOT_LOGGED_IN)">
                 <span class="glyphicon glyphicon-arrow-left"></span>
             </button>
-            <input type="text" data-ng-model="auth.loginData.email" class="marginRight" placeholder="Email" />
-            <input type="password" data-ng-model="auth.loginData.password" class="marginRight" placeholder="Password" />
-            <button type="submit" class="button button-green" data-ng-disabled="!auth.loginData.password || !auth.loginData.email" data-ng-click="auth.login()">
-                Login
-            </button>
+            <div class="marginTop">
+                <input type="text" data-ng-model="auth.loginData.email" class="marginRight" placeholder="Email" />
+            </div>
+            <div class="marginTop">
+                <input type="password" data-ng-model="auth.loginData.password" class="marginRight" placeholder="Password" />
+            </div>
+            <div class="marginTop">
+                <button type="submit" class="button button-green" data-ng-disabled="!auth.loginData.password || !auth.loginData.email" data-ng-click="auth.login()">
+                    Login
+                </button>
+            </div>
         </form>
     </div>
     <div data-ng-show="auth.currentState === auth.states.RESET_PASSWORD">

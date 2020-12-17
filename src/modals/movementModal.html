@@ -7,22 +7,22 @@
                     <div class="modal-body textCenter">
                         <div class="row">
                             <div class="col-xs-12">
-                                <p>Move from <strong>{{movement.moveFrom.name}}</strong> to <strong>{{movement.moveTo.name}}</strong></p>
+                                <p>Move troops from <strong>{{movement.moveFrom.name}}</strong> to <strong>{{movement.moveTo.name}}</strong></p>
                             </div>
                         </div>
-                        <!-- <div class="row">
-                            <div class="col-xs-4">
-                                <svg id="moveFromSvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                        <div class="row" id="movementPreviewBox">
+                            <div class="col-xs-5" style="height: 200px; display: -webkit-inline-box;">
+                                <svg id="moveFromSvg" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-height: 200px; display: table-cell;">
                                 </svg>
                             </div>
-                            <div class="col-xs-4">
-                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            <div class="col-xs-2">
+                                <!-- <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> -->
                             </div>
-                            <div class="col-xs-4">
-                                <svg id="moveToSvg" viewBox="" xmlns="http://www.w3.org/2000/svg">
+                            <div class="col-xs-5" style="height: 200px; display: -webkit-inline-box;">
+                                <svg id="moveToSvg" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-height: 200px; display: table-cell;">
                                 </svg>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="row">
                             <div class="col-xs-6">
                                 <h1>{{ movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops }}</h1>
@@ -31,17 +31,60 @@
                                 <h1>{{ movement.moveTo.numberOfTroops + movement.moveNumberOfTroops }}</h1>
                             </div>
                         </div>
+                        <div class="row troop_{{ movement.color }}" id="troopIcons">
+                            <div class="col-xs-6">
+                                <div
+                                    data-ng-show="(movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops) > 12"
+                                    class="mainTroopIndicator"
+                                >
+                                    <div class="inner" id="movementModalFromTerritorySvgHigherThan12" inject-svg src="assets/troopIcons/soldier2.svg" style="display: inline-block;">
+                                    </div>
+                                    <p style="display: inline-block;">
+                                        x{{ movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops }}
+                                    </p>
+                                </div>
+                                <div
+                                    data-ng-show="(movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops) <= 12"
+                                    class="mainTroopIndicator"
+                                    data-ng-repeat="i in movement.toArray(movement.moveFrom.numberOfTroops - movement.moveNumberOfTroops) track by $index"
+                                >
+                                    <div class="inner" id="movementModalFromTerritorySvg{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div
+                                    data-ng-show="(movement.moveTo.numberOfTroops + movement.moveNumberOfTroops) > 12"
+                                    class="mainTroopIndicator"
+                                >
+                                    <div class="inner" id="movementModalToTerritorySvgHigherThan12" inject-svg src="assets/troopIcons/soldier2.svg" style="display: inline-block;">
+                                    </div>
+                                    <p style="display: inline-block;">
+                                        x{{ movement.moveTo.numberOfTroops + movement.moveNumberOfTroops }}
+                                    </p>
+                                </div>
+                                <div
+                                    data-ng-show="(movement.moveTo.numberOfTroops + movement.moveNumberOfTroops) <= 12"
+                                    class="mainTroopIndicator"
+                                    data-ng-repeat="i in movement.toArray(movement.moveTo.numberOfTroops + movement.moveNumberOfTroops) track by $index"
+                                >
+                                    <div class="inner" id="movementModalToTerritorySvg{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <rzslider rz-slider-model="movement.moveNumberOfTroops" rz-slider-options="movement.movementSliderOptions"></rzslider>
                             </div>
                             <div class="col-xs-12 paddingTop">
-                                <button type="button" class="button button-blue" data-ng-click="movement.cancel()" id="moveButton">
+                                <button type="button" class="button button-red" data-ng-click="movement.cancel()" id="moveButton">
                                     <strong>Cancel</strong>
                                 </button>
                                 <button type="button" class="button button-blue" data-ng-click="movement.moveTroops()" id="moveButton">
                                     <strong>Move troops</strong>
                                 </button>
+                                <!-- <button type="button" class="button button-purple" data-ng-click="movement.moveAllTroops()" id="moveButton">
+                                    <strong>Move all troops</strong>
+                                </button> -->
                             </div>
                         </div>
                     </div>

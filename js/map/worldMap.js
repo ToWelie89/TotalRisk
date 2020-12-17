@@ -1,12 +1,12 @@
-const { worldMap } = require('./worldMapConfiguration');
 const Region = require('./region');
 const { shuffle } = require('./../helpers');
 
 class WorldMap {
-    constructor() {
+    constructor(chosenMap) {
         this.regions = new Map();
 
-        worldMap.regions.forEach(region => this.initializeRegion(region));
+        chosenMap.configuration.regions.forEach(region => this.initializeRegion(region));
+
         console.log('World map regions: ');
         console.log(this.regions);
     }

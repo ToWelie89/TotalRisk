@@ -43,7 +43,10 @@
                 return hash;
             }
 
-            const lobbiesSocket = io('https://totalconquest.herokuapp.com/lobbies');
+            // REAL ENDPOINT
+            //const lobbiesSocket = io('https://totalconquest.herokuapp.com/lobbies');
+            // LOCAL ENDPOINT
+            const lobbiesSocket = io('http://127.0.0.1:5000/lobbies');
             lobbiesSocket.on('currentLobbies', lobbies => {
                 lobbies.map(lobby => {
                     lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);

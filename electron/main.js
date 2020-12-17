@@ -120,7 +120,7 @@ const createDefaultWindow = () => {
         console.log('Screen witdh larger than 2560');
         screenConfig = {
             zoomFactor: 1.1,
-            minWidth: 1480,
+            minWidth: 1580,
             minHeight: 1340
         };
     } else { // Screen bounds could not be identified
@@ -137,10 +137,8 @@ const createDefaultWindow = () => {
     win = new BrowserWindow({
         width: width,
         height: height,
-        /*minWidth: screenConfig.minWidth,
-        minHeight: screenConfig.minHeight,*/
-        minWidth: 50,
-        minHeight: 50,
+        minWidth: screenConfig.minWidth,
+        minHeight: screenConfig.minHeight,
         title: isDev ? 'TotalRisk DEVELOPMENT VERSION' : 'TotalRisk',
         fullscreen: riskSettings.fullScreen,
         show: false,
@@ -175,7 +173,7 @@ const createDefaultWindow = () => {
             sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES);
             setTimeout(() => {
                 sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
-            }, 500);
+            }, 2000);
 
             /*sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES)
             setTimeout(() => {
@@ -221,12 +219,12 @@ const createDefaultWindow = () => {
             sendStatusToWindow(MESSAGE_TYPES.CHECKING_FOR_UPDATES);
             setTimeout(() => {
                 sendStatusToWindow(MESSAGE_TYPES.NO_NEW_UPDATE_AVAILABLE);
-            }, 1500);
+            }, 3000);
         });
     }
 
     if (!dontUseWebTools) {
-        //win.webContents.openDevTools();
+        win.webContents.openDevTools();
     }
 
     win.setMenu(null);

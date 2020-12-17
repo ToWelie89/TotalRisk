@@ -179,7 +179,7 @@ describe('gameSetupController', () => {
         gameSetupController.updateAvatarOfPlayer({name: 'Pelle'}, newAvatar);
         // Assert
         expect(gameSetupController.players[0].avatar).toEqual(newAvatar);
-        expect(mockSoundService.changeColor.play).toHaveBeenCalled();
+        expect(mockSoundService.tick.play).toHaveBeenCalled();
     });
 
     it('updateColorOfPlayer should update the color of a player properly', () => {
@@ -200,7 +200,7 @@ describe('gameSetupController', () => {
         gameSetupController.addPlayer();
         // Assert
         expect(gameSetupController.players.length).toEqual(3);
-        expect(mockSoundService.bleep2.play).toHaveBeenCalled();
+        expect(mockSoundService.tick.play).toHaveBeenCalled();
     });
 
     it('addPlayer should not add if max limit is reached', () => {

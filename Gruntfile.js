@@ -46,14 +46,14 @@ module.exports = function(grunt) {
         },
         watch: {
             prod: {
-                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg'],
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg', '!js/libs/**/*.js'],
                 tasks: ['default'],
                 options: {
                     spawn: false
                 }
             },
             local: {
-                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg'],
+                files: ['js/**/*.js', 'less/**/*.less', 'json/**/*.json', 'assets/**/*.svg', '!js/libs/**/*.js'],
                 tasks: ['default:local'],
                 options: {
                     spawn: false

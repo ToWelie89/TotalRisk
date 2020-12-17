@@ -1,0 +1,95 @@
+#multiplayerViewCurrentTurnTimerContainer {
+    position: absolute;
+    z-index: 999;
+    width: 150px;
+    height: 150px;
+    background: black;
+    border-radius: 50%;
+    border: 5px solid gray;
+    left: 683px;
+    top: 63px;
+    transform: scale(0.65);
+    transition: all 600ms;
+
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
+    #multiplayerViewCurrentTurnTimerHourGlass {
+        margin-top: 4px;
+
+        svg {
+            width: 120px;
+            margin-top: 8px;
+
+            #middleSand {
+                animation-iteration-count: 1;
+                animation-timing-function: linear;
+                animation-fill-mode: forwards;
+                visibility: hidden;
+            }
+            
+            #topGlassSand {
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in;
+                animation-fill-mode: forwards;
+            }
+            
+            #bottomGlassSand {
+                animation-iteration-count: 1;
+                animation-timing-function: ease-in;
+                animation-fill-mode: forwards;
+                visibility: hidden;
+            }
+        }
+    }
+
+    #multiplayerViewCurrentTurnTimerSecondsLeft {
+        color: black;
+        position: absolute;
+        width: 100%;
+        top: 67%;
+        font-size: 21px;
+        text-align: center;
+        font-weight: 900;
+    }
+}
+  
+@-webkit-keyframes middleGlassAnimate {
+      0% {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+      100% {
+          clip-path: polygon(0 8%, 100% 8%, 100% 100%, 0 100%);
+      }
+}
+@-webkit-keyframes topGlassAnimate {
+      0% {
+          clip-path: polygon(0 0%, 100% 0%, 100% 100%, 0% 100%);
+      }
+      100% {
+          clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+      }
+}
+@-webkit-keyframes bottomGlassAnimate {
+      0% {
+          clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      }
+      100% {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+}
+@-webkit-keyframes hourglassWarning {
+    0% {
+        border-color: gray;
+    }
+    50% {
+        border-color: red;
+    }
+    100% {
+        border-color: gray;
+    }
+}

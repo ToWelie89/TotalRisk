@@ -12,12 +12,13 @@ const {PLAYER_TYPES} = require('./../player/playerConstants');
 const {delay, lightenDarkenColor} = require('./../helpers');
 const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
+const {clearArrow} = require('./../map/mapArrow');
 
 const Chart = require('chart.js');
 
 class GameController {
 
-    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
+    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService, timerService) {
         this.vm = this;
 
         // PUBLIC FUNCTIONS
@@ -51,6 +52,9 @@ class GameController {
         this.gameAnnouncerService = gameAnnouncerService;
         this.tutorialService = tutorialService;
         this.socketService = socketService;
+        this.timerService = timerService;
+
+        this.mapSelector = '#singleplayerMap';
 
         this.elementIds = {
             ownageChart: 'ownageChartSingleplayer',
@@ -92,26 +96,13 @@ class GameController {
         document.addEventListener('keyup', this.boundListener);
 
         document.querySelectorAll('.country').forEach(country => {
-            var clone = country.cloneNode(true);
+            /* var clone = country.cloneNode(true);
             country.parentNode.replaceChild(clone, country);
 
             clone.addEventListener('click', (e) => {
                 this.clickCountry(e);
-            });
-        });
-        document.querySelectorAll('.troopCounter').forEach(country => {
-            var clone = country.cloneNode(true);
-            country.parentNode.replaceChild(clone, country);
-
-            clone.addEventListener('click', (e) => {
-                this.clickCountry(e);
-            });
-        });
-        document.querySelectorAll('.troopCounterText').forEach(country => {
-            var clone = country.cloneNode(true);
-            country.parentNode.replaceChild(clone, country);
-
-            clone.addEventListener('click', (e) => {
+            }); */
+            country.addEventListener('click', (e) => {
                 this.clickCountry(e);
             });
         });
@@ -120,9 +111,10 @@ class GameController {
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
-                this.mapService.init('map');
+                this.mapService.init('singleplayerMap');
                 this.setListeners();
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+                this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
@@ -134,6 +126,7 @@ class GameController {
     }
 
     startGame(players, winningCondition, aiTesting = false) {
+        this.gameEngine.mapSelector = this.mapSelector;
         this.gameEngine.startGame(players, winningCondition, aiTesting);
         this.gameEngine.currentGameIsMultiplayer = false;
         this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
@@ -145,6 +138,8 @@ class GameController {
 
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
+        this.vm.mapConfiguration = this.gameEngine.selectedMap.configuration;
+        this.vm.mapConfiguration.regions.sort((a, b) => b.bonusTroops - a.bonusTroops);
         this.setChartData();
 
         const callback = () => {
@@ -235,6 +230,9 @@ class GameController {
     }
 
     updateChartData() {
+        if (this.vm.isTutorialMode) {
+            return;
+        }
         this.gameEngine.updateStandings();
 
         this.ownageChart.data.datasets[0].data = this.gameEngine.standings.map(x => x.percentageOwned);
@@ -369,12 +367,18 @@ class GameController {
             resolve: {
                 multiplayer: () => false
             }
-        }).result.then(() => {
+        }).result.then(response => {
+            this.startMenuIsOpen = false;
+            this.escapeWasPressed = false;
+
+            if (response.quitGame) {
+                this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
+                return;
+            }
+
             if (this.aiTurn && this.vm.gamePaused === PAUSE_MODES.PAUSED) {
                 this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
             }
-            this.startMenuIsOpen = false;
-            this.escapeWasPressed = false;
         });
     }
 
@@ -395,13 +399,17 @@ class GameController {
     }
 
     pauser() {
-        if (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) {
-            return;
+        if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME) {
+            throw 'gameCancelled';
+        } else {
+            if (this.vm.gamePaused === PAUSE_MODES.NOT_PAUSED) {
+                return;
+            }
+            clearInterval(this.dotAnimationInterval);
+            this.vm.gamePaused = PAUSE_MODES.PAUSED;
+            this.$scope.$apply();
+            return delay(500).then(() => this.pauser());
         }
-        clearInterval(this.dotAnimationInterval);
-        this.vm.gamePaused = PAUSE_MODES.PAUSED;
-        this.$scope.$apply();
-        return delay(500).then(() => this.pauser());
     }
 
     checkIfPlayerMustTurnInCards() {
@@ -486,7 +494,7 @@ class GameController {
         this.vm.turn = this.gameEngine.nextTurn();
         this.vm.aiTurn = this.gameEngine.turn.player.type !== PLAYER_TYPES.HUMAN;
 
-        if (this.settings.showAnnouncer) {
+        if (this.settings.showAnnouncer && this.vm.turn.newPlayer) {
             this.turnPresenterIsOpen = true;
             this.$uibModal.open({
                 templateUrl: 'src/modals/turnPresentationModal.html',
@@ -516,7 +524,7 @@ class GameController {
 
     nextTurnAI () {
         this.vm.turn = this.gameEngine.nextTurn();
-        if (this.settings.showAnnouncer) {
+        if (this.settings.showAnnouncer && this.vm.turn.newPlayer) {
             return new Promise(resolve => {
                 this.turnPresenterIsOpen = true;
                 return this.$uibModal.open({
@@ -585,6 +593,7 @@ class GameController {
     }
 
     testAttackPhase(players) {
+        this.gameEngine.mapSelector = this.mapSelector;
         this.gameEngine.startGame(players);
         this.vm.turn = this.gameEngine.turn;
         const clickedTerritory = getTerritoryByName(this.gameEngine.map, 'Egypt');
@@ -600,6 +609,9 @@ class GameController {
     }
 
     engageAttackPhase(clickedTerritory) {
+        if (this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner).name === this.gameEngine.players.get(clickedTerritory.owner).name) {
+            return;
+        }
         this.$uibModal.open({
             templateUrl: 'src/modals/attackModal.html',
             backdrop: 'static',
@@ -619,6 +631,8 @@ class GameController {
                 }
             }
         }).result.then(closeResponse => {
+            clearArrow(this.mapSelector);
+            this.gameEngine.selectedTerritory = undefined;
             this.gameEngine.setMusic(IN_GAME_MUSIC);
             console.log('Battle is over ', closeResponse);
             this.updatePlayerDataAfterAttack(closeResponse);
@@ -692,7 +706,7 @@ class GameController {
         if (this.gameEngine.turn.turnPhase === TURN_PHASES.DEPLOYMENT) {
             if (this.gameEngine.troopsToDeploy > 0 && clickedTerritory.owner === this.gameEngine.turn.player.name) {
                 this.soundService.addTroopSound.play();
-                displayReinforcementNumbers(clickedTerritory.name);
+                displayReinforcementNumbers(this.mapSelector, clickedTerritory.name);
             } else {
                 this.soundService.denied.play();
             }
@@ -710,13 +724,18 @@ class GameController {
                 this.gameEngine.setMusic(ATTACK_MUSIC);
                 this.engageAttackPhase(clickedTerritory);
             } else {
-                this.gameEngine.selectedTerritory = clickedTerritory;
-                this.mapService.updateMap(this.gameEngine.filter);
-                this.mapService.hightlightTerritory(country);
+                if (!this.gameEngine.selectedTerritory || this.gameEngine.selectedTerritory.name !== clickedTerritory.name) {
+                    this.gameEngine.selectedTerritory = clickedTerritory;
+                    this.mapService.updateMap(this.gameEngine.filter);
+                    this.mapService.hightlightTerritory(country);
+                } else {
+                    this.gameEngine.selectedTerritory = undefined;
+                    clearArrow(this.mapSelector);
+                    this.mapService.updateMap(this.gameEngine.filter);
+                }
             }
         } else if (this.gameEngine.turn.turnPhase === TURN_PHASES.MOVEMENT) {
-            if (this.gameEngine.selectedTerritory &&
-                this.gameEngine.selectedTerritory.name === clickedTerritory.name) {
+            if (this.gameEngine.selectedTerritory && this.gameEngine.selectedTerritory.name === clickedTerritory.name) {
                 this.gameEngine.selectedTerritory = undefined;
                 this.mapService.updateMap(this.gameEngine.filter);
             } else if (this.gameEngine.selectedTerritory &&
@@ -742,18 +761,22 @@ class GameController {
             backdrop: 'static',
             windowClass: 'riskModal',
             controller: 'movementModalController',
+            windowClass: 'riskModal movementModalWrapper',
             controllerAs: 'movement',
             keyboard: false,
             resolve: {
                 data: () => {
                     return {
                         moveTo: toTerritory,
-                        moveFrom: this.gameEngine.selectedTerritory
+                        moveFrom: this.gameEngine.selectedTerritory,
+                        mapSelector: this.mapSelector
                     };
                 }
             }
         }).result.then(closeResponse => {
             if (closeResponse === 'cancelled') {
+                this.gameEngine.selectedTerritory = undefined;
+                this.mapService.updateMap(this.vm.filter);
                 return;
             }
 

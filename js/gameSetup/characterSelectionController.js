@@ -5,11 +5,12 @@ const {avatars} = require('./../player/playerConstants');
 const {objectsAreEqual, arrayIncludesObject, loadSvgIntoDiv} = require('./../helpers');
 
 class CharacterSelectionController {
-    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, customCharacters, socketService) {
+    constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, customCharacters, socketService, soundService) {
         this.vm = this;
         this.$scope = $scope;
         this.$uibModalInstance = $uibModalInstance;
         this.socketService = socketService;
+        this.soundService = soundService;
 
         this.vm.currentSelectedPlayer = currentSelectedPlayer ? Object.assign({}, currentSelectedPlayer) : null;
         this.vm.oldAvatar = currentSelectedPlayer ? currentSelectedPlayer.avatar : null;
@@ -19,13 +20,14 @@ class CharacterSelectionController {
         this.vm.avatars = avatars;
         this.vm.selectAvatar = this.selectAvatar;
         this.vm.ok = this.ok;
+        this.vm.cancel = this.cancel;
         this.vm.selectAvatarAndClose = this.selectAvatarAndClose;
         this.vm.avatarIsSelected = this.avatarIsSelected;
         this.vm.avatarIsTaken = this.avatarIsTaken;
         this.vm.loadingCharacters = true;
 
-        if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.userName) {
-            this.vm.currentSelectedPlayer.name = this.vm.currentSelectedPlayer.userName;
+        if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar) {
+            this.vm.currentSelectedPlayer.name = this.vm.currentSelectedPlayer.avatar.displayName;
         }
 
         this.vm.takenAvatars = this.vm.selectedPlayers.map(x => x.avatar);
@@ -35,15 +37,51 @@ class CharacterSelectionController {
         $('.mainWrapper').css('filter', 'blur(5px)');
         $('.mainWrapper').css('-webkit-filter', 'blur(5px)');
 
-        if (!currentSelectedPlayer) {
+        console.log('BALLE', this.vm.currentSelectedPlayer)
+
+        if (!this.vm.currentSelectedPlayer || !this.vm.currentSelectedPlayer.avatar) {
             const backgroundToSelect = './assets/avatarBackgrounds/default.svg';
             loadSvgIntoDiv(backgroundToSelect, '#characterSelectionModal__background');
             this.currentBackground = backgroundToSelect;
         }
 
         setTimeout(() => {
+            $('.selectableAvatars').css('opacity', '0');
             if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.svg) {
                 this.selectAvatar(this.vm.currentSelectedPlayer.avatar, true);
+            } else if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.customCharacter) {
+                loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', () => {
+                    const character = Object.values(this.vm.avatars).find(x => x.id === this.vm.currentSelectedPlayer.avatar.id);
+
+                    $('#selectedCharacterSvg svg g[category="hat"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="head"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="eyes"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="eyebrows"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="nose"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="mouth"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="torso"] > g').css('visibility', 'hidden');
+                    $('#selectedCharacterSvg svg g[category="legs"] > g').css('visibility', 'hidden');
+
+                    $(`#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
+                    $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
+
+                    $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
+
+                    const backgroundToSelect = './assets/avatarBackgrounds/default.svg';
+                    loadSvgIntoDiv(backgroundToSelect, '#characterSelectionModal__background');
+                    this.currentBackground = backgroundToSelect;
+                    this.vm.currentSelectedPlayer.name = character.name;
+
+                    $('#selectedCharacterSvg').animate({
+                        opacity: '1'
+                    }, 200);
+                });
             }
         }, 50);
 
@@ -54,8 +92,18 @@ class CharacterSelectionController {
             });
             setTimeout(() => {
                 // Must fix this
-                this.loadSavedCharacterPortraits();
-            }, 1500);
+                this.loadSavedCharacterPortraits(() => {
+                    $('.selectableAvatars').animate({
+                        opacity: 1
+                    }, 300);
+                });
+            }, 900);
+        } else {
+            setTimeout(() => {
+                $('.selectableAvatars').animate({
+                    opacity: 1
+                }, 300);
+            }, 500);
         }
 
         if (this.multiplayer) { // Is multiplayer game
@@ -67,7 +115,7 @@ class CharacterSelectionController {
         }
     }
 
-    loadSavedCharacterPortraits() {
+    loadSavedCharacterPortraits(callback) {
         document.querySelectorAll('.selectableAvatars__item').forEach(characterBox => {
             if (characterBox.querySelector('div[character]')) {
                 const avatarId = characterBox.querySelector('div[character]').getAttribute('character');
@@ -102,6 +150,7 @@ class CharacterSelectionController {
         });
         this.vm.loadingCharacters = false;
         this.$scope.$apply();
+        callback();
     }
 
     avatarIsSelected(avatar) {
@@ -127,12 +176,15 @@ class CharacterSelectionController {
 
     selectAvatar(avatar, initialLoad = false) {
         if (this.avatarIsTaken(avatar)) {
+            this.soundService.denied.play();
             return;
         }
 
-        if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar.id === avatar.id && !initialLoad) {
+        if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.id === avatar.id && !initialLoad) {
             return;
         }
+
+        this.soundService.tick.play();
 
         if (this.vm.currentSelectedPlayer === null) {
             this.vm.currentSelectedPlayer = {
@@ -140,9 +192,7 @@ class CharacterSelectionController {
                 name: Object.entries(avatars).find(x => x[1] === avatar)[0]
             };
         } else {
-            if (!this.vm.currentSelectedPlayer.userName) {
-                this.vm.currentSelectedPlayer.name = Object.entries(avatars).find(x => x[1] === avatar)[0];
-            }
+            this.vm.currentSelectedPlayer.name = avatar.displayName || avatar.name;
             this.vm.currentSelectedPlayer.avatar = avatar;
         }
 
@@ -190,11 +240,20 @@ class CharacterSelectionController {
 
     selectAvatarAndClose(avatar) {
         if (this.avatarIsTaken(avatar)) {
+            this.soundService.denied.play();
             return;
         }
 
+        this.soundService.tick.play();
+
         this.selectAvatar(avatar);
         this.ok();
+    }
+
+    cancel() {
+        this.$uibModalInstance.close({
+            cancel: true
+        });
     }
 
     ok() {

@@ -1,0 +1,51 @@
+.movementModalWrapper {
+    > .modal-dialog {
+        > .modal-content {
+            background: url(../assets/modalBackground.png);
+            background-size: 100% 100%;
+            box-shadow: none;
+
+            #movementModal {
+                > .modal-dialog {
+                    > .modal-content {
+                        padding: 50px;
+                        background-color: transparent;
+                        box-shadow: none;
+
+                        #movementPreviewBox {
+                            opacity: 0;
+                            transition: all 600ms;
+
+                            &.loaded {
+                                opacity: 1;
+                            }
+
+                            svg {
+                                pointer-events: none;
+                                path {
+                                    stroke-width: 3px;
+                                }
+                            }
+                        }
+
+                        #troopIcons {
+                            min-height: 115px;
+                            .mainTroopIndicator {
+                                display: inline-block;
+                                height: 50px;
+                                .inner {
+                                    height: 100%;
+                                    svg {
+                                        height: 100%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        
+                
+            }
+        }
+    }
+}

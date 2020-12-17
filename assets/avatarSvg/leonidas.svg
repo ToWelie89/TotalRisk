@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="240.505 -320.674 273.466 612.745" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="240.505 -320.674 273.466 612.745" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com" style="filter: url(#filter-droppy)">
   <defs>
+    <filter xmlns="http://www.w3.org/2000/svg" id="filter-droppy" height="130%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="1"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
     <radialGradient id="gradient-0" gradientUnits="userSpaceOnUse" cx="326.412" cy="-147.721" r="50.618" gradientTransform="matrix(-0.694001, 1.500034, -1.123327, -0.519716, 453.550305, -784.951956)">
       <stop offset="0" style="stop-color: rgb(246, 228, 215);"/>
       <stop offset="1" style="stop-color: rgb(99, 88, 84);"/>

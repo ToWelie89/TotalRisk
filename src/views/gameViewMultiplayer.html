@@ -8,7 +8,7 @@
         <div class="row" id="topBar">
             <div class="col-xs-4 textCenter" style="padding-left:0px; padding-top:6px;">
                 <div class="col-xs-3">
-                    <div style="position: absolute; z-index: 1000; top: -91px; left: -110px; transform: scale(0.5);">
+                    <div id="currentPlayerPortrait">
                         <div class="setupBoxAvatarsContainer__item" style="margin-top: 0px;">
                             <div
                                 id="currentPlayerPortraitMultiplayer"
@@ -26,6 +26,13 @@
                             <div class="setupBoxAvatarsContainer__item__flag">
                                 <waving-flag flag-width="90" flag-height="50" flag-url="gameMultiplayer.turn.player.avatar.flag"></waving-flag>
                             </div>
+                        </div>
+                    </div>
+                    <div id="multiplayerViewCurrentTurnTimerContainer" data-ng-show="gameMultiplayer.turn.player.type === 0">
+                        <div id="multiplayerViewCurrentTurnTimerHourGlass" inject-svg src="assets/hourglass.svg">
+                        </div>
+                        <div id="multiplayerViewCurrentTurnTimerSecondsLeft">
+                            {{ gameMultiplayer.secondsLeft }}
                         </div>
                     </div>
                 </div>
@@ -60,7 +67,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div data-ng-show="gameMultiplayer.turn.player.cards.length === 0" class="floatLeft marginTop">
+                        <div data-ng-show="gameMultiplayer.turn.player.cards.length === 0" class="floatLeft marginTop" style="color: white;">
                             No cards on hand
                         </div>
                         <h4 class="floatLeft colorWhite" style="clear: left;" data-ng-show="gameMultiplayer.currentOwnagePercentage">
@@ -125,12 +132,12 @@
                                     </div>
                                 </div>
                                 <div class="troop_{{ gameMultiplayer.turn.player.color.name }}" data-ng-show="gameMultiplayer.turn.turnPhase == 0" style="width: 300px; position: absolute;">
-                                    <div class="textCenter" data-ng-if="gameMultiplayer.troopsToDeploy <= 12">
+                                    <div class="textCenter" data-ng-show="gameMultiplayer.troopsToDeploy <= 12">
                                         <div style="display: inline-block;" class="mainTroopIndicator" data-ng-repeat="i in gameMultiplayer.toArray(gameMultiplayer.troopsToDeploy) track by $index">
                                             <div id="reinforcementTroopIconSingleplayer{{ $index }}" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                         </div>
                                     </div>
-                                    <div data-ng-if="gameMultiplayer.troopsToDeploy > 12" class="textCenter" style="margin-top: -5px;">
+                                    <div data-ng-show="gameMultiplayer.troopsToDeploy > 12" class="textCenter" style="margin-top: -5px;">
                                         <div style="display: inline-block;">
                                             <div id="reinforcementTroopIconSingleplayer-static" inject-svg src="assets/troopIcons/soldier2.svg"></div>
                                         </div>
@@ -138,7 +145,7 @@
                                             x{{ gameMultiplayer.troopsToDeploy }}
                                         </div>
                                     </div>
-                                    <div class="textCenter" data-ng-if="gameMultiplayer.troopsToDeploy === 0">
+                                    <div class="textCenter" data-ng-show="gameMultiplayer.troopsToDeploy === 0">
                                         <strong>No more reinforcements!</strong>
                                     </div>
                                 </div>
@@ -149,7 +156,8 @@
                         <span id="nextButton"
                               data-ng-click="gameMultiplayer.nextTurn()"
                               data-ng-show="!gameMultiplayer.aiTurn"
-                              data-ng-class="{'nextButton--disabled': gameMultiplayer.checkIfNextIsDisabled()}">
+                              data-ng-class="{'nextButton--disabled': gameMultiplayer.checkIfNextIsDisabled(),
+                                'pulsateButton': gameMultiplayer.isMyTurn() && !gameMultiplayer.checkIfNextIsDisabled() && gameMultiplayer.turn.turnPhase === 0 && gameMultiplayer.troopsToDeploy === 0}">
                                   <span>
                                       Next
                                   </span>
@@ -158,14 +166,27 @@
                 </div>
             </div>
         </div>
-        <div class="row" id="timerBar">
+        <!-- <div class="row" id="timerBar">
             <p data-ng-show="gameMultiplayer.secondsLeft">
                 {{ gameMultiplayer.secondsLeft }}
             </p>
             <div id="timerBarInner" style="width: {{ gameMultiplayer.turn.player.type === 0 ? gameMultiplayer.timerWidth + 'px' : '100%' }}">
             </div>
-        </div>
+        </div> -->
         <div class="row gameView">
+            <div id="showRegionBonuses" class="button button-green large button-unclickable">
+                View region bonuses
+                <div id="showRegionBonusesInner">
+                    <div id="showRegionBonusesInnerInner">
+                        <div class="regionInfo" style="color: black; padding-bottom: 10px; border-bottom: none; font-size: 26px;">
+                            <strong style="width: 50%; text-align: left;">Region</strong><p style="width: 50%; text-align: right; font-weight: bold;">Troop bonus</p>
+                        </div>
+                        <div class="regionInfo" data-ng-repeat="region in gameMultiplayer.mapConfiguration.regions">
+                            <strong style="color: {{ region.color.mainColor }};">{{ region.name }}</strong><p>{{ region.bonusTroops }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="ownageChartContainer" uib-tooltip-html="gameMultiplayer.ownageChartTooltip" tooltip-placement="right">
                 <canvas id="ownageChartMultiplayer" width="100" height="100"></canvas>
             </div>
@@ -174,8 +195,7 @@
             </div>
            <div id="multiplayerMap"
                 data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN_MULTIPLAYER}"
-                inject-svg src="assets/maps/worldMap/worldMap.svg">
-           </div>
+            ></div>
         </div>
         <div id="lobbyChatBoxes">
             <div class="muteChatContainer">

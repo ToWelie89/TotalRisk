@@ -7,7 +7,20 @@
     <div class="row mainMenuBox textCenter">
     <div id="gameSetupBox">
         <div class="row">
-            <div class="col-xs-12 textCenter marginTop--double">
+            <div class="col-xs-12 marginTop--double">
+                <div id="singleplayerSetupMapContainer" style="text-align: left;">
+                    <div id="singleplayerSetupMapPreview"></div>
+                    <div id="singleplayerSetupMapPreviewText">
+                        <div>
+                            <p>
+                                {{ setup.gameEngine.selectedMap.name }}<br>
+                                {{ setup.gameEngine.selectedMap.regions }} regions<br>
+                                {{ setup.gameEngine.selectedMap.territories }} territories
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
                 <div class="buttonGroup" style="height: 40px;">
                     <button type="button" class="button button-green button-unclickable">
                         <strong>Map control percentage for victory</strong>
@@ -17,6 +30,25 @@
                         <strong data-ng-if="goal.type === 'mapControl'">{{goal.percentage}}%</strong>
                     </button>
                 </div>
+                <button type="button" class="button button-purple marginLeft--double" data-ng-click="setup.openMapSelectorMenu();">
+                    <strong>Change map</strong>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" id="mapSelectorMenu" data-ng-class="{'minimized': !setup.showMapList}">
+                <div
+                    data-ng-repeat="map in setup.maps track by $index"
+                    data-ng-class="{'selected': map === setup.gameEngine.selectedMap }"
+                    id="singlePlayerMapListMapPreview{{ $index }}"
+                    class="mapPreview small"
+                    data-ng-click="setup.selectMap(map)"
+                    data-ng-dblclick="setup.selectMap(map); setup.openMapSelectorMenu();"
+                    uib-tooltip-html="setup.mapTooltips[map.id]"
+                    tooltip-placement="bottom"
+                    inject-svg
+                    src="{{ map.mainMap }}"
+                ></div>
             </div>
         </div>
 

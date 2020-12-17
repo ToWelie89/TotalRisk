@@ -1,4 +1,99 @@
+const fictionalFlags = [
+    {
+        name: 'Rainbow flag',
+        path: './assets/flagsSvg/rainbowflag.svg'
+    },
+    {
+        name: 'Pirate flag',
+        path: './assets/flagsSvg/pirateFlag.svg'
+    },
+    {
+        name: 'Pirate flag 2',
+        path: './assets/flagsSvg/pirateFlag2.svg'
+    },
+];
+
 const flags = [
+    {
+        name: 'Gran Colombia',
+        path: './assets/flagsSvg/grancolombia.svg'
+    },
+    {
+        name: 'Soviet Union',
+        path: './assets/flagsSvg/ussr.svg'
+    },
+    {
+        name: 'Empire of Brazil',
+        path: './assets/flagsSvg/empireofbrazil.png'
+    },
+    {
+        name: 'Dehli Sultanate',
+        path: './assets/flagsSvg/dehlisultanate.svg'
+    },
+    {
+        name: 'Italian Colonial Empire',
+        path: './assets/flagsSvg/italiancolonialempire.svg'
+    },
+    {
+        name: 'Austrian Empire',
+        path: './assets/flagsSvg/austrianempire.svg'
+    },
+    {
+        name: 'Austro-Hungarian Empire',
+        path: './assets/flagsSvg/austrohungarianempire.svg'
+    },
+    {
+        name: 'Khmer Empire',
+        path: './assets/flagsSvg/khmerempire.svg'
+    },
+    {
+        name: 'Kingdom of Goryeo',
+        path: './assets/flagsSvg/kingdomofgoryeo.svg'
+    },
+    {
+        name: 'Majapahit Empire',
+        path: './assets/flagsSvg/majapahitempire.svg'
+    },
+    {
+        name: 'Kingdom of Joseon',
+        path: './assets/flagsSvg/kingdomofjoseon.svg'
+    },
+    {
+        name: 'Achaemenid Empire',
+        path: './assets/flagsSvg/achaemenidempire.svg'
+    },
+    {
+        name: 'Safavid Empire',
+        path: './assets/flagsSvg/safavidempire.svg'
+    },
+    {
+        name: 'Mughal Empire',
+        path: './assets/flagsSvg/mughalempire.svg'
+    },
+    {
+        name: 'Tokugawa Shogunate',
+        path: './assets/flagsSvg/tokugawashogunate.svg'
+    },
+    {
+        name: 'Maratha Empire',
+        path: './assets/flagsSvg/marathaempire.svg'
+    },
+    {
+        name: 'Burmese Empire',
+        path: './assets/flagsSvg/burmeseempire.svg'
+    },
+    {
+        name: 'Rattanakosin Kingdom',
+        path: './assets/flagsSvg/rattanakosinkingdom.svg'
+    },
+    {
+        name: 'Sikh Empire',
+        path: './assets/flagsSvg/sikhempire.svg'
+    },
+    {
+        name: 'Empire of Dai Nam',
+        path: './assets/flagsSvg/dainamempire.svg'
+    },
     {
         name: 'Athens',
         path: './assets/flagsSvg/athens.svg'
@@ -33,7 +128,7 @@ const flags = [
     },
     {
         name: 'Macedon',
-        path: './assets/flagsSvg/macedon.svg'
+        path: './assets/flagsSvg/macedon2.svg'
     },
     {
         name: 'Normandy',
@@ -44,7 +139,7 @@ const flags = [
         path: './assets/flagsSvg/oldEngland.svg'
     },
     {
-        name: 'Medieval France',
+        name: 'French colonial empire',
         path: './assets/flagsSvg/oldFrance.svg'
     },
     {
@@ -80,14 +175,6 @@ const flags = [
         path: './assets/flagsSvg/persianEmpire.svg'
     },
     {
-        name: 'Pirate flag',
-        path: './assets/flagsSvg/pirateFlag.svg'
-    },
-    {
-        name: 'Pirate flag 2',
-        path: './assets/flagsSvg/pirateFlag2.svg'
-    },
-    {
         name: 'Qing Dynasty',
         path: './assets/flagsSvg/qingDynasty.svg'
     },
@@ -105,4 +192,4 @@ const flags = [
     }
 ];
 
-module.exports = { flags };
+module.exports = { flags, fictionalFlags };

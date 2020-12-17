@@ -21,14 +21,14 @@ class SoundService {
         this.movement = this.constructAudio(`${this.soundPath}/armysound1.wav`);
         this.tick = this.constructAudio(`${this.soundPath}/tick.wav`);
         this.denied = this.constructAudio(`${this.soundPath}/denied.wav`);
-        this.newMessage = this.constructAudio(`${this.soundPath}/newMessage.wav`);
+        this.newMessage = this.constructAudio(`${this.soundPath}/newMessage.wav`, 0.25);
         this.muskets = this.constructAudio(`${this.soundPath}/muskets.wav`);
     }
 
-    constructAudio(fullPath) {
+    constructAudio(fullPath, volumeModifier = undefined) {
         return {
             play: () => {
-                const sound = new Sound(fullPath, this.settings);
+                const sound = new Sound(fullPath, this.settings, volumeModifier);
                 sound.play();
             }
         };

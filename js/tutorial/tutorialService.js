@@ -24,9 +24,9 @@ class TutorialService {
         territoryToAttack = getTerritoryByName(this.gameEngine.map, territoryToAttack);
         this.territoryToAttack = territoryToAttack;
 
-        let territoryToMoveTo = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner === this.currentPlayerName);
-        territoryToMoveTo = getTerritoryByName(this.gameEngine.map, territoryToAttack);
-        this.territoryToMoveTo = territoryToMoveTo;
+        /* let territoryToMoveTo = territory.adjacentTerritories.find(adjTerr => getTerritoryByName(this.gameEngine.map, adjTerr).owner === this.currentPlayerName);
+        territoryToMoveTo = getTerritoryByName(this.gameEngine.map, territoryToAttack); */
+        this.territoryToMoveTo = territoryToAttack;
 
         this.defenderColor = this.gameEngine.players.get(territoryToAttack.owner).color.mainColor;
     }
@@ -67,7 +67,7 @@ class TutorialService {
                 markup: `Right now it's <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}s</strong> turn, whose name is presented here. The first phase is the <strong>deployment phase</strong> in which the player can reinforce his territories with fresh troops.`
             }],
             () => {
-                $('#tutorialContainer #playerName').addClass('animated infinite bounce');
+                $('#singlePlayerContainer #playerName').addClass('animated infinite bounce');
                 /*zoom.to({
                     x: 350,
                     y: 200,
@@ -80,7 +80,7 @@ class TutorialService {
     }
 
     deploymentIndicatorExplanation() {
-        $('#tutorialContainer #playerName').removeClass('animated infinite bounce');
+        $('#singlePlayerContainer #playerName').removeClass('animated infinite bounce');
         //zoom.out();
 
         return this.openTutorialPresenter(
@@ -89,7 +89,7 @@ class TutorialService {
                 markup: `Here you can see the amount of troops that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> have to distribute between the different territories that he controls.`
             }],
             () => {
-                $('#tutorialContainer #currentPhaseIndicator').addClass('animated infinite bounce');
+                $('#troopsToDeployContainer').addClass('animated infinite bounce');
             },
             () => {},
             1000
@@ -97,7 +97,7 @@ class TutorialService {
     }
 
     reinforcementRulesExplanation() {
-        $('#tutorialContainer #currentPhaseIndicator').removeClass('animated infinite bounce');
+        $('#troopsToDeployContainer').removeClass('animated infinite bounce');
 
         return this.openTutorialPresenter(
             [{
@@ -116,10 +116,10 @@ class TutorialService {
                 markup: 'By changing the filter to <strong>region</strong> you can switch the colors of the map to color by regions. This way you can more easily determine which <strong>territories</strong> make up each <strong>region</strong>.',
             }],
             () => {
-                $('#tutorialContainer #showByRegion').addClass('blink_me');
+                $('#singlePlayerContainer #showByRegion').addClass('blink_me');
             },
             () => {
-                $('#tutorialContainer #showByRegion').removeClass('blink_me');
+                $('#singlePlayerContainer #showByRegion').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );
@@ -131,10 +131,10 @@ class TutorialService {
                 message: 'To view the map by territorial ownership again just press this button.'
             }],
             () => {
-                $('#tutorialContainer #showByOwner').addClass('blink_me');
+                $('#singlePlayerContainer #showByOwner').addClass('blink_me');
             },
             () => {
-                $('#tutorialContainer #showByOwner').removeClass('blink_me');
+                $('#singlePlayerContainer #showByOwner').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );
@@ -147,10 +147,10 @@ class TutorialService {
                 markup: `<strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> decides he wants to put all his reinforcements in ${this.territoryToAttackFrom.name}.`
             }],
             () => {
-                $(`#tutorialContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).addClass('blink_me');
+                $(`#singlePlayerContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).addClass('blink_me');
             },
             () => {
-                $(`#tutorialContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).removeClass('blink_me');
+                $(`#singlePlayerContainer #svgMap .country[id="${this.territoryToAttackFrom.name}"]`).removeClass('blink_me');
             },
             1000
         );
@@ -163,10 +163,10 @@ class TutorialService {
                 markup: `<strong>${this.territoryToAttackFrom.name}</strong> is now inhabited by <strong>${this.territoryToAttackFrom.numberOfTroops}</strong> troops. Given he has no additional troops to deploy he can now skip to the next phase by pressing the <strong>NEXT</strong> button.`
             }],
             () => {
-                $('#tutorialContainer #nextButton').addClass('blink_me');
+                $('#singlePlayerContainer #nextButton').addClass('blink_me');
             },
             () => {
-                $('#tutorialContainer #nextButton').removeClass('blink_me');
+                $('#singlePlayerContainer #nextButton').removeClass('blink_me');
                 this.soundService.click.play();
             },
             1000
@@ -214,7 +214,7 @@ class TutorialService {
             return this.$uibModal.open({
                 templateUrl: 'src/modals/attackModal.html',
                 backdrop: 'static',
-                windowClass: 'riskModal',
+                windowClass: 'riskModal attackModalWrapper',
                 controller: 'attackModalController',
                 controllerAs: 'attack',
                 keyboard: false,
@@ -225,7 +225,8 @@ class TutorialService {
                             attackFrom: this.gameEngine.selectedTerritory,
                             attacker: this.gameEngine.players.get(this.gameEngine.selectedTerritory.owner),
                             defender: this.gameEngine.players.get(this.territoryToAttack.owner),
-                            tutorialMode: true
+                            tutorialMode: true,
+                            multiplayer: false
                         };
                     }
                 }
@@ -317,7 +318,7 @@ class TutorialService {
                 markup: `Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has won an invasion he has recieved a card. To view the cards that the current player has on hand simply click this button.`
             }],
             () => {
-                $('#tutorialContainer #cardButton').addClass('blink_me');
+                $('#singlePlayerContainer #cardButton').addClass('blink_me');
             }
         );
     }
@@ -330,7 +331,7 @@ class TutorialService {
             }],
             () => {},
             () => {
-                $('#tutorialContainer #cardButton').removeClass('blink_me');
+                $('#singlePlayerContainer #cardButton').removeClass('blink_me');
             }
         );
     }
@@ -362,7 +363,7 @@ class TutorialService {
                         this.$scope.$apply();
                     }, 100);
                     setTimeout(() => {
-                        $('#tutorialContainer .mainTroopIndicator').removeClass('animated infinite bounce');
+                        $('#singlePlayerContainer .mainTroopIndicator').removeClass('animated infinite bounce');
                     }, 1000);
                 }
                 resolve();
@@ -399,10 +400,10 @@ class TutorialService {
                 markup: `During the attack phase a player can keep attacking for as long as he wants. Now that <strong style="color: ${this.currentPlayerColor};">${this.currentPlayerName}</strong> has taken over ${this.territoryToAttack.name} and moved forces there he can keep invading new territories from there if he wants. When the player feels he is done he can end the attack phase by pressing the <strong>NEXT</strong> button.`,
             }],
             () => {
-                $('#tutorialContainer #nextButton').addClass('blink_me');
+                $('#singlePlayerContainer #nextButton').addClass('blink_me');
             },
             () => {
-                $('#tutorialContainer #nextButton').removeClass('blink_me');
+                $('#singlePlayerContainer #nextButton').removeClass('blink_me');
                 this.soundService.click.play();
             }
         );
@@ -445,14 +446,16 @@ class TutorialService {
                 backdrop: 'static',
                 windowClass: 'riskModal',
                 controller: 'movementModalController',
+                windowClass: 'riskModal movementModalWrapper',
                 controllerAs: 'movement',
                 keyboard: false,
                 resolve: {
                     data: () => {
                         return {
                             moveTo: this.territoryToAttackFrom,
-                            moveFrom: this.gameEngine.selectedTerritory,
-                            tutorial: true
+                            moveFrom: this.territoryToAttackFrom,
+                            tutorial: true,
+                            mapSelector: '#singleplayerMap'
                         };
                     }
                 }

@@ -1,12 +1,14 @@
-const {GAME_PHASES, VICTORY_GOALS} = require('./gameConstants');
-const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, devMode} = require('./helpers');
+const {GAME_PHASES, VICTORY_GOALS, MAPS} = require('./gameConstants');
+const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, devMode, loadSvgIntoDiv} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
+const { getTerritoryByName } = require('./map/mapHelpers');
+const { patchLog } = require('./patchLog/patchLog');
 
 class MainController {
 
-    constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService) {
+    constructor($scope, $rootScope, $compile, gameEngine, soundService, $uibModal, toastService, mapService) {
         this.vm = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -15,6 +17,7 @@ class MainController {
         this.soundService = soundService;
         this.toastService = toastService;
         this.$compile = $compile;
+        this.mapService = mapService;
         // PUBLIC FUNCTIONS
         this.vm.toggleMusicVolume = this.toggleMusicVolume;
         this.vm.startGame = this.startGame;
@@ -26,6 +29,8 @@ class MainController {
         this.vm.quit = this.quit;
         this.vm.testEndScreen = this.testEndScreen;
         this.vm.testAttackModal = this.testAttackModal;
+        this.vm.testMovementModal = this.testMovementModal;
+        this.vm.closePatchNotes = this.closePatchNotes;
 
         this.vm.gamePhases = GAME_PHASES;
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
@@ -65,6 +70,14 @@ class MainController {
             });
 
             this.vm.appVersion = electron.remote.app.getVersion();
+            if (electronDevVersion()) {
+                const highestVersion = Object.keys(patchLog)[0];
+                this.vm.currentPatchVersion = highestVersion;
+                this.vm.currentPatchNotes = patchLog[highestVersion];
+            } else {
+                this.vm.currentPatchVersion = this.vm.appVersion;
+                this.vm.currentPatchNotes = patchLog[this.vm.appVersion];
+            }
             this.$rootScope.appVersion = this.vm.appVersion;
         } else {
             fetch('./package.json')
@@ -77,6 +90,59 @@ class MainController {
         }
 
         console.log('Initialization of mainController');
+    }
+
+    closePatchNotes() {
+        this.soundService.tick.play();
+        this.vm.currentPatchNotes = null;
+    }
+
+    testMovementModal() {
+        const players = Array.from(
+            new Array(6), (x, i) =>
+                new Player(
+                    Object.keys(avatars)[i],
+                    Object.keys(PLAYER_COLORS).map(key => PLAYER_COLORS[key])[i],
+                    Object.keys(avatars).map(key => avatars[key])[i],
+                    PLAYER_TYPES.HUMAN
+                )
+        );
+        this.gameEngine.initMap()
+        this.gameEngine.startGame(players, {});
+        loadSvgIntoDiv("assets/maps/worldMap/worldMap.svg", '#mapBackgroundForTestingMovement', () => {
+            const argentina = getTerritoryByName(this.gameEngine.map, 'Argentina');
+            const brazil = getTerritoryByName(this.gameEngine.map, 'Brazil');
+
+            brazil.owner = players[0].name;
+            brazil.numberOfTroops = 2;
+            argentina.owner = players[0].name;
+            argentina.numberOfTroops = 12;
+
+            this.mapService.init('mapBackgroundForTestingMovement');
+            this.mapService.updateMap();
+
+            this.$uibModal.open({
+                templateUrl: 'src/modals/movementModal.html',
+                backdrop: 'static',
+                windowClass: 'riskModal',
+                controller: 'movementModalController',
+                windowClass: 'riskModal movementModalWrapper',
+                controllerAs: 'movement',
+                keyboard: false,
+                resolve: {
+                    data: () => {
+                        return {
+                            moveTo: brazil,
+                            moveFrom: argentina,
+                            mapSelector: '#mapBackgroundForTestingMovement'
+                        };
+                    }
+                }
+            }).result.then(() => {
+                $('#mapBackgroundForTestingMovement').html('');
+            });
+        });
+
     }
 
     testAttackModal() {
@@ -121,6 +187,7 @@ class MainController {
                     PLAYER_TYPES.HUMAN
                 )
         );
+        this.gameEngine.initMap();
         this.gameEngine.startGame(players, {});
 
         players.forEach(p => {
@@ -263,6 +330,7 @@ class MainController {
     }
 
     startNewLocalGame() {
+        this.soundService.tick.play();
         this.$uibModal.open({
             templateUrl: 'src/modals/scenarioSelectorModal.html',
             backdrop: 'static',
@@ -271,31 +339,43 @@ class MainController {
             controllerAs: 'scenario',
             keyboard: false
         }).result.then((closeResponse) => {
-            // handle scenario somehow
-            const selectedScenario = closeResponse.selectedScenario;
-            this.setGamePhase(selectedScenario.setupPhase);
+            if (!closeResponse.cancel) {
+                // handle scenario somehow
+                const selectedScenario = closeResponse.selectedScenario;
+                this.setGamePhase(selectedScenario.setupPhase);
+            }
         });
     }
 
     setGamePhase(phase) {
         this.vm.currentGamePhase = phase;
         this.$rootScope.currentGamePhase = this.vm.currentGamePhase;
-        this.soundService.bleep2.play();
+        this.soundService.tick.play();
     }
 
     startGame(players, chosenGoal) {
-        this.$rootScope.players = players;
-        this.$rootScope.chosenGoal = chosenGoal;
-        this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
+        this.soundService.tick.play();
+        
+        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerMap', () => {
+            this.gameEngine.initMap();
+            this.$rootScope.players = players;
+            this.$rootScope.chosenGoal = chosenGoal;
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
+            this.$rootScope.$apply();
+        });
     }
 
     goBackToMenu() {
+        this.soundService.tick.play();
         this.vm.currentGamePhase = GAME_PHASES.MAIN_MENU;
         $('.flag-element').remove();
         this.gameEngine.setMusic();
     }
 
     startTutorial() {
+        this.soundService.tick.play();
+        this.gameEngine.selectedMap = MAPS[0];
+        this.gameEngine.initMap();
         this.$rootScope.currentGamePhase = GAME_PHASES.TUTORIAL;
     }
 

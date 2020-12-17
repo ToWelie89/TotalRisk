@@ -20,6 +20,7 @@ class LobbiesController {
         this.$uibModal = $uibModal;
         this.gameEngine = gameEngine;
         this.socketService = socketService;
+        this.vm.customCharacters = [];
 
         this.$rootScope.$watch('currentLobby', () => {
             this.initLobby();
@@ -108,6 +109,7 @@ class LobbiesController {
         this.vm.existingPlayers = this.existingPlayers;
         this.vm.kickPlayer = this.kickPlayer;
         this.vm.openSelectionScreen = this.openSelectionScreen;
+        this.vm.getStartTooltip = this.getStartTooltip;
         this.vm.startGameIsDisabled = this.startGameIsDisabled;
         this.vm.startGame = this.startGame;
         this.vm.updateColorOfPlayer = this.updateColorOfPlayer;
@@ -116,6 +118,7 @@ class LobbiesController {
     }
 
     addAi() {
+        this.soundService.tick.play();
         this.socketService.gameSocket.emit('addAiPlayer', this.vm.room.id);
     }
 
@@ -129,7 +132,7 @@ class LobbiesController {
 
     setGoal(goal) {
         this.vm.chosenGoal = goal;
-        this.soundService.changeColor.play();
+        this.soundService.tick.play();
         this.socketService.gameSocket.emit('setGoal', this.vm.room.id, this.vm.chosenGoal);
     }
 
@@ -147,7 +150,7 @@ class LobbiesController {
 
             console.log('This room', this.vm.room);
 
-            loadSvgIntoDiv('./assets/maps/worldMap/worldMap.svg', '#lobbyMapContainer');
+            loadSvgIntoDiv(this.vm.room.map.mainMap, '#lobbyMapContainer');
 
             this.vm.userIsHost = this.vm.room.creatorUid === user.uid;
             this.vm.turnLengthSliderOptions.disabled = !this.vm.userIsHost;
@@ -168,6 +171,10 @@ class LobbiesController {
                 let chosenAvatar;
 
                 if (userData) {
+                    if (userData.characters) {
+                        this.vm.customCharacters = userData.characters;
+                    }
+
                     if (userData.defaultAvatar) {
                         if (userData.characters && userData.characters.find(c => c.id === userData.defaultAvatar)) {
                             const chosenDefaultAvatar = userData.characters.find(c => c.id === userData.defaultAvatar);
@@ -223,6 +230,8 @@ class LobbiesController {
             return;
         }
 
+        this.soundService.tick.play();
+
         this.$uibModal.open({
             templateUrl: 'src/modals/characterSelectionModal.html',
             backdrop: 'static',
@@ -233,11 +242,16 @@ class LobbiesController {
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
                 selectedPlayers: () => this.vm.players,
-                multiplayer: () => true
+                multiplayer: () => true,
+                customCharacters: () => this.vm.customCharacters
             }
         }).result.then(closeResponse => {
             $('.mainWrapper').css('filter', 'none');
             $('.mainWrapper').css('-webkit-filter', 'none');
+            
+            if (closeResponse.cancel) {
+                return;
+            }
 
             if (!objectsAreEqual(closeResponse.avatar, currentSelectedPlayer.avatar)) {
                 this.socketService.gameSocket.emit('updateAvatar', this.vm.room.id, uid, closeResponse.avatar);
@@ -248,6 +262,7 @@ class LobbiesController {
     }
 
     addSocketListeners() {
+        this.soundService.tick.play();
         this.socketService.gameSocket.on('updatedColorOfPlayer', (playerUid, playerColor) => {
             const player = this.vm.players.find(p => p.userUid === playerUid);
             if (player) {
@@ -280,6 +295,7 @@ class LobbiesController {
         });
 
         this.socketService.gameSocket.on('kicked', () => {
+            this.soundService.tick.play();
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.errorToast('', 'You have been kicked from the lobby.');
@@ -299,12 +315,14 @@ class LobbiesController {
         });
 
         this.socketService.gameSocket.on('updatedLockedSlots', lockedSlots => {
+            this.soundService.tick.play();
             this.vm.lockedSlots = lockedSlots;
             this.setPlayers(this.vm.players);
             this.vm.room.maxNumberOfPlayer = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
         });
 
         this.socketService.gameSocket.on('setTurnLengthNotifier', turnLength => {
+            this.soundService.tick.play();
             this.vm.turnLength = turnLength;
             this.$rootScope.turnLength = turnLength;
             this.$scope.$apply();
@@ -312,34 +330,53 @@ class LobbiesController {
         });
 
         this.socketService.gameSocket.on('setAiSpeedNotifier', aiSpeed => {
+            this.soundService.tick.play();
             this.vm.aiSpeed = aiSpeed;
             this.$scope.$apply();
             window.dispatchEvent(new Event('resize'));
         });
 
         this.socketService.gameSocket.on('setGoalNotifier', chosenGoal => {
+            this.soundService.tick.play();
             this.vm.chosenGoal = chosenGoal;
             this.$scope.$apply();
         });
 
-        this.socketService.gameSocket.on('gameStarted', (players, victoryGoal, map, turn, troopsToDeploy) => {
+        this.socketService.gameSocket.on('gameStarted', (players, victoryGoal, territories, turn, troopsToDeploy, selectedMap) => {
             console.log('troopsToDeploy', troopsToDeploy);
             this.gameEngine.currentGameIsMultiplayer = true;
             this.gameEngine.turn = turn;
             this.gameEngine.troopsToDeploy = troopsToDeploy;
+            this.gameEngine.selectedMap = selectedMap;
 
-            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
-                const territoryFromServer = map.find(x => x.name === t.name);
-                t.owner = territoryFromServer.owner;
-                t.numberOfTroops = territoryFromServer.numberOfTroops;
+            loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#multiplayerMap', () => {
+                this.gameEngine.initMap();
+
+                this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                    const territoryFromServer = territories.find(x => x.name === t.name);
+                    t.owner = territoryFromServer.owner;
+                    t.numberOfTroops = territoryFromServer.numberOfTroops;
+                });
+
+                this.$rootScope.players = players;
+                this.$rootScope.chosenGoal = victoryGoal;
+
+                this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
+
+                this.$rootScope.$apply();
             });
+        });
 
-            this.$rootScope.players = players;
-            this.$rootScope.chosenGoal = victoryGoal;
-
-            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
-
-            this.$rootScope.$apply();
+        this.socketService.gameSocket.on('disconnect', data => {
+            if (data === 'transport close') { // server disconnected
+                this.toastService.errorToast(
+                    'Lost connection',
+                    'Disconnected from server'
+                );
+                this.$rootScope.currentLobby = '';
+                this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
+                this.$rootScope.$apply();
+            }
         });
     }
 
@@ -446,7 +483,7 @@ class LobbiesController {
     }
 
     leaveLobby() {
-        this.soundService.bleep2.play();
+        this.soundService.tick.play();
         const user = firebase.auth().currentUser;
         const userName = user.displayName ? user.displayName : user.email;
 
@@ -463,6 +500,7 @@ class LobbiesController {
     }
 
     kickPlayer(player) {
+        this.soundService.tick.play();
         this.socketService.gameSocket.emit('kickPlayer', this.vm.room.id, player.userUid);
     }
 
@@ -483,8 +521,18 @@ class LobbiesController {
         return this.vm.players.filter(x => x !== undefined);
     }
 
+    getStartTooltip() {
+        if (this.existingPlayers().length < CONSTANTS.MIN_NUMBER_OF_PLAYERS) {
+            return 'You need to be at least two players!';
+        }
+        if (this.vm.players.filter(x => x && x.type === PLAYER_TYPES.HUMAN).length <= 1) {
+            return 'You need to be at least two human players. If you are just one human go for singleplayer instead.';
+        }
+        return '';
+    }
+
     startGameIsDisabled() {
-        return this.existingPlayers().length < CONSTANTS.MIN_NUMBER_OF_PLAYERS;
+        return this.existingPlayers().length < CONSTANTS.MIN_NUMBER_OF_PLAYERS || this.vm.players.filter(x => x && x.type === PLAYER_TYPES.HUMAN).length <= 1;
     }
 
     startGame() {

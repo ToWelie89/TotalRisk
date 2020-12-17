@@ -11,8 +11,10 @@ const GameController = require('./gameController');
 
 class GameControllerTutorial extends GameController {
 
-    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService) {
-        super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService);
+    constructor($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService, timerService) {
+        super($scope, $rootScope, $sce, $uibModal, $timeout, gameEngine, soundService, mapService, tutorialService, aiHandler, settings, gameAnnouncerService, socketService, timerService);
+
+        this.mapSelector = '#tutorialMap';
 
         this.elementIds = {
             ownageChart: 'ownageChartTutorial',
@@ -31,7 +33,7 @@ class GameControllerTutorial extends GameController {
                 this.mapService.init('tutorialMap');
                 this.setListeners();
                 this.startTutorial();
-                this.setChartData();
+                //this.setChartData();
             }
         });
     }

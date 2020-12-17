@@ -650,7 +650,7 @@ const CountryCodes = {
         'code': '853'
     },
     'MK': {
-        'name': 'Macedonia, The Former Yugoslav Republic Of',
+        'name': 'Macedonia',
         'iso2': 'MK',
         'code': '389'
     },
@@ -925,7 +925,7 @@ const CountryCodes = {
         'code': '590'
     },
     'SH': {
-        'name': 'Saint Helena, Ascension And Tristan Da Cunha',
+        'name': 'Saint Helena',
         'iso2': 'SH',
         'code': '290'
     },
@@ -1030,7 +1030,7 @@ const CountryCodes = {
         'code': '27'
     },
     'GS': {
-        'name': 'South Georgia And The South Sandwich Islands',
+        'name': 'South Georgia',
         'iso2': 'GS',
         'code': ''
     },

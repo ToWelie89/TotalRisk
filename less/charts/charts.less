@@ -3,7 +3,16 @@
     left: 20px;
     width: 100px;
     height: 100px;
-    clip-path: circle(50% at center);
+    //clip-path: circle(50% at center);
+    transition: all 600ms;
+
+    &:hover {
+        transform: scale(1.2);
+    }
+
+    canvas {
+        filter: drop-shadow(0 0 6px rgba(0,0,0,0.7));
+    }
 }
 
 

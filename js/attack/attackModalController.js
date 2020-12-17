@@ -4,8 +4,9 @@ const {GAME_PHASES} = require('./../gameConstants');
 const {loadSvgIntoDiv} = require('./../helpers');
 
 class AttackModalController {
-    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine) {
+    constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine, settings) {
         this.vm = this;
+        this.settings = settings;
 
         // PUBLIC FIELDS
         this.vm.attackerDice = [];
@@ -126,6 +127,7 @@ class AttackModalController {
                         unit.style.display = 'block';
                         soundService.newMessage.play();
                         if (index === (allUnits.length - 1)) {
+                            document.querySelectorAll('#attackModalBottomWrapper .animatedRibbon').forEach(x => x.classList.remove('hide'));
                             this.vm.deployTroopsAnimationLoading = false;
                             this.$scope.$apply();
                         }
@@ -136,10 +138,12 @@ class AttackModalController {
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');
             this.attacker_box = new dice_box(attackerCanvas, { w: 618, h: 200 }, {
-                dice_color: '#6b0a05'
+                dice_color: '#6b0a05',
+                fastDice: this.settings.fastDice
             });
             this.defender_box = new dice_box(defenderCanvas, { w: 618, h: 200 }, {
-                dice_color: '#061a7f'
+                dice_color: '#061a7f',
+                fastDice: this.settings.fastDice
             });
 
             setTimeout(() => {
@@ -160,9 +164,9 @@ class AttackModalController {
 
     keyupEventListener(e) {
         if (e.keyCode === 27) { // Escape
-            if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME) {
-                this.$uibModalInstance.close();
-                document.removeEventListener('keyup', this.boundListener);
+            if (this.$rootScope.currentGamePhase !== GAME_PHASES.GAME || this.$rootScope.currentGamePhase !== GAME_PHASES.GAME_MULTIPLAYER) {
+                //this.$uibModalInstance.close();
+                //document.removeEventListener('keyup', this.boundListener);
             }
         }
     }
@@ -352,7 +356,10 @@ class AttackModalController {
                 $('#attackerTroops .troopIcon svg').addClass('animated infinite bounce');
 
                 if (context.vm.attacker.numberOfTroops > 3) {
-                    context.vm.moveNumberOfTroops = 3;
+                    context.vm.moveNumberOfTroops = context.vm.attacker.numberOfTroops;
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 50);
                     context.vm.movementSliderOptions = {
                         floor: 3,
                         ceil: context.vm.attacker.numberOfTroops,
@@ -474,7 +481,7 @@ class AttackModalController {
     }
 
     getCountrySvg(territoryName) {
-        let mapContainer = 'map';
+        let mapContainer = 'singleplayerMap';
         if (this.attackData.tutorialMode) {
             mapContainer = 'tutorialMap';
         } else if (this.multiplayerMode) {

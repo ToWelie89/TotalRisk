@@ -1,4 +1,43 @@
 <div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox" ng-cloak>
+
+    <div id="patchNotesContainer" data-ng-show="main.currentPatchNotes">
+        <div id="closeButton" data-ng-click="main.closePatchNotes()">
+            <i class="fas fa-times-circle"></i>
+        </div>
+
+        <p id="title">
+            Version {{main.currentPatchVersion}}
+        </p>
+        
+        <div class="scrollable">
+            <div id="patchNotesContainerDescription" data-ng-bind="main.currentPatchNotes.description"></div>
+            <p class="header">
+                New features and improvements
+            </p>
+            <ul id="patchNotesContainerNews">
+                <li class="newsItem" data-ng-repeat="news in main.currentPatchNotes.news">
+                    <strong data-ng-bind="news.title" data-ng-show="news.title"></strong>
+                    <br data-ng-show="news.title">
+                    <span data-ng-bind="news.description"></span>
+                    <ul ng-if="news.subPoints" style="padding-top: 10px; list-style-type: disc;">
+                        <li class="newsItem" data-ng-repeat="p in news.subPoints">
+                            {{ p }}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="header">
+                Bug fixes
+            </p>
+            <ul id="patchNotesContainerBugFixes">
+                <li class="newsItem" data-ng-repeat="bugFix in main.currentPatchNotes.bugFixes">
+                    <strong data-ng-bind="bugFix.title" data-ng-show="bugFix.title"></strong>
+                    <br data-ng-show="bugFix.title">
+                    <span data-ng-bind="bugFix.description"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div style="margin-top: 70px;
                 width: 600px;
                 margin: 0 auto;
@@ -10,7 +49,7 @@
             <strong>Local Game</strong>
         </button>
         <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.MULTIPLAYER_LOBBIES)">
-            <div class="main-menu-button-icon" id="newGameIcon2" inject-svg src="assets/mainMenuIcons/newGame.svg">
+            <div class="main-menu-button-icon" id="newGameIcon2" inject-svg src="assets/mainMenuIcons/newGameMp.svg">
             </div>
             <strong>Online Game</strong>
         </button>
@@ -28,6 +67,11 @@
             <div class="main-menu-button-icon" id="characterEditorIcon" inject-svg src="assets/mainMenuIcons/editor.svg">
             </div>
             <strong>Character Editor</strong>
+        </button>
+        <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.CHARACTER_GALLERY)">
+            <div class="main-menu-button-icon" id="galleryIcon" inject-svg src="assets/mainMenuIcons/gallery.svg">
+            </div>
+            <strong>Character Gallery</strong>
         </button>
         <button type="button" class="button button-green main-menu-button" data-ng-click="main.setGamePhase(main.gamePhases.SETTINGS)">
             <div class="main-menu-button-icon" id="settingsIcon" inject-svg src="assets/mainMenuIcons/settings.svg">
@@ -49,9 +93,14 @@
         <button data-ng-show="main.devMode" data-ng-click="main.testAttackModal()">
             Test attack modal
         </button>
+        <button data-ng-show="main.devMode" data-ng-click="main.testMovementModal()">
+            Test movement modal
+        </button>
+        <div id="mapBackgroundForTestingMovement" style="width: 820px; position: absolute; top: 870px; left: 610px; background-color: #9797ef;">
+        </div>
     </div>
 
     <div id="versionBox">
-        <span>Version {{ main.appVersion }}</span>
+        <span>BETA Version {{ main.appVersion }}</span>
     </div>
 </div>

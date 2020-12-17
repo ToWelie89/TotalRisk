@@ -3,7 +3,7 @@ require('firebase/auth');
 require('firebase/database');
 const {GAME_PHASES} = require('./../gameConstants');
 const {startGlobalLoading, stopGlobalLoading, getRandomInteger, chancePercentage} = require('./../helpers');
-const {flags} = require('./editorConstants');
+const {flags, fictionalFlags} = require('./editorConstants');
 const CountryCodes = require('./countryCodes');
 
 class CharacterCreatorController {
@@ -19,8 +19,9 @@ class CharacterCreatorController {
         this.vm.selectedCharacterId = undefined;
         this.vm.showEditor = false;
 
-        this.vm.showHistoricFlags = true;
+        this.vm.flagtab = 'historic';
         this.vm.historicFlags = flags.sort((a, b) => { return a.name - b.name; });
+        this.vm.fictionalFlags = fictionalFlags.sort((a, b) => { return a.name - b.name; });
         this.vm.countryFlags = Object.keys(CountryCodes).map(c => {
             return {
                 name: CountryCodes[c].name,
@@ -222,12 +223,15 @@ class CharacterCreatorController {
     randomize() {
         this.soundService.tick.play();
 
-        if (chancePercentage(50)) {
-            this.vm.selectedFlag = this.vm.historicFlags[getRandomInteger(0, (this.vm.historicFlags.length - 1))];
-            this.vm.showHistoricFlags = true;
+        const allFlags = [...this.vm.historicFlags, ...this.vm.countryFlags, ...this.vm.fictionalFlags];
+        this.vm.selectedFlag = allFlags[getRandomInteger(0, (allFlags.length - 1))];
+
+        if (this.vm.historicFlags.includes(this.vm.selectedFlag)) {
+            this.vm.flagtab = 'historic';
+        } else if (this.vm.countryFlags.includes(this.vm.selectedFlag)) {
+            this.vm.flagtab = 'modern';
         } else {
-            this.vm.selectedFlag = this.vm.countryFlags[getRandomInteger(0, (this.vm.countryFlags.length - 1))];
-            this.vm.showHistoricFlags = false;
+            this.vm.flagtab = 'fictional';
         }
 
         this.vm.currentSelection.forEach(part => {

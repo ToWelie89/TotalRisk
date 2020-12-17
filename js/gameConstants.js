@@ -1,4 +1,6 @@
-const { worldMap } = require('./map/worldMapConfiguration');
+const { worldMap } = require('./map/maps/classicMap/worldMapConfiguration');
+const { worldMapExtended } = require('./map/maps/worldMapExtended/worldMapExtendedConfiguration');
+const { napoleonicEuropeMap } = require('./map/maps/napoleonicEurope/napoleonicEuropeConfiguration');
 const { CARD_TYPE } = require('./card/cardConstants');
 
 const TURN_PHASES = {
@@ -29,17 +31,37 @@ const GAME_PHASES = {
     PROFILE: 12,
     LEADERBOARD: 13,
     PLAYER_SETUP_NAPOLEONIC: 14,
-    PLAYER_SETUP_LOTR: 15
+    PLAYER_SETUP_LOTR: 15,
+    CHARACTER_GALLERY: 16
 };
 
-const MAPS = {
-    WORLD_MAP: {
+const MAPS = [
+    {
+        id: 'WORLD_MAP',
         mainMap: './assets/maps/worldMap/worldMap.svg',
+        configuration: worldMap,
         name: 'Classic world map',
         regions: worldMap.regions.length,
-        territories: worldMap.regions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.territories), []).length
+        territories: worldMap.regions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.territories), []).length,
+        description: 'The classic world map configuration'
+    }, {
+        id: 'WORLD_MAP_EXTENDED',
+        mainMap: './assets/maps/worldMapExtended/worldMapExtended.svg',
+        configuration: worldMapExtended,
+        name: 'Extended world map',
+        regions: worldMapExtended.regions.length,
+        territories: worldMapExtended.regions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.territories), []).length,
+        description: 'An extended version of the classic world map configuration with additional territories and pahts between regions'
+    }, {
+        id: 'NAPOLEONIC_EUROPE_MAP',
+        mainMap: './assets/maps/napoleonicEurope/napoleonMap.svg',
+        configuration: napoleonicEuropeMap,
+        name: 'Napoleonic Era Europe',
+        regions: napoleonicEuropeMap.regions.length,
+        territories: napoleonicEuropeMap.regions.reduce((accumulator, currentValue) => accumulator.concat(currentValue.territories), []).length,
+        description: 'This is map of Europe based on the the era of the Napoleonic wars.'
     }
-};
+];
 
 const CONSTANTS = {
     MIN_NUMBER_OF_PLAYERS: 2,

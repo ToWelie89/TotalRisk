@@ -164,6 +164,7 @@ const loadSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
     $.get(svgPath, (svg) => {
         svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
         svg = svg.replace(/filter-/g, 'filter-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/pattern-/g, 'pattern-' + Math.floor((Math.random() * 100000000000) + 1));
         $(divSelector).html(svg);
 
         if (callback) {

@@ -69,6 +69,10 @@ class PlayerPortraitDirective {
                         $(`${targetSelector} svg`).css('width', '207%');
                         $(`${targetSelector} svg`).css('margin-left', '-39px');
                         $(`${targetSelector} svg`).css('margin-top', '-40px');
+                    } else if (xsmall) {
+                        $(`${targetSelector} svg`).css('width', '150%');
+                        $(`${targetSelector} svg`).css('margin-left', '-20px');
+                        $(`${targetSelector} svg`).css('margin-top', '-30px');
                     }
 
                     if (loading) {

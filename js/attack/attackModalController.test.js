@@ -1,7 +1,7 @@
 import AttackModalController from './attackModalController';
 import {createUibModalInstance, createSoundService, createScope, createRootScope, createTutorialService, createSocketService} from './../test/mockHelper';
 import Territory from './../map/territory';
-import { worldMap } from './../map/worldMapConfiguration';
+import { worldMap } from './../map/maps/classicMap/worldMapConfiguration';
 import {arraysEqual, delay} from './../helpers';
 
 describe('attackModalController', () => {

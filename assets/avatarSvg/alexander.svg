@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="-483.623 -63.643 177.275 468.411" character="alexander" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="-483.623 -63.643 177.275 468.411" character="alexander" xmlns="http://www.w3.org/2000/svg" style="filter: url(#filter-droppy)">
   <defs>
+    <filter xmlns="http://www.w3.org/2000/svg" id="filter-droppy" height="130%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="1"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
     <linearGradient id="gradient-0" gradientUnits="userSpaceOnUse" x1="-27.28" y1="-312.303" x2="-27.28" y2="-279.197" gradientTransform="matrix(-0.617408, -0.786644, 0.04366, -0.034267, -138.967438, -317.530426)">
       <stop offset="0" style="stop-color: rgb(231, 224, 198);"/>
       <stop offset="1" style="stop-color: rgb(214, 206, 177);"/>

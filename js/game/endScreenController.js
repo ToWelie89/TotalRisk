@@ -100,7 +100,7 @@ class EndScreenController {
                 if (this.settings.enable3d) {
                     initGlobe({
                         bg: './assets/maps/globe_bg.jpg',
-                        diffuse: './assets/maps/worldMap/globe.png',
+                        diffuse: './assets/maps/worldMap/globe2.png',
                         halo: './assets/maps/globe_halo.png',
                     });
                 }

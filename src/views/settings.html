@@ -17,7 +17,17 @@
             </strong>
         </div>
 
-        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+        <div class="row" style="width: 600px; margin: 0 auto; text-align: center;">
+            <div class="col-xs-12 colorWhite" style="font-size: 20px;">
+                <div>
+                    <button type="button" class="button button-blue" data-ng-click="settings.resetToDefault()">
+                        <strong>Reset to default settings</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 10px;">
             <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
                 <div>
                     <strong>Gameplay settings</strong>
@@ -37,8 +47,7 @@
         <div class="row" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
-                    Show announcer <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                     data-placement="bottom" title="If turned on each turn will be presented by a announcer." style="color: #f0f048;"></span>
+                    Show announcer <i class="fas fa-info-circle" uib-tooltip="If turned on each turn will be presented by a announcer." tooltip-placement="top" style="color: #f0f048;"></i>
                 </div>
             </div>
             <div class="col-xs-8 settingContainer" data-toggle="buttons">
@@ -51,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <!-- <div class="row" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     3D effects <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -67,7 +76,7 @@
                     </label>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
@@ -78,6 +87,22 @@
                 <div>
                     <label class="switch" data-ng-click="settings.toggleFullScreen()">
                         <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.fullScreen">
+                        <span class="switch-label" data-on="On" data-off="Off"></span>
+                        <span class="switch-handle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
+            <div class="col-xs-4">
+                <div>
+                    Fast dice mode <i class="fas fa-info-circle" uib-tooltip="If turned on the dice rolls will be much faster." tooltip-placement="top" style="color: #f0f048;"></i>
+                </div>
+            </div>
+            <div class="col-xs-8 settingContainer" data-toggle="buttons">
+                <div>
+                    <label class="switch" data-ng-click="settings.toggleFastDice()">
+                        <input type="checkbox" class="switch-input" data-ng-checked="settings.settings.fastDice">
                         <span class="switch-label" data-on="On" data-off="Off"></span>
                         <span class="switch-handle"></span>
                     </label>
@@ -127,7 +152,7 @@
                 <rzslider rz-slider-model="settings.sfxVolume" rz-slider-options="settings.sfxVolumeSliderOptions"></rzslider>
             </div>
         </div>
-        <div data-ng-show="settings.runningElectron">
+        <!-- <div data-ng-show="settings.runningElectron">
             <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
                 <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
                     <div>
@@ -165,6 +190,6 @@
                     <input type="text" placeholder="Password" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.password" data-ng-change="settings.updateProxySettings()" />
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

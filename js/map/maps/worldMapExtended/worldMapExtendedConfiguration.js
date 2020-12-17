@@ -1,4 +1,4 @@
-const worldMap = {
+const worldMapExtended = {
     regions: [{
         name: 'Africa',
         bonusTroops: 3,
@@ -46,7 +46,8 @@ const worldMap = {
             adjacentTerritories: [
                 'Madagascar',
                 'East Africa',
-                'Congo'
+                'Congo',
+                'Falkland Isles'
             ]
         }, {
             name: 'Madagascar',
@@ -63,6 +64,12 @@ const worldMap = {
             borderColor: '#b22525'
         },
         territories: [{
+            name: 'Falkland Isles',
+            adjacentTerritories: [
+                'Argentina',
+                'South Africa'
+            ]
+        }, {
             name: 'Venezuela',
             adjacentTerritories: [
                 'Central America',
@@ -88,7 +95,9 @@ const worldMap = {
             name: 'Argentina',
             adjacentTerritories: [
                 'Peru',
-                'Brazil'
+                'Brazil',
+                'New Zeeland',
+                'Falkland Isles'
             ]
         }]
     }, {
@@ -99,6 +108,12 @@ const worldMap = {
             borderColor: '#35a749'
         },
         territories: [{
+            name: 'Svalbard',
+            adjacentTerritories: [
+                'Greenland',
+                'Scandinavia'
+            ]
+        }, {
             name: 'Iceland',
             adjacentTerritories: [
                 'Greenland',
@@ -119,7 +134,8 @@ const worldMap = {
                 'Iceland',
                 'Northern Europe',
                 'Great Britain',
-                'Ukraine'
+                'Ukraine',
+                'Svalbard'
             ]
         }, {
             name: 'Western Europe',
@@ -167,12 +183,19 @@ const worldMap = {
             borderColor: '#234abe'
         },
         territories: [{
+            name: 'Hawaii',
+            adjacentTerritories: [
+                'Western United States',
+                'Japan'
+            ]
+        }, {
             name: 'Greenland',
             adjacentTerritories: [
                 'Iceland',
                 'Northwest Territory',
                 'Ontario',
-                'Quebec'
+                'Quebec',
+                'Svalbard'
             ]
         }, {
             name: 'Northwest Territory',
@@ -222,7 +245,8 @@ const worldMap = {
                 'Alberta',
                 'Ontario',
                 'Central America',
-                'Eastern United States'
+                'Eastern United States',
+                'Hawaii'
             ]
         }, {
             name: 'Eastern United States',
@@ -286,7 +310,9 @@ const worldMap = {
             name: 'Japan',
             adjacentTerritories: [
                 'Kamchatka',
-                'Mongolia'
+                'Mongolia',
+                'Philippines',
+                'Hawaii'
             ]
         }, {
             name: 'Kamchatka',
@@ -295,7 +321,8 @@ const worldMap = {
                 'Yakutsk',
                 'Irkutsk',
                 'Mongolia',
-                'Japan'
+                'Japan',
+                'Hawaii'
             ]
         }, {
             name: 'Middle East',
@@ -356,17 +383,31 @@ const worldMap = {
             borderColor: '#8442c6'
         },
         territories: [{
+            name: 'Philippines',
+            adjacentTerritories: [
+                'Indonesia',
+                'Japan'
+            ]
+        }, {
+            name: 'New Zeeland',
+            adjacentTerritories: [
+                'Eastern Australia',
+                'Argentina'
+            ]
+        }, {
             name: 'Eastern Australia',
             adjacentTerritories: [
                 'Western Australia',
-                'New Guinea'
+                'New Guinea',
+                'New Zeeland'
             ]
         }, {
             name: 'Indonesia',
             adjacentTerritories: [
                 'Siam',
                 'New Guinea',
-                'Western Australia'
+                'Western Australia',
+                'Philippines'
             ]
         }, {
             name: 'New Guinea',
@@ -378,11 +419,10 @@ const worldMap = {
             name: 'Western Australia',
             adjacentTerritories: [
                 'Eastern Australia',
-                'New Guinea',
                 'Indonesia'
             ]
         }]
     }]
 };
 
-module.exports = { worldMap };
+module.exports = { worldMapExtended };

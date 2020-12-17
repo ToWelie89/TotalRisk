@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="226.928" cy="99.801" r="143.9" id="gradient-1" gradientTransform="matrix(2.520381, 0, 0, 0.105047, -345.016998, 89.317177)">
+      <stop offset="0" style="stop-color: rgb(151, 67, 22);"/>
+      <stop offset="1" style="stop-color: rgb(51, 20, 1);"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="226.928" cy="99.801" r="143.9" id="gradient-2" gradientTransform="matrix(2.520381, 0, 0, 0.105047, -344.7435, -413.743469)">
+      <stop offset="0" style="stop-color: rgb(151, 67, 22);"/>
+      <stop offset="1" style="stop-color: rgb(51, 20, 1);"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.275" cy="-251.479" r="22.5" id="gradient-7" gradientTransform="matrix(1.594286, 0, 0, 1, -60.186244, 0)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="114.416" cy="273.347" r="24.516" id="gradient-8" gradientTransform="matrix(0, 2.376769, -1.865878, 0, 624.448331, 1.406544)">
+      <stop offset="0" style="stop-color: rgb(109, 74, 56);"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.474" cy="-333.297" r="9.701" id="gradient-9" gradientTransform="matrix(0, -12.952636, 1, 0, 434.770996, 981.058769)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="114.416" cy="273.347" r="24.516" id="gradient-10" gradientTransform="matrix(0, 2.515591, -2.125339, 0, 695.371253, -14.476944)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.201" cy="169.764" r="9.701" id="gradient-11" gradientTransform="matrix(0, -12.974518, 1.308241, 0, -120.891186, 1482.798096)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.201" cy="169.764" r="9.701" id="gradient-3" gradientTransform="matrix(0, -12.974518, 1.308241, 0, -120.891186, 1482.798096)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="114.416" cy="273.347" r="24.516" id="gradient-4" gradientTransform="matrix(0, 2.515591, -2.125339, 0, 695.371253, -14.476944)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.474" cy="-333.297" r="9.701" id="gradient-5" gradientTransform="matrix(0, -12.952636, 1, 0, 434.770996, 981.058769)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="114.416" cy="273.347" r="24.516" id="gradient-6" gradientTransform="matrix(0, 2.376769, -1.865878, 0, 624.448331, 1.406544)">
+      <stop offset="0" style="stop-color: rgb(109, 74, 56);"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="101.275" cy="-251.479" r="22.5" id="gradient-12" gradientTransform="matrix(1.594286, 0, 0, 1, -60.186244, 0)">
+      <stop offset="0" style="stop-color: rgba(109, 74, 56, 1)"/>
+      <stop offset="1" style="stop-color: rgba(42, 28, 21, 1)"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="213.352" cy="158.022" r="57.381" id="gradient-0" gradientTransform="matrix(-0.436856, -1.007274, 0.497906, -0.215942, 196.239196, 390.458229)">
+      <stop offset="0" style="stop-color: rgb(255, 255, 255);"/>
+      <stop offset="1" style="stop-color: rgba(255, 255, 255, 0);"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="213.352" cy="158.022" r="57.381" id="gradient-13" gradientTransform="matrix(-0.436856, 1.007274, 0.497906, 0.215942, 274.768127, -78.003578)">
+      <stop offset="0" style="stop-color: rgb(255, 255, 255);"/>
+      <stop offset="1" style="stop-color: rgba(255, 255, 255, 0);"/>
+    </radialGradient>
+  </defs>
+  <g style="" transform="matrix(1.488654, 0, 0, 1.488654, -85.968338, -124.319496)">
+    <g id="topGlass">
+      <polygon style="fill: rgb(99, 84, 52);" points="126.025 116.627 329.326 116.627 321.346 148.544 302.612 194.339 273.817 227.297 249.532 246.031 236.002 251.582 221.777 251.235 202.696 243.603 179.105 224.175 155.514 197.808 140.249 167.625 130.188 138.136" id="topGlassSand"/>
+      <polygon style="fill: rgba(254, 217, 175, 0.4); visibility: visible;" points="125.294 105.142 126.097 119.33 132.807 148.472 143.16 174.738 153.13 195.635 166.551 211.74 182.464 228.42 200.485 241.84 215.823 250.084 228.093 252.002 236.721 250.851 264.712 235.513 292.704 206.18 304.207 191.034 318.778 155.757 327.405 124.89 329.706 104.184" id="topGlass" class=""/>
+      <path d="M 124.797 107.509 C 124.797 138.949 150.131 190.99 153.291 195.278 C 156.418 199.522 195.775 252.31 227.32 252.31" style="stroke-width: 4px; fill: none; stroke: rgb(222, 248, 243);"/>
+      <path d="M 227.259 252.315 C 227.259 220.875 252.593 168.834 255.753 164.546 C 258.88 160.302 298.237 107.514 329.782 107.514" style="stroke-width: 4px; fill: none; stroke: rgb(222, 248, 243);" transform="matrix(-1, 0, 0, -1, 557.041016, 359.828995)"/>
+      <polygon style="fill: url(#gradient-0);" points="135.19 105.569 137.516 133.871 153.025 173.805 183.654 208.312 215.834 224.208 244.137 192.416 249.952 154.032 238.709 122.628 223.588 98.977"/>
+    </g>
+    <g transform="matrix(1, 0, 0, -1, 0.002997, 504.836395)" id="bottomGlass">
+      <polygon style="fill: rgb(99, 84, 52);" points="180.30499267578125 225.71600341796875 188.2050018310547 228.48599243164062 193.4530029296875 231.3000030517578 201.25999450683594 235.82699584960938 210.5489959716797 241.2469940185547 218.22500610351562 245.05499267578125 223.13900756835938 247.56300354003906 227.4550018310547 248.3040008544922 232.44700622558594 247.99899291992188 241.26499938964844 244.85800170898438 245.47000122070312 242.03199768066406 253.6529998779297 237.7729949951172 258.9440002441406 234.53199768066406 267.614013671875 228.1909942626953 276.17401123046875 221.01400756835938 284.3210144042969 217.03900146484375 286.7049865722656 214.45599365234375 301.4110107421875 198.55799865722656 319.6929931640625 157.2239990234375 327.2030029296875 134.00900268554688 329.9339904785156 107.78399658203125 125.0469970703125 109.96900177001953 131.8780059814453 146.8489990234375 145.53599548339844 180.9969940185547 158.6490020751953 203.67100524902344" id="bottomGlassSand"/>
+      <polygon style="fill: rgba(254, 217, 175, 0.4);" points="124.947 105.142 126.097 119.33 132.807 148.472 143.16 174.738 153.13 195.635 166.551 211.74 182.464 228.42 200.485 241.84 215.823 250.084 228.093 252.002 236.721 250.851 264.712 235.513 292.704 206.18 304.207 191.034 318.778 155.757 327.405 124.89 329.706 104.184" id="bottomGlass"/>
+      <polygon style="fill: url(#gradient-13);" points="213.719 206.886 216.046 178.584 231.554 138.65 262.184 104.143 294.363 88.247 322.665 120.039 328.48 158.423 317.238 189.827 302.117 213.478" transform="matrix(-1, 0, 0, -1, 542.199005, 301.724998)"/>
+      <path d="M 124.797 107.509 C 124.797 138.949 150.131 190.99 153.291 195.278 C 156.418 199.522 195.775 252.31 227.32 252.31" style="stroke-width: 4px; fill: none; stroke: rgb(222, 248, 243);"/>
+      <path d="M 227.259 252.315 C 227.259 220.875 252.593 168.834 255.753 164.546 C 258.88 160.302 298.237 107.514 329.782 107.514" style="stroke-width: 4px; fill: none; stroke: rgb(222, 248, 243);" transform="matrix(-1, 0, 0, -1, 557.041016, 359.828995)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, -0.275002, 0)">
+      <rect x="91.499" y="108.266" width="19.403" height="122.996" style="fill: url(#gradient-11);"/>
+      <circle style="fill: url(#gradient-10);" cx="114.416" cy="273.347" r="24.516" transform="matrix(0.395256, 0, 0, 0.848793, 55.953659, -1.134173)"/>
+      <rect x="91.772" y="-394.795" width="19.403" height="122.996" style="fill: url(#gradient-9);" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+      <circle style="fill: url(#gradient-8);" cx="114.416" cy="273.347" r="24.516" transform="matrix(0.395256, 0, 0, -0.848793, 56.227135, 504.194794)"/>
+      <ellipse style="fill: url(#gradient-7);" cx="101.275" cy="-251.479" rx="22.5" ry="3.371" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 253.151306, 0.034001)">
+      <rect x="91.499" y="108.266" width="19.403" height="122.996" style="fill: url(#gradient-3);"/>
+      <circle style="fill: url(#gradient-4);" cx="114.416" cy="273.347" r="24.516" transform="matrix(0.395256, 0, 0, 0.848793, 55.953659, -1.134173)"/>
+      <rect x="91.772" y="-394.795" width="19.403" height="122.996" style="fill: url(#gradient-5);" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+      <circle style="fill: url(#gradient-6);" cx="114.416" cy="273.347" r="24.516" transform="matrix(0.395256, 0, 0, -0.848793, 56.227135, 504.194794)"/>
+      <ellipse style="fill: url(#gradient-12);" cx="101.275" cy="-251.479" rx="22.5" ry="3.371" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+    </g>
+    <rect x="83.028" y="88.21" width="287.801" height="23.182" style="fill: url(#gradient-1);"/>
+    <rect x="83.301" y="-414.851" width="287.801" height="23.182" style="fill: url(#gradient-2);" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+  </g>
+  <polygon style="fill: rgb(161, 137, 101);" points="237.024 244.856 243.903 242.98 250.468 242.355 257.034 241.73 263.6 242.98 269.708 245.097 264.171 247.051 262.217 247.865 260.751 248.517 260.425 249.82 260.262 252.262 260.1 255.031 259.774 261.708 263.008 458.515 256.353 458.515 248.242 257.34 247.207 253.68 247.045 252.549 246.561 250.771 246.076 249.64 245.106 247.702 235.574 245.278" id="middleSand"/>
+</svg>

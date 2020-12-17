@@ -7,11 +7,18 @@
     box-shadow: 0 0 10px black;
     width: 500px;
     min-width: 500px;
-    height: 125px;
-    min-height: 125px;
+    height: auto;
     z-index: 200;
 
     #authenticationBoxDefaultAvatar {
+		transform: scale(1.0);
+        transform-origin: center center;
+		transition: all 600ms;
+		
+		&:hover {
+            transform: scale(1.4);
+        }
+
     	#authenticationBoxDefaultAvatarInner {
     		height: 85px;
     		width: 85px;

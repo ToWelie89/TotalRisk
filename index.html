@@ -15,7 +15,8 @@
             screen = require('electron').screen;
         }
     </script>
-    <script src='js/libs/responsivevoice.js'></script>
+    <!-- <script src='js/libs/responsivevoice.js'></script> -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=ppPpZb3q"></script>
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
     <script src='js/libs/dice.js'></script>
@@ -31,6 +32,8 @@
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/b7520ef1d5.js" crossorigin="anonymous"></script>
 
     <!-- Fix for electron -->
     <script>if (window.module) module = window.module;</script>
@@ -49,6 +52,27 @@
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Cinzel&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <script>
+        if (process.env && process.env.LOGIN_INFO) {
+            setTimeout(() => {
+                const userName = process.env.LOGIN_INFO.split(':')[0];
+                const password = process.env.LOGIN_INFO.split(':')[1];
+                $('#authenticationBox > div:nth-child(3) > button:nth-child(2)').click();
+                setTimeout(() => {
+
+                    console.log('userName', userName)
+                    console.log('password', password)
+                    $('#authenticationBox > div:nth-child(4) > form > div:nth-child(2) > input').val(userName.trim());
+                    $('#authenticationBox > div:nth-child(4) > form > div:nth-child(3) > input').val(password.trim());
+                    setTimeout(() => {
+                        document.querySelector('#authenticationBox > div:nth-child(4) > form > div:nth-child(4) > button').removeAttribute('disabled')
+                        $('#authenticationBox > div:nth-child(4) > form > div:nth-child(4) > button').click();
+                    }, 300);
+                }, 500);
+            }, 2000);
+        }
+    </script>
 </head>
 
 <body ng-app="risk" data-ng-controller="mainController as main">
@@ -71,6 +95,7 @@
             <ng-include src="'src/views/settings.html'"></ng-include>
             <ng-include src="'src/views/leaderboard.html'"></ng-include>
             <ng-include src="'src/views/editor.html'"></ng-include>
+            <ng-include src="'src/views/editorGallery.html'"></ng-include>
             <ng-include src="'src/views/playerSetupMultiplayer.html'"></ng-include>
             <ng-include src="'src/views/multiplayerSetup.html'"></ng-include>
             <ng-include src="'src/views/singleplayerSetup.html'"></ng-include>

@@ -9,6 +9,19 @@ svg {
         // text-shadow: 1px 1px 3px #a2a2a2;
         pointer-events: none;
     }
+    #mapArrow {
+        pointer-events: none;
+        stroke-width: 2px;
+
+        &.attackArrow {
+            fill: #e83e49;
+            stroke: black;
+        }
+        &.movementArrow {
+            fill: #058cca;
+            stroke: black;
+        }
+    }
     .country {
         &:hover {
             stroke: rgba(0, 0, 0, 0.3);
@@ -84,6 +97,7 @@ svg {
                 fill: #b68ae1;
             }
         }
+        // CLASSIC MAP REGION COLORS
         &[country-color='AFRICA'] {
             fill: @blackColor;
             stroke: @blackColorStroke;
@@ -107,6 +121,47 @@ svg {
         &[country-color='AUSTRALIA'] {
             fill: @purpleColor;
             stroke: @purpleColorStroke;
+        }
+        // NAPOLEONIC MAP REGION COLORS
+        &[country-color='UNITED KINGDOM'] {
+            fill: #b40606;
+            stroke: #680808;
+        }
+        &[country-color='IBERIAN PENINSULA'] {
+            fill: #c6c12f;
+            stroke: #918d06;
+        }
+        &[country-color='FRENCH EMPIRE'] {
+            fill: #5dbde6;
+            stroke: #287798;
+        }
+        &[country-color='ITALIAN PROTECTORATES'] {
+            fill: #29aa4e;
+            stroke: #067726;
+        }
+        &[country-color='RUSSIAN EMPIRE'] {
+            fill: #db82f3;
+            stroke: #9736b1;
+        }
+        &[country-color='KINGDOMS OF SCANDINAVIA'] {
+            fill: #ff6e34;
+            stroke: #912900;
+        }
+        &[country-color='OTTOMAN EMPIRE'] {
+            fill: #906f68;
+            stroke: #5c3b33;
+        }
+        &[country-color='AUSTRIAN EMPIRE'] {
+            fill: #bababa;
+            stroke: #464646;
+        }
+        &[country-color='KINGDOM OF PRUSSIA'] {
+            fill: #dac827;
+            stroke: #6f6402;
+        }
+        &[country-color='RHINE AND HELVETIC CONFEDERATIONS'] {
+            fill: #483ca5;
+            stroke: #1d1461;
         }
     }
     .troopCounter {

@@ -1,7 +1,7 @@
 "use strict";
 
 var random_storage = [];
-this.frame_rate = 1 / 25;
+//this.frame_rate = 1 / 25; // 1 / 5 för riktigt snabba dice
 
 function prepare_rnd(callback) {
     callback();
@@ -179,7 +179,7 @@ this.dice_inertia = {'d6': 13};
 this.scale = 50;
 
 this.create_d6 = function(dice_color) {
-    if (!this.d6_geometry) this.d6_geometry = this.create_d6_geometry(this.scale * 1.9);
+    if (!this.d6_geometry) this.d6_geometry = this.create_d6_geometry(this.scale * 1.9); // HÄR KAN MAN ÄNDRA DICE STORLEK
     this.dice_material = this.create_dice_materials(this.standart_d20_dice_face_labels, this.scale / 2, 1.0, dice_color)
     return new THREE.Mesh(this.d6_geometry, this.dice_material);
 }
@@ -192,6 +192,12 @@ this.dice_box = function(container, dimentions, options) {
     this.dice_color = '#000000';
     this.dice_color = options.dice_color ? options.dice_color : this.dice_color;
 
+    if (options.fastDice) {
+        that.frame_rate = 1 / 6;
+    } else {
+        that.frame_rate = 1 / 30;
+    }
+
     this.dices = [];
     this.scene = new THREE.Scene();
     this.world = new CANNON.World();
@@ -202,7 +208,7 @@ this.dice_box = function(container, dimentions, options) {
     container.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
-    //this.renderer.setClearColor( 0xffffff, 0);
+    this.renderer.setClearColor( 0xffffff, 0);
 
     this.reinit(container, dimentions);
 
@@ -294,9 +300,9 @@ this.dice_box.prototype.reinit = function(container, dimentions) {
     this.desk = new THREE.Mesh(
         new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
         new THREE.MeshPhongMaterial({
-            //map: texture,
+            map: texture/* ,
             color: 0xb5885e,
-            transparent: true
+            transparent: true */
         })
     );
     this.desk.receiveShadow = true;

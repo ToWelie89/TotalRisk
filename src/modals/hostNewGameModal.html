@@ -6,20 +6,41 @@
                 <div class="modal-body">
                     <div class="modal-body textCenter">
                         <div class="row">
-                            <div class="col-xs-12 textCenter marginTop--double marginBottom--double paddingBottom">
-                                <div data-ng-repeat="mapKey in hostNewGame.mapKeys track by $index">
-                                    <p data-ng-bind="hostNewGame.maps[mapKey].name" style="font-size: 20px;"></p>
+                            <div class="col-xs-12 textCenter marginTop--double marginBottom--double paddingBottom" id="chosenMap">
+                                <div
+                                    id="currentlySelectedMapPreview"
+                                    class="mapPreview"
+                                ></div>
+                                <div id="currentlySelectedMapInfo">
+                                    <p><strong>{{ hostNewGame.currentlySelectedMap.name }}</strong></p>
                                     <p>
-                                        <strong>Regions:</strong> {{hostNewGame.maps[mapKey].regions}}
+                                        <strong>Regions:</strong> {{ hostNewGame.currentlySelectedMap.regions }}
                                     </p>
                                     <p class="paddingBottom">
-                                        <strong>Territories:</strong> {{hostNewGame.maps[mapKey].territories}}
+                                        <strong>Territories:</strong> {{ hostNewGame.currentlySelectedMap.territories }}
                                     </p>
+                                    <p>
+                                        <i>{{ hostNewGame.currentlySelectedMap.description }}</i>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 textCenter marginTop--double marginBottom--double paddingBottom">
+                                <div id="mapList">
+                                    <!-- <p data-ng-bind="map.name" style="font-size: 20px;"></p>
+                                    <p>
+                                        <strong>Regions:</strong> {{map.regions}}
+                                    </p>
+                                    <p class="paddingBottom">
+                                        <strong>Territories:</strong> {{map.territories}}
+                                    </p> -->
                                     <div
+                                        data-ng-repeat="map in hostNewGame.maps track by $index" 
+                                        data-ng-class="{'selected': map === hostNewGame.currentlySelectedMap }"
                                         id="hostNewGameMapPreview{{ $index }}"
-                                        class="mapPreview"
+                                        class="mapPreview small"
+                                        data-ng-click="hostNewGame.selectMap(map)"
                                         inject-svg
-                                        src="{{ hostNewGame.maps[mapKey].mainMap }}"
+                                        src="{{ map.mainMap }}"
                                     ></div>
                                 </div>
                             </div>

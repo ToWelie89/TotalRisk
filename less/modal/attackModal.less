@@ -9,11 +9,10 @@
 
             #attackModal {
                 #attackModalAttackerPortraitSvg, #attackModalDefenderPortraitSvg {
-                    height: 250px;
-                    width: 230px;
+                    height: 440px;
                     text-align: center;
                     margin: 0 auto;
-                    margin-top: -50px;
+                    margin-top: -80px;
                     svg {
                         height: 100% !important;
                         margin: 0 !important;
@@ -47,10 +46,52 @@
                             }
 
                             #attackModalBottomWrapper {
-                                background: linear-gradient(180deg, rgba(170,170,170,1) 0%, rgba(255,255,255,1) 10%);
+                                background: linear-gradient(180deg, #232323 0%, #6f6464 10%);
                                 margin-top: -10px;
                                 width: 95%;
                                 margin: 0 auto;
+
+                                .animatedRibbon {
+                                    position: absolute;
+                                    z-index: 999;
+                                    transition: opacity 300ms;
+                                    &:hover {
+                                        opacity: 0.3;
+                                    }
+                                    .animatedRibbonInner {
+                                        height: 50px;
+                                        line-height: 50px;
+                                        font-size: 26px;
+                                        letter-spacing: 1.3px;
+                                        font-weight: 600;
+                                    }
+                                    &#attackerRibbon {
+                                        transform: skewY(-0.01turn);
+                                        left: 45px;
+                                        bottom: -10px;
+                                    }
+                                    &#defenderRibbon {
+                                        transform: skewY(0.01turn);
+                                        right: 45px;
+                                        bottom: -10px;
+                                    }
+                                }
+
+                                #sliderContainer {
+                                    .rzslider .rz-bubble {
+                                        color: white;
+                                    }
+                                }
+
+                                #moveButton {
+                                    -webkit-animation: pulsateMoveButton 1.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+                                    -webkit-animation-iteration-count: infinite;
+                                    margin-top: 50px;
+                                    width: 70%;
+                                    height: 50px;
+                                    font-size: 18px;
+                                    border-radius: 20px;
+                                }
                             }
                         }
 

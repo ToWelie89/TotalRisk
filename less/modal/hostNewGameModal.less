@@ -1,12 +1,13 @@
 .hostNewGameModal {
     > .modal-dialog {
+        width: auto;
         > .modal-content {
             background: transparent;
             box-shadow: none;
 
             #hostNewGameModal {
                 .modal-dialog {
-                    width: 800px;
+                    width: 880px;
                     .modal-content {
                         background: url(../assets/modalBackground.png);
                         background-size: 100% 100%;
@@ -17,11 +18,40 @@
                             padding-right: 30px;
                             margin-top: 10px;
 
+                            #chosenMap {
+                                padding-top: 40px;
+                                #currentlySelectedMapPreview {
+                                    float: left;
+                                    width: 400px;
+                                    width: 50%;
+                                    height: 224px;
+                                }
+                                #currentlySelectedMapInfo {
+                                    float: left;
+                                    text-align: left;
+                                    padding: 24px 0px 0px 18px;
+                                    width: 50%;
+                                    p:first-child {
+                                        font-size: 20px;
+                                    }
+                                    i {
+                                        font-size: 14px;
+                                    }
+                                }
+                            }
+
+                            #mapList {
+                                background: #404040;
+                                box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.42);
+                                padding: 20px;
+                                border-radius: 20px;
+                                text-align: left;
+                            }
+
                             .mapPreview {
                                 background-color: #5397d1;
-                                width: 50%;
                                 margin: 0 auto;
-                                padding: 20px;
+                                padding: 20px 40px;
                                 box-shadow: 0 0 30px rgba(0, 0, 0, 0.46);
 
                                 svg {
@@ -29,9 +59,26 @@
                                     .troopCounter, .troopCounterText, text {
                                         display: none;
                                     }
+                                    #troopCounters {
+                                        display: none;
+                                    }
                                     text {
                                         display: none;
                                     }
+                                }
+
+                                &.small {
+                                    width: 100px;
+                                    display: inline-block;
+                                    padding: 5px;
+                                    margin-right: 10px;
+                                    cursor: url(../assets/cursors/new/pointer.png), auto;
+                                }
+
+                                &.selected {
+                                    box-shadow: 0 0 30px #d6d6d6e3;
+                                    border: 2px solid #d0d0d0;
+                                    cursor: url(../assets/cursors/new/default.png), auto;
                                 }
                             }
 

@@ -14,7 +14,7 @@ class ScenarioSelectorModalController {
                 disabled: false,
                 setupPhase: GAME_PHASES.PLAYER_SETUP,
                 displayName: 'Classic Risk',
-                background: 'assets/scenarios/classic.jpeg',
+                background: 'assets/scenarios/classic1.PNG',
                 description: 'This is the classic game of Risk with the standard rules as default'
             },
             ...AVAILABLE_SCENARIOS
@@ -29,11 +29,11 @@ class ScenarioSelectorModalController {
                 scenario.specialRules.forEach(specialRule => {
                     if (specialRule.displayName && specialRule.description) {
                         specialRule.tooltipHtml = this.$sce.trustAsHtml(`
-                        <div class="standardTooltip">
-                            <p>
+                        <div class="standardTooltip" style="color: white !important;">
+                            <span>
                                 <strong>${specialRule.displayName}</strong><br>
                                 ${specialRule.description}
-                            </p>
+                            </span>
                         </div>
                     `);
                     }
@@ -55,7 +55,7 @@ class ScenarioSelectorModalController {
             this.soundService.denied.play();
             return;
         }
-        this.soundService.bleep2.play();
+        this.soundService.tick.play();
         this.vm.selectedScenario = scenario;
         this.selectScenario();
     }
@@ -65,8 +65,15 @@ class ScenarioSelectorModalController {
             this.soundService.denied.play();
             return;
         }
-        this.soundService.bleep2.play();
+        this.soundService.tick.play();
         this.vm.selectedScenario = scenario;
+    }
+
+    cancel() {
+        this.soundService.tick.play();
+        this.$uibModalInstance.close({
+            cancel: true
+        });
     }
 
     selectScenario() {

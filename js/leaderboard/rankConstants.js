@@ -61,8 +61,8 @@ const getLeaderboard = () => {
 
 const getRankingOfPlayerByUid = uid => {
     return getLeaderboard().then(response => {
-        const player = response.leaderboardList.find(x => x.id === uid);
-        const rank = response.leaderboardList.indexOf(player) + 1;
+        const player = response.leaderboardList.find(x => x.id === uid) || 'N/A';
+        const rank = response.leaderboardList.indexOf(player) !== -1 ? response.leaderboardList.indexOf(player) + 1 : 'N/A';
         return {
             league: player.league,
             rank
@@ -89,7 +89,7 @@ const LEAGUES = {
     }
 };
 
-const MINIMUM_NUMBER_OF_GAMES_PLAYED_FOR_RANKED = 2;
+const MINIMUM_NUMBER_OF_GAMES_PLAYED_FOR_RANKED = 1;
 
 const MINIMUM_NUMBER_OF_PLAYERS_TO_ENABLE_RANKING = 20;
 

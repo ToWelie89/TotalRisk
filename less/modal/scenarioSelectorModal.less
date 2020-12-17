@@ -1,10 +1,21 @@
 .scenarioSelectorModal {
     > .modal-dialog {
         width: 900px;
+        > .modal-content {
+            box-shadow: none;
+            background-color: transparent;
+        }
     }
     #scenarioSelectorModal {
         .modal-dialog {
             width: 900px;
+
+            .modal-content {
+                background: url(file:///C:/Git/tr/assets/modalBackground.png);
+                background-size: 100% 100%;
+                box-shadow: none;
+                padding: 50px;
+            }
             
             .scenarioContainer {
                 &__scenario {
@@ -19,8 +30,10 @@
                     width: 100%;
                     transition: all 0.4s;
                     box-shadow: inset 0 0 10px #000000;
+                    cursor: url(../assets/cursors/new/pointer.png), auto;
                     
                     &.selected {
+                        background-position: center bottom;
                         opacity: 1;
                         -webkit-filter: none;
                         filter: none;
@@ -28,6 +41,7 @@
                         .scenarioContainer__scenario__specialRulesContainer {
                             display: table-row;
                             &__item {
+                                color: white;
                                 pointer-events: auto;
                             }
                         }
@@ -60,13 +74,15 @@
                     }
                     
                     p {
-                        display: table-cell;
-                        vertical-align: middle;
-                        color: white;
+                        /* display: table-cell;
+                        vertical-align: middle; */
+                        padding-top: 20px;
+                        color: black;
                         padding-left: 30px;
-                        padding-right: 30px;
                         font-size: 20px;
-                        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+                        font-weight: 900;
+                        padding-right: 160px;
+                        font-size: 15px;
                         strong {
                             font-size: 30px;
                         }

@@ -13,6 +13,19 @@
         width: 1500px;
         margin: 0 auto;
 
+        #currentPlayerPortrait {
+            position: absolute;
+            z-index: 1000;
+            top: -22px;
+            left: -110px;
+            transform: scale(0.5);
+            transform-origin: top;
+            transition: all 600ms;
+            &:hover {
+                transform: scale(0.8);
+            }
+        }
+
         #playerName {
             font-size: 30px;
         }
@@ -46,7 +59,64 @@
         height: ~"calc(100% - 150px)";
         box-shadow: inset 0px 0px 100px 11px rgba(28, 48, 150, 0.83);
 
-		#map {
+        #showRegionBonuses {
+            top: 15px;
+            left: 15px;
+            position: absolute;
+            transition: opacity 600ms ease 1s;
+            
+            &:hover {
+                #showRegionBonusesInner {
+                    opacity: 1;
+                }
+            }
+            #showRegionBonusesInner {
+                pointer-events: none;
+                opacity: 0;
+                filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
+                position: absolute;
+                z-index: 300;
+                top: 41px;
+                left: 12px;
+                filter: drop-shadow(0 0 10px black);
+
+                #showRegionBonusesInnerInner {
+                    padding: 10px;
+                    background: #e8d5b1;
+                    min-height: 200px;
+                    color: #543b0a;
+                    clip-path: polygon(0% 6%, 10% 6%, 18% 0%, 26% 6%, 100% 6%, 100% 100%, 94% 100%, 89% 98%, 87% 100%, 79% 98%, 78% 100%, 71% 95%, 68% 100%, 62% 97%, 61% 100%, 49% 100%, 37% 92%, 33% 100%, 20% 100%, 15% 96%, 14% 100%, 8% 100%, 4% 95%, 0% 100%);
+                    padding-top: 10%;
+                    padding-left: 16px;
+                    padding-right: 16px;
+                    padding-bottom: 14%;
+                    width: 560px;
+                    font-size: 16px;
+                    box-shadow: inset 0 0 50px #0000006e;
+
+                    .regionInfo {
+                        padding-top: 10px;
+                        padding-bottom: 6px;
+                        font-size: 22px;
+                        border-bottom: 1px dashed #b17d1e;
+                        strong {
+                            display: inline-block;
+                            width: 90%;
+                            -webkit-text-stroke: 1px black;
+                        }
+                        p {
+                            display: inline-block;
+                            text-align: right;
+                            width: 10%;
+                            margin: 0;
+                            padding-right: 5px;
+                        }
+                    }
+                }
+            }
+        }
+
+		#singleplayerMap, #tutorialMap {
 	        width: 1500px;
 	        margin: 0 auto;
 		}

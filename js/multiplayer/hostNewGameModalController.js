@@ -1,4 +1,5 @@
 const { MAPS } = require('./../gameConstants');
+const { loadSvgIntoDiv } = require('./../helpers');
 
 class HostNewGameModalController {
 
@@ -16,8 +17,9 @@ class HostNewGameModalController {
         this.vm.password = '';
 
         this.vm.maps = MAPS;
-        this.vm.mapKeys = Object.keys(MAPS);
-        this.vm.currentlySelectedMap = this.vm.mapKeys[0];
+        this.vm.currentlySelectedMap = this.vm.maps[0];
+
+        loadSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
     }
 
     createLobby() {
@@ -27,6 +29,12 @@ class HostNewGameModalController {
             password: this.vm.password,
             map: this.vm.currentlySelectedMap
         });
+    }
+
+    selectMap(map) {
+        this.soundService.tick.play();
+        this.currentlySelectedMap = map;
+        loadSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
     }
 
     cancel() {
