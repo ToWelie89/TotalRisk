@@ -1,5 +1,5 @@
 const patchLog = {
-    '1.4.0': {
+    '1.4.1': {
         patchType: 'major',
         description: 'This patch contains lots of improvements, bug fixes and new added features.',
         news: [{
