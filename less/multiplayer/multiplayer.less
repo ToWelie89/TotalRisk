@@ -5,10 +5,12 @@
     bottom: 0;
 	top: 0;
 	background: #5397d1;
+	overflow-y: hidden;
 	
 	> div {
 		background: rgb(62, 62, 62);
-		height: ~"calc(100% - 242px)";
+		//height: ~"calc(100% - 242px)";
+		height: 100%;
 	}
 
 	#topBar {
@@ -163,9 +165,25 @@
 		}
 	}
 	#lobbyChatBoxes {
-		width: 100%;
+		width: 650px;
 		position: absolute;
 		bottom: 0;
+		transition: all 600ms;
+
+		&.minimized {
+			.chatMessagesContainer {
+				height: 0 !important;
+				min-height: 0 !important;
+				padding: 0 !important;
+
+				.topShadowOverlay {
+					height: 0;
+				}
+			}
+			.senderBar {
+				display: none;
+			}
+		}
 
 		.muteChatContainer {
 			width: 100%;
@@ -187,27 +205,30 @@
 			border-radius: 0px;
 
 			.chatMessagesContainer {
+				transition: all 600ms;
 				min-height: 200px;
 				height: 200px;
 				max-height: 200px;
 				resize: none;
 
 				.topShadowOverlay {
+					transition: all 1ms;
 				    border-top-left-radius: 0px;
 				}
 
 				&::-webkit-scrollbar-track {
 					cursor: url(../assets/cursors/new/default.png), auto;
-				    border-top-right-radius: 0px;
+				    border-top-right-radius: 2px;
 				}
 
 				&::-webkit-scrollbar {
 					cursor: url(../assets/cursors/new/default.png), auto;
-				    border-top-right-radius: 0px;
+				    border-top-right-radius: 20px;
 				}
 			}
 
 			.senderBar {
+				transition: all 600ms;
 				input, button {
 					border-radius: 0px;
 				}

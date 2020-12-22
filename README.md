@@ -19,18 +19,29 @@ Technologies used:
 - **Heroku** For dedicated remote server
 - **Firebase** Database and authentication handling and storing of user data (such as statistics and user settings)
 
+## Prerequisites
+
+First make sure to have Nodejs installed. This project is designed to work with the latest version of Nodejs (14.15.3) and npm. Download it [here](https://nodejs.org/en/download/)
+
+Next up install the following packages globally that will be needed for the build process:
+```
+npm install -g grunt
+npm install -g grunt-cli
+```
+
 ## Getting started
 
-- Clone the repo
-- Install all dependencies by running
+Clone the repo
+```
+git clone https://github.com/ToWelie89/TotalRisk.git
+```
 
+Install all dependencies by running
 ```
 npm install
 ```
 
 (To build and run the project locally you need both dependencies and devDependencies)
-
-- Build the project (this may require you to first install grunt and grunt-cli globally using npm)
 
 ```
 grunt default
@@ -55,20 +66,12 @@ Open http://127.0.0.1:5000 in your browser. Running the game in your browser is 
 
 ## How to run locally (Electron version)
 
-To run the game as a standalone application I am using Electron. If you want to run the game as an Electron application you may need to install Electron globally first by running:
-
-```
-npm install -g electron
-```
-
-and then run:
-
+To run as a standlone desktop application simply execute:
 ```
 npm run electron
 ```
 
 This will run the game as a standalone electron Windows application. However this will run as a production mode, it will attempt to check for previous releases of the game and patch the game with the latest version if one is found. This is done using electron-updater. But right now the game is in development and the game may get stuck in a loading screen unless you run in a specific dev mode. To do this run:
-
 ```
 npm run electron:dev
 ```
@@ -135,18 +138,32 @@ npm install -g cloc
 
 ## Troubleshooting
 
+### Unresolved dependencies (bufferutil, util8) when trying to build electron app
+
+The quickest fix is to add the following as an environment variable:
+```
+export ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true
+```
+
 ### Failed to load gRPC binary module error
 
-If you get an error message sort of like this it might have something to do with a known issue between Firebase and Electron. I managed to fix this by running (in a console with admin rights):
+**Update** This should be fixed now since I updated the Firebase version
 
+If you get an error message sort of like this it might have something to do with a known issue between Firebase and Electron. I managed to fix this by running (in a console with admin rights):
 ```
 npm --add-python-to-path='true' --debug install --global windows-build-tools
 ```
 
 This will install a bunch of useful dev tools for Windows and add them to your PATH. In this case we need Python so that we then can run:
-
 ```
 npm rebuild --runtime=electron --target=3.0.2 --disturl=https://atom.io/download/electron
+```
+
+### cross-env problem
+
+If when you try to run as an Electron app you may get an error that refers to cross-env. In that case try installing it globally:
+```
+npm install -g cross-env
 ```
 
 ### Other
@@ -158,6 +175,3 @@ For other issues please leave a bug report [here](https://github.com/ToWelie89/T
 + **clean:build**: Deletes all previous compiled build files
 + **browserify:build**: Browserify will build the entry point js-file app.js with the transform babelify and preset es2015 to transpile ES2015 code
 + **less**: Compile less into a css-file
-+ **replace:inlineModalSvgs**: This will inline the markup from the svg-file used for the map into the html markup
-+ **replace:inlineSvg**: Inline more svg files to html files
-+ **notify:build**: Notify the user that the build is complete

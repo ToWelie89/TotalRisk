@@ -1,4 +1,5 @@
 const { TURN_PHASES } = require('./../gameConstants');
+const { PLAYER_TYPES } = require('./../player/playerConstants');
 
 class GameAnnouncer {
     constructor(settings) {
@@ -58,7 +59,14 @@ class GameAnnouncer {
             onend: onendCallback
         }; */
 
-        responsiveVoice.speak(turn.newPlayer ? (`${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`) : ' ', this.announcerType, {
+        let text;
+        if (turn.player.type === PLAYER_TYPES.HUMAN) {
+            text = `${turn.player.color.name} player ${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`;
+        } else {
+            text = `AI player ${turn.player.avatar.pronounciation ? turn.player.avatar.pronounciation : turn.player.name}'s turn`;
+        }
+
+        responsiveVoice.speak(turn.newPlayer ? text : ' ', this.announcerType, {
             pitch: this.pitch,
             //volume: (this.settings.musicVolume / 100),
             volume: 1,

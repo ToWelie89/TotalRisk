@@ -22,34 +22,39 @@
         animation: main 250ms;
         animation-fill-mode: forwards;
     }
-    div {
-        i {
+    div:nth-child(2) {
+        div {
             position: absolute;
     
             &:first-child, &:nth-child(2) {
+                width: 20px;
+                height: 40px;
                 position: absolute;
-                left: -20px;
+                left: 0;
                 bottom: -20px;
                 z-index: -1;
-                border: 20px solid transparent;
-                border-right-color: #043140;
+                background: #043140;
+                clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
                 
                 animation: edge 500ms;
                 animation-fill-mode: forwards;
             }
             &:nth-child(2) {
+                width: 20px;
+                height: 40px;
                 left: auto;
-                right: -20px;
-                border-right-color: transparent;
-                border-left-color: #043140;
+                right: 0;
+                background: #043140;
+                clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
             }
             &:nth-child(3), &:last-child {
-                width: 20px;
+                width: 60px;
+                height: 60px;
                 bottom: -20px;
                 left: -40px;
                 z-index: -2;
-                border: 30px solid #1D53C0;
-                border-left-color: transparent;
+                background: #1D53C0;
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%);
                 
                 animation: back 600ms;
                 animation-fill-mode: forwards;
@@ -57,11 +62,13 @@
                 transform-origin: 100% 0;
             }
             &:last-child {
+                width: 60px;
+                height: 60px;
                 bottom: -20px;
                 left: auto;
                 right: -41px;
-                border: 30px solid #1D53C0;
-                border-right-color: transparent;
+                background: #1D53C0;
+                clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 50% 50%, 100% 0%);
             
                 transform-origin: 0 0;
             }
@@ -89,28 +96,49 @@
     &[color="PURPLE"] {
         .customColorMixin(@purplePlayer);
     }
+    &[color="PARCHMENT"] {
+        .customColorMixin(#ebc867);
+    }
 }
 
 .customColorMixin(@baseColor) {
+    &.insetShadow {
+        .animatedRibbonInner {
+            box-shadow: inset 0 0 15px darken(@baseColor, 60%);
+        }
+        div:nth-child(2) {
+            div {
+                &:first-child, &:nth-child(2) {
+                    box-shadow: inset 0 0 15px darken(@baseColor, 60%);
+                }
+                &:nth-child(2) {
+                    box-shadow: inset 0 0 15px darken(@baseColor, 60%);
+                }
+                &:nth-child(3), &:last-child {
+                    box-shadow: inset 0 0 15px darken(@baseColor, 60%);
+                }
+                &:last-child {
+                    box-shadow: inset 0 0 15px darken(@baseColor, 60%);
+                }
+            }
+        }
+    }
     .animatedRibbonInner {
         background: lighten(@baseColor, 14%); // lightest
     }
-    div {
-        i {
+    div:nth-child(2) {
+        div {
             &:first-child, &:nth-child(2) {
-                border-right-color: @baseColor; // The darkest
+                background: darken(@baseColor, 18%); // The darkest
             }
             &:nth-child(2) {
-                border-left-color: @baseColor;
-                border-right-color: transparent;
+                background: darken(@baseColor, 18%);
             }
             &:nth-child(3), &:last-child {
-                border: 30px solid lighten(@baseColor, 7%); // Slightly ligher
-                border-left-color: transparent;
+                background: lighten(@baseColor, 7%); // Slightly ligher
             }
             &:last-child {
-                border: 30px solid lighten(@baseColor, 7%);
-                border-right-color: transparent;
+                background: lighten(@baseColor, 7%);
             }
         }
     }

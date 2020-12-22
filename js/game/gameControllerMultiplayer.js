@@ -32,6 +32,7 @@ class GameControllerMultiplayer extends GameController {
         this.firstLoad = true;
         this.vm.showLobbyChat = true;
         this.vm.timerWidth = 0;
+        this.vm.pinChat = true;
 
         this.$rootScope.$watch('currentLobby', () => {
             this.vm.currentLobby = this.$rootScope.currentLobby;
@@ -40,6 +41,7 @@ class GameControllerMultiplayer extends GameController {
         this.globalChatColor = getRandomColor();
 
         this.vm.isMyTurn = this.isMyTurn;
+        this.vm.togglePinChat = this.togglePinChat;
 
         this.mapSelector = '#multiplayerMap';
 
@@ -49,10 +51,15 @@ class GameControllerMultiplayer extends GameController {
         };
 
         firebase.database().ref('globalChat').on('value', snapshot => {
-            if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && !this.firstLoad && !this.vm.showLobbyChat) {
+            if (
+                !this.vm.muteChat &&
+                this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER &&
+                !this.firstLoad &&
+                (this.vm.showLobbyChat || document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.contains('minimized'))
+            ) {
                 this.soundService.newMessage.play();
             }
-            if (this.vm.showLobbyChat && !this.firstLoad) {
+            if ((document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.contains('minimized') || this.vm.showLobbyChat) && !this.firstLoad) {
                 this.vm.unreadGlobalMessages++;
             }
             this.firstLoad = false;
@@ -82,10 +89,52 @@ class GameControllerMultiplayer extends GameController {
                 });
             }, 1);
         });
+        document.querySelector('#multiplayerContainer #lobbyChatBoxes').addEventListener('mouseover', event => {
+            console.log('mouseover', event)
+            document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.remove('minimized');
+
+            if (this.vm.showLobbyChat) {
+                this.vm.unreadLobbyMessages = 0;
+            } else {
+                this.vm.unreadGlobalMessages = 0;
+            }
+        });
+        document.querySelector('#multiplayerContainer #lobbyChatBoxes').addEventListener('mouseout', event => {
+            console.log('mouseout', event)
+            if (!this.vm.pinChat) {
+
+                const bounds = document.querySelector('#multiplayerContainer #lobbyChatBoxes').getBoundingClientRect();
+
+                const mouseX = event.clientX;
+                const mouseY = event.clientY;
+
+                if (
+                    mouseX >= bounds.x &&
+                    mouseX <= (bounds.x + bounds.width) &&
+                    mouseY >= bounds.y &&
+                    mouseY <= (bounds.y + bounds.height)
+                ) {
+                    return;
+                } else {
+                    document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.add('minimized');
+                }
+            }
+        });
     }
 
+    togglePinChat() {
+        this.vm.pinChat = !this.vm.pinChat;
+        if (this.vm.pinChat) {
+            document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.remove('minimized');
+        }
+    }
+    
     switchChat(showLobbyChat) {
+        if (this.vm.showLobbyChat === showLobbyChat) {
+            return;
+        }
         this.vm.showLobbyChat = showLobbyChat;
+        this.soundService.tick.play();
         if (this.vm.showLobbyChat) {
             this.vm.unreadLobbyMessages = 0;
         } else {
@@ -410,7 +459,7 @@ class GameControllerMultiplayer extends GameController {
             this.startMenuIsOpen = false;
             this.escapeWasPressed = false;
 
-            if (response.quitGame) {
+            if (response && response.quitGame) {
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
                 return;
             }
@@ -592,11 +641,15 @@ class GameControllerMultiplayer extends GameController {
         });
 
         this.socketService.gameSocket.on('messagesUpdated', (messages) => {
-            if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER && this.vm.showLobbyChat) {
+            if (
+                !this.vm.muteChat &&
+                this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER &&
+                (!this.vm.showLobbyChat || document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.contains('minimized'))
+            ) {
                 this.soundService.newMessage.play();
             }
 
-            if (!this.vm.showLobbyChat) {
+            if (!this.vm.showLobbyChat || document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.contains('minimized')) {
                 this.vm.unreadLobbyMessages++;
             }
 

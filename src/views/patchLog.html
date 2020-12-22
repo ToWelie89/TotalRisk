@@ -1,0 +1,47 @@
+<div data-ng-show="main.currentGamePhase == main.gamePhases.PATCH_LOG" class="textCenter mainMenuBox" id="characterGallery" style="position: relative; color: white;" ng-cloak>
+    <div id="mainDiv">
+        <div class="backButtonContainer">
+            <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+            </button>
+        </div>
+        <div id="largePatchLogContainer">
+            <div class="largePatchLogContainerInner" data-ng-repeat="key in main.patchLogKeys" key="{{key}}" data-ng-class="{'minimized': main.patchLog[key].minimized === true}" data-ng-click="main.patchLog[key].minimized = !main.patchLog[key].minimized">
+                <div class="patchTitle">
+                    <i class="fas fa-chevron-right"></i> {{ key }} {{ (key === main.currentPatchVersion) ? ' (Current patch)' : '' }}
+                </div>
+                <div class="content">
+                    <div class="marginBottom" id="patchNotesContainerDescription" data-ng-show="main.patchLog[key].timestampNormalized">
+                        Released {{ main.patchLog[key].timestampNormalized }}
+                    </div>
+                    <div id="patchNotesContainerDescription" data-ng-bind="main.patchLog[key].description"></div>
+                    <p class="header" data-ng-show="main.patchLog[key].news.length > 0">
+                        New features and improvements
+                    </p>
+                    <ul id="patchNotesContainerNews">
+                        <li class="newsItem" data-ng-repeat="news in main.patchLog[key].news">
+                            <strong data-ng-bind="news.title" data-ng-show="news.title"></strong>
+                            <br data-ng-show="news.title">
+                            <span data-ng-bind="news.description"></span>
+                            <ul ng-if="news.subPoints" style="padding-top: 10px; list-style-type: disc;">
+                                <li class="newsItem" data-ng-repeat="p in news.subPoints">
+                                    {{ p }}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="header" data-ng-show="main.patchLog[key].bugFixes.length > 0">
+                        Bug fixes
+                    </p>
+                    <ul id="patchNotesContainerBugFixes">
+                        <li class="newsItem" data-ng-repeat="bugFix in main.patchLog[key].bugFixes">
+                            <strong data-ng-bind="bugFix.title" data-ng-show="bugFix.title"></strong>
+                            <br data-ng-show="bugFix.title">
+                            <span data-ng-bind="bugFix.description"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

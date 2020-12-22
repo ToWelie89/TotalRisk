@@ -1,7 +1,7 @@
 const {PLAYER_TYPES, AI_VALUES} = require('./playerConstants');
 
 class Player {
-    constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN, userUid = undefined, isHost = undefined) {
+    constructor(name, color, avatar, type = PLAYER_TYPES.HUMAN, userUid = undefined, isHost = undefined, attackerDice = undefined, attackerDiceLabel = undefined) {
         this.name = name;
         this.color = color;
         this.avatar = avatar;
@@ -9,6 +9,8 @@ class Player {
         this.type = type;
         this.userUid = userUid;
         this.isHost = isHost;
+        this.attackerDice = attackerDice;
+        this.attackerDiceLabel = attackerDiceLabel;
 
         this.aiValues = AI_VALUES;
 

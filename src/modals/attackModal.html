@@ -6,6 +6,17 @@
                 <div class="modal-body">
                     <div class="modal-body textCenter">
                         <div class="row" id="territoryContainer">
+                            <div class="animatedRibbon insetShadow hide" color="PARCHMENT" id="attackModalTopBanner">
+                                <div class="animatedRibbonInner">
+                                    Battle for {{ attack.defender.name }}
+                                </div>
+                                <div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
                             <div class="col-xs-12">
                                 <style>
                                     #attackModalBattleSvg .soldier, #attackModalBattleSvg .cannon, #attackModalBattleSvg .fireflash {
@@ -27,15 +38,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="animatedRibbon hide" id="attackerRibbon" color="{{ attack.attacker.color.name.toUpperCase() }}">
+                                    <div class="animatedRibbon insetShadow hide" id="attackerRibbon" color="{{ attack.attacker.color.name.toUpperCase() }}">
                                         <div class="animatedRibbonInner">
                                             {{attack.attacker.owner}}
                                         </div>
                                         <div>
-                                            <i></i>
-                                            <i></i>
-                                            <i></i>
-                                            <i></i>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -73,36 +84,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="animatedRibbon hide" id="defenderRibbon" color="{{ attack.defender.color.name.toUpperCase() }}">
+                                    <div class="animatedRibbon insetShadow hide" id="defenderRibbon" color="{{ attack.defender.color.name.toUpperCase() }}">
                                         <div class="animatedRibbonInner">
                                             {{attack.defender.owner}}
                                         </div>
                                         <div>
-                                            <i></i>
-                                            <i></i>
-                                            <i></i>
-                                            <i></i>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                                <div class="col-xs-6">
-                                    {{ attack.attacker.numberOfTroops }}
-                                </div>
-                                <div class="col-xs-6">
-                                    {{ attack.defender.numberOfTroops }}
-                                </div>
-                            </div> -->
-                            <!-- <div class="row">
-                                <div class="col-xs-6">
-                                    <strong>Attacker</strong>
-                                </div>
-                                <div class="col-xs-6">
-                                    <strong>Defender</strong>
-                                </div>
-                            </div> -->
-                            <div class="row" style="opacity: 0;" id="diceContainer">
+                            <div class="row" id="diceContainer">
                                 <div class="col-xs-6" data-ng-if="attack.attackerDice" style="width: 50%; height: 200px;">
                                     <div id="attackerCanvas" style="width: 618px; height: 200px;"></div>
                                 </div>

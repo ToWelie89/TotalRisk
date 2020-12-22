@@ -84,6 +84,9 @@ log.info('App starting...');
 // Fix for audio bug
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
+// Fix for zoom level caching
+app.commandLine.appendSwitch ("disable-http-cache");
+
 app.on('login', (event, webContents, request, authInfo, callback) => {
     callback(
         proxyExists ? proxySettings.username : '',
@@ -102,10 +105,17 @@ const createDefaultWindow = () => {
     const mainScreen = electron.screen.getPrimaryDisplay();
     let screenConfig;
 
-    if (mainScreen.bounds.width <= 1920) { // Full-HD or smaller
+    if (mainScreen.bounds.width <= 1366) { // Full-HD or smaller
         console.log('Screen witdh equal or smaller than 1920');
         screenConfig = {
-            zoomFactor: 0.85,
+            zoomFactor: 0.52,
+            minWidth: 1000,
+            minHeight: 768
+        };
+    } else if (mainScreen.bounds.width <= 1920) { // Full-HD or smaller
+        console.log('Screen witdh equal or smaller than 1920');
+        screenConfig = {
+            zoomFactor: 0.70,
             minWidth: 1340,
             minHeight: 1000
         };

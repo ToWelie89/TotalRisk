@@ -2,6 +2,7 @@ const BattleHandler = require('./battleHandler');
 const {delay, shuffle, randomIntFromInterval } = require('./../helpers');
 const {GAME_PHASES} = require('./../gameConstants');
 const {loadSvgIntoDiv} = require('./../helpers');
+const {displayDamageNumberForAttackModal} = require('./../animations/animations');
 
 class AttackModalController {
     constructor($scope, $rootScope, $uibModalInstance, soundService, tutorialService, attackData, socketService, gameEngine, settings) {
@@ -127,6 +128,7 @@ class AttackModalController {
                         unit.style.display = 'block';
                         soundService.newMessage.play();
                         if (index === (allUnits.length - 1)) {
+                            document.querySelector('#attackModalTopBanner').classList.remove('hide');
                             document.querySelectorAll('#attackModalBottomWrapper .animatedRibbon').forEach(x => x.classList.remove('hide'));
                             this.vm.deployTroopsAnimationLoading = false;
                             this.$scope.$apply();
@@ -138,25 +140,33 @@ class AttackModalController {
             const attackerCanvas = document.getElementById('attackerCanvas');
             const defenderCanvas = document.getElementById('defenderCanvas');
             this.attacker_box = new dice_box(attackerCanvas, { w: 618, h: 200 }, {
-                dice_color: '#6b0a05',
+                dice_color: (this.settings && this.settings.attackerDice) ? this.settings.attackerDice : '#6b0a05',
+                dice_label_color: (this.settings && this.settings.attackerDiceLabel) ? this.settings.attackerDiceLabel : '#aaaaaa',
                 fastDice: this.settings.fastDice
             });
+            let dice_color = '#061a7f';
+            let dice_label_color = '#aaaaaa';
+
+            if (attackData.defender.attackerDice) {
+                dice_color = attackData.defender.attackerDice;
+            }
+            if (attackData.defender.attackerDice) {
+                dice_label_color = attackData.defender.attackerDiceLabel;
+            }
+
             this.defender_box = new dice_box(defenderCanvas, { w: 618, h: 200 }, {
-                dice_color: '#061a7f',
+                dice_color,
+                dice_label_color,
                 fastDice: this.settings.fastDice
             });
 
             setTimeout(() => {
-                $('#diceContainer').animate({
-                    opacity: 1
-                }, 150, () => {
-                    this.vm.loading = false;
-                    this.$scope.$apply();
-                    if (attackData.tutorialMode) {
-                        this.tutorial = this.attackData.tutorialMode;
-                        this.runTutorial();
-                    }
-                });
+                this.vm.loading = false;
+                this.$scope.$apply();
+                if (attackData.tutorialMode) {
+                    this.tutorial = this.attackData.tutorialMode;
+                    this.runTutorial();
+                }
             }, 50);
 
         }, this.getCountrySvgDelay);
@@ -317,6 +327,7 @@ class AttackModalController {
             const numberOfsoldiersToHide = visibleSoldiers.length - soldiersToShow;
             
             const soldiersToHide = visibleSoldiers.sort((a, b) => Number(b.getAttribute('index')) - Number(a.getAttribute('index'))).slice(0, numberOfsoldiersToHide);
+
             animateDyingSoldiers(soldiersToHide);
         }
 
@@ -333,6 +344,13 @@ class AttackModalController {
             
             const soldiersToHide = visibleSoldiers.sort((a, b) => Number(b.getAttribute('index')) - Number(a.getAttribute('index'))).slice(0, numberOfsoldiersToHide);
             animateDyingSoldiers(soldiersToHide);
+        }
+
+        if (context.vm.attackerCasualties > 0) {
+            displayDamageNumberForAttackModal(document.querySelector('#attackModalBattleSvg svg #leftArmy'), context.vm.attackerCasualties, true);
+        }
+        if (context.vm.defenderCasualties > 0) {
+            displayDamageNumberForAttackModal(document.querySelector('#attackModalBattleSvg svg #rightArmy'), context.vm.defenderCasualties, false);
         }
 
         context.battleFought(

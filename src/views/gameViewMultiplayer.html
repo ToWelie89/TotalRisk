@@ -200,6 +200,22 @@
         <div id="lobbyChatBoxes">
             <div class="muteChatContainer">
                 <div>
+                    <div style="position: absolute; top: -90px; left: 12px; text-align: left; width: 170px;">
+                        <div style="width: 100%;">
+                            <button type="button" class="button button-blue marginBottom" data-ng-click="gameMultiplayer.togglePinChat()" style="position: relative; width: 100%;">
+                                <span data-ng-show="gameMultiplayer.pinChat">Unpin chat</span>
+                                <span data-ng-show="!gameMultiplayer.pinChat">Pin chat</span>
+                            </button>
+                        </div>
+                        <div style="width: 100%;">
+                            <button type="button" class="button marginBottom" data-ng-click="gameMultiplayer.muteChat = !gameMultiplayer.muteChat" data-ng-class="{'button-green': gameMultiplayer.muteChat, 'button-red': !gameMultiplayer.muteChat}" style="position: relative; width: 100%;">
+                                <span data-ng-show="gameMultiplayer.muteChat">Unmute chat</span>
+                                <span class="glyphicon glyphicon-volume-up" data-ng-show="gameMultiplayer.muteChat"></span>
+                                <span data-ng-show="!gameMultiplayer.muteChat">Mute chat</span>
+                                <span class="glyphicon glyphicon-volume-off" data-ng-show="!gameMultiplayer.muteChat"></span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="chatTab" data-ng-click="gameMultiplayer.switchChat(true)" data-ng-class="{'chatTab--active': gameMultiplayer.showLobbyChat}">
                         Lobby chat
                         <div class="unreadCount" data-ng-show="gameMultiplayer.unreadLobbyMessages > 0">
@@ -212,14 +228,6 @@
                             {{ gameMultiplayer.unreadGlobalMessages <= 99 ? gameMultiplayer.unreadGlobalMessages : '...' }}
                         </div>
                     </div>
-                </div>
-                <div>
-                    <button type="button" class="button marginBottom" data-ng-click="gameMultiplayer.muteChat = !gameMultiplayer.muteChat" data-ng-class="{'button-green': gameMultiplayer.muteChat, 'button-red': !gameMultiplayer.muteChat}" style="position: relative;">
-                        <span data-ng-show="gameMultiplayer.muteChat">Unmute chat</span>
-                        <span class="glyphicon glyphicon-volume-up" data-ng-show="gameMultiplayer.muteChat"></span>
-                        <span data-ng-show="!gameMultiplayer.muteChat">Mute chat</span>
-                        <span class="glyphicon glyphicon-volume-off" data-ng-show="!gameMultiplayer.muteChat"></span>
-                    </button>
                 </div>
             </div>
             <div class="chatBox" data-ng-show="gameMultiplayer.showLobbyChat">

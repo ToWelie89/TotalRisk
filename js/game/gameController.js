@@ -371,7 +371,7 @@ class GameController {
             this.startMenuIsOpen = false;
             this.escapeWasPressed = false;
 
-            if (response.quitGame) {
+            if (response && response.quitGame) {
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
                 return;
             }

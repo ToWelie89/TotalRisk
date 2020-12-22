@@ -13,6 +13,11 @@
                     text-align: center;
                     margin: 0 auto;
                     margin-top: -80px;
+                    &.customCharacterSvg {
+                        svg {
+                            transform: scale(1.2);
+                        }
+                    }
                     svg {
                         height: 100% !important;
                         margin: 0 !important;
@@ -24,6 +29,7 @@
                     .modal-content {
                         background: transparent;
                         box-shadow: none;
+                        margin-top: 0px;
                         .modal-body {
                             padding: 0;
 
@@ -31,6 +37,47 @@
                                 max-height: 487px;
                                 .col-xs-12 {
                                     padding: 0;
+                                }
+
+                                .animatedRibbon {
+                                    position: absolute;
+                                    z-index: 999999;
+                                    bottom: -20px;
+                                    transform: scale(1.2);
+                                    line-height: 60px;
+                                    width: 600px;
+                                    font-size: 28px;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    left: 0;
+                                    right: 0;
+                                    top: 80px;
+                                    pointer-events: none;
+
+                                    .animatedRibbonInner {
+                                        color: black;
+                                    }
+
+                                    div:nth-child(2) {
+                                        div {
+                                            &:nth-child(1) {
+                                                bottom: auto;
+                                                top: 40px;
+                                            }
+                                            &:nth-child(2) {
+                                                bottom: auto;
+                                                top: 40px;
+                                            }
+                                            &:nth-child(3) {
+                                                bottom: auto;
+                                                top: 20px;
+                                            }
+                                            &:nth-child(4) {
+                                                bottom: auto;
+                                                top: 20px;
+                                            }
+                                        }
+                                    }
                                 }
                             }
 

@@ -7,7 +7,8 @@
 }
 
 .reinforcementText, .damageText {
-    position: absolute;
+    position: fixed;
+    z-index: 9999999999999;
     top: 0;
     left: 0;
     font-weight: 900;
@@ -15,4 +16,8 @@
     font-family: 'Arial';
     -webkit-text-stroke: 2px #000000;
     pointer-events: none;
+
+    &.large {
+        font-size: 50px;
+    }
 }

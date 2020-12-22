@@ -33,12 +33,14 @@ class Settings {
             }
         }
 
-        this.playSound     = savedSettings ? savedSettings.playSound     : settings.playSound;
-        this.aiSpeed       = savedSettings ? savedSettings.aiSpeed       : settings.aiSpeed;
-        this.showAnnouncer = savedSettings ? savedSettings.showAnnouncer : settings.showAnnouncer;
-        this.fullScreen    = savedSettings ? savedSettings.fullScreen    : settings.fullScreen;
-        this.enable3d      = savedSettings ? savedSettings.enable3d      : settings.enable3d;
-        this.fastDice      = savedSettings ? savedSettings.fastDice      : settings.fastDice;
+        this.playSound         = savedSettings ? savedSettings.playSound          : settings.playSound;
+        this.aiSpeed           = savedSettings ? savedSettings.aiSpeed            : settings.aiSpeed;
+        this.showAnnouncer     = savedSettings ? savedSettings.showAnnouncer      : settings.showAnnouncer;
+        this.fullScreen        = savedSettings ? savedSettings.fullScreen         : settings.fullScreen;
+        this.enable3d          = savedSettings ? savedSettings.enable3d           : settings.enable3d;
+        this.fastDice          = savedSettings ? savedSettings.fastDice           : settings.fastDice;
+        this.attackerDice      = savedSettings ? savedSettings.attackerDice       : settings.attackerDice;
+        this.attackerDiceLabel = savedSettings ? savedSettings.attackerDiceLabel  : settings.attackerDiceLabel;
 
         this.musicVolume   = savedSettings ? savedSettings.musicVolume   : settings.musicVolume;
         this.sfxVolume     = savedSettings ? savedSettings.sfxVolume     : settings.sfxVolume;
@@ -57,14 +59,16 @@ class Settings {
 
     saveSettings() {
         const settingsToSave = {
-            playSound:     this.playSound,
-            aiSpeed:       this.aiSpeed,
-            showAnnouncer: this.showAnnouncer,
-            fullScreen:    this.fullScreen,
-            fastDice:      this.fastDice,
-            musicVolume:   this.musicVolume,
-            sfxVolume:     this.sfxVolume,
-            enable3d:      this.enable3d
+            playSound:          this.playSound,
+            aiSpeed:            this.aiSpeed,
+            showAnnouncer:      this.showAnnouncer,
+            fullScreen:         this.fullScreen,
+            fastDice:           this.fastDice,
+            musicVolume:        this.musicVolume,
+            sfxVolume:          this.sfxVolume,
+            enable3d:           this.enable3d,
+            attackerDice:       this.attackerDice,
+            attackerDiceLabel:  this.attackerDiceLabel
         };
 
         if (this.runningElectron) {

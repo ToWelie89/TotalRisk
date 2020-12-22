@@ -14,7 +14,7 @@ class ScenarioSelectorModalController {
                 disabled: false,
                 setupPhase: GAME_PHASES.PLAYER_SETUP,
                 displayName: 'Classic Risk',
-                background: 'assets/scenarios/classic1.PNG',
+                background: 'assets/scenarios/classic1.png',
                 description: 'This is the classic game of Risk with the standard rules as default'
             },
             ...AVAILABLE_SCENARIOS

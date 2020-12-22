@@ -19,6 +19,13 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
+const getRandomValues = require('get-random-values');
+
+global.window = {
+    crypto: {
+        getRandomValues
+    }
+}
 
 const {
     PLAYER_COLORS,
@@ -547,7 +554,6 @@ const updateMapState = (roomId, doNotRemoveHighlightClass = false) => {
 };
 
 const updateOnlineUsers = (callback = () => {}) => {
-
     console.log(lobbiesSocketList
         .map(x => ({
             userName: x.userName,
@@ -878,7 +884,7 @@ io
             setPlayers(roomId);
         });
 
-        socket.on('setUser', (userUid, userName, roomId, isHost, chosenAvatar) => {
+        socket.on('setUser', (userUid, userName, roomId, isHost, chosenAvatar, attackerDice, attackerDiceLabel) => {
             const game = games.find(game => game.id === roomId);
             const usedAvatars = game.players.map(socket => socket.avatar.id);
 
@@ -889,6 +895,8 @@ io
             socket.ai = false;
             socket.color = getRandomUnusedColor(roomId);
             socket.avatar = (chosenAvatar && !usedAvatars.includes(chosenAvatar.id)) ? chosenAvatar : getUnusedAvatar(roomId).avatar;
+            socket.attackerDice = attackerDice;
+            socket.attackerDiceLabel = attackerDiceLabel;
 
             game.players.push(socket);
 
@@ -1000,7 +1008,9 @@ io
                 x.avatar,
                 x.ai ? PLAYER_TYPES.AI : PLAYER_TYPES.HUMAN,
                 x.userUid,
-                x.isHost
+                x.isHost,
+                x.attackerDice,
+                x.attackerDiceLabel
             ));
 
             console.log('starting game', game.gameEngine.selectedMap);
@@ -1066,6 +1076,26 @@ io
 
             const attacker = invasionData.attackFrom.owner;
             const defender = invasionData.battleWasWon ? invasionData.previousOwner : invasionData.attackTo.owner;
+
+            // TODO här kraschade det
+            if (!game || !game.gameEngine) {
+                console.log('CRASH!! Error 2');
+                console.log('https://trello.com/c/l3Hmbe6b/108-multiplayer-crash-med-daniel');
+                console.log('games', games);
+                console.log('socket.roomId', socket.roomId);
+                console.log('socket.userName', socket.userName);
+                console.log('socket.userUid', socket.userUid);
+
+                if (game.gameEngine) {
+                    const mapState = [...this.gameEngine.map.regions].map(x => ({
+                        name: x[0],
+                        value: {
+                            territories: [...x[1].territories].map(t => ({ name: t[0], numberOfTroops: t[1].numberOfTroops, owner: t[1].owner }))
+                        }
+                    }));
+                    console.log('mapstate', mapState);
+                }
+            }
 
             if (invasionData.battleWasWon) {
                 game.gameEngine.players.get(attacker).statistics.battlesWon += 1;
@@ -1145,9 +1175,25 @@ io
 
             const game = games.find(game => game.id === socket.roomId);
 
-            //console.log('game exists', !!game)
-
             // TODO - här kraschade det sist
+            if (!game || !getTerritoryByName(game.gameEngine.map, movementFromTerritoryName) || !getTerritoryByName(game.gameEngine.map, movementToTerritoryName)) {
+                console.log('CRASH!! Error 1');
+                console.log('games', games);
+                console.log('socket.roomId', socket.roomId);
+                console.log('socket.userName', socket.userName);
+                console.log('socket.userUid', socket.userUid);
+
+                if (game.gameEngine) {
+                    const mapState = [...this.gameEngine.map.regions].map(x => ({
+                        name: x[0],
+                        value: {
+                            territories: [...x[1].territories].map(t => ({ name: t[0], numberOfTroops: t[1].numberOfTroops, owner: t[1].owner }))
+                        }
+                    }));
+                    console.log('mapstate', mapState);
+                }
+            }
+
             getTerritoryByName(game.gameEngine.map, movementFromTerritoryName).numberOfTroops = movementFromTerritoryNumberOfTroops;
             getTerritoryByName(game.gameEngine.map, movementToTerritoryName).numberOfTroops = movementToTerritoryNumberOfTroops;
 

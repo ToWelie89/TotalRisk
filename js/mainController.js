@@ -1,10 +1,11 @@
+import moment from 'moment';
+
 const {GAME_PHASES, VICTORY_GOALS, MAPS} = require('./gameConstants');
 const {randomIntFromInterval, randomDoubleFromInterval, runningElectron, electronDevVersion, devMode, loadSvgIntoDiv} = require('./helpers');
 const Player = require('./player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./player/playerConstants');
 const {ERROR_TYPES} = require('./autoUpdating/updaterConstants');
 const { getTerritoryByName } = require('./map/mapHelpers');
-const { patchLog } = require('./patchLog/patchLog');
 
 class MainController {
 
@@ -70,14 +71,20 @@ class MainController {
             });
 
             this.vm.appVersion = electron.remote.app.getVersion();
-            if (electronDevVersion()) {
-                const highestVersion = Object.keys(patchLog)[0];
-                this.vm.currentPatchVersion = highestVersion;
-                this.vm.currentPatchNotes = patchLog[highestVersion];
-            } else {
+
+            fetch(`http://martinsonesson.se/totalrisk/patchlog.json?${randomIntFromInterval(111111111111,9999999999999)}`).then(resp => resp.json())
+            .then(patchLog => {
                 this.vm.currentPatchVersion = this.vm.appVersion;
                 this.vm.currentPatchNotes = patchLog[this.vm.appVersion];
-            }
+
+                this.vm.patchLogKeys = Object.keys(patchLog);
+                this.vm.patchLog = patchLog;
+                this.vm.patchLogKeys.forEach((key, i) => {
+                    //this.vm.patchLog[key].minimized = i === 0 ? false : true;
+                    this.vm.patchLog[key].minimized = true;
+                    this.vm.patchLog[key].timestampNormalized = (this.vm.patchLog[key].timestamp) ? moment(Number(this.vm.patchLog[key].timestamp)).format('ll') : undefined;
+                });
+            });
             this.$rootScope.appVersion = this.vm.appVersion;
         } else {
             fetch('./package.json')

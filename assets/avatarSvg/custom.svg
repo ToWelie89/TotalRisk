@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="81.432 -49.716 489.508 985.419" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com" style="filter: url(#filter-droppy)">
+<svg viewBox="81.432 -49.716 489.508 985.419" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com" style="filter: url(#filter-droppy)" class="customCharacterSvg">
   <defs>
     <filter xmlns="http://www.w3.org/2000/svg" id="filter-droppy" height="130%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>

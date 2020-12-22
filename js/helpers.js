@@ -10,6 +10,27 @@ const shuffle = a => {
     }
 };
 
+const throttle = (func, limit) => {
+    let lastFunc
+    let lastRan
+    return function () {
+        const context = this
+        const args = arguments
+        if (!lastRan) {
+            func.apply(context, args)
+            lastRan = Date.now()
+        } else {
+            clearTimeout(lastFunc)
+            lastFunc = setTimeout(function () {
+                if ((Date.now() - lastRan) >= limit) {
+                    func.apply(context, args)
+                    lastRan = Date.now()
+                }
+            }, limit - (Date.now() - lastRan))
+        }
+    }
+};
+
 const arraysEqual = (a, b) => {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -45,10 +66,47 @@ const chancePercentage = (x) => {
     return x <= perc;
 };
 
-const randomIntFromInterval = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
+/* const randomIntFromInterval = (min, max) => Math.floor(Math.random()*(max-min+1)+min); */
+
+// Random algorithm taken from Diceware https://github.com/EFForg/OpenWireless/blob/master/app/js/diceware.js
+const randomIntFromInterval = (min, max) => {
+    max++;
+    var rval = 0;
+    var range = max - min;
+
+    var bits_needed = Math.ceil(Math.log2(range));
+    if (bits_needed > 53) {
+        throw new Exception("We cannot generate numbers larger than 53 bits.");
+    }
+    var bytes_needed = Math.ceil(bits_needed / 8);
+    var mask = Math.pow(2, bits_needed) - 1;
+    // 7776 -> (2^13 = 8192) -1 == 8191 or 0x00001111 11111111
+
+    // Create byte array and fill with N random numbers
+    var byteArray = new Uint8Array(bytes_needed);
+    window.crypto.getRandomValues(byteArray);
+
+    var p = (bytes_needed - 1) * 8;
+    for (var i = 0; i < bytes_needed; i++) {
+        rval += byteArray[i] * Math.pow(2, p);
+        p -= 8;
+    }
+
+    // Use & to apply the mask and reduce the number of recursive lookups
+    rval = rval & mask;
+
+    if (rval >= range) {
+        // Integer out of acceptable range
+        return randomIntFromInterval(min, max);
+    }
+    // Return an integer that falls within the range
+    return min + rval;
+}
+
+
 
 const randomDoubleFromInterval = (min, max) => {
-    const double = Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
+    const double = Math.random() < 0.5 ? ((1 - Math.random()) * (max - min) + min) : (Math.random() * (max - min) + min);
     return Math.round(double * 10) / 10;
 };
 
@@ -62,8 +120,8 @@ const hashString = string => {
     let hash = 0, i, chr;
     if (string.length === 0) return hash;
     for (i = 0; i < string.length; i++) {
-        chr   = string.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
+        chr = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
@@ -94,7 +152,7 @@ const getRandomColor = () => {
 };
 
 const getRandomInteger = (min, max) => {
-    return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const lightenDarkenColor = (colorCode, amount) => {
@@ -220,6 +278,7 @@ const getParameterValueByKey = parameterName => {
 
 module.exports = {
     shuffle,
+    throttle,
     arraysEqual,
     delay,
     allValuesInArrayAreEqual,

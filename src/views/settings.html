@@ -17,7 +17,7 @@
             </strong>
         </div>
 
-        <div class="row" style="width: 600px; margin: 0 auto; text-align: center;">
+        <div class="row" style="width: 80%; margin: 0 auto; text-align: center;">
             <div class="col-xs-12 colorWhite" style="font-size: 20px;">
                 <div>
                     <button type="button" class="button button-blue" data-ng-click="settings.resetToDefault()">
@@ -27,14 +27,14 @@
             </div>
         </div>
 
-        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 10px;">
+        <div class="row" style="width: 80%; margin: 0 auto; margin-top: 10px;">
             <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
                 <div>
                     <strong>Gameplay settings</strong>
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     AI Speed
@@ -44,7 +44,7 @@
                 <rzslider rz-slider-model="settings.aiSpeed" rz-slider-options="settings.movementSliderOptions"></rzslider>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Show announcer <i class="fas fa-info-circle" uib-tooltip="If turned on each turn will be presented by a announcer." tooltip-placement="top" style="color: #f0f048;"></i>
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="row" style="width: 600px; margin: 0 auto;">
+        <!-- <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     3D effects <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
+        <div class="row" data-ng-show="settings.runningElectron" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Full Screen
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" data-ng-show="settings.runningElectron" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Fast dice mode <i class="fas fa-info-circle" uib-tooltip="If turned on the dice rolls will be much faster." tooltip-placement="top" style="color: #f0f048;"></i>
@@ -109,14 +109,39 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
+            <div class="col-xs-4">
+                <div>
+                    Dice color <i class="fas fa-info-circle" uib-tooltip="The color used for your attacking dice. Works in multiplayer as well." tooltip-placement="top" style="color: #f0f048;"></i>
+                </div>
+            </div>
+            <div class="col-xs-8 settingContainer" data-toggle="buttons" style="color: white; table-layout: fixed;">
+                <div style="display: table-cell;">
+                    Background:
+                </div>
+                <div class="colorSelector" id="colorSelectorBackground" style="display: table-cell;">
+                </div>
+                <div style="display: table-cell;">
+                    Label:
+                </div>
+                <div class="colorSelector" id="colorSelectorLabel" style="display: table-cell;">
+                </div>
+                <div style="display: table-cell;">
+                    Preview:
+                </div>
+                <div id="dicePreview" style="font-size: 24px; font-weight: 900; text-align: center; line-height: 50px;display: table-cell; width: 50px; height: 50px; border-radius: 4px; background: {{ settings.settings.attackerDice }}; color: {{ settings.settings.attackerDiceLabel }};">
+                    3
+                </div>
+            </div>
+        </div>
+        <div class="row" style="width: 80%; margin: 0 auto; margin-top: 30px;">
             <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
                 <div>
                     <strong>Sound settings</strong>
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Play sound
@@ -132,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Music volume
@@ -142,7 +167,7 @@
                 <rzslider rz-slider-model="settings.musicVolume" rz-slider-options="settings.musicVolumeSliderOptions"></rzslider>
             </div>
         </div>
-        <div class="row" style="width: 600px; margin: 0 auto;">
+        <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="col-xs-4">
                 <div>
                     Sound effects volume
@@ -153,14 +178,14 @@
             </div>
         </div>
         <!-- <div data-ng-show="settings.runningElectron">
-            <div class="row" style="width: 600px; margin: 0 auto; margin-top: 30px;">
+            <div class="row" style="width: 80%; margin: 0 auto; margin-top: 30px;">
                 <div class="col-xs-12 textLeft colorWhite" style="font-size: 20px;">
                     <div>
                         <strong>Proxy settings</strong>
                     </div>
                 </div>
             </div>
-            <div class="row" style="width: 600px; margin: 0 auto;">
+            <div class="row" style="width: 80%; margin: 0 auto;">
                 <div class="col-xs-4">
                     <div style="vertical-align: top; padding-top: 10px;">
                         Host and port
@@ -170,7 +195,7 @@
                     <input type="text" placeholder="Host:port" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.host" data-ng-change="settings.updateProxySettings()" />
                 </div>
             </div>
-            <div class="row" style="width: 600px; margin: 0 auto;">
+            <div class="row" style="width: 80%; margin: 0 auto;">
                 <div class="col-xs-4">
                     <div style="vertical-align: top; padding-top: 10px;">
                         Proxy username
@@ -180,7 +205,7 @@
                     <input type="text" placeholder="Username" style="width: 100%;" class="floatLeft" data-ng-model="settings.proxySettings.username" data-ng-change="settings.updateProxySettings()" />
                 </div>
             </div>
-            <div class="row" style="width: 600px; margin: 0 auto;">
+            <div class="row" style="width: 80%; margin: 0 auto;">
                 <div class="col-xs-4">
                     <div style="vertical-align: top; padding-top: 10px;">
                         Proxy password

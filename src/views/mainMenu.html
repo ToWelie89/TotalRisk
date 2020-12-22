@@ -11,7 +11,7 @@
         
         <div class="scrollable">
             <div id="patchNotesContainerDescription" data-ng-bind="main.currentPatchNotes.description"></div>
-            <p class="header">
+            <p class="header" data-ng-show="main.currentPatchNotes.news.length > 0">
                 New features and improvements
             </p>
             <ul id="patchNotesContainerNews">
@@ -26,7 +26,7 @@
                     </ul>
                 </li>
             </ul>
-            <p class="header">
+            <p class="header" data-ng-show="main.currentPatchNotes.bugFixes.length > 0">
                 Bug fixes
             </p>
             <ul id="patchNotesContainerBugFixes">
@@ -36,6 +36,9 @@
                     <span data-ng-bind="bugFix.description"></span>
                 </li>
             </ul>
+            <a href="javascript: void(0)" data-ng-click="main.setGamePhase(main.gamePhases.PATCH_LOG)">
+                Read older patch notes
+            </a>
         </div>
     </div>
     <div style="margin-top: 70px;

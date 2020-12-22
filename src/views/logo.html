@@ -1,5 +1,11 @@
 <div class="textCenter mainMenuBox" data-ng-hide="main.currentGamePhase === main.gamePhases.GAME || main.currentGamePhase === main.gamePhases.AI_TESTING || main.currentGamePhase === main.gamePhases.TUTORIAL || main.currentGamePhase === main.gamePhases.END_SCREEN || main.currentGamePhase === main.gamePhases.GAME_MULTIPLAYER">
     <div style="position: absolute; right: 0; padding: 15px 40px;">
+        <a href="javascript: void(0)" style="font-size: 20px; line-height: 20px; color: transparent; opacity: 0.5;" uib-tooltip="See patch notes" tooltip-placement="bottom" data-ng-click="main.setGamePhase(main.gamePhases.PATCH_LOG)">
+            <i class="fas fa-list" style="font-size: 20px; line-height: 20px; text-shadow: 0 0 20px #0000009c; color: white; pointer-events: none; border-radius: 50%;
+            border: 1px solid white;
+            padding: 12px;
+            line-height: 16px;"></i>
+        </a>
         <a href="https://github.com/ToWelie89/TotalRisk/issues" style="font-size: 20px; line-height: 20px; color: transparent; opacity: 0.5;" uib-tooltip="Report a bug (requires Github account)" tooltip-placement="bottom">
             <i class="fas fa-bug" style="font-size: 20px; line-height: 20px; text-shadow: 0 0 20px #0000009c; color: white; pointer-events: none; border-radius: 50%;
             border: 1px solid white;

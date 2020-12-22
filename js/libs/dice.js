@@ -128,7 +128,7 @@ function calc_texture_size(approx) {
     return Math.pow(2, Math.floor(Math.log(approx) / Math.log(2)));
 }
 
-this.create_dice_materials = function(face_labels, size, margin, dice_color) {
+this.create_dice_materials = function(face_labels, size, margin, dice_color, label_color) {
     function create_text_texture(text, color, back_color) {
         if (text == undefined) return null;
         var canvas = document.createElement("canvas");
@@ -140,7 +140,7 @@ this.create_dice_materials = function(face_labels, size, margin, dice_color) {
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.fillStyle = color;
+        context.fillStyle = label_color;
         context.fillText(text, canvas.width / 2, canvas.height / 2);
         var texture = new THREE.Texture(canvas);
         texture.needsUpdate = true;
@@ -167,7 +167,7 @@ this.material_options = {
     shininess: 40,
     flatShading: true,
 };
-this.label_color = '#aaaaaa';
+//this.label_color = '#aaaaaa';
 this.ambient_light_color = 0xf0f5fb;
 this.spot_light_color = 0xefdfd5;
 this.desk_color = 0xb7b7b7;
@@ -178,9 +178,9 @@ this.dice_inertia = {'d6': 13};
 
 this.scale = 50;
 
-this.create_d6 = function(dice_color) {
+this.create_d6 = function(dice_color, label_color) {
     if (!this.d6_geometry) this.d6_geometry = this.create_d6_geometry(this.scale * 1.9); // HÄR KAN MAN ÄNDRA DICE STORLEK
-    this.dice_material = this.create_dice_materials(this.standart_d20_dice_face_labels, this.scale / 2, 1.0, dice_color)
+    this.dice_material = this.create_dice_materials(this.standart_d20_dice_face_labels, this.scale / 2, 1.0, dice_color, label_color)
     return new THREE.Mesh(this.d6_geometry, this.dice_material);
 }
 
@@ -189,6 +189,11 @@ var that = this;
 this.dice_box = function(container, dimentions, options) {
     this.use_adapvite_timestep = true;
 
+    console.log(options)
+    console.log(that.label_color)
+
+    this.label_color = '#aaaaaa';
+    this.label_color = options.dice_label_color ? options.dice_label_color : this.dice_label_color;
     this.dice_color = '#000000';
     this.dice_color = options.dice_color ? options.dice_color : this.dice_color;
 
@@ -348,7 +353,7 @@ this.dice_box.prototype.generate_vectors = function(vector, boost, diceRolls) {
 }
 
 this.dice_box.prototype.create_dice = function(type, pos, velocity, angle, axis) {
-    var dice = that['create_' + type](this.dice_color);
+    var dice = that['create_' + type](this.dice_color, this.label_color);
     dice.castShadow = true;
     dice.dice_type = type;
     dice.body = new CANNON.RigidBody(that.dice_mass[type],

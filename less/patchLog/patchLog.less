@@ -1,0 +1,90 @@
+#largePatchLogContainer {
+    width: 90%;
+    padding: 20px;
+    float: right;
+    margin-right: 20px;
+    text-align: left;
+    overflow-y: auto;
+    height: ~"calc(100% - 50px)";
+    margin-top: 22px;
+
+    .largePatchLogContainerInner {
+        padding-right: 10px;
+
+        #patchNotesContainerDescription {
+            font-size: 18px;
+        }
+        #patchNotesContainerNews {
+            margin-top: 10px;
+        }
+        #patchNotesContainerBugFixes {
+            margin-top: 10px;
+        }
+        .patchTitle {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            i {
+                margin-right: 15px;
+                transform: rotate(0deg);
+                transition: all 600ms;
+            }
+        }
+        .header {
+            font-size: 16px;
+            font-weight: 900;
+            margin: 10px 0;
+        }
+        .newsItem {
+            padding-bottom: 10px;
+        }
+
+        .content {
+            max-height: auto;
+            overflow-y: hidden;
+            transition: all 600ms;
+            transform-origin: top;
+            transform: none;
+        }
+
+        &.minimized {
+            .content {
+                transform: scaleY(0);
+                height: 0;
+            }
+            .patchTitle {
+                i {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
+
+    &::-webkit-scrollbar-track {
+        //cursor: url(../assets/cursors/new/default.png), auto !important;
+        cursor:pointer;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar {
+        //cursor: url(../assets/cursors/new/default.png), auto !important;
+        cursor:pointer;
+        width: 20px;
+        background-color: #F5F5F5;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        //cursor: url(../assets/cursors/new/default.png), auto !important;
+        cursor:pointer;
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #555;
+
+        &:hover {
+            background-color: #222;
+        }
+    }
+}

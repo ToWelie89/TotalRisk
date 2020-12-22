@@ -1,14 +1,16 @@
-const {runningElectron} = require('./../helpers');
+const {runningElectron, throttle} = require('./../helpers');
 const {settings} = require('./defaultSettings');
 
 class SettingsController {
 
-    constructor($scope, $timeout, settings, aiHandler, soundService, gameEngine) {
+    constructor($scope, $timeout, settings, aiHandler, soundService, gameEngine, toastService) {
         this.vm = this;
+        this.$scope = $scope;
         this.vm.settings = settings;
         this.aiHandler = aiHandler;
         this.soundService = soundService;
         this.gameEngine = gameEngine;
+        this.toastService = toastService;
 
         this.vm.runningElectron = runningElectron();
 
@@ -60,6 +62,76 @@ class SettingsController {
         this.vm.toggleFastDice = this.toggleFastDice;
         this.vm.updateProxySettings = this.updateProxySettings;
         this.vm.resetToDefault = this.resetToDefault;
+
+        this.setColorPickers();
+    }
+
+    setColorPickers() {
+        const getPickrSettings = (color, selector) => ({
+            el: selector,
+            theme: 'nano',
+            default: color,
+            swatches: [
+                'rgba(244, 67, 54, 1)',
+                'rgba(233, 30, 99, 1)',
+                'rgba(156, 39, 176, 1)',
+                'rgba(103, 58, 183, 1)',
+                'rgba(63, 81, 181, 1)',
+                'rgba(33, 150, 243, 1)',
+                'rgba(3, 169, 244, 1)',
+                'rgba(0, 188, 212, 1)',
+                'rgba(0, 150, 136, 1)',
+                'rgba(76, 175, 80, 1)',
+                'rgba(139, 195, 74, 1)',
+                'rgba(205, 220, 57, 1)',
+                'rgba(255, 235, 59, 1)',
+                'rgba(255, 193, 7, 1)'
+            ],
+            components: {
+                // Main components
+                preview: true,
+                opacity: false,
+                hue: true,
+                // Input / output Options
+                interaction: {
+                    hex: false,
+                    rgba: false,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: false,
+                    clear: false,
+                    save: false
+                }
+            }
+        });
+
+        const backgroundPicker = Pickr.create(getPickrSettings(this.vm.settings.attackerDice, '#colorSelectorBackground'));
+        const labelPicker = Pickr.create(getPickrSettings(this.vm.settings.attackerDiceLabel, '#colorSelectorLabel'));
+        backgroundPicker.on('change', throttle(color => {
+            const newColor = color.toHEXA().toString();
+            if (chroma.deltaE(newColor, this.vm.settings.attackerDiceLabel) < 20) {
+                this.toastService.errorToast('Not valid color', 'Your dice background color and label color cant be too similar');
+                backgroundPicker.setColor(this.vm.settings.attackerDice);
+            } else {
+                document.querySelectorAll('.pickr button')[0].style.color = newColor;
+                this.vm.settings.attackerDice = newColor;
+                this.vm.settings.saveSettings();
+                this.$scope.$apply();
+            }
+        }, 800));
+        labelPicker.on('change', throttle(color => {
+            const newColor = color.toHEXA().toString();
+            if (chroma.deltaE(newColor, this.vm.settings.attackerDice) < 20) {
+                this.toastService.errorToast('Not valid color', 'Your dice background color and label color cant be too similar');
+                labelPicker.setColor(this.vm.settings.attackerDiceLabel);
+            } else {
+                document.querySelectorAll('.pickr button')[1].style.color = newColor;
+                this.vm.settings.attackerDiceLabel = newColor;
+                this.vm.settings.saveSettings();
+                this.$scope.$apply();
+            }
+        }, 800));
     }
 
     updateProxySettings() {

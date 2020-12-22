@@ -8,7 +8,7 @@ const CountryCodes = require('./../editor/countryCodes');
 const { getPlayerTooltipMarkup } = require('./../tooltips/tooltipHelpers');
 
 class LobbiesController {
-    constructor($scope, $rootScope, $sce, $compile, $timeout, $uibModal, soundService, toastService, gameEngine, socketService) {
+    constructor($scope, $rootScope, $sce, $compile, $timeout, $uibModal, soundService, toastService, gameEngine, socketService, settings) {
         this.vm = this;
         this.$scope = $scope;
         this.$rootScope = $rootScope;
@@ -20,6 +20,7 @@ class LobbiesController {
         this.$uibModal = $uibModal;
         this.gameEngine = gameEngine;
         this.socketService = socketService;
+        this.settings = settings;
         this.vm.customCharacters = [];
 
         this.$rootScope.$watch('currentLobby', () => {
@@ -190,7 +191,7 @@ class LobbiesController {
                     }
                 }
 
-                this.socketService.gameSocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost, chosenAvatar);
+                this.socketService.gameSocket.emit('setUser', user.uid, userName, this.vm.room.id, this.vm.userIsHost, chosenAvatar, this.settings.attackerDice, this.settings.attackerDiceLabel);
                 this.socketService.gameSocket.emit('sendMessage', this.vm.room.id, {
                     sender: 'SERVER',
                     uid: 'SERVER',

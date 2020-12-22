@@ -17,6 +17,37 @@ const displayText = (territory, textElement) => {
     });
 };
 
+const displayDamageNumberForAttackModal = (selector, damageValue, leftArmy) => {
+    const id = `damageTextAttackModal${Math.floor((Math.random() * 1000000) + 1)}`;
+    var damageText = document.createElement('p');
+    damageText.innerHTML = `-${damageValue}`;
+    damageText.id = id;
+    damageText.classList.add('damageText', 'large');
+
+    const bodyRect = document.body.getBoundingClientRect();
+    const elemRect = selector.getBoundingClientRect();
+    const offsetTop = elemRect.y + 40;
+    let offsetLeft;
+
+    if (leftArmy) {
+        offsetLeft = elemRect.x + (elemRect.width / 2);
+    } else {
+        offsetLeft = elemRect.x + (elemRect.width / 2);
+    }
+
+    damageText.style.left = (Math.floor(offsetLeft) + 20) + 'px';
+    damageText.style.top = (Math.floor(offsetTop) - 20) + 'px';
+
+    document.children[0].appendChild(damageText);
+
+    $(`#${damageText.id}`).animate({
+        opacity: 0,
+        top: '-=25'
+    }, 1000, function() {
+        $(`#${damageText.id}`).remove();
+    });
+};
+
 const displayDamageNumbers = (mapSelector, territoryName, damageValue) => {
     let territory;
     if (document.querySelector(`${mapSelector} #troopCounters`)) {
@@ -24,21 +55,6 @@ const displayDamageNumbers = (mapSelector, territoryName, damageValue) => {
     } else {
         territory = document.querySelector(`${mapSelector} .troopCounter[for="${territoryName}"]`);
     }
-
-    /* territories.forEach(t => {
-        const bounds = t.getBoundingClientRect();
-        // See if element is visible
-        if (bounds.bottom !== 0 ||
-            bounds.height !== 0 ||
-            bounds.left !== 0 ||
-            bounds.right !== 0 ||
-            bounds.top !== 0 ||
-            bounds.width !== 0 ||
-            bounds.x !== 0 ||
-            bounds.y !== 0) {
-            territory = t;
-        }
-    }); */
 
     if (territory) {
         const id = `damageText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/[ ,&]/g,'');
@@ -60,21 +76,6 @@ const displayReinforcementNumbers = (mapSelector, territoryName, reinforcementVa
         territory = document.querySelector(`${mapSelector} .troopCounter[for="${territoryName}"]`);
     }
 
-    /* territories.forEach(t => {
-        const bounds = t.getBoundingClientRect();
-        // See if element is visible
-        if (bounds.bottom !== 0 ||
-            bounds.height !== 0 ||
-            bounds.left !== 0 ||
-            bounds.right !== 0 ||
-            bounds.top !== 0 ||
-            bounds.width !== 0 ||
-            bounds.x !== 0 ||
-            bounds.y !== 0) {
-            territory = t;
-        }
-    }); */
-
     if (territory) {
         const id = `reinforcementText${territoryName}${Math.floor((Math.random() * 1000000) + 1)}`.replace(/[ ,&]/g,'');
 
@@ -87,4 +88,4 @@ const displayReinforcementNumbers = (mapSelector, territoryName, reinforcementVa
     }
 };
 
-module.exports = {displayDamageNumbers, displayReinforcementNumbers};
+module.exports = {displayDamageNumberForAttackModal, displayDamageNumbers, displayReinforcementNumbers};

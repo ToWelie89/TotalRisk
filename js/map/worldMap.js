@@ -6,9 +6,6 @@ class WorldMap {
         this.regions = new Map();
 
         chosenMap.configuration.regions.forEach(region => this.initializeRegion(region));
-
-        console.log('World map regions: ');
-        console.log(this.regions);
     }
 
     initializeRegion(region) {

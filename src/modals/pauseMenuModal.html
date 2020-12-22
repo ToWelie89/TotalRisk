@@ -136,7 +136,31 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div>
+                                Dice color <i class="fas fa-info-circle" uib-tooltip="The color used for your attacking dice. Works in multiplayer as well." tooltip-placement="top" style="color: #f0f048;"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-8 settingContainer" data-toggle="buttons" style="color: white; table-layout: fixed;">
+                            <div style="display: table-cell;">
+                                Background:
+                            </div>
+                            <div class="colorSelector" id="colorSelectorBackground" style="display: table-cell;">
+                            </div>
+                            <div style="display: table-cell;">
+                                Label:
+                            </div>
+                            <div class="colorSelector" id="colorSelectorLabel" style="display: table-cell;">
+                            </div>
+                            <div style="display: table-cell;">
+                                Preview:
+                            </div>
+                            <div id="dicePreview" style="font-size: 24px; font-weight: 900; text-align: center; line-height: 50px;display: table-cell; width: 50px; height: 50px; border-radius: 4px; background: {{ settings.settings.attackerDice }}; color: {{ settings.settings.attackerDiceLabel }};">
+                                3
+                            </div>
+                        </div>
+                    </div>
                     <div class="row" style="margin-top: 30px;">
                         <div class="col-xs-12">
                             <button type="button" class="button button-blue" data-ng-click="pauseMenu.backToMenu()" id="moveButton">

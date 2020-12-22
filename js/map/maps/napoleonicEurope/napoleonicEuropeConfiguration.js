@@ -94,7 +94,8 @@ const napoleonicEuropeMap = {
                 'Île-de-France',
                 'Burgundy & Lorraine',
                 'Lombardy, Piedmont & Tuscany',
-                'Aragon & Castile'
+                'Aragon & Castile',
+                'Corsica'
             ]
         }]
     }, {

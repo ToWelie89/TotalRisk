@@ -15,7 +15,6 @@
             screen = require('electron').screen;
         }
     </script>
-    <!-- <script src='js/libs/responsivevoice.js'></script> -->
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=ppPpZb3q"></script>
     <script src='js/libs/three.min.js'></script>
     <script src='js/libs/cannon.min.js'></script>
@@ -27,6 +26,9 @@
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
     <script src="node_modules/izitoast/dist/js/iziToast.min.js"></script>
+    <script src="node_modules/@simonwep/pickr/dist/pickr.min.js"></script>
+    <script src="node_modules/moment/dist/moment.js"></script>
+    <script src="node_modules/chroma-js/chroma.min.js"></script>
     <script src="assetsDist/app.bundle.js"></script>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -43,6 +45,7 @@
     <link href="node_modules\izitoast\dist\css\iziToast.min.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" type="text/css" href="node_modules/angularjs-slider/dist/rzslider.css">
+    <link rel="stylesheet" href="node_modules/@simonwep/pickr/dist/themes/nano.min.css"/>
 
     <link href="cssLibs/animate.css" rel="stylesheet" type="text/css">
     <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
@@ -101,6 +104,7 @@
             <ng-include src="'src/views/singleplayerSetup.html'"></ng-include>
             <ng-include src="'src/views/editProfile.html'"></ng-include>
             <ng-include src="'src/views/profile.html'"></ng-include>
+            <ng-include src="'src/views/patchLog.html'"></ng-include>
         </div>
         <ng-include src="'src/views/gameViewSingleplayer.html'"></ng-include>
         <ng-include src="'src/views/gameViewTutorial.html'"></ng-include>

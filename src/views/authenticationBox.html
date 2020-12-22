@@ -9,7 +9,8 @@
                    main.currentGamePhase === main.gamePhases.PROFILE ||
                    main.currentGamePhase === main.gamePhases.END_SCREEN ||
                    main.currentGamePhase === main.gamePhases.CHARACTER_GALLERY ||
-                   main.currentGamePhase === main.gamePhases.LEADERBOARD"
+                   main.currentGamePhase === main.gamePhases.LEADERBOARD ||
+                   main.currentGamePhase === main.gamePhases.PATCH_LOG"
      data-ng-controller="authenticationController as auth"
      ng-cloak>
     <div data-ng-show="auth.currentState === auth.states.LOGGED_IN || auth.currentState === auth.states.EDIT_PROFILE" style="height: 100%;">
