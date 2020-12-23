@@ -1,0 +1,200 @@
+<html>
+    <head>
+        <script src="https://kit.fontawesome.com/b7520ef1d5.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <style>
+            body {
+                background-color: #020202;
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+                font-family: 'Montserrat', sans-serif;
+                color: white;
+                font-size: 20px;
+            }
+
+            #backgroundImage {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: -500;
+                background-repeat: no-repeat;
+                background-size: 110%;
+                background-image: url(https://github.com/ToWelie89/TotalRisk/blob/master/assets/backgroundImages/battle2.png?raw=true);
+
+                animation: scroll_bg 120s linear infinite;
+                filter: brightness(150%);
+            }
+
+            #backgroundSmoke {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: -400;
+                background-image: url(https://github.com/ToWelie89/TotalRisk/blob/master/assets/backgroundImages/smoke.png?raw=true);
+                background-repeat: no-repeat;
+                background-position-y: bottom;
+                filter: blur(4px);
+                opacity: 0.22;
+
+                animation: scroll_cloud 60s linear infinite;
+            }
+
+            @keyframes scroll_cloud {
+                0% { background-position-x: -2560px; }
+                100% { background-position-x: 0px; }
+            }
+
+            @keyframes scroll_bg {
+                0% { background-position-x: 0%; }
+                50% { background-position-x: 100%; }
+                100% { background-position-x: 0%; }
+            }
+
+            #mainDiv {
+                margin: 0 auto;
+                width: 40%;
+                background: #000000e3;
+                height: 100%;
+                text-align: center;
+                padding: 20px;
+                position: absolute;
+                margin-left: auto;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+
+            #mainDiv::before {
+                content: '';
+                width: 55px;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: -60px;
+                background: linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+                border-right: 5px solid white;
+            }
+            #mainDiv::after {
+                content: '';
+                width: 60px;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                background: linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+                right: -65px;
+                border-left: 5px solid white;
+            }
+
+            #mainDiv img {
+                margin-top: 5px;
+                width: 100%;
+                max-width: 600px;
+            }
+            li {
+                margin-bottom: 5px;
+            }
+            a {
+                color: #709cef;
+                text-decoration: none;;
+            }
+            a:hover {
+                color: red;
+            }
+            .downloadLink {
+                padding: 20px 60px;
+                border-radius: 5px;
+                font-size: 28px;
+                display: inline-block;
+            }
+            #windowsDownload {
+                background: #04a1fd;
+                color: white;
+                border: 5px solid white;
+            }
+            #windowsDownload:hover {
+                background: #0980c5;
+            }
+            #macDownload {
+                margin-left: 5px;
+                background: white;
+                color: black;
+                border: 5px solid #ababab;
+            }
+            #macDownload:hover {
+                background: #c1c1c1;
+            }
+            #githubDownload {
+                margin-left: 5px;
+                background: #24292e;
+                color: white;
+                border: 5px solid #ababab;
+                margin-top: 10px;
+            }
+            #githubDownload:hover {
+                background: #000000;
+            }
+            @media only screen and (max-width: 1300px) {
+                #mainDiv {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <script>
+        fetch('https://raw.githubusercontent.com/ToWelie89/TotalRisk/master/package.json')
+        .then(res => res.json())
+        .then(package => {
+            var version = package.version;
+            document.querySelector('#currentVersion').innerText = version;
+            
+            var windowsLink = 'https://github.com/ToWelie89/TotalRisk/releases/download/v' + version + '/TotalRisk-Setup-' + version + '.exe';
+            document.querySelector('#windowsDownload').setAttribute('href', windowsLink);
+            
+            var macLink = 'https://github.com/ToWelie89/TotalRisk/releases/download/v' + version + '/TotalRisk-' + version + '.dmg';
+            document.querySelector('#macDownload').setAttribute('href', macLink);
+        });
+    </script>
+    <body>
+        <div id="backgroundImage"></div>
+        <div id="backgroundSmoke"></div>
+
+        <div id="mainDiv">
+            <img src="https://github.com/ToWelie89/TotalRisk/blob/master/assets/logo.png?raw=true" />
+
+            <p style="margin-top: 40px;">
+                Welcome to the download page of <strong>Total Risk</strong>. A fully functional standalone game implementation of the classic board game.
+            </p>
+            <p style="margin-top: 40px; margin-left: 60px; text-align: left;">
+                <ul style="text-align: left;">
+                    <li>Ability to play against AI opponenets</li>
+                    <li>Multiple map support</li>
+                    <li>Online multiplayer against other players</li>
+                    <li>Create and customize your own character</li>
+                    <li>Global leaderboard</li>
+                </ul>
+            </p>
+            <p style="margin-top: 40px; margin-left: 20px; text-align: left;">
+                This game was developed by <a href="http://martinsonesson.se/">Martin Sonesson</a> - software developer.<br>
+                If you wish to report a bug or raise an issue you can do it <a href="https://github.com/ToWelie89/TotalRisk/issues">here</a>.
+            </p>
+            <p style="margin-top: 40px; margin-left: 20px; text-align: left; font-size: 42px;">
+                Current version <span id="currentVersion"></span>
+            </p>
+            <p style="margin-top: 40px; margin-left: 20px; text-align: center;">
+                <p style="margin-bottom:30px;">Download</p>
+                <a href="" id="windowsDownload" class="downloadLink">
+                    <i class="fab fa-windows"></i> Windows
+                </a>
+                <a href="" id="macDownload" class="downloadLink">
+                    <i class="fab fa-apple"></i> macOS
+                </a>
+                <a href="https://github.com/ToWelie89/TotalRisk/releases/latest" id="githubDownload" class="downloadLink">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </p>
+        </div>
+    </body>
+</html>

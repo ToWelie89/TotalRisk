@@ -142,6 +142,33 @@ class GameController {
         this.vm.mapConfiguration.regions.sort((a, b) => b.bonusTroops - a.bonusTroops);
         this.setChartData();
 
+        setTimeout(() => {
+            document.querySelectorAll('#showRegionBonuses .regionInfo:not(:first-child)').forEach(x => {
+                x.addEventListener('mouseenter', event => {
+                    document.querySelectorAll(`${this.mapSelector} svg .country`).forEach(country => {
+                        country.classList.remove('tooltipHighlight');
+                    });
+    
+                    const regionName = event.target.querySelector('p:first-child').innerText;
+                    const region = this.vm.mapConfiguration.regions.find(x => x.name === regionName);
+                    if (region) {
+                        document.querySelectorAll(`${this.mapSelector} svg g[id="${regionName}"] .country`).forEach(country => {
+                            country.classList.add('tooltipHighlight');
+                        });
+                    }
+                });
+                x.addEventListener('mouseleave', event => {
+                    const regionName = event.target.querySelector('p:first-child').innerText;
+                    const region = this.vm.mapConfiguration.regions.find(x => x.name === regionName);
+                    if (region) {
+                        document.querySelectorAll(`${this.mapSelector} svg g[id="${regionName}"] .country`).forEach(country => {
+                            country.classList.remove('tooltipHighlight');
+                        });
+                    }
+                });
+            });
+        }, 600);
+
         const callback = () => {
             if (this.gameEngine.turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.checkIfPlayerMustTurnInCards();

@@ -23,6 +23,11 @@ svg {
         }
     }
     .country {
+        &.tooltipHighlight {
+            stroke-width: 4;
+            stroke: white !important;
+            fill: darken(white, 10%) !important;
+        }
         &:hover {
             stroke: rgba(0, 0, 0, 0.3);
             stroke-width: 4;
@@ -30,7 +35,7 @@ svg {
         &[country-color='RED'] {
             fill: @redColor;
             stroke: @redColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #5f1010;
             }
             &:hover {
@@ -40,7 +45,7 @@ svg {
         &[country-color='GREEN'] {
             fill: @greenColor;
             stroke: @greenColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #377d2b;
             }
             &:hover {
@@ -50,7 +55,7 @@ svg {
         &[country-color='BLUE'] {
             fill: @blueColor;
             stroke: @blueColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #151594;
             }
             &:hover {
@@ -60,7 +65,7 @@ svg {
         &[country-color='PINK'] {
             fill: @pinkColor;
             stroke: @pinkColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #cc4f8d;
             }
             &:hover {
@@ -70,7 +75,7 @@ svg {
         &[country-color='BLACK'] {
             fill: @blackColor;
             stroke: @blackColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #000000;
             }
             &:hover {
@@ -80,7 +85,7 @@ svg {
         &[country-color='YELLOW'] {
             fill: @yellowColor;
             stroke: @yellowColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #e0e019;
             }
             &:hover {
@@ -90,7 +95,7 @@ svg {
         &[country-color='PURPLE'] {
             fill: @purpleColor;
             stroke: @purpleColorStroke;
-            &.highlighted, &.highlighted:hover {
+            &.highlighted, &.highlighted:hover, &.tooltipHighlight {
                 fill: #5e4479;
             }
             &:hover {

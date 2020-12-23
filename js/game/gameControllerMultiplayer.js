@@ -100,7 +100,6 @@ class GameControllerMultiplayer extends GameController {
             }
         });
         document.querySelector('#multiplayerContainer #lobbyChatBoxes').addEventListener('mouseout', event => {
-            console.log('mouseout', event)
             if (!this.vm.pinChat) {
 
                 const bounds = document.querySelector('#multiplayerContainer #lobbyChatBoxes').getBoundingClientRect();

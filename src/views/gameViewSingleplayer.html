@@ -162,11 +162,11 @@
                 Show region bonuses
                 <div id="showRegionBonusesInner">
                     <div id="showRegionBonusesInnerInner">
-                        <div class="regionInfo" style="color: black; padding-bottom: 10px; border-bottom: none; font-size: 26px;">
-                            <strong style="width: 50%; text-align: left;">Region</strong><p style="width: 50%; text-align: right; font-weight: bold;">Troop bonus</p>
+                        <div class="regionInfo" style="color: black; padding-bottom: 10px; border-bottom: none;">
+                            <p style="text-shadow: none; width: 50%; text-align: left;">Region</p><p style="width: 50%; text-align: right;">Troop bonus</p>
                         </div>
                         <div class="regionInfo" data-ng-repeat="region in game.mapConfiguration.regions">
-                            <strong style="color: {{ region.color.mainColor }};">{{ region.name }}</strong><p>{{ region.bonusTroops }}</p>
+                            <p style="color: {{ region.color.mainColor }};">{{ region.name }}</p><p>{{ region.bonusTroops }}</p>
                         </div>
                     </div>
                 </div>
