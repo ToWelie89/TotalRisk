@@ -8,10 +8,12 @@ class SocketService {
     }
 
     createLobbiesSocket() {
+        electronLog.info('Attempting to connect to lobbies socket', `${endpoint}/lobbies`);
         this.lobbiesSocket = io.connect(`${endpoint}/lobbies`, {transports: ['websocket', 'polling', 'flashsocket']});
     }
 
     createGameSocket() {
+        electronLog.info('Attempting to connect to game socket', `${endpoint}/game`);
         this.gameSocket = io.connect(`${endpoint}/game`, {transports: ['websocket', 'polling', 'flashsocket']});
     }
 

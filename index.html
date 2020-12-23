@@ -11,6 +11,7 @@
         let screen;
         if (!!(window && window.process && window.process.type)) { // If running Electron
             electron = require('electron');
+            electronLog = require('electron-log');
             ipcRenderer = require('electron').ipcRenderer;
             screen = require('electron').screen;
         }
