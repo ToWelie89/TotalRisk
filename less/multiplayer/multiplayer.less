@@ -44,15 +44,14 @@
             top: 15px;
             left: 15px;
             position: absolute;
-            transition: opacity 600ms ease 1s;
             
             &:hover {
                 #showRegionBonusesInner {
-					opacity: 0.95;
+					visibility: visible;
                 }
             }
             #showRegionBonusesInner {
-                opacity: 0;
+                visibility: hidden;
                 filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
                 position: absolute;
                 z-index: 300;
