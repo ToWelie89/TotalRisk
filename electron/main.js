@@ -155,7 +155,8 @@ const createDefaultWindow = () => {
         icon: '../icon.ico',
         webPreferences: {
             zoomFactor: screenConfig.zoomFactor
-        }
+        },
+        v8CacheOptions: 'none'
     });
 
     win.on('closed', () => {

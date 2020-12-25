@@ -6,6 +6,7 @@ const {
 } = require('./../map/mapHelpers');
 const {
     loadSvgIntoDiv,
+    loadCustomCharacterSvgIntoDiv,
     runningElectron
 } = require('./../helpers');
 const {
@@ -72,26 +73,8 @@ class EndScreenController {
                     if (player.avatar.svg) {
                         loadSvgIntoDiv(player.avatar.svg, `.podiumSvgContainer#${svgElements[index]}`);
                     } else if (player.avatar.customCharacter) {
-                        loadSvgIntoDiv('assets/avatarSvg/custom.svg', `.podiumSvgContainer#${svgElements[index]}`, () => {
-                            const character = player.avatar;
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="hat"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="head"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="eyes"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="eyebrows"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="nose"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="mouth"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="torso"] > g`).css('visibility', 'hidden');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="legs"] > g`).css('visibility', 'hidden');
-
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                            $(`.podiumSvgContainer#${svgElements[index]} svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
-
+                        const character = player.avatar;
+                        loadCustomCharacterSvgIntoDiv('assets/avatarSvg/custom.svg', `.podiumSvgContainer#${svgElements[index]}`, character, () => {
                             $(`.podiumSvgContainer#${svgElements[index]} svg .skinTone`).css('fill', character.skinTone);
                         });
                     }

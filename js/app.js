@@ -55,6 +55,12 @@ import InjectSVGDirective from './directives/injectSvgDirective';
 
 const app = angular.module('risk', ['rzModule', 'ui.bootstrap', 'ngSanitize']);
 
+app.config(['$uibModalProvider', function ($uibModalProvider) {
+    $uibModalProvider.options = {
+        animation: false
+    };
+}]);
+
 /* MAIN GAME ENGINE */
 app.service('gameEngine', GameEngine);
 /* LOAD SETTINGS */

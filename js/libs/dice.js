@@ -189,9 +189,6 @@ var that = this;
 this.dice_box = function(container, dimentions, options) {
     this.use_adapvite_timestep = true;
 
-    console.log(options)
-    console.log(that.label_color)
-
     this.label_color = '#aaaaaa';
     this.label_color = options.dice_label_color ? options.dice_label_color : this.dice_label_color;
     this.dice_color = '#000000';

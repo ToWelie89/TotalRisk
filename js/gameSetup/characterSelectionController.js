@@ -2,7 +2,7 @@ require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
 const {avatars} = require('./../player/playerConstants');
-const {objectsAreEqual, arrayIncludesObject, loadSvgIntoDiv} = require('./../helpers');
+const {objectsAreEqual, arrayIncludesObject, loadSvgIntoDiv, loadCustomCharacterSvgIntoDiv} = require('./../helpers');
 
 class CharacterSelectionController {
     constructor($scope, $uibModalInstance, currentSelectedPlayer, selectedPlayers, multiplayer, customCharacters, socketService, soundService) {
@@ -50,33 +50,13 @@ class CharacterSelectionController {
             if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.svg) {
                 this.selectAvatar(this.vm.currentSelectedPlayer.avatar, true);
             } else if (this.vm.currentSelectedPlayer && this.vm.currentSelectedPlayer.avatar && this.vm.currentSelectedPlayer.avatar.customCharacter) {
-                loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', () => {
-                    const character = Object.values(this.vm.avatars).find(x => x.id === this.vm.currentSelectedPlayer.avatar.id);
-
-                    $('#selectedCharacterSvg svg g[category="hat"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="head"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="eyes"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="eyebrows"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="nose"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="mouth"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="torso"] > g').css('visibility', 'hidden');
-                    $('#selectedCharacterSvg svg g[category="legs"] > g').css('visibility', 'hidden');
-
-                    $(`#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                    $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
-
-                    $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
+                loadCustomCharacterSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', this.vm.currentSelectedPlayer.avatar, () => {
+                    $('#selectedCharacterSvg svg .skinTone').css('fill', this.vm.currentSelectedPlayer.avatar.skinTone);
 
                     const backgroundToSelect = './assets/avatarBackgrounds/default.svg';
                     loadSvgIntoDiv(backgroundToSelect, '#characterSelectionModal__background');
                     this.currentBackground = backgroundToSelect;
-                    this.vm.currentSelectedPlayer.name = character.name;
+                    this.vm.currentSelectedPlayer.name = this.vm.currentSelectedPlayer.avatar.name;
 
                     $('#selectedCharacterSvg').animate({
                         opacity: '1'
@@ -200,29 +180,8 @@ class CharacterSelectionController {
             loadSvgIntoDiv(this.vm.currentSelectedPlayer.avatar.svg, '#selectedCharacterSvg');
         } else if (this.vm.currentSelectedPlayer.avatar.customCharacter) {
             $('#selectedCharacterSvg').css('opacity', '0');
-            loadSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', () => {
-                const character = Object.values(this.vm.avatars).find(x => x.id === this.vm.currentSelectedPlayer.avatar.id);
-
-                $('#selectedCharacterSvg svg g[category="hat"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="head"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="eyes"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="eyebrows"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="nose"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="mouth"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="torso"] > g').css('visibility', 'hidden');
-                $('#selectedCharacterSvg svg g[category="legs"] > g').css('visibility', 'hidden');
-
-                $(`#selectedCharacterSvg svg g[category="hat"] > g[name="${character.hat}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="head"] > g[name="${character.head}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="eyebrows"] > g[name="${character.eyebrows}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="eyes"] > g[name="${character.eyes}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="nose"] > g[name="${character.nose}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="mouth"] > g[name="${character.mouth}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="torso"] > g[name="${character.torso}"]`).css('visibility', 'visible');
-                $(`#selectedCharacterSvg svg g[category="legs"] > g[name="${character.legs}"]`).css('visibility', 'visible');
-
-                $('#selectedCharacterSvg svg .skinTone').css('fill', character.skinTone);
-
+            loadCustomCharacterSvgIntoDiv('assets/avatarSvg/custom.svg', '#selectedCharacterSvg', this.vm.currentSelectedPlayer.avatar, () => {
+                $('#selectedCharacterSvg svg .skinTone').css('fill', this.vm.currentSelectedPlayer.avatar.skinTone);
                 $('#selectedCharacterSvg').animate({
                     opacity: '1'
                 }, 200);

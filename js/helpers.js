@@ -218,6 +218,52 @@ const arrayIncludesObject = (array, object) => {
     return o !== undefined;
 };
 
+const loadCustomCharacterSvgIntoDiv = (svgPath, divSelector, avatarConfiguration, callback, callbackTimer = 50) => {
+    $.get(svgPath, (svg) => {
+        var temp = document.createElement('span');
+        temp.innerHTML = svg;
+        let gradientsUsed = [];
+
+        ['hat', 'head', 'eyebrows', 'eyes', 'nose', 'mouth', 'torso', 'legs'].forEach(category => {
+            temp.querySelectorAll(`g[category="${category}"] > g`).forEach(x => {
+                if (x.getAttribute('name') !== avatarConfiguration[category]) {
+                    x.remove();
+                } else {
+                    x.style.visibility = 'visible';
+                    console.log('divSelector', divSelector)
+                    let newGradients = x.innerHTML.match(/custom-character-gradient-[0-9]{0,3}|gradient-[0-9]{0,3}/g) || [];
+                    gradientsUsed = [...gradientsUsed, ...newGradients];
+                }
+            });
+        });
+
+        const onlyUnique = (value, index, self) => self.indexOf(value) === index;
+
+        gradientsUsed = gradientsUsed.filter(onlyUnique);
+
+        temp.querySelectorAll('radialGradient, linearGradient').forEach(gradient => {
+            if (!gradientsUsed.includes(gradient.id)) {
+                //gradient.remove();
+            }
+        });
+
+        svg = temp.innerHTML;
+        temp.remove();
+
+        svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/filter-/g, 'filter-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/pattern-/g, 'pattern-' + Math.floor((Math.random() * 100000000000) + 1));
+
+        $(divSelector).html(svg);
+
+        if (callback) {
+            setTimeout(() => {
+                callback();
+            }, callbackTimer);
+        }
+    }, 'text');
+};
+
 const loadSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
     $.get(svgPath, (svg) => {
         svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
@@ -296,6 +342,7 @@ module.exports = {
     objectsAreEqual,
     arrayIncludesObject,
     loadSvgIntoDiv,
+    loadCustomCharacterSvgIntoDiv,
     startGlobalLoading,
     stopGlobalLoading,
     getParameterValueByKey,

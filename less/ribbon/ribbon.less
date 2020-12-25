@@ -1,4 +1,5 @@
 .animatedRibbon {
+    will-change: transform;
     position: relative;
     filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
     &.hide {
@@ -9,6 +10,7 @@
     }
     .animatedRibbonInner {
         clip-path: polygon(0% 0%, 6% 0%, 9% 3%, 14% 0%, 25% 0%, 28% 5%, 30% 0%, 36% 0%, 39% 3%, 41% 0%, 49% 0%, 52% 5%, 52% 0%, 73% 0%, 80% 0%, 80% 6%, 83% 0%, 89% 0%, 95% 0%, 100% 0%, 100% 39%, 100% 70%, 99% 85%, 100% 95%, 100% 100%, 90% 100%, 86% 98%, 82% 100%, 79% 97%, 76% 100%, 61% 100%, 50% 100%, 48% 97%, 45% 100%, 36% 100%, 22% 100%, 19% 97%, 14% 100%, 5% 100%, 0% 100%, 0% 69%, 0% 61%, 0% 49%);
+        will-change: transform;
 
         padding-left: 10px;
         padding-right: 10px;
@@ -25,6 +27,7 @@
     div:nth-child(2) {
         div {
             position: absolute;
+            will-change: transform;
     
             &:first-child, &:nth-child(2) {
                 width: 20px;

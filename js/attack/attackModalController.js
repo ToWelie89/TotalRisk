@@ -61,8 +61,8 @@ class AttackModalController {
         this.vm.attackerTotalCasualites = 0;
         this.vm.defenderTotalCasualites = 0;
 
-        //this.getCountrySvgDelay = 500;
-        this.getCountrySvgDelay = 1;
+        this.getCountrySvgDelay = 200;
+        //this.getCountrySvgDelay = 1;
         this.moveTroopsDelay = 2500;
         this.closeModalDelay = 2500;
         this.startShakeAnimationDelay = 100;
