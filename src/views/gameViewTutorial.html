@@ -2,7 +2,7 @@
     class="container"
     id="singlePlayerContainer"
     data-ng-controller="gameControllerTutorial as gameTutorial"
-    data-ng-show="main.currentGamePhase == main.gamePhases.TUTORIAL"
+    data-ng-if="main.currentGamePhase == main.gamePhases.TUTORIAL"
     ng-cloak
 >
     <div style="height: 100%;" ng-cloak>
@@ -166,11 +166,7 @@
             <div class="troopChartContainer" uib-tooltip-html="gameTutorial.troopChartTooltip" tooltip-placement="right">
                 <canvas id="troopChartSingleplayer" width="100" height="100"></canvas>
             </div>
-           <div id="tutorialMap"
-                data-ng-class="{'endScreen': main.currentGamePhase === main.gamePhases.END_SCREEN}"
-                inject-svg
-                src="assets/maps/worldMap/worldMap.svg">
-           </div>
+           <div id="tutorialMap"></div>
         </div>
     </div>
 </div>

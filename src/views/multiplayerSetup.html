@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="lobbiesController as lobbies" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.MULTIPLAYER_LOBBIES" data-ng-controller="lobbiesController as lobbies" ng-cloak>
     <div class="backButtonContainer">
         <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
             <span class="glyphicon glyphicon-arrow-left"></span>

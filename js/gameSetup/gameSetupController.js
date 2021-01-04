@@ -1,7 +1,7 @@
 const Player = require('./../player/player');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
 const {CONSTANTS, VICTORY_GOALS, GAME_PHASES, MAPS} = require('./../gameConstants');
-const {lightenDarkenColor, loadSvgIntoDiv} = require('./../helpers');
+const {lightenDarkenColor, loadMapSvgIntoDiv} = require('./../helpers');
 
 const firebase = require('firebase/app');
 require('firebase/auth');
@@ -43,7 +43,7 @@ class GameSetupController {
         this.vm.getEmptyPlayerSlots = () => Array(CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.players.length).fill(0);
         this.vm.customCharacters = [];
 
-        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
+        loadMapSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
 
         this.vm.mapTooltips = {};
         MAPS.forEach(map => {
@@ -53,7 +53,7 @@ class GameSetupController {
             `);
         })
 
-        this.fetchDefaultAvatar();
+        //this.fetchDefaultAvatar();
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP) {
@@ -66,7 +66,9 @@ class GameSetupController {
                             PLAYER_TYPES.HUMAN
                         )
                 );
-                this.fetchDefaultAvatar();
+                this.fetchDefaultAvatar().then(() => {
+                    this.$scope.$apply();
+                });
             }
         });
     }
@@ -77,46 +79,48 @@ class GameSetupController {
 
     selectMap(map) {
         this.gameEngine.selectedMap = map;
-        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
+        loadMapSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerSetupMapPreview');
     }
 
     fetchDefaultAvatar() {
-        firebase.auth().onAuthStateChanged(authUser => {
-            if (authUser) {
-                firebase.database().ref('/users/' + authUser.uid).once('value').then(snapshot => {
-                    const user = snapshot.val();
-                    if (user && user.characters) {
-                        this.vm.customCharacters = user.characters;
-                    } else {
-                        this.vm.customCharacters = [];
-                    }
-                    if (user && user.defaultAvatar) {
-                        if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
-                            const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
-                            chosenDefaultAvatar.customCharacter = true;
-                            this.defaultAvatar = chosenDefaultAvatar;
-                        } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
-                            const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
-                            chosenDefaultAvatar.customCharacter = false;
-                            chosenDefaultAvatar.name = Object.entries(avatars).find(x => x[1].id === chosenDefaultAvatar.id)[0];
-                            this.defaultAvatar = chosenDefaultAvatar;
+        return new Promise((resolve, reject) => {
+            firebase.auth().onAuthStateChanged(authUser => {
+                if (authUser) {
+                    firebase.database().ref('/users/' + authUser.uid).once('value').then(snapshot => {
+                        const user = snapshot.val();
+                        if (user && user.characters) {
+                            this.vm.customCharacters = user.characters;
+                        } else {
+                            this.vm.customCharacters = [];
                         }
-
-                        if (this.defaultAvatar) {
-                            this.vm.players[0].avatar = this.defaultAvatar;
-                            this.vm.players[0].name = this.defaultAvatar.name;
+                        if (user && user.defaultAvatar) {
+                            if (user.characters && user.characters.find(c => c.id === user.defaultAvatar)) {
+                                const chosenDefaultAvatar = user.characters.find(c => c.id === user.defaultAvatar);
+                                chosenDefaultAvatar.customCharacter = true;
+                                this.defaultAvatar = chosenDefaultAvatar;
+                            } else if (Object.values(avatars).find(x => x.id === user.defaultAvatar)) {
+                                const chosenDefaultAvatar = Object.values(avatars).find(x => x.id === user.defaultAvatar);
+                                chosenDefaultAvatar.customCharacter = false;
+                                chosenDefaultAvatar.name = Object.entries(avatars).find(x => x[1].id === chosenDefaultAvatar.id)[0];
+                                this.defaultAvatar = chosenDefaultAvatar;
+                            }
+    
+                            if (this.defaultAvatar) {
+                                this.vm.players[0].avatar = this.defaultAvatar;
+                                this.vm.players[0].name = this.defaultAvatar.name;
+                            }
+    
+                            resolve();
                         }
-
-                        return Promise.resolve();
-                    }
-                }).catch(err => {
-                    console.error(err);
-                    return Promise.reject();
-                });
-            } else {
-                this.vm.customCharacters = [];
-                return Promise.resolve();
-            }
+                    }).catch(err => {
+                        console.error(err);
+                        reject();
+                    });
+                } else {
+                    this.vm.customCharacters = [];
+                    resolve();
+                }
+            });
         });
     }
 
@@ -199,6 +203,7 @@ class GameSetupController {
             controller: 'characterSelectionController',
             controllerAs: 'characterSelection',
             keyboard: false,
+            animation: false,
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
                 selectedPlayers: () => this.vm.players,

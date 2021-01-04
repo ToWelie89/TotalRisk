@@ -96,9 +96,13 @@ class AttackModalController {
                 document.querySelector('#attackModalBattleSvg #leftTroopCounter').textContent = this.vm.attacker.numberOfTroops;
                 document.querySelector('#attackModalBattleSvg #rightTroopCounter').textContent = this.vm.defender.numberOfTroops;
 
-                $('#attackModalBattleSvg #leftTroopCounter, #attackModalBattleSvg #rightTroopCounter').animate({
+                $('#attackModalBattleSvg svg').animate({
                     opacity: 1
-                }, 350);
+                }, 350, () => {
+                    $('#attackModalBattleSvg #leftTroopCounter, #attackModalBattleSvg #rightTroopCounter').animate({
+                        opacity: 1
+                    }, 350);
+                });
 
                 const cannonsToShow = numberOfTroops => {
                     let cannonsToShow;

@@ -89,7 +89,7 @@ class CharacterCreatorController {
                         this.vm.characters = snapshot.val().characters;
                         setTimeout(() => {
                             this.$scope.$apply();
-                            this.loadSavedCharacterPortraits();
+                            //this.loadSavedCharacterPortraits();
                         }, 200);
                     } else {
                         this.vm.characters = [];

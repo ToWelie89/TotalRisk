@@ -11,9 +11,17 @@ class CharacterGalleryController {
 
         this.vm.loading = false;
 
+        this.alreadyCleared = true;
+
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.CHARACTER_GALLERY) {
+                this.alreadyCleared = false;
                 this.fetchCharcaters();
+            } else {
+                if (!this.alreadyCleared) {
+                    document.getElementById('galleryContainer').innerHTML = '';
+                    this.alreadyCleared = true;
+                }
             }
         });
     }

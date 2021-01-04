@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.EDIT_PROFILE" class="textCenter mainMenuBox" data-ng-controller="editProfileController as editProfile" id="editProfile" style="position: relative;" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.EDIT_PROFILE" class="textCenter mainMenuBox" data-ng-controller="editProfileController as editProfile" id="editProfile" style="position: relative;" ng-cloak>
     <div id="mainDiv">
         <div class="backButtonContainer">
             <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">

@@ -224,28 +224,39 @@ const loadCustomCharacterSvgIntoDiv = (svgPath, divSelector, avatarConfiguration
         temp.innerHTML = svg;
         let gradientsUsed = [];
 
+        temp.querySelectorAll('radialGradient, linearGradient').forEach(gradient => {
+            let xlink = gradient.getAttribute('xmlns:xlink');
+            if (!xlink) {
+                xlink = gradient.getAttribute('xlink:href');
+            }
+            if (xlink) {
+                gradient.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            }
+        });
+
         ['hat', 'head', 'eyebrows', 'eyes', 'nose', 'mouth', 'torso', 'legs'].forEach(category => {
             temp.querySelectorAll(`g[category="${category}"] > g`).forEach(x => {
                 if (x.getAttribute('name') !== avatarConfiguration[category]) {
                     x.remove();
                 } else {
                     x.style.visibility = 'visible';
-                    console.log('divSelector', divSelector)
-                    let newGradients = x.innerHTML.match(/custom-character-gradient-[0-9]{0,3}|gradient-[0-9]{0,3}/g) || [];
+                    let newGradients = x.innerHTML.match(/custom-character-gradient-[0-9]{0,30}|gradient-[0-9]{0,30}/g) || [];
                     gradientsUsed = [...gradientsUsed, ...newGradients];
                 }
             });
         });
 
+        temp.querySelectorAll('.skinTone').forEach(x => x.style.fill = avatarConfiguration.skinTone);
+
         const onlyUnique = (value, index, self) => self.indexOf(value) === index;
 
         gradientsUsed = gradientsUsed.filter(onlyUnique);
 
-        temp.querySelectorAll('radialGradient, linearGradient').forEach(gradient => {
+        /* temp.querySelectorAll('radialGradient, linearGradient').forEach(gradient => {
             if (!gradientsUsed.includes(gradient.id)) {
-                //gradient.remove();
+                gradient.remove();
             }
-        });
+        }); */
 
         svg = temp.innerHTML;
         temp.remove();
@@ -255,6 +266,26 @@ const loadCustomCharacterSvgIntoDiv = (svgPath, divSelector, avatarConfiguration
         svg = svg.replace(/pattern-/g, 'pattern-' + Math.floor((Math.random() * 100000000000) + 1));
 
         $(divSelector).html(svg);
+
+        if (callback) {
+            setTimeout(() => {
+                callback();
+            }, callbackTimer);
+        }
+    }, 'text');
+};
+
+const loadMapSvgIntoDiv = (svgPath, divSelector, callback, callbackTimer = 50) => {
+    $.get(svgPath, (svg) => {
+        svg = svg.replace(/gradient-/g, 'gradient-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/filter-/g, 'filter-' + Math.floor((Math.random() * 100000000000) + 1));
+        svg = svg.replace(/pattern-/g, 'pattern-' + Math.floor((Math.random() * 100000000000) + 1));
+
+        const temp = document.createElement('span');
+        temp.innerHTML = svg;
+        temp.querySelectorAll('style, #regionTexts, #troopCounters, .troopCounterText, .troopCounter, #mapArrow, #compass').forEach(x => x.remove());
+        $(divSelector).html(temp.innerHTML);
+        temp.remove();
 
         if (callback) {
             setTimeout(() => {
@@ -342,6 +373,7 @@ module.exports = {
     objectsAreEqual,
     arrayIncludesObject,
     loadSvgIntoDiv,
+    loadMapSvgIntoDiv,
     loadCustomCharacterSvgIntoDiv,
     startGlobalLoading,
     stopGlobalLoading,

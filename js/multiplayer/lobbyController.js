@@ -240,6 +240,7 @@ class LobbiesController {
             controller: 'characterSelectionController',
             controllerAs: 'characterSelection',
             keyboard: false,
+            animation: false,
             resolve: {
                 currentSelectedPlayer: () => currentSelectedPlayer,
                 selectedPlayers: () => this.vm.players,
@@ -350,22 +351,20 @@ class LobbiesController {
             this.gameEngine.troopsToDeploy = troopsToDeploy;
             this.gameEngine.selectedMap = selectedMap;
 
-            loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#multiplayerMap', () => {
-                this.gameEngine.initMap();
+            this.gameEngine.initMap();
 
-                this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
-                    const territoryFromServer = territories.find(x => x.name === t.name);
-                    t.owner = territoryFromServer.owner;
-                    t.numberOfTroops = territoryFromServer.numberOfTroops;
-                });
-
-                this.$rootScope.players = players;
-                this.$rootScope.chosenGoal = victoryGoal;
-
-                this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
-
-                this.$rootScope.$apply();
+            this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
+                const territoryFromServer = territories.find(x => x.name === t.name);
+                t.owner = territoryFromServer.owner;
+                t.numberOfTroops = territoryFromServer.numberOfTroops;
             });
+
+            this.$rootScope.players = players;
+            this.$rootScope.chosenGoal = victoryGoal;
+
+            this.$rootScope.currentGamePhase = GAME_PHASES.GAME_MULTIPLAYER;
+
+            this.$rootScope.$apply();
         });
 
         this.socketService.gameSocket.on('disconnect', data => {

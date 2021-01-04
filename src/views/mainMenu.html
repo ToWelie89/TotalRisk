@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.MAIN_MENU" class="textCenter mainMenuBox" ng-cloak>
 
     <div id="patchNotesContainer" data-ng-show="main.currentPatchNotes">
         <div id="closeButton" data-ng-click="main.closePatchNotes()">

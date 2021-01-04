@@ -164,7 +164,8 @@ class LobbiesController {
                         windowClass: 'riskModal joinPrivateLobby',
                         controller: 'joinPrivateLobbyController',
                         controllerAs: 'joinPrivate',
-                        keyboard: false
+                        keyboard: false,
+                        animation: false
                     }).result.then((closeResponse) => {
                         if (closeResponse && closeResponse.password) {
                             if (hashString(closeResponse.password) === lobby.password) {
@@ -197,7 +198,8 @@ class LobbiesController {
             windowClass: 'riskModal hostNewGameModal',
             controller: 'hostNewGameModalController',
             controllerAs: 'hostNewGame',
-            keyboard: false
+            keyboard: false,
+            animation: false
         }).result.then((closeResponse) => {
             if (closeResponse && closeResponse.gameName) {
                 startGlobalLoading();

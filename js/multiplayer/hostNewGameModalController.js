@@ -1,5 +1,5 @@
 const { MAPS } = require('./../gameConstants');
-const { loadSvgIntoDiv } = require('./../helpers');
+const { loadMapSvgIntoDiv } = require('./../helpers');
 
 class HostNewGameModalController {
 
@@ -19,7 +19,7 @@ class HostNewGameModalController {
         this.vm.maps = MAPS;
         this.vm.currentlySelectedMap = this.vm.maps[0];
 
-        loadSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
+        loadMapSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
     }
 
     createLobby() {
@@ -34,7 +34,7 @@ class HostNewGameModalController {
     selectMap(map) {
         this.soundService.tick.play();
         this.currentlySelectedMap = map;
-        loadSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
+        loadMapSvgIntoDiv(this.vm.currentlySelectedMap.mainMap, '#currentlySelectedMapPreview');
     }
 
     cancel() {

@@ -9,6 +9,7 @@
         let electron;
         let ipcRenderer;
         let screen;
+        let electronLog;
         if (!!(window && window.process && window.process.type)) { // If running Electron
             electron = require('electron');
             electronLog = require('electron-log');
@@ -49,16 +50,16 @@
     <link rel="stylesheet" href="node_modules/@simonwep/pickr/dist/themes/nano.min.css"/>
 
     <link href="cssLibs/animate.css" rel="stylesheet" type="text/css">
-    <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css">
+    <!-- <link href="cssLibs/csshake.css" rel="stylesheet" type="text/css"> -->
     <link href="assetsDist/default.css" rel="stylesheet" type="text/css">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Cinzel&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <script>
-        if (process.env && process.env.LOGIN_INFO) {
+        if (process && process.env && process.env.LOGIN_INFO) {
             setTimeout(() => {
                 const userName = process.env.LOGIN_INFO.split(':')[0];
                 const password = process.env.LOGIN_INFO.split(':')[1];
@@ -94,12 +95,13 @@
 
     <div class="wrapper mainWrapper" id="mainGameWrapper">
         <ng-include src="'src/views/logo.html'"></ng-include>
+
         <div class="container mainContent">
             <ng-include src="'src/views/mainMenu.html'"></ng-include>
+            <ng-include src="'src/views/editorGallery.html'"></ng-include>
             <ng-include src="'src/views/settings.html'"></ng-include>
             <ng-include src="'src/views/leaderboard.html'"></ng-include>
             <ng-include src="'src/views/editor.html'"></ng-include>
-            <ng-include src="'src/views/editorGallery.html'"></ng-include>
             <ng-include src="'src/views/playerSetupMultiplayer.html'"></ng-include>
             <ng-include src="'src/views/multiplayerSetup.html'"></ng-include>
             <ng-include src="'src/views/singleplayerSetup.html'"></ng-include>

@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor" style="position: relative;" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.CHARACTER_CREATOR" class="textCenter mainMenuBox" data-ng-controller="characterCreatorController as characterCreator" id="characterEditor" style="position: relative;" ng-cloak>
     <div id="mainDiv">
         <div class="backButtonContainer">
             <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
@@ -9,7 +9,13 @@
             <div class="col-xs-12">
                 <div class="existingCharactersContainer" data-ng-show="characterCreator.characters.length > 0">
                     <div class="existingCharactersContainer__item" data-ng-class="{'existingCharactersContainer__item-selected': characterCreator.selectedCharacterId === character.id}" data-ng-repeat="character in characterCreator.characters track by $index" data-ng-click="characterCreator.selectCharacter(character)">
-                        <div class="existingCharactersContainer__item__inner" character="{{ character.id }}" id="editorCustomCharacterThumbnail{{ $index }}" inject-svg src="assets/avatarSvg/custom.svg"></div>
+                        <div
+                            class="existingCharactersContainer__item__inner"
+                            id="editorCustomCharacterThumbnail{{ $index }}"
+                            inject-svg
+                            character-config="{{ character }}"
+                            src="assets/avatarSvg/custom.svg"
+                        ></div>
                     </div>
                     <div class="existingCharactersContainer__item" data-ng-click="characterCreator.createNewCharacter()" data-ng-show="characterCreator.characters.length < 5">
                         <div class="existingCharactersContainer__item__inner">

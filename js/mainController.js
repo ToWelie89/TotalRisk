@@ -136,6 +136,7 @@ class MainController {
                 windowClass: 'riskModal movementModalWrapper',
                 controllerAs: 'movement',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {
@@ -160,6 +161,7 @@ class MainController {
             controller: 'attackModalController',
             controllerAs: 'attack',
             keyboard: false,
+            animation: false,
             resolve: {
                 attackData: () => {
                     return {
@@ -265,7 +267,8 @@ class MainController {
             windowClass: 'riskModal autoUpdaterModal',
             controller: 'autoUpdaterModalController',
             controllerAs: 'updater',
-            keyboard: false
+            keyboard: false,
+            animation: false
         }).result.then((closeResponse = {}) => {
             if (!closeResponse.error) {
                 this.toastService.successToast('', 'The game is up to date');
@@ -344,7 +347,8 @@ class MainController {
             windowClass: 'riskModal scenarioSelectorModal',
             controller: 'scenarioSelectorModalController',
             controllerAs: 'scenario',
-            keyboard: false
+            keyboard: false,
+            animation: false
         }).result.then((closeResponse) => {
             if (!closeResponse.cancel) {
                 // handle scenario somehow
@@ -362,14 +366,10 @@ class MainController {
 
     startGame(players, chosenGoal) {
         this.soundService.tick.play();
-        
-        loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerMap', () => {
-            this.gameEngine.initMap();
-            this.$rootScope.players = players;
-            this.$rootScope.chosenGoal = chosenGoal;
-            this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
-            this.$rootScope.$apply();
-        });
+        this.gameEngine.initMap();
+        this.$rootScope.players = players;
+        this.$rootScope.chosenGoal = chosenGoal;
+        this.$rootScope.currentGamePhase = GAME_PHASES.GAME;
     }
 
     goBackToMenu() {

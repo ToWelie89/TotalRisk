@@ -559,8 +559,7 @@ const updateOnlineUsers = (callback = () => {}) => {
             userName: x.userName,
             userUid: x.userUid,
             tooltipInfo: x.tooltipInfo || ''
-        })))
-
+        })));
     const onlineUsers = lobbiesSocketList
         .map(x => ({
             userName: x.userName,
@@ -587,6 +586,10 @@ io
         updateLobbies();
 
         socket.on('setUser', (userName, userUid) => {
+            if (lobbiesSocketList.find(x => x.userUid === userUid)) {
+                return; // User already set
+            }
+
             console.log('set user', userName, userUid)
             socket.userName = userName;
             socket.userUid = userUid;
@@ -886,6 +889,10 @@ io
 
         socket.on('setUser', (userUid, userName, roomId, isHost, chosenAvatar, attackerDice, attackerDiceLabel) => {
             const game = games.find(game => game.id === roomId);
+            if (game.players.find(x => x.userUid)) {
+                return; // user already exists in this game
+            }
+
             const usedAvatars = game.players.map(socket => socket.avatar.id);
 
             socket.userUid = userUid;

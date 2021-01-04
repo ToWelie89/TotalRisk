@@ -23,8 +23,8 @@ class TimerService {
     };
     
     startTimer(time, callback) {
-        this.clearHourglass();
         setTimeout(() => {
+            this.clearHourglass();
             const middleAnimationTime = time / 10;
             const sandAnimationTime = time - middleAnimationTime;
             document.querySelector('#middleSand').style.animationDelay = `${sandAnimationTime - (0.04 * sandAnimationTime)}s`;

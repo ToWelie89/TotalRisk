@@ -271,7 +271,7 @@ class AuthenticationController {
 
     logout() {
         this.soundService.tick.play();
-        const currentUser = firebase.auth().currentUser;
+        const uid = firebase.auth().currentUser.uid;
         firebase.auth().signOut()
             .then(() => {
                 this.vm.currentState = this.vm.states.NOT_LOGGED_IN;
@@ -291,7 +291,7 @@ class AuthenticationController {
                 this.$scope.$apply();
             })
             .then(() => {
-                this.socketService.lobbiesSocket.emit('signOutUser', currentUser.uid);
+                this.socketService.lobbiesSocket.emit('signOutUser', uid);
             })
             .catch(err => {
                 console.log('Logout error', err),

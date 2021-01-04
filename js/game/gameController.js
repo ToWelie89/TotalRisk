@@ -9,7 +9,7 @@ const {
 } = require('./../gameConstants');
 const {getTerritoryByName, getTerritoriesByOwner, getTerritoriesForMovement} = require('./../map/mapHelpers');
 const {PLAYER_TYPES} = require('./../player/playerConstants');
-const {delay, lightenDarkenColor} = require('./../helpers');
+const {delay, lightenDarkenColor, loadSvgIntoDiv} = require('./../helpers');
 const {CARD_TYPE} = require('./../card/cardConstants');
 const {displayReinforcementNumbers} = require('./../animations/animations');
 const {clearArrow} = require('./../map/mapArrow');
@@ -111,10 +111,14 @@ class GameController {
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.GAME) {
-                this.mapService.init('singleplayerMap');
-                this.setListeners();
-                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
-                this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
+                loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#singleplayerMap', () => {
+                    this.mapService.init('singleplayerMap');
+                    this.setListeners();
+                    setTimeout(() => {
+                        this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+                        this.vm.gamePaused = PAUSE_MODES.NOT_PAUSED;
+                    }, 50);
+                }, 20);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.AI_TESTING) {
                 this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal, true);
             } else if (this.$rootScope.currentGamePhase === GAME_PHASES.END_SCREEN) {
@@ -141,6 +145,8 @@ class GameController {
         this.vm.mapConfiguration = this.gameEngine.selectedMap.configuration;
         this.vm.mapConfiguration.regions.sort((a, b) => b.bonusTroops - a.bonusTroops);
         this.setChartData();
+
+        this.$scope.$apply();
 
         setTimeout(() => {
             document.querySelectorAll('#showRegionBonuses .regionInfo:not(:first-child)').forEach(x => {
@@ -186,6 +192,7 @@ class GameController {
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {
@@ -391,6 +398,7 @@ class GameController {
             controller: 'pauseMenuModalController',
             controllerAs: 'pauseMenu',
             keyboard: false,
+            animation: false,
             resolve: {
                 multiplayer: () => false
             }
@@ -400,6 +408,7 @@ class GameController {
 
             if (response && response.quitGame) {
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
+                document.getElementById('singleplayerMap').children[0].remove();
                 return;
             }
 
@@ -462,6 +471,7 @@ class GameController {
             windowClass: 'riskModal cardTurnInModalWrapper',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn',
+            animation: false,
             resolve: {
                 data: () => {
                     return {
@@ -530,6 +540,7 @@ class GameController {
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {
@@ -561,6 +572,7 @@ class GameController {
                     controller: 'turnPresentationController',
                     controllerAs: 'turnPresentation',
                     keyboard: false,
+                    animation: false,
                     resolve: {
                         data: () => {
                             return {
@@ -646,6 +658,7 @@ class GameController {
             controller: 'attackModalController',
             controllerAs: 'attack',
             keyboard: false,
+            animation: false,
             resolve: {
                 attackData: () => {
                     return {
@@ -791,6 +804,7 @@ class GameController {
             windowClass: 'riskModal movementModalWrapper',
             controllerAs: 'movement',
             keyboard: false,
+            animation: false,
             resolve: {
                 data: () => {
                     return {

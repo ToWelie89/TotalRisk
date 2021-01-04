@@ -5,11 +5,11 @@ class PlayerTypePopoverController {
         this.vm = this;
         this.vm.init = this.init;
         this.vm.getTypeName = this.getTypeName;
+        this.vm.types = Array.from(Object.keys(PLAYER_TYPES).map((key) => PLAYER_TYPES[key]));
     }
 
-    init(player) {
-        this.vm.types = Array.from(Object.keys(PLAYER_TYPES).map((key) => PLAYER_TYPES[key]));
-        this.vm.player = player;
+    init(index) {
+        this.index = index;
     }
 
     getTypeName(type) {

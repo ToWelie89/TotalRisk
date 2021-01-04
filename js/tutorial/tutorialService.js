@@ -218,6 +218,7 @@ class TutorialService {
                 controller: 'attackModalController',
                 controllerAs: 'attack',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     attackData: () => {
                         return {
@@ -345,6 +346,7 @@ class TutorialService {
                 controller: 'cardTurnInModalController',
                 controllerAs: 'cardTurnIn',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {
@@ -449,6 +451,7 @@ class TutorialService {
                 windowClass: 'riskModal movementModalWrapper',
                 controllerAs: 'movement',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {
@@ -511,6 +514,7 @@ class TutorialService {
                 controller: 'turnPresentationController',
                 controllerAs: 'turnPresentation',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     data: () => {
                         return {

@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER" data-ng-controller="lobbyController as lobby" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.PLAYER_SETUP_MULTIPLAYER" data-ng-controller="lobbyController as lobby" ng-cloak>
     <div class="backButtonContainer">
         <button type="button" class="button button-green" data-ng-click="lobby.leaveLobby()">
             <span class="glyphicon glyphicon-arrow-left"></span>

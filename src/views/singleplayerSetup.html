@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.PLAYER_SETUP" data-ng-controller="gameSetupController as setup" data-ng-init="setup.init()" ng-cloak>
     <div class="backButtonContainer">
         <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
             <span class="glyphicon glyphicon-arrow-left"></span>
@@ -46,6 +46,7 @@
                     data-ng-dblclick="setup.selectMap(map); setup.openMapSelectorMenu();"
                     uib-tooltip-html="setup.mapTooltips[map.id]"
                     tooltip-placement="bottom"
+                    map="map"
                     inject-svg
                     src="{{ map.mainMap }}"
                 ></div>
@@ -106,7 +107,7 @@
                         popover-trigger="'focus'"
                         uib-popover-template="'src/popoverPlayerTypeTemplate.html'"
                         data-ng-controller="playerTypePopoverController as playerTypePopover"
-                        data-ng-init="playerTypePopover.init(setup.players[i])"
+                        data-ng-init="playerTypePopover.init(i)"
                     >
                         <i class="fas fa-user" data-ng-show="setup.players[i].type === 0"></i>
                         <i class="fas fa-desktop" data-ng-show="setup.players[i].type !== 0"></i>

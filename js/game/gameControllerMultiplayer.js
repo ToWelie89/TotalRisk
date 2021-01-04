@@ -8,7 +8,7 @@ const {
     TURN_PHASES,
     ATTACK_MUSIC
 } = require('./../gameConstants');
-const { normalizeTimeFromTimestamp, getRandomColor } = require('./../helpers');
+const { normalizeTimeFromTimestamp, getRandomColor, loadSvgIntoDiv } = require('./../helpers');
 const { displayReinforcementNumbers, displayDamageNumbers } = require('./../animations/animations');
 const { getTerritoryByName, getTerritoriesForMovement } = require('./../map/mapHelpers');
 const { PLAYER_TYPES } = require('./../player/playerConstants');
@@ -90,7 +90,6 @@ class GameControllerMultiplayer extends GameController {
             }, 1);
         });
         document.querySelector('#multiplayerContainer #lobbyChatBoxes').addEventListener('mouseover', event => {
-            console.log('mouseover', event)
             document.querySelector('#multiplayerContainer #lobbyChatBoxes').classList.remove('minimized');
 
             if (this.vm.showLobbyChat) {
@@ -222,6 +221,7 @@ class GameControllerMultiplayer extends GameController {
             windowClass: 'riskModal cardTurnInModalWrapper',
             controller: 'cardTurnInModalController',
             controllerAs: 'cardTurnIn',
+            animation: false,
             resolve: {
                 data: () => {
                     return {
@@ -250,6 +250,7 @@ class GameControllerMultiplayer extends GameController {
             controller: 'attackModalController',
             controllerAs: 'attack',
             keyboard: false,
+            animation: false,
             resolve: {
                 attackData: () => {
                     return {
@@ -277,13 +278,15 @@ class GameControllerMultiplayer extends GameController {
 
                 const user = firebase.auth().currentUser;
                 this.vm.myUid = user.uid;
-                this.mapService.init('multiplayerMap', true, this.vm.myUid);
-                this.setListeners();
-                this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
-                this.setSocketListeners();
-                this.socketService.gameSocket.emit('getMessages');
-                this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
-                this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                loadSvgIntoDiv(this.gameEngine.selectedMap.mainMap, '#multiplayerMap', () => {
+                    this.mapService.init('multiplayerMap', true, this.vm.myUid);
+                    this.setListeners();
+                    this.startGame(this.$rootScope.players, this.$rootScope.chosenGoal);
+                    this.setSocketListeners();
+                    this.socketService.gameSocket.emit('getMessages');
+                    this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
+                    this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid);
+                }, 20);
             }
         });
     }
@@ -379,6 +382,7 @@ class GameControllerMultiplayer extends GameController {
             windowClass: 'riskModal movementModalWrapper',
             controllerAs: 'movement',
             keyboard: false,
+            animation: false,
             resolve: {
                 data: () => {
                     return {
@@ -451,6 +455,7 @@ class GameControllerMultiplayer extends GameController {
             controller: 'pauseMenuModalController',
             controllerAs: 'pauseMenu',
             keyboard: false,
+            animation: false,
             resolve: {
                 multiplayer: () => true
             }
@@ -482,6 +487,7 @@ class GameControllerMultiplayer extends GameController {
 
             this.$rootScope.endScreenData = endScreenData;
             this.$rootScope.currentGamePhase = GAME_PHASES.END_SCREEN;
+            this.$rootScope.$apply();
         });
 
         this.socketService.gameSocket.on('newReinforcements', newTroops => {
@@ -578,6 +584,7 @@ class GameControllerMultiplayer extends GameController {
                     controller: 'turnPresentationController',
                     controllerAs: 'turnPresentation',
                     keyboard: false,
+                    animation: false,
                     resolve: {
                         data: () => {
                             return {

@@ -11,7 +11,7 @@
             width: 900px;
 
             .modal-content {
-                background: url(file:///C:/Git/tr/assets/modalBackground.png);
+                background: url(../assets/modalBackground.png);
                 background-size: 100% 100%;
                 box-shadow: none;
                 padding: 50px;
@@ -25,16 +25,16 @@
                     text-align: left;
                     -webkit-filter: grayscale(100%);
                     filter: grayscale(100%);
-                    opacity: 0.5;
                     display: table;
                     width: 100%;
                     transition: all 0.4s;
                     box-shadow: inset 0 0 10px #000000;
                     cursor: url(../assets/cursors/new/pointer.png), auto;
+                    filter: brightness(0.3);
                     
                     &.selected {
+                        filter: none;
                         background-position: center bottom;
-                        opacity: 1;
                         -webkit-filter: none;
                         filter: none;
                         height: 240px;

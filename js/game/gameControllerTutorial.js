@@ -3,7 +3,7 @@ const {
     GAME_PHASES
 } = require('./../gameConstants');
 const Player = require('./../player/player');
-const {delay} = require('./../helpers');
+const {delay, loadSvgIntoDiv} = require('./../helpers');
 const {getTerritoryByName, getTerritoriesByOwner} = require('./../map/mapHelpers');
 const {PLAYER_COLORS, avatars, PLAYER_TYPES} = require('./../player/playerConstants');
 
@@ -30,10 +30,11 @@ class GameControllerTutorial extends GameController {
     setCurrentGamePhaseWatcher() {
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.TUTORIAL) {
-                this.mapService.init('tutorialMap');
-                this.setListeners();
-                this.startTutorial();
-                //this.setChartData();
+                loadSvgIntoDiv('assets/maps/worldMap/worldMap.svg', '#tutorialMap', () => {
+                    this.mapService.init('tutorialMap');
+                    this.setListeners();
+                    this.startTutorial();
+                }, 50);
             }
         });
     }
@@ -139,6 +140,7 @@ class GameControllerTutorial extends GameController {
                 this.vm.isTutorialMode = false;
                 this.$rootScope.currentGamePhase = GAME_PHASES.MAIN_MENU;
                 this.$scope.$apply();
+                document.getElementById('tutorialMap').children[0].remove();
             })
             .catch(err => {
                 console.log(err);
@@ -150,6 +152,7 @@ class GameControllerTutorial extends GameController {
                 }
                 this.gameEngine.setMusicVolume(this.settings.musicVolume);
                 $('#svgMap .country').removeClass('blink_me');
+                document.getElementById('tutorialMap').children[0].remove();
             });
     }
 

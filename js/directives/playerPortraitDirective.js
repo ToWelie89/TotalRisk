@@ -58,8 +58,6 @@ class PlayerPortraitDirective {
                     }
     
                     loadCustomCharacterSvgIntoDiv('assets/avatarSvg/custom.svg', targetSelector, avatar, () => {    
-                        $(`${targetSelector} svg .skinTone`).css('fill', avatar.skinTone);
-    
                         if (small) {
                             $(`${targetSelector} svg`).css('width', '207%');
                             $(`${targetSelector} svg`).css('margin-left', '-39px');

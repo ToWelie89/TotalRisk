@@ -2,7 +2,7 @@
     class="container"
     data-ng-controller="gameController as game"
     id="singlePlayerContainer"
-    data-ng-show="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING"
+    data-ng-if="main.currentGamePhase == main.gamePhases.GAME || main.currentGamePhase == main.gamePhases.AI_TESTING"
 >
     <div style="height: 100%;" ng-cloak>
         <div class="row colorWhite" id="topBar">

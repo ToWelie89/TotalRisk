@@ -1,4 +1,4 @@
-const { loadSvgIntoDiv } = require('./../helpers');
+const { loadSvgIntoDiv, loadMapSvgIntoDiv, loadCustomCharacterSvgIntoDiv } = require('./../helpers');
 
 class InjectSVGDirective {
     constructor() {
@@ -9,7 +9,14 @@ class InjectSVGDirective {
         $(document).ready(() => {
             setTimeout(() => {
                 const div = elem[0];
-                loadSvgIntoDiv(attr.src, `#${div.id}`, () => {}, 1);
+                if (attr.map) {
+                    loadMapSvgIntoDiv(attr.src, `#${div.id}`, () => {}, 1);
+                } else if (attr.characterConfig) {
+                    const character = JSON.parse(attr.characterConfig);
+                    loadCustomCharacterSvgIntoDiv(attr.src, `#${div.id}`, character, () => {}, 1);
+                } else {
+                    loadSvgIntoDiv(attr.src, `#${div.id}`, () => {}, 1);
+                }
             }, 1);
         });
     }

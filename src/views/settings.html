@@ -1,4 +1,4 @@
-<div data-ng-show="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings" ng-cloak>
+<div data-ng-if="main.currentGamePhase == main.gamePhases.SETTINGS" class="textCenter mainMenuBox" data-ng-controller="settingsController as settings" ng-cloak>
     <div class="backButtonContainer">
         <button type="button" class="button button-green" data-ng-click="main.setGamePhase(main.gamePhases.MAIN_MENU)">
             <span class="glyphicon glyphicon-arrow-left"></span>

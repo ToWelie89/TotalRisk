@@ -160,6 +160,7 @@ class EditProfileController {
                 controller: 'characterSelectionController',
                 controllerAs: 'characterSelection',
                 keyboard: false,
+                animation: false,
                 resolve: {
                     currentSelectedPlayer: () => ({
                         avatar: this.vm.user.defaultAvatar
