@@ -278,27 +278,29 @@ class LobbiesController {
     }
 
     setupSocket() {
-        this.socketService.createLobbiesSocket();
+        if (!this.socketService.lobbiesSocket) {
+            this.socketService.createLobbiesSocket();
+        }
 
-        this.vm.socketService.lobbiesSocket.on('connect', () => {
-            this.startPingInterval();
+        this.startPingInterval();
 
-            this.vm.socketService.lobbiesSocket.emit('getLobbies');
+        this.vm.socketService.lobbiesSocket.emit('getLobbies');
 
-            firebase.auth().onAuthStateChanged(user => {
-                if (user) {
-                    this.setUser(user.displayName, user.uid);
-                } else {
-                    this.setUser();
-                }
-            });
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.setUser(user.displayName, user.uid);
+            } else {
+                this.setUser();
+            }
         });
+        
+        this.vm.socketService.lobbiesSocket.emit('fetchOnlineUsers');
 
-        this.vm.socketService.lobbiesSocket.on('updatedBioOfUserNotifier', response => {
+        this.socketService.setLobbiesListener('updatedBioOfUserNotifier', (ev, {response}) => {
             this.setTooltipOfOnlineUser(response.uid, response);
         });
 
-        this.vm.socketService.lobbiesSocket.on('onlineUsers', onlineUsers => {
+        this.socketService.setLobbiesListener('onlineUsers', (ev, {onlineUsers}) => {
             this.vm.onlineUsers = onlineUsers;
             console.log('Players online: ', onlineUsers);
 
@@ -316,10 +318,9 @@ class LobbiesController {
                     this.setTooltipOfOnlineUser(u.userUid, u.tooltipInfo);
                 }
             });
-
         });
 
-        this.vm.socketService.lobbiesSocket.on('currentLobbies', lobbies => {
+        this.socketService.setLobbiesListener('currentLobbies', (ev, {lobbies}) => {
             this.vm.lobbies = [];
             lobbies.forEach(lobby => {
                 this.vm.lobbies.push(lobby);
@@ -345,13 +346,15 @@ class LobbiesController {
                 this.$scope.$apply();
             }, 1);
         });
-        this.vm.socketService.lobbiesSocket.on('createNewRoomResponse', room => {
-            this.$rootScope.currentLobby = room;
+
+        this.socketService.setLobbiesListener('createNewRoomResponse', (ev, {room}) => {
             this.$rootScope.currentGamePhase = GAME_PHASES.PLAYER_SETUP_MULTIPLAYER;
+            this.$rootScope.currentLobby = room;
             this.$rootScope.$apply();
             stopGlobalLoading();
         });
-        this.vm.socketService.lobbiesSocket.on('disconnect', data => {
+
+        this.socketService.setLobbiesListener('disconnect', (ev, {data}) => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.MULTIPLAYER_LOBBIES && data === 'transport close') {
                 this.$scope.$apply();
                 console.log('DISCONNECTED');

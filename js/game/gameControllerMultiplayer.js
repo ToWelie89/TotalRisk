@@ -475,7 +475,7 @@ class GameControllerMultiplayer extends GameController {
     }
 
     setSocketListeners() {
-        this.socketService.gameSocket.on('playerWonNotifier', (endScreenData) => {
+        this.socketService.setGameListener('playerWonNotifier', (ev, {endScreenData}) => {
             clearInterval(this.vm.hourGlassTimerInterval);
             console.log('A player won', endScreenData);
 
@@ -490,7 +490,7 @@ class GameControllerMultiplayer extends GameController {
             this.$rootScope.$apply();
         });
 
-        this.socketService.gameSocket.on('newReinforcements', newTroops => {
+        this.socketService.setGameListener('newReinforcements', (ev, {newTroops}) => {
             this.soundService.cardTurnIn.play();
             for (let i = 0; i < newTroops; i++) {
                 setTimeout(() => {
@@ -501,23 +501,23 @@ class GameControllerMultiplayer extends GameController {
             }
         });
 
-        this.socketService.gameSocket.on('setHighlightedNotifier', territoryName => {
+        this.socketService.setGameListener('setHighlightedNotifier', (ev, {territoryName}) => {
             document.querySelector(`${this.mapSelector} svg .country[id="${territoryName}"]`).classList.add('highlighted');
         });
 
-        this.socketService.gameSocket.on('removeHighlightedNotifier', territoryName => {
+        this.socketService.setGameListener('removeHighlightedNotifier', (ev, {territoryName}) => {
             document.querySelector(`${this.mapSelector} svg .country[id="${territoryName}"`).classList.remove('highlighted');
         });
 
-        this.socketService.gameSocket.on('setArrowNotifier', (from, to, arrowType) => {
+        this.socketService.setGameListener('setArrowNotifier', (ev, {from, to, arrowType}) => {
             setArrowBetweenTerritories(this.mapSelector, from, to, arrowType, true);
         });
 
-        this.socketService.gameSocket.on('clearArrowNotifier', () => {
+        this.socketService.setGameListener('clearArrowNotifier', () => {
             clearArrow(this.mapSelector, true);
         });
 
-        this.socketService.gameSocket.on('updatedCardsForPlayer', (ownerUid, cards) => {
+        this.socketService.setGameListener('updatedCardsForPlayer', (ev, {ownerUid, cards}) => {
             this.soundService.cardSelect.play();
             const playerName = Array.from(this.gameEngine.players.values()).find(x => x.userUid === ownerUid).name;
 
@@ -533,7 +533,7 @@ class GameControllerMultiplayer extends GameController {
             this.vm.turn = this.gameEngine.turn;
         });
 
-        this.socketService.gameSocket.on('updateMapState', (territories, doNotRemoveHighlightClass) => {
+        this.socketService.setGameListener('updateMapState', (ev, {territories, doNotRemoveHighlightClass}) => {
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = territories.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
@@ -543,7 +543,7 @@ class GameControllerMultiplayer extends GameController {
             this.$scope.$apply();
         });
 
-        this.socketService.gameSocket.on('troopAddedToTerritoryNotifier', (territoryName, doNotRemoveHighlightClass = false) => {
+        this.socketService.setGameListener('troopAddedToTerritoryNotifier', (ev, {territoryName, doNotRemoveHighlightClass}) => {
             this.gameEngine.addTroopToTerritory(territoryName);
             this.vm.troopsToDeploy = this.gameEngine.troopsToDeploy;
             this.$scope.$apply();
@@ -556,7 +556,7 @@ class GameControllerMultiplayer extends GameController {
             this.mapService.updateMapForMultiplayer(this.gameEngine.filter, this.vm.myUid, doNotRemoveHighlightClass);
         });
 
-        this.socketService.gameSocket.on('nextTurnNotifier', (turn, reinforcementData) => {
+        this.socketService.setGameListener('nextTurnNotifier', (ev, {turn, reinforcementData}) => {
             this.gameEngine.selectedTerritory = undefined;
             if (turn.newPlayer && turn.player.type === PLAYER_TYPES.HUMAN) {
                 this.initiateTimer();
@@ -606,7 +606,7 @@ class GameControllerMultiplayer extends GameController {
             }
         });
 
-        this.socketService.gameSocket.on('battleFoughtNotifier', (battleData, doNotRemoveHighlightClass = false) => {
+        this.socketService.setGameListener('battleFoughtNotifier', (ev, {battleData, doNotRemoveHighlightClass}) => {
             console.log('battleData',battleData);
 
             getTerritoryByName(this.gameEngine.map, battleData.attackerTerritory).numberOfTroops = battleData.attackerNumberOfTroops;
@@ -627,7 +627,7 @@ class GameControllerMultiplayer extends GameController {
             this.updateChartData();
         });
 
-        this.socketService.gameSocket.on('updateOwnerAfterSuccessfulInvasionNotifier', (updateOwnerData) => {
+        this.socketService.setGameListener('updateOwnerAfterSuccessfulInvasionNotifier', (ev, {updateOwnerData}) => {
             getTerritoryByName(this.gameEngine.map, updateOwnerData.attackerTerritory).numberOfTroops = updateOwnerData.attackerTerritoryNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).numberOfTroops = updateOwnerData.defenderTerritoryNumberOfTroops;
             getTerritoryByName(this.gameEngine.map, updateOwnerData.defenderTerritory).owner = updateOwnerData.owner;
@@ -638,7 +638,7 @@ class GameControllerMultiplayer extends GameController {
             this.updateChartData();
         });
 
-        this.socketService.gameSocket.on('updateMovementNotifier', (map) => {
+        this.socketService.setGameListener('updateMovementNotifier', (ev, {map}) => {
             this.gameEngine.map.getAllTerritoriesAsList().forEach(t => {
                 const territoryFromServer = map.find(x => x.name === t.name);
                 t.owner = territoryFromServer.owner;
@@ -646,7 +646,7 @@ class GameControllerMultiplayer extends GameController {
             });
         });
 
-        this.socketService.gameSocket.on('messagesUpdated', (messages) => {
+        this.socketService.setGameListener('messagesUpdated', (ev, {messages}) => {
             if (
                 !this.vm.muteChat &&
                 this.$rootScope.currentGamePhase === GAME_PHASES.GAME_MULTIPLAYER &&

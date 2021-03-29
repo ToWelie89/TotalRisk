@@ -73,7 +73,7 @@ class AttackModalController {
 
         if (this.multiplayerMode) {
             // display territories in battle for other players
-            this.socketService.gameSocket.on('skipToNextPlayer', () => {
+            this.socketService.setGameListener('skipToNextPlayer', () => {
                 this.retreat();
             });
         }

@@ -23,8 +23,17 @@ class LobbiesController {
         this.settings = settings;
         this.vm.customCharacters = [];
 
-        this.$rootScope.$watch('currentLobby', () => {
-            this.initLobby();
+        this.lobbyId = -1;
+
+        if (this.$rootScope.currentLobbyWatcher) {
+            this.$rootScope.currentLobbyWatcher();
+        }
+        this.$rootScope.currentLobbyWatcher = this.$rootScope.$watch('currentLobby', (newVal, oldVal) => {            
+            console.log(oldVal.id, newVal.id)
+            if (!!newVal && !this.lobbyInitialized) {
+                this.lobbyInitialized = true;
+                this.initLobby();
+            }
         });
 
         this.vm.victoryGoals = VICTORY_GOALS;
@@ -158,13 +167,9 @@ class LobbiesController {
             this.vm.aiSpeedSliderOptions.disabled = !this.vm.userIsHost;
             const userName = user.displayName ? user.displayName : user.email;
 
-            if (!this.socketService.lobbiesSocket) {
-                this.socketService.createLobbiesSocket();
-            }
             if (!this.socketService.gameSocket) {
                 this.socketService.createGameSocket();
             }
-
             this.addSocketListeners();
 
             firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
@@ -264,15 +269,14 @@ class LobbiesController {
     }
 
     addSocketListeners() {
-        this.soundService.tick.play();
-        this.socketService.gameSocket.on('updatedColorOfPlayer', (playerUid, playerColor) => {
+        this.socketService.setGameListener('updatedColorOfPlayer', (ev, {playerUid, playerColor}) => {
             const player = this.vm.players.find(p => p.userUid === playerUid);
             if (player) {
                 player.color = playerColor;
             }
         });
 
-        this.socketService.gameSocket.on('messagesUpdated', (messages) => {
+        this.socketService.setGameListener('messagesUpdated', (ev, {messages}) => {
             if (!this.vm.muteChat && this.$rootScope.currentGamePhase === GAME_PHASES.PLAYER_SETUP_MULTIPLAYER && this.vm.showLobbyChat) {
                 this.soundService.newMessage.play();
             }
@@ -296,7 +300,7 @@ class LobbiesController {
             console.log('Lobby messages', this.vm.lobbyChatMessages);
         });
 
-        this.socketService.gameSocket.on('kicked', () => {
+        this.socketService.setGameListener('kicked', (ev, {}) => {
             this.soundService.tick.play();
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
@@ -304,47 +308,46 @@ class LobbiesController {
             this.socketService.disconnectGameSocket();
         });
 
-        this.socketService.gameSocket.on('hostLeft', () => {
+        this.socketService.setGameListener('hostLeft', (ev, {}) => {
             this.$rootScope.currentLobby = '';
             this.$rootScope.currentGamePhase = GAME_PHASES.MULTIPLAYER_LOBBIES;
             this.toastService.infoToast('', 'The host has left the game.');
             this.socketService.disconnectGameSocket();
         });
 
-        this.socketService.gameSocket.on('updatedPlayers', players => {
+        this.socketService.setGameListener('updatedPlayers', (ev, {players}) => {
             this.setPlayers(players);
             console.log('Players updated in room', this.vm.players);
         });
 
-        this.socketService.gameSocket.on('updatedLockedSlots', lockedSlots => {
+        this.socketService.setGameListener('updatedLockedSlots', (ev, {lockedSlots}) => {
             this.soundService.tick.play();
             this.vm.lockedSlots = lockedSlots;
             this.setPlayers(this.vm.players);
             this.vm.room.maxNumberOfPlayer = (CONSTANTS.MAX_NUMBER_OF_PLAYERS - this.vm.lockedSlots.length);
         });
 
-        this.socketService.gameSocket.on('setTurnLengthNotifier', turnLength => {
+        this.socketService.setGameListener('setTurnLengthNotifier', (ev, {turnLength}) => {
             this.soundService.tick.play();
             this.vm.turnLength = turnLength;
             this.$rootScope.turnLength = turnLength;
             this.$scope.$apply();
             window.dispatchEvent(new Event('resize'));
         });
-
-        this.socketService.gameSocket.on('setAiSpeedNotifier', aiSpeed => {
+        
+        this.socketService.setGameListener('setAiSpeedNotifier', (ev, {aiSpeed}) => {
             this.soundService.tick.play();
             this.vm.aiSpeed = aiSpeed;
             this.$scope.$apply();
             window.dispatchEvent(new Event('resize'));
         });
 
-        this.socketService.gameSocket.on('setGoalNotifier', chosenGoal => {
+        this.socketService.setGameListener('setGoalNotifier', (ev, {chosenGoal}) => {
             this.soundService.tick.play();
             this.vm.chosenGoal = chosenGoal;
-            this.$scope.$apply();
         });
 
-        this.socketService.gameSocket.on('gameStarted', (players, victoryGoal, territories, turn, troopsToDeploy, selectedMap) => {
+        this.socketService.setGameListener('gameStarted', (ev, {players, victoryGoal, territories, turn, troopsToDeploy, selectedMap}) => {
             console.log('troopsToDeploy', troopsToDeploy);
             this.gameEngine.currentGameIsMultiplayer = true;
             this.gameEngine.turn = turn;
@@ -367,7 +370,7 @@ class LobbiesController {
             this.$rootScope.$apply();
         });
 
-        this.socketService.gameSocket.on('disconnect', data => {
+        this.socketService.setGameListener('disconnect', (ev, {data}) => {
             if (data === 'transport close') { // server disconnected
                 this.toastService.errorToast(
                     'Lost connection',
@@ -378,6 +381,14 @@ class LobbiesController {
                 this.$rootScope.$apply();
             }
         });
+
+        /*
+        this.socketService.gameSocket.on('updatedColorOfPlayer', (playerUid, playerColor) => {
+            const player = this.vm.players.find(p => p.userUid === playerUid);
+            if (player) {
+                player.color = playerColor;
+            }
+        });*/
     }
 
     setPlayers(players) {

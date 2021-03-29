@@ -87,7 +87,7 @@ class CharacterSelectionController {
         }
 
         if (this.multiplayer) { // Is multiplayer game
-            this.socketService.gameSocket.on('updatedPlayers', players => {
+            this.socketService.setGameListener('updatedPlayers', players => {
                 this.vm.selectedPlayers = players.filter(x => x !== undefined);
                 this.vm.takenAvatars = this.vm.selectedPlayers.map(x => x.avatar);
                 this.$scope.$apply();

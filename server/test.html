@@ -44,6 +44,7 @@
             }
 
             const lobbiesSocket = io('https://totalconquest.herokuapp.com/lobbies');
+            //const lobbiesSocket = io('http://127.0.0.1:5000/lobbies');
             lobbiesSocket.on('currentLobbies', lobbies => {
                 lobbies.map(lobby => {
                     lobby.normalizedTime = normalizeTimeFromTimestamp(lobby.creationTimestamp);

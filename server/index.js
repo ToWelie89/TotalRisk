@@ -651,6 +651,10 @@ io
             //lobbiesSocketList = lobbiesSocketList.filter(s => s.userUid !== socket.userUid);
         });
 
+        socket.on('fetchOnlineUsers', () => {
+            updateOnlineUsers();
+        });
+
         socket.on('removeUser', () => {
             socket.userUid = undefined;
             socket.userName = undefined;
@@ -746,6 +750,8 @@ io
 io
     .of('game')
     .on('connection', (socket) => {
+        socket.removeAllListeners('message');
+        
         socket.on('disconnect', reason => {
             const game = games.find(game => game.id === socket.roomId);
 
@@ -889,7 +895,7 @@ io
 
         socket.on('setUser', (userUid, userName, roomId, isHost, chosenAvatar, attackerDice, attackerDiceLabel) => {
             const game = games.find(game => game.id === roomId);
-            if (game.players.find(x => x.userUid)) {
+            if (game.players.find(x => x.userUid === userUid)) {
                 return; // user already exists in this game
             }
 
