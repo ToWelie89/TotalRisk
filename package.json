@@ -1,7 +1,7 @@
 {
   "name": "TotalRisk",
   "productName": "TotalRisk",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "A web application game of the classic board game Risk",
   "main": "electron/main.js",
   "license": "MIT",
@@ -33,7 +33,8 @@
     "risk",
     "game",
     "heroku",
-    "express"
+    "express",
+    "nodejs"
   ],
   "build": {
     "appId": "com.github.ToWelie89.TotalRisk",
