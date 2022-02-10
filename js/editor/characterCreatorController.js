@@ -76,31 +76,30 @@ class CharacterCreatorController {
             '#a6775b',
             '#7d5137'
         ];
+        
+        const currentUser = firebase.auth().currentUser;
+        if (currentUser) {
+            this.vm.isAuthenticated = true;
+            this.vm.showEditor = false;
+            const user = currentUser;
 
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                this.vm.isAuthenticated = true;
-                this.vm.showEditor = false;
-                const user = firebase.auth().currentUser;
-
-                firebase.database().ref('users/' + user.uid).on('value', snapshot => {
-                    const user = snapshot.val();
-                    if (user && user.characters) {
-                        this.vm.characters = snapshot.val().characters;
-                        setTimeout(() => {
-                            this.$scope.$apply();
-                            //this.loadSavedCharacterPortraits();
-                        }, 200);
-                    } else {
-                        this.vm.characters = [];
-                    }
-                });
-            } else {
-                this.vm.isAuthenticated = false;
-                this.vm.showEditor = false;
-                this.vm.characters = [];
-            }
-        });
+            firebase.database().ref('users/' + user.uid).on('value', snapshot => {
+                const user = snapshot.val();
+                if (user && user.characters) {
+                    this.vm.characters = snapshot.val().characters;
+                    setTimeout(() => {
+                        this.$scope.$apply();
+                        //this.loadSavedCharacterPortraits();
+                    }, 200);
+                } else {
+                    this.vm.characters = [];
+                }
+            });
+        } else {
+            this.vm.isAuthenticated = false;
+            this.vm.showEditor = false;
+            this.vm.characters = [];
+        }
 
         $(document).ready(() => {
             this.vm.currentSelection.forEach(part => {

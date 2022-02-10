@@ -19,13 +19,12 @@ class LeaderboardController {
 
         this.vm.scrollToMe = this.scrollToMe;
 
-        firebase.auth().onAuthStateChanged(authUser => {
-            if (authUser) {
-                this.vm.userUid = authUser.uid;
-            } else {
-                this.vm.userUid = null;
-            }
-        });
+        const user = firebase.auth().currentUser;
+        if (user) {
+            this.vm.userUid = user.uid;
+        } else {
+            this.vm.userUid = null;
+        }
 
         this.$rootScope.$watch('currentGamePhase', () => {
             if (this.$rootScope.currentGamePhase === GAME_PHASES.LEADERBOARD) {

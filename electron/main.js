@@ -235,7 +235,7 @@ const createDefaultWindow = () => {
     }
 
     if (!dontUseWebTools) {
-        //win.webContents.openDevTools();
+        win.webContents.openDevTools();
     }
 
     win.setMenu(null);

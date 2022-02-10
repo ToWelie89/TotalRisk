@@ -291,7 +291,9 @@ class AuthenticationController {
                 this.$scope.$apply();
             })
             .then(() => {
-                this.socketService.lobbiesSocket.emit('signOutUser', uid);
+                if (this.socketService.lobbiesSocket) {
+                    this.socketService.lobbiesSocket.emit('signOutUser', uid);
+                }
             })
             .catch(err => {
                 console.log('Logout error', err),
