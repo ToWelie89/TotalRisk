@@ -117,8 +117,6 @@ const randomIntFromInterval = (min, max) => {
     return min + rval;
 }
 
-
-
 const randomDoubleFromInterval = (min, max) => {
     const double = Math.random() < 0.5 ? ((1 - Math.random()) * (max - min) + min) : (Math.random() * (max - min) + min);
     return Math.round(double * 10) / 10;
