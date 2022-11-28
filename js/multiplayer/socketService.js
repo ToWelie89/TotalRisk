@@ -83,9 +83,11 @@ class SocketService {
     }
 
     disconnectGameSocket() {
-        this.gameSocket.emit('disconnect');
-        this.gameSocket.disconnect();
-        this.gameSocket = undefined;
+        if (this.gameSocket) {
+            this.gameSocket.emit('disconnect');
+            this.gameSocket.disconnect();
+            this.gameSocket = undefined;
+        }
     }
 }
 

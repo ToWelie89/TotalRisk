@@ -72,7 +72,7 @@ class MainController {
 
             this.vm.appVersion = electron.remote.app.getVersion();
 
-            fetch(`http://martinsonesson.se/totalrisk/patchlog.json?${randomIntFromInterval(111111111111,9999999999999)}`).then(resp => resp.json())
+            fetch(`https://martinsonesson.se/totalrisk/patchlog.json?${randomIntFromInterval(111111111111,9999999999999)}`).then(resp => resp.json())
             .then(patchLog => {
                 this.vm.currentPatchVersion = this.vm.appVersion;
                 this.vm.currentPatchNotes = patchLog[this.vm.appVersion];
